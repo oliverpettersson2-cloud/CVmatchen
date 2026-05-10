@@ -60,18 +60,31 @@ var ARBETE=[
 {id:'a0',icon:'📊',title:'Arbetsmarknaden',sub:'Sverige, Skåne & Öresundsregionen',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
 lessons:[
 {t:'Den svenska arbetsmarknaden',
-s:'Sverige har ca 5,2 miljoner sysselsatta.\n\nArbetslöshet 2025:\n🇸🇪 Sverige: ~8,6%\n📍 Skåne: ~10,2%\n🏙️ Helsingborg: ~9,8%\n\nStörsta sektorer:\n🏥 Vård & omsorg — störst\n🏗️ Bygg & teknik — hög efterfrågan\n🚚 Lager & logistik — snabbväxande\n💻 IT & digitalt — lägst arbetslöshet',
-a:'Arbetsmarknaden mäts av SCB via AKU (Arbetskraftsundersökning). Ungdomsarbetslöshet 15-24 år är ca dubbelt det totala. Öppen arbetslöshet och deltagare i program räknas separat. 2024-2025 påverkas marknaden av höga räntor och svag byggsektor.'},
+s:'Sverige har ca 5,2 miljoner sysselsatta — av 10,6 miljoner invånare.\n\n📊 Arbetslöshet 2026 (Eurostat):\n🇸🇪 Sverige: 9,7% — bland EU:s högsta\n📍 Skåne: ~10%\n🏙️ Helsingborg: ~9,8%\n👶 Ungdomar 15–24: 30,1%\n\n💡 Paradoxalt nog saknar Sverige 30 000+ specialister inom IT & cyber — samtidigt som lågutbildade har svårt att hitta jobb.\n\nStörsta sektorer:\n🏥 Vård & omsorg — störst\n🏗️ Bygg — pressad av höga räntor\n🚚 Lager & logistik — snabbväxande\n💻 IT & digitalt — lägst arbetslöshet',
+a:'Arbetsmarknaden mäts av SCB via AKU (Arbetskraftsundersökning) och rapporteras till Eurostat enligt ILO-standard. Ungdomsarbetslöshet 15–24 år är ca dubbelt det totala. Strukturproblemet 2026: en mismatch mellan tillgänglig arbetskraft och faktiskt behov — 30 000+ specialister saknas inom IT/cybersäkerhet.'},
 {t:'Skåne och Öresundsregionen',
-s:'Skåne — 1,4 miljoner invånare.\n\nÖresundsregionen är en av Europas starkaste arbetsmarknader:\n\n🇩🇰 Danmark: ~5,0% arbetslöshet\n🏘️ Helsingör: ~5,3%\n\n~20 000 personer pendlar dagligen Sverige ↔ Danmark!',
-a:'Öresundsbron öppnade 2000 och integrerade arbetsmarknaden. EU-medborgarskap ger fri rörlighet — du kan bo i Helsingborg och jobba i Köpenhamn. Danska löner är 20-30% högre, men levnadskostnader likaså. Skatt betalas i arbetslandet men deklaration krävs i båda länder.'},
+s:'Skåne — 1,4 miljoner invånare. Sveriges tredje största exportlän.\n\n📊 Arbetslöshet:\n🇸🇪 Sverige: 9,7%\n🇩🇰 Danmark: 2,7% (officiell, Statistics Denmark)\n\n💱 Valutan gör skillnaden ännu större:\n1 DKK = 1,45 SEK idag (2026)\nSamma jobb kan ge 30–50% mer hem efter växling!\n\n👥 ~20 000 svenskar pendlar dagligen över Öresund till danska jobb.',
+a:'Öresundsbron öppnade 2000 och integrerade arbetsmarknaden. EU-medborgarskap ger fri rörlighet. Den danska "officiella" siffran (2,7%) är registerbaserad (Statistics Denmark) — Eurostats LFS-mätning ligger på ~6,5% (jämförbar med Sveriges 9,7%). Båda är korrekta — olika metoder. Valutaeffekten har förstärkts 2024–2026 i takt med att SEK försvagats. Skatt betalas i arbetslandet, deklaration krävs i båda länder.'},
 {t:'Helsingborgs arbetsmarknad',
-s:'Helsingborg är en av Skånes starkaste städer.\n\nStarka sektorer lokalt:\n🏭 Industri & livsmedel (Findus, Perstorp)\n🚢 Logistik & hamn\n🏥 Vård & Region Skåne\n🛒 Handel & service\n\n⛴️ Helsingör ligger 15 min bort med färjan — en hel dansk arbetsmarknad nära!',
-a:'H+ stadsomvandlingsprojektet skapar tusentals nya jobb i Helsingborg. Arbetsförmedlingen Helsingborg: Järnvägsgatan 14. Jobbtorg Helsingborg erbjuder kostnadsfri matchning och coachning för invånare.'}
+s:'Helsingborg är Sveriges 8:e största stad — ~115 000 invånare.\n\nStarka sektorer lokalt:\n🏭 Industri & livsmedel (Findus, IKEA, Perstorp)\n🚢 Logistik & hamn (en av Sveriges 5 största)\n🏥 Vård & Region Skåne — största arbetsgivaren\n🛒 Handel & service\n\n⛴️ Färjan till Helsingör tar 20 min — Region Hovedstaden ligger granne!\n\n💼 Stadsomvandlingen H+ skapar tusentals nya jobb framöver.',
+a:'H+ stadsomvandlingsprojektet skapar tusentals nya jobb i Helsingborg. Arbetsförmedlingen Helsingborg: Järnvägsgatan 14. Jobbtorg Helsingborg erbjuder kostnadsfri matchning och coachning för invånare. Helsingborgs hamn är en av Sveriges fem största — drar lager, truck och logistik-jobb. Vården (Region Skåne) har konstant rekryteringsbehov, särskilt undersköterskor och sjuksköterskor.'}
 ],
-ex:{type:'arb-map',title:'Arbetsmarknadskartan',desc:'Utforska arbetslöshet och arbetsmarknad i Öresundsregionen.'},
-quiz:[{q:'Vad är ungefärlig arbetslöshet i Skåne 2026?',o:['5%','9%','20%'],c:1},{q:'Hur många pendlar dagligen över Öresund?',o:['2 000','200 000','20 000'],c:2},{q:'Vilken sektor har generellt lägst arbetslöshet i Sverige?',o:['IT & digitalt','Bygg','Handel'],c:0},{q:'Hur lång är båtturen Helsingborg–Helsingör?',o:['15 min','45 min','5 min'],c:0}],
-pr:['Vilka jobb finns just nu i Helsingborg?','Hur söker jag jobb i Danmark som bor i Sverige?','Vilka branscher rekryterar mest i Skåne nu?']},
+ex:{type:'arb-map',title:'Arbetsmarknadskartan',desc:'Interaktiv karta över Skåne — klicka på en kommun för att se arbetslöshet, sektorer och pendlingsmönster.'},
+quiz:[
+{q:'Vad är Sveriges arbetslöshet 2026 enligt Eurostat?',o:['5,2%','9,7%','15,3%'],c:1},
+{q:'Hur många pendlar dagligen över Öresund?',o:['2 000','200 000','20 000'],c:2},
+{q:'Vilken sektor har generellt lägst arbetslöshet i Sverige?',o:['IT & digitalt','Bygg','Handel'],c:0},
+{q:'Hur lång är färjan Helsingborg–Helsingör?',o:['20 min','45 min','5 min'],c:0},
+{q:'Vad är Danmarks officiella arbetslöshet 2026?',o:['2,7%','6,5%','9,7%'],c:0},
+{q:'Hur mycket är 1 DKK i SEK idag?',o:['0,75 SEK','1,45 SEK','3,20 SEK'],c:1},
+{q:'Vad är ungdomsarbetslösheten 15–24 år i Sverige?',o:['8,5%','15%','30,1%'],c:2},
+{q:'Hur många specialister saknas inom IT/cyber i Sverige?',o:['1 000+','30 000+','500 000+'],c:1},
+{q:'Vilken är Sveriges tredje största exportregion?',o:['Stockholm','Skåne','Norrbotten'],c:1},
+{q:'Vilken är Helsingborgs största arbetsgivare?',o:['IKEA','Region Skåne','Findus'],c:1},
+{q:'Vad krävs för att jobba i Danmark som bor i Sverige?',o:['Svenskt medborgarskap','Pass + visum','EU-medborgarskap räcker'],c:2},
+{q:'Vilken metod använder Eurostat för att mäta arbetslöshet?',o:['Register-baserad','Labour Force Survey (ILO-standard)','Valundersökning'],c:1}
+],
+pr:['Vilka jobb finns just nu i Helsingborg?','Hur söker jag jobb i Danmark som bor i Sverige?','Vilka branscher rekryterar mest i Skåne nu?','Räkna ut min faktiska timlön i Danmark efter växling.','Vilka utbildningar leder snabbast till jobb inom vård i Helsingborg?']},
 
 {id:'a_match',icon:'🎯',title:'Matcha med AI',sub:'Förstå matchningslogiken innan du kör skarpt',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
 lessons:[
@@ -86,8 +99,19 @@ s:'AI genererar alltid tre versioner:\n\n📌 Erfarenhetsfokus\n"5 år inom lage
 a:'De tre vinklarna matchar olika rekryteringsstilar. Erfarenhet passar traditionella rekryterare och stora bolag. Motivation passar kulturfokuserade bolag och startups. Resultat passar datadriven rekrytering och chefsroller. Blanda gärna delar.'}
 ],
 ex:{type:'match-trainer',title:'Träna matchningslogiken',desc:'Info → Quiz → Miniövning — förstå allt innan du kör skarpt.'},
-quiz:[{q:'Vad innebär "partial match"?',o:['Du saknar kompetensen helt','Du har liknande erfarenhet','Du har exakt kompetensen'],c:1},{q:'Varför är nyckelord kritiska i CV?',o:['Rekryterare läser dem sist','Ser proffsigare ut','ATS-system filtrerar bort CV utan rätt nyckelord'],c:2},{q:'Vilken profiltext-vinkel passar bäst vid karriärskifte?',o:['Motivationsfokus','Kompetens & resultat','Erfarenhetsfokus'],c:0}],
-pr:['Analysera min matchning mot denna annons: [klistra in]','Vilken profiltext-vinkel passar bäst för mitt fall?','Skriv om detta CV-avsnitt för bättre nyckelordsmatch.']},
+quiz:[
+{q:'Vad innebär "partial match"?',o:['Du saknar kompetensen helt','Du har liknande erfarenhet — kan formuleras om','Du har exakt kompetensen'],c:1},
+{q:'Varför är nyckelord kritiska i CV?',o:['Rekryterare läser dem sist','Ser proffsigare ut','ATS-system filtrerar bort CV utan rätt nyckelord'],c:2},
+{q:'Vilken profiltext-vinkel passar bäst vid karriärskifte?',o:['Motivationsfokus','Kompetens & resultat','Erfarenhetsfokus'],c:0},
+{q:'Hur många nyckelord analyserar AI:n per annons?',o:['10–20','50–100','200+'],c:2},
+{q:'Hur lång tid har en rekryterare på första genomläsningen?',o:['30 sekunder','2 minuter','6–7 sekunder'],c:2},
+{q:'Hur stor andel CV stoppas av ATS-system?',o:['10%','35%','75%'],c:2},
+{q:'Vilken vinkel passar bäst för traditionella stora bolag?',o:['Erfarenhetsfokus','Motivationsfokus','Resultatfokus'],c:0},
+{q:'Vilken vinkel passar bäst för en datadriven chefsroll?',o:['Erfarenhetsfokus','Motivationsfokus','Kompetens & resultat'],c:2},
+{q:'Vad betyder MISSING-flaggan?',o:['Sök inte jobbet','Visa viljan att lära','Ljug om kompetensen'],c:1},
+{q:'Måste man välja en av de tre profiltexterna?',o:['Ja, bara en','Nej, kan blanda delar','Bara om man inte har erfarenhet'],c:1}
+],
+pr:['Analysera min matchning mot denna annons: [klistra in]','Vilken profiltext-vinkel passar bäst för mitt fall?','Skriv om detta CV-avsnitt för bättre nyckelordsmatch.','Hitta de viktigaste nyckelorden i denna annons: [klistra in]','Föreslå hur jag kan formulera om "MISSING"-områden positivt.']},
 
 {id:'a_cv',icon:'📄',title:'CV-byggaren',sub:'Förstå varje del INNAN du fyller i ditt riktiga CV',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
 lessons:[
@@ -102,8 +126,19 @@ s:'❌ "Jobbade i kassan och hjälpte kunder."\n\n✅ "Hanterade 200+ kundtransa
 a:'AI genererar 3 bullet points per anställning baserat på titel + företag. Kom ihåg: mätbara resultat (%, antal, kronor) är alltid starkare än vaga beskrivningar. Granska alltid vad AI föreslår — du vet bäst vad du faktiskt gjort.'}
 ],
 ex:{type:'cv-trainer',title:'Träna CV-byggaren',desc:'4 infoskärmar · 6 quizfrågor · Mini-bygge — sedan är du redo för ditt riktiga CV!'},
-quiz:[{q:'Hur lång tid lägger en rekryterare på första genomläsningen?',o:['2 minuter','5 minuter','6-7 sekunder','30 sekunder'],c:2},{q:'Vad ska profiltexten besvara?',o:['Vem du är, vad du kan, vad du söker','Ålder, adress och lön','Dina hobbies','Alla jobb du haft'],c:0},{q:'Vilken formel gäller för starka arbetsuppgifter?',o:['Lång och detaljerad','Handling + Skala/Resultat','Känsla + Personlighet','Kopia från annonsen'],c:1}],
-pr:['Skriv en profiltext för: [yrkestitel, erfarenhet, stad]','Gör dessa arbetsuppgifter starkare: [klistra in]','Föreslå 8 kompetenser för en [yrkestitel].']},
+quiz:[
+{q:'Hur lång tid lägger en rekryterare på första genomläsningen?',o:['2 minuter','5 minuter','6–7 sekunder','30 sekunder'],c:2},
+{q:'Vad ska profiltexten besvara?',o:['Vem du är, vad du kan, vad du söker','Ålder, adress och lön','Dina hobbies','Alla jobb du haft'],c:0},
+{q:'Vilken formel gäller för starka arbetsuppgifter?',o:['Lång och detaljerad','Handling + Skala/Resultat','Känsla + Personlighet','Kopia från annonsen'],c:1},
+{q:'Hur stor andel CV läses aldrig av en människa?',o:['10%','35%','75%'],c:2},
+{q:'Inom hur många rader bestämmer 60% av rekryterare ja/nej?',o:['Första 4','Första 10','Halva CV:t'],c:0},
+{q:'Hur många mätbara resultat ska man ha per anställning?',o:['Inga, känslor räcker','Minst 1–2 där det går','Bara om de är spektakulära'],c:1},
+{q:'Mätbara resultat är _____ trovärdigare än vaga beskrivningar.',o:['Lika','2x','10x'],c:1},
+{q:'Hur många CV bör du ha per yrkesroll?',o:['Bara ett','Upp till 3','Minst 10'],c:1},
+{q:'Vad är värst för ett CV?',o:['Nyckelord','Floskler som "driven team-spelare"','Konkreta siffror'],c:1},
+{q:'Vad är "ATS"?',o:['En CV-mall','Applicant Tracking System','Anställningstest'],c:1}
+],
+pr:['Skriv en profiltext för: [yrkestitel, erfarenhet, stad]','Gör dessa arbetsuppgifter starkare: [klistra in]','Föreslå 8 kompetenser för en [yrkestitel].','Kvantifiera dessa arbetsuppgifter — uppskatta siffror om jag inte minns exakt.','Gör mitt CV ATS-vänligt utan att förlora läsbarhet.']},
 
 {id:'a1',icon:'🧠',title:'Mina kompetenser',sub:'Hårda, mjuka & överförbara',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
 lessons:[{t:'Vad är kompetenser?',s:'Kompetenser är saker du kan. Det kan vara något du lärt dig i skolan, på jobbet eller i livet.\n\nExempel: köra bil, prata med kunder, laga mat.',a:'Kompetenser är förmågor du använder för att utföra arbetsuppgifter. De delas in i hårda (tekniska) och mjuka (sociala) kompetenser.'},{t:'Hårda och mjuka',s:'Hårda = saker du kan mäta (Excel, truckkort).\nMjuka = hur du är med andra (samarbete, tålamod).',a:'Hårda kompetenser kan testas eller certifieras. Mjuka handlar om beteenden, kommunikation och problemlösning.'},{t:'Överförbara kompetenser',s:'Överförbara kompetenser är saker du kan använda i många jobb.\n\nExempel: service, planering, ansvar.',a:'Generella förmågor som fungerar i olika branscher. Viktiga när du byter yrke.'}],
