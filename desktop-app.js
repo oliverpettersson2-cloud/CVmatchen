@@ -5979,6 +5979,16 @@
       html += '<div style="font-size:11px; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; color:' + (mod.color || '#60a5fa') + '; margin-bottom:10px;">📘 LEKTION ' + (i + 1) + ' / ' + lessons.length + '</div>';
       html += '<div class="lesson-card">';
       html += '<div class="lesson-title">' + escape(l.t || '') + '</div>';
+      // Modul-introduktionsvideo (visas bara på lektion 1)
+      if (i === 0 && mod.video) {
+        html += '<div style="margin:10px 0 18px; border-radius:12px; overflow:hidden; background:#000; box-shadow:0 4px 24px rgba(0,0,0,0.3);">';
+        html += '<video controls preload="metadata" style="width:100%; display:block;" poster="">';
+        html += '<source src="' + escapeAttr(mod.video) + '" type="video/mp4">';
+        html += 'Din webbläsare stöder inte video-uppspelning.';
+        html += '</video>';
+        html += '<div style="padding:8px 14px; background:rgba(240,192,64,0.08); border-top:1px solid rgba(240,192,64,0.2); font-size:12px; color:rgba(255,255,255,0.7); letter-spacing:0.3px;">🎙️ AI-berättad introduktion · ~3 min</div>';
+        html += '</div>';
+      }
       // Pre-intro (syfte/mål/innehåll) FÖRE videon
       if (pre) {
         html += '<div style="background:rgba(62,180,137,0.07); border:1px solid rgba(62,180,137,0.25); border-radius:10px; padding:14px 16px; margin:10px 0 16px; white-space:pre-wrap; font-size:14px; line-height:1.6; color:rgba(255,255,255,0.85);">' + escape(pre) + '</div>';

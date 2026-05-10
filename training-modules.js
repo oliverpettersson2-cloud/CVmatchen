@@ -57,7 +57,7 @@ pr:['Skapa en kort pitch baserat på min erfarenhet.','Förklara denna jobbannon
 ];
 
 var ARBETE=[
-{id:'a0',icon:'📊',title:'Arbetsmarknaden',sub:'Sverige, Skåne & Öresundsregionen',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
+{id:'a0',icon:'📊',title:'Arbetsmarknaden',sub:'Sverige, Skåne & Öresundsregionen',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/arbetsmarknaden.mp4',
 lessons:[
 {t:'Den svenska arbetsmarknaden',
 s:'Sverige har ca 5,2 miljoner sysselsatta — av 10,6 miljoner invånare.\n\n📊 Arbetslöshet 2026 (Eurostat):\n🇸🇪 Sverige: 9,7% — bland EU:s högsta\n📍 Skåne: ~10%\n🏙️ Helsingborg: ~9,8%\n👶 Ungdomar 15–24: 30,1%\n\n💡 Paradoxalt nog saknar Sverige 30 000+ specialister inom IT & cyber — samtidigt som lågutbildade har svårt att hitta jobb.\n\nStörsta sektorer:\n🏥 Vård & omsorg — störst\n🏗️ Bygg — pressad av höga räntor\n🚚 Lager & logistik — snabbväxande\n💻 IT & digitalt — lägst arbetslöshet',
@@ -86,7 +86,7 @@ quiz:[
 ],
 pr:['Vilka jobb finns just nu i Helsingborg?','Hur söker jag jobb i Danmark som bor i Sverige?','Vilka branscher rekryterar mest i Skåne nu?','Räkna ut min faktiska timlön i Danmark efter växling.','Vilka utbildningar leder snabbast till jobb inom vård i Helsingborg?']},
 
-{id:'a_match',icon:'🎯',title:'Matcha med AI',sub:'Förstå matchningslogiken innan du kör skarpt',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
+{id:'a_match',icon:'🎯',title:'Matcha med AI',sub:'Förstå matchningslogiken innan du kör skarpt',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/matcha.mp4',
 lessons:[
 {t:'Vad är AI-matchning?',
 s:'CVmatchen AI läser ditt CV och en jobbannons — och hittar kopplingarna.\n\nResultatet:\n🟢 MATCH — du har kompetensen exakt\n🟡 PARTIAL — du har något liknande\n🔴 MISSING — du saknar det\n\nPlus tre anpassade profiltexter att välja bland.',
@@ -113,7 +113,7 @@ quiz:[
 ],
 pr:['Analysera min matchning mot denna annons: [klistra in]','Vilken profiltext-vinkel passar bäst för mitt fall?','Skriv om detta CV-avsnitt för bättre nyckelordsmatch.','Hitta de viktigaste nyckelorden i denna annons: [klistra in]','Föreslå hur jag kan formulera om "MISSING"-områden positivt.']},
 
-{id:'a_cv',icon:'📄',title:'CV-byggaren',sub:'Förstå varje del INNAN du fyller i ditt riktiga CV',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
+{id:'a_cv',icon:'📄',title:'CV-byggaren',sub:'Förstå varje del INNAN du fyller i ditt riktiga CV',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/cv-byggaren.mp4',
 lessons:[
 {t:'Vad är ett bra CV?',
 s:'Ditt CV är din marknadsföring — inte din biografi.\n\n✅ Anpassat per ansökan\n✅ Lätt att skumma (6-7 sek)\n✅ Rätt nyckelord på rätt plats\n✅ Ärligt och konkret\n\nCVmatchen hjälper dig bygga strukturerat med AI-stöd.',
