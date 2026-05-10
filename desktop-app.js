@@ -6050,6 +6050,12 @@
       html += '<div class="lesson-card">';
       if (ex.title) html += '<div class="lesson-title">' + escape(ex.title) + '</div>';
       if (ex.desc)  html += '<div class="lesson-text">' + escape(ex.desc) + '</div>';
+      // Embedded Skåne-karta för arb-map-övning
+      if (ex.type === 'arb-map') {
+        html += '<div style="margin:18px 0 0; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.10); background:#0f1729; box-shadow:0 4px 24px rgba(0,0,0,0.3);">';
+        html += '<iframe src="/arbetsmarknadskarta.html" style="width:100%; height:680px; border:0; display:block;" loading="lazy" title="Arbetsmarknadskartan Skåne"></iframe>';
+        html += '</div>';
+      }
       if (ex.fields && ex.fields.length) {
         html += '<ul style="margin:12px 0 0 0; padding-left:20px; color:rgba(255,255,255,0.75); font-size:14px; line-height:1.6;">';
         ex.fields.forEach(f => {

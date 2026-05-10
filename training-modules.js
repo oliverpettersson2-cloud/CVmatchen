@@ -69,7 +69,7 @@ a:'Öresundsbron öppnade 2000 och integrerade arbetsmarknaden. EU-medborgarskap
 s:'Helsingborg är Sveriges 8:e största stad — ~115 000 invånare.\n\nStarka sektorer lokalt:\n🏭 Industri & livsmedel (Findus, IKEA, Perstorp)\n🚢 Logistik & hamn (en av Sveriges 5 största)\n🏥 Vård & Region Skåne — största arbetsgivaren\n🛒 Handel & service\n\n⛴️ Färjan till Helsingör tar 20 min — Region Hovedstaden ligger granne!\n\n💼 Stadsomvandlingen H+ skapar tusentals nya jobb framöver.',
 a:'H+ stadsomvandlingsprojektet skapar tusentals nya jobb i Helsingborg. Arbetsförmedlingen Helsingborg: Järnvägsgatan 14. Jobbtorg Helsingborg erbjuder kostnadsfri matchning och coachning för invånare. Helsingborgs hamn är en av Sveriges fem största — drar lager, truck och logistik-jobb. Vården (Region Skåne) har konstant rekryteringsbehov, särskilt undersköterskor och sjuksköterskor.'}
 ],
-ex:{type:'arb-map',title:'Arbetsmarknadskartan',desc:'Interaktiv karta över Skåne — klicka på en kommun för att se arbetslöshet, sektorer och pendlingsmönster.',links:[{t:'🗺️ Öppna Skånekartan',u:'/arbetsmarknadskarta.html',d:'10 kommuner med live-data om arbetslöshet och sektorer'}]},
+ex:{type:'arb-map',title:'Utforska arbetslösheten i Skåne',desc:'Interaktiv karta nedan — klicka på en stad för att se arbetslöshet, sektorer och insikter. Data från SCB och Arbetsförmedlingen.'},
 quiz:[
 {q:'Vad är Sveriges arbetslöshet 2026 enligt Eurostat?',o:['5,2%','9,7%','15,3%'],c:1},
 {q:'Hur många pendlar dagligen över Öresund?',o:['2 000','200 000','20 000'],c:2},
