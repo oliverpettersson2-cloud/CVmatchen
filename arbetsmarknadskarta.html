@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arbetsmarknadskartan — Skåne | CVmatchen</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "Segoe UI", sans-serif;
+    background: linear-gradient(165deg, #0f1729 0%, #1a1a2e 100%);
+    color: #fff;
+    min-height: 100vh;
+    line-height: 1.55;
+  }
+  .header {
+    padding: 24px 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .header h1 {
+    margin: 0;
+    font-family: Georgia, serif;
+    font-size: 28px;
+    font-weight: 700;
+  }
+  .header h1 .gold { color: #f0c040; }
+  .back-link {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 14px;
+    padding: 8px 16px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+  .back-link:hover { background: rgba(255,255,255,0.05); color: #f0c040; }
+  .legend {
+    display: flex;
+    gap: 18px;
+    padding: 16px 32px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; }
+  .legend-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+  }
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 24px;
+    padding: 24px 32px;
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+  @media (max-width: 900px) {
+    .container { grid-template-columns: 1fr; }
+  }
+  .map-wrap {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+  }
+  .map-svg { width: 100%; height: auto; max-height: 70vh; }
+  .map-bg { fill: rgba(255,255,255,0.04); stroke: rgba(255,255,255,0.12); stroke-width: 1; }
+  .city-circle {
+    cursor: pointer;
+    transition: all 0.2s;
+    stroke: #1a1a2e;
+    stroke-width: 2;
+  }
+  .city-circle:hover { stroke: #f0c040; stroke-width: 3; transform: scale(1.15); transform-origin: center; }
+  .city-circle.active { stroke: #f0c040; stroke-width: 4; }
+  .city-label {
+    fill: rgba(255,255,255,0.85);
+    font-size: 13px;
+    font-weight: 600;
+    pointer-events: none;
+    text-anchor: middle;
+  }
+  .city-label-bg {
+    fill: rgba(15,23,41,0.8);
+    pointer-events: none;
+  }
+  .info-panel {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px;
+    position: sticky;
+    top: 24px;
+    align-self: start;
+    min-height: 400px;
+  }
+  .info-empty {
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    padding: 80px 20px;
+    font-style: italic;
+    font-size: 15px;
+  }
+  .info-empty .arrow {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .info-name {
+    font-family: Georgia, serif;
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    color: #fff;
+  }
+  .info-pop {
+    color: rgba(255,255,255,0.55);
+    font-size: 14px;
+    margin: 0 0 24px;
+  }
+  .stat-block {
+    background: rgba(255,255,255,0.04);
+    border-left: 3px solid #f0c040;
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+  .stat-label {
+    font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 4px;
+  }
+  .stat-value {
+    font-family: Georgia, serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #f0c040;
+    line-height: 1;
+  }
+  .stat-value.pct-low { color: #3eb489; }
+  .stat-value.pct-mid { color: #f0c040; }
+  .stat-value.pct-high { color: #e85d26; }
+  .info-section {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .info-section h4 {
+    margin: 0 0 8px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    font-family: "JetBrains Mono", Consolas, monospace;
+  }
+  .sectors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .sector-chip {
+    background: rgba(240,192,64,0.10);
+    border: 1px solid rgba(240,192,64,0.3);
+    border-radius: 100px;
+    padding: 4px 12px;
+    font-size: 13px;
+    color: #f0c040;
+  }
+  .insight {
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.55;
+  }
+  .footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><span class="gold">CV</span>matchen · Arbetsmarknadskartan</h1>
+  <a href="javascript:history.back()" class="back-link">← Tillbaka</a>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#3eb489;"></span>Låg arbetslöshet (&lt; 7%)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f0c040;"></span>Medel (7–10%)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#e85d26;"></span>Hög (&gt; 10%)</div>
+  <div class="legend-item">📍 Klicka på en kommun för att se mer</div>
+</div>
+
+<div class="container">
+  <div class="map-wrap">
+    <svg viewBox="0 0 600 700" class="map-svg" id="map">
+      <!-- Skåne förenklad bakgrund (kustlinje approx) -->
+      <path class="map-bg" d="M 80 80 L 200 60 L 320 70 L 420 100 L 480 150 L 510 230 L 540 320 L 530 410 L 510 490 L 470 560 L 410 610 L 340 640 L 250 645 L 170 620 L 110 560 L 75 470 L 60 360 L 65 240 L 75 150 Z" />
+
+      <!-- Öresund (mellan Skåne och Danmark) -->
+      <text x="35" y="380" fill="rgba(96,165,250,0.5)" font-size="14" font-style="italic" transform="rotate(-90 35 380)">Öresund</text>
+
+      <!-- Danmark (Helsingör skuggad i kanten) -->
+      <circle cx="22" cy="180" r="12" fill="rgba(255,107,107,0.20)" stroke="rgba(255,107,107,0.5)" stroke-width="1" stroke-dasharray="3,3"/>
+      <text x="22" y="184" fill="rgba(255,255,255,0.6)" font-size="9" text-anchor="middle">DK</text>
+
+      <!-- Cities will be inserted by JS -->
+      <g id="cities"></g>
+    </svg>
+  </div>
+
+  <div class="info-panel" id="info">
+    <div class="info-empty">
+      <span class="arrow">←</span>
+      Klicka på en kommun för att se arbetslöshet, sektorer och pendlingsmönster
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Källa: SCB · Arbetsförmedlingen · Statistics Denmark · Eurostat (2026) · Helsingör jämförelse-data
+</div>
+
+<script>
+  const cities = [
+    {
+      id: 'helsingborg', name: 'Helsingborg', x: 110, y: 180, pop: 115000,
+      unemployment: 9.8, level: 'mid',
+      sectors: ['Industri', 'Logistik & hamn', 'Vård', 'Handel'],
+      insight: 'Helsingborgs hamn är en av Sveriges 5 största. Färjan till Helsingör (DK) tar 20 min — en hel dansk arbetsmarknad granne. H+ stadsomvandlingen skapar tusentals nya jobb framöver.'
+    },
+    {
+      id: 'malmo', name: 'Malmö', x: 200, y: 480, pop: 360000,
+      unemployment: 12.5, level: 'high',
+      sectors: ['Hamn & logistik', 'IT', 'Utbildning', 'Bygg'],
+      insight: 'Sveriges 3:e största stad. Hög arbetslöshet (~12,5%) men starkt pulserande arbetsmarknad. Köpenhamn 35 min med tåg via Öresundsbron.'
+    },
+    {
+      id: 'lund', name: 'Lund', x: 250, y: 430, pop: 95000,
+      unemployment: 6.5, level: 'low',
+      sectors: ['Utbildning (LU)', 'Forskning', 'IT/Tech (Mobile Heights)', 'Medtech'],
+      insight: 'Lunds universitet drar tech, forskning och innovation. Bland Skånes lägsta arbetslöshet. ESS och MAX IV ger global magnetism för forskare.'
+    },
+    {
+      id: 'kristianstad', name: 'Kristianstad', x: 410, y: 280, pop: 90000,
+      unemployment: 10.2, level: 'high',
+      sectors: ['Livsmedel (Absolut)', 'Lantbruk', 'Vård', 'Tillverkning'],
+      insight: 'Centrum för östra Skånes arbetsmarknad. Absolut Vodka är största privata arbetsgivaren. Lantbrukssektorn stark.'
+    },
+    {
+      id: 'landskrona', name: 'Landskrona', x: 165, y: 280, pop: 47000,
+      unemployment: 14.8, level: 'high',
+      sectors: ['Industri', 'Tillverkning', 'Service'],
+      insight: 'Bland Sveriges högsta arbetslöshet. Tidigare varvsstad — pågående omställning. Strategiska investeringar i infrastruktur ska vända trenden.'
+    },
+    {
+      id: 'eslov', name: 'Eslöv', x: 280, y: 360, pop: 35000,
+      unemployment: 8.4, level: 'mid',
+      sectors: ['Tillverkning', 'Lantbruk', 'Pendling'],
+      insight: 'Pendlingscentrum. 30 min till Malmö, 20 min till Lund — många bor här och pendlar.'
+    },
+    {
+      id: 'trelleborg', name: 'Trelleborg', x: 230, y: 580, pop: 47000,
+      unemployment: 9.5, level: 'mid',
+      sectors: ['Hamn (Tysklands-färjan)', 'Industri', 'Lantbruk'],
+      insight: 'Sveriges sydligaste stad. Hamnen är Sveriges 3:e största för godstrafik. Tysklandsfärjor ger logistikjobb.'
+    },
+    {
+      id: 'ystad', name: 'Ystad', x: 360, y: 580, pop: 30000,
+      unemployment: 7.2, level: 'mid',
+      sectors: ['Turism', 'Lantbruk', 'Hantverk'],
+      insight: 'Turistmagneten via Wallander och danska sommargäster. Lägre arbetslöshet än Skåne-snitt. Småskaligt näringsliv.'
+    },
+    {
+      id: 'angelholm', name: 'Ängelholm', x: 130, y: 100, pop: 42000,
+      unemployment: 7.0, level: 'mid',
+      sectors: ['Flygindustri (Saab)', 'Trä & möbler', 'Service'],
+      insight: 'Saab-fabriken är största arbetsgivare. Flygplats med koppling till Stockholm. Lägre arbetslöshet än större grannstäder.'
+    },
+    {
+      id: 'hassleholm', name: 'Hässleholm', x: 350, y: 180, pop: 52000,
+      unemployment: 9.7, level: 'mid',
+      sectors: ['Logistik', 'Tillverkning', 'Tåg-knutpunkt'],
+      insight: 'Viktig järnvägsknut för södra Sverige. Pågatåg + fjärrtåg ger pendlingsmöjlighet både norrut och söderut.'
+    }
+  ];
+
+  function levelClass(level) {
+    return level === 'low' ? 'pct-low' : level === 'high' ? 'pct-high' : 'pct-mid';
+  }
+  function levelColor(level) {
+    return level === 'low' ? '#3eb489' : level === 'high' ? '#e85d26' : '#f0c040';
+  }
+
+  const g = document.getElementById('cities');
+  cities.forEach(c => {
+    const r = Math.max(8, Math.min(20, Math.sqrt(c.pop / 1000) * 0.9));
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', c.x);
+    circle.setAttribute('cy', c.y);
+    circle.setAttribute('r', r);
+    circle.setAttribute('fill', levelColor(c.level));
+    circle.setAttribute('class', 'city-circle');
+    circle.setAttribute('data-id', c.id);
+    circle.addEventListener('click', () => selectCity(c));
+    g.appendChild(circle);
+
+    const labelBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    const labelW = c.name.length * 7 + 14;
+    labelBg.setAttribute('x', c.x - labelW / 2);
+    labelBg.setAttribute('y', c.y + r + 4);
+    labelBg.setAttribute('width', labelW);
+    labelBg.setAttribute('height', 18);
+    labelBg.setAttribute('rx', 4);
+    labelBg.setAttribute('class', 'city-label-bg');
+    g.appendChild(labelBg);
+
+    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('x', c.x);
+    label.setAttribute('y', c.y + r + 17);
+    label.setAttribute('class', 'city-label');
+    label.textContent = c.name;
+    g.appendChild(label);
+  });
+
+  function selectCity(c) {
+    document.querySelectorAll('.city-circle').forEach(el => el.classList.remove('active'));
+    document.querySelector('.city-circle[data-id="' + c.id + '"]').classList.add('active');
+
+    const lvlClass = levelClass(c.level);
+    document.getElementById('info').innerHTML = `
+      <h2 class="info-name">${c.name}</h2>
+      <p class="info-pop">${c.pop.toLocaleString('sv-SE')} invånare</p>
+
+      <div class="stat-block">
+        <div class="stat-label">Arbetslöshet</div>
+        <div class="stat-value ${lvlClass}">${String(c.unemployment).replace('.', ',')}%</div>
+      </div>
+
+      <div class="info-section">
+        <h4>Starka sektorer</h4>
+        <div class="sectors">
+          ${c.sectors.map(s => `<span class="sector-chip">${s}</span>`).join('')}
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h4>Insikt</h4>
+        <p class="insight">${c.insight}</p>
+      </div>
+    `;
+  }
+
+  // Auto-select Helsingborg by default
+  setTimeout(() => selectCity(cities[0]), 100);
+</script>
+
+</body>
+</html>
