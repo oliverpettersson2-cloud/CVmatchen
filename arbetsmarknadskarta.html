@@ -206,16 +206,58 @@
 
 <div class="container">
   <div class="map-wrap">
-    <svg viewBox="0 0 600 700" class="map-svg" id="map">
-      <!-- Skåne förenklad bakgrund (kustlinje approx) -->
-      <path class="map-bg" d="M 80 80 L 200 60 L 320 70 L 420 100 L 480 150 L 510 230 L 540 320 L 530 410 L 510 490 L 470 560 L 410 610 L 340 640 L 250 645 L 170 620 L 110 560 L 75 470 L 60 360 L 65 240 L 75 150 Z" />
+    <svg viewBox="-60 0 660 700" class="map-svg" id="map">
+      <!-- Danmark (Sjælland-kant antydd, Helsingör-Köpenhamn) -->
+      <path d="M -60 100 Q -40 150 -45 220 Q -50 300 -55 400 Q -50 500 -60 600 L -60 700 L -60 0 Z"
+            fill="rgba(232,93,38,0.05)" stroke="rgba(232,93,38,0.25)" stroke-width="1" stroke-dasharray="4,4"/>
+      <text x="-30" y="240" fill="rgba(232,93,38,0.55)" font-size="13" font-weight="600">DK</text>
+      <text x="-35" y="260" fill="rgba(232,93,38,0.45)" font-size="10" font-style="italic">Helsingör</text>
 
-      <!-- Öresund (mellan Skåne och Danmark) -->
-      <text x="35" y="380" fill="rgba(96,165,250,0.5)" font-size="14" font-style="italic" transform="rotate(-90 35 380)">Öresund</text>
+      <!-- Öresund-text -->
+      <text x="-5" y="400" fill="rgba(96,165,250,0.6)" font-size="13" font-style="italic" transform="rotate(-90 -5 400)">Öresund</text>
 
-      <!-- Danmark (Helsingör skuggad i kanten) -->
-      <circle cx="22" cy="180" r="12" fill="rgba(255,107,107,0.20)" stroke="rgba(255,107,107,0.5)" stroke-width="1" stroke-dasharray="3,3"/>
-      <text x="22" y="184" fill="rgba(255,255,255,0.6)" font-size="9" text-anchor="middle">DK</text>
+      <!-- Skåne — geografiskt korrekt med Kullaberg (NV), Sandhammaren (SO), Falsterbonäset (SV) -->
+      <path class="map-bg" d="
+        M 14 108
+        Q 22 95 41 100
+        L 68 130
+        Q 78 145 82 165
+        L 95 200
+        L 105 230
+        Q 102 270 100 310
+        L 95 350
+        Q 110 380 120 410
+        L 130 460
+        Q 140 510 145 540
+        L 142 565
+        Q 130 590 123 610
+        L 130 622
+        Q 145 628 165 624
+        Q 175 618 185 614
+        L 200 612
+        Q 215 612 230 614
+        L 260 608
+        Q 290 605 320 598
+        L 360 588
+        Q 395 580 420 575
+        L 450 568
+        Q 478 558 495 540
+        L 510 510
+        Q 525 470 535 430
+        L 555 380
+        Q 565 330 568 280
+        L 565 230
+        Q 555 190 540 160
+        L 520 130
+        Q 500 100 470 80
+        L 430 65
+        Q 380 50 320 45
+        L 260 50
+        Q 200 55 160 70
+        L 110 85
+        Q 70 95 41 100
+        Z
+      " />
 
       <!-- Cities will be inserted by JS -->
       <g id="cities"></g>
@@ -237,64 +279,64 @@
 <script>
   const cities = [
     {
-      id: 'helsingborg', name: 'Helsingborg', x: 110, y: 180, pop: 115000,
+      id: 'helsingborg', name: 'Helsingborg', x: 89, y: 242, pop: 115000,
       unemployment: 9.8, level: 'mid',
       sectors: ['Industri', 'Logistik & hamn', 'Vård', 'Handel'],
       insight: 'Helsingborgs hamn är en av Sveriges 5 största. Färjan till Helsingör (DK) tar 20 min — en hel dansk arbetsmarknad granne. H+ stadsomvandlingen skapar tusentals nya jobb framöver.'
     },
     {
-      id: 'malmo', name: 'Malmö', x: 200, y: 480, pop: 360000,
-      unemployment: 12.5, level: 'high',
-      sectors: ['Hamn & logistik', 'IT', 'Utbildning', 'Bygg'],
-      insight: 'Sveriges 3:e största stad. Hög arbetslöshet (~12,5%) men starkt pulserande arbetsmarknad. Köpenhamn 35 min med tåg via Öresundsbron.'
-    },
-    {
-      id: 'lund', name: 'Lund', x: 250, y: 430, pop: 95000,
-      unemployment: 6.5, level: 'low',
-      sectors: ['Utbildning (LU)', 'Forskning', 'IT/Tech (Mobile Heights)', 'Medtech'],
-      insight: 'Lunds universitet drar tech, forskning och innovation. Bland Skånes lägsta arbetslöshet. ESS och MAX IV ger global magnetism för forskare.'
-    },
-    {
-      id: 'kristianstad', name: 'Kristianstad', x: 410, y: 280, pop: 90000,
-      unemployment: 10.2, level: 'high',
-      sectors: ['Livsmedel (Absolut)', 'Lantbruk', 'Vård', 'Tillverkning'],
-      insight: 'Centrum för östra Skånes arbetsmarknad. Absolut Vodka är största privata arbetsgivaren. Lantbrukssektorn stark.'
-    },
-    {
-      id: 'landskrona', name: 'Landskrona', x: 165, y: 280, pop: 47000,
-      unemployment: 14.8, level: 'high',
-      sectors: ['Industri', 'Tillverkning', 'Service'],
-      insight: 'Bland Sveriges högsta arbetslöshet. Tidigare varvsstad — pågående omställning. Strategiska investeringar i infrastruktur ska vända trenden.'
-    },
-    {
-      id: 'eslov', name: 'Eslöv', x: 280, y: 360, pop: 35000,
-      unemployment: 8.4, level: 'mid',
-      sectors: ['Tillverkning', 'Lantbruk', 'Pendling'],
-      insight: 'Pendlingscentrum. 30 min till Malmö, 20 min till Lund — många bor här och pendlar.'
-    },
-    {
-      id: 'trelleborg', name: 'Trelleborg', x: 230, y: 580, pop: 47000,
-      unemployment: 9.5, level: 'mid',
-      sectors: ['Hamn (Tysklands-färjan)', 'Industri', 'Lantbruk'],
-      insight: 'Sveriges sydligaste stad. Hamnen är Sveriges 3:e största för godstrafik. Tysklandsfärjor ger logistikjobb.'
-    },
-    {
-      id: 'ystad', name: 'Ystad', x: 360, y: 580, pop: 30000,
-      unemployment: 7.2, level: 'mid',
-      sectors: ['Turism', 'Lantbruk', 'Hantverk'],
-      insight: 'Turistmagneten via Wallander och danska sommargäster. Lägre arbetslöshet än Skåne-snitt. Småskaligt näringsliv.'
-    },
-    {
-      id: 'angelholm', name: 'Ängelholm', x: 130, y: 100, pop: 42000,
+      id: 'angelholm', name: 'Ängelholm', x: 130, y: 140, pop: 42000,
       unemployment: 7.0, level: 'mid',
       sectors: ['Flygindustri (Saab)', 'Trä & möbler', 'Service'],
       insight: 'Saab-fabriken är största arbetsgivare. Flygplats med koppling till Stockholm. Lägre arbetslöshet än större grannstäder.'
     },
     {
-      id: 'hassleholm', name: 'Hässleholm', x: 350, y: 180, pop: 52000,
+      id: 'landskrona', name: 'Landskrona', x: 125, y: 339, pop: 47000,
+      unemployment: 14.8, level: 'high',
+      sectors: ['Industri', 'Tillverkning', 'Service'],
+      insight: 'Bland Sveriges högsta arbetslöshet. Tidigare varvsstad — pågående omställning. Strategiska investeringar i infrastruktur ska vända trenden.'
+    },
+    {
+      id: 'malmo', name: 'Malmö', x: 165, y: 485, pop: 360000,
+      unemployment: 12.5, level: 'high',
+      sectors: ['Hamn & logistik', 'IT', 'Utbildning', 'Bygg'],
+      insight: 'Sveriges 3:e största stad. Hög arbetslöshet (~12,5%) men starkt pulserande arbetsmarknad. Köpenhamn 35 min med tåg via Öresundsbron.'
+    },
+    {
+      id: 'lund', name: 'Lund', x: 217, y: 431, pop: 95000,
+      unemployment: 6.5, level: 'low',
+      sectors: ['Utbildning (LU)', 'Forskning', 'IT/Tech (Mobile Heights)', 'Medtech'],
+      insight: 'Lunds universitet drar tech, forskning och innovation. Bland Skånes lägsta arbetslöshet. ESS och MAX IV ger global magnetism för forskare.'
+    },
+    {
+      id: 'eslov', name: 'Eslöv', x: 243, y: 355, pop: 35000,
+      unemployment: 8.4, level: 'mid',
+      sectors: ['Tillverkning', 'Lantbruk', 'Pendling'],
+      insight: 'Pendlingscentrum. 30 min till Malmö, 20 min till Lund — många bor här och pendlar.'
+    },
+    {
+      id: 'trelleborg', name: 'Trelleborg', x: 206, y: 603, pop: 47000,
+      unemployment: 9.5, level: 'mid',
+      sectors: ['Hamn (Tysklands-färjan)', 'Industri', 'Lantbruk'],
+      insight: 'Sveriges sydligaste stad. Hamnen är Sveriges 3:e största för godstrafik. Tysklandsfärjor ger logistikjobb.'
+    },
+    {
+      id: 'ystad', name: 'Ystad', x: 371, y: 577, pop: 30000,
+      unemployment: 7.2, level: 'mid',
+      sectors: ['Turism', 'Lantbruk', 'Hantverk'],
+      insight: 'Turistmagneten via Wallander och danska sommargäster. Lägre arbetslöshet än Skåne-snitt. Småskaligt näringsliv.'
+    },
+    {
+      id: 'hassleholm', name: 'Hässleholm', x: 358, y: 183, pop: 52000,
       unemployment: 9.7, level: 'mid',
       sectors: ['Logistik', 'Tillverkning', 'Tåg-knutpunkt'],
       insight: 'Viktig järnvägsknut för södra Sverige. Pågatåg + fjärrtåg ger pendlingsmöjlighet både norrut och söderut.'
+    },
+    {
+      id: 'kristianstad', name: 'Kristianstad', x: 457, y: 253, pop: 90000,
+      unemployment: 10.2, level: 'high',
+      sectors: ['Livsmedel (Absolut)', 'Lantbruk', 'Vård', 'Tillverkning'],
+      insight: 'Centrum för östra Skånes arbetsmarknad. Absolut Vodka är största privata arbetsgivaren. Lantbrukssektorn stark.'
     }
   ];
 
