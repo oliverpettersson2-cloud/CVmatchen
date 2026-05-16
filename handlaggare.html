@@ -1481,10 +1481,16 @@ const SOFT_ACTIONS = new Set([
   'generate_quiz'          // AI genererar quiz-frågor till digital modul
 ]);
 function post(action, data) {
+  const body = {action, ...data};
+  // Multi-tenant: skicka alltid med adminens session-token så backend
+  // kan verifiera behörighet. verifyAdmin() i api/supabase.js kräver den.
+  if (typeof admin !== 'undefined' && admin && admin.accessToken && !body.accessToken) {
+    body.accessToken = admin.accessToken;
+  }
   return fetch(API, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({action, ...data})
+    body: JSON.stringify(body)
   }).then(r => {
     if (!r.ok) {
       // För soft actions: returnera error-objekt istället för att kasta så

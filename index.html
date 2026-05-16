@@ -9938,11 +9938,10 @@ var D={
 
     var prompt=ctx+'\nBygg en konkret vecka-för-vecka 30-dagarsplan (4 veckor) för denna person. Varje vecka: 3-4 specifika uppgifter med tydliga verktyg (CVmatchen, Platsbanken, LinkedIn, AF, alfakassan.se). Anpassa till yrke och situation. Avsluta med 3 tips för att hålla motivationen. Svara på svenska, strukturerat med veckorubriker.';
 
-    var apiKey='';try{apiKey=localStorage.getItem('cvmatchen_api_key')||'';}catch(e){}
     try{
-      var res=await fetch('https://api.anthropic.com/v1/messages',{
+      var res=await fetch('/api/chat',{
         method:'POST',
-        headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        headers:{'Content-Type':'application/json'},
         body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:800,messages:[{role:'user',content:prompt}]})
       });
       var data=await res.json();
@@ -10314,11 +10313,10 @@ var D={
       'Studietakt: '+(vals[2]||'ej angivet')+'\n'+
       'Önskad start: '+(vals[3]||'ej angivet')+'\n\n'+
       'Rekommendera specifika Komvux-kurser med kurskoder (t.ex. MATMAT01a, SVASVA01). Förklara varför varje kurs behövs och i vilken ordning. Svara på svenska, kort och konkret.';
-    var apiKey='';try{apiKey=localStorage.getItem('cvmatchen_api_key')||'';}catch(e){}
     try{
-      var res=await fetch('https://api.anthropic.com/v1/messages',{
+      var res=await fetch('/api/chat',{
         method:'POST',
-        headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        headers:{'Content-Type':'application/json'},
         body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:600,messages:[{role:'user',content:prompt}]})
       });
       var data=await res.json();
@@ -10362,12 +10360,11 @@ var D={
     if(fb)fb.innerHTML='';
     var pp=gp();if(!pp[D.curMod.id])pp[D.curMod.id]={};pp[D.curMod.id].sv={"sv-edu":edu,"sv-lang":lang,"sv-goal":goal,"sv-time":time};sp(pp);
     if(r)r.innerHTML='<div style="padding:12px;background:rgba(255,255,255,.04);border-radius:10px;font-size:13px;color:rgba(255,255,255,.4);">🤖 Analyserar din situation...</div>';
-    var apiKey='';try{apiKey=localStorage.getItem('cvmatchen_api_key')||'';}catch(e){}
     var prompt='Studentens situation:\n- Utbildning: '+edu+'\n- Svenska: '+lang+'\n- Mål/yrke: '+goal+'\n- Tid: '+time+'\n\nRekommendera 3-4 specifika moduler från: SFI, Komvux, Folkhögskola, YH, Gymnasiekomplettering, CSN, Validering, Distans/online, Praktik & APL, Din studieväg, AMU, Universitet & Högskola, Korta certifieringskurser, Lärling & YA, Etableringsinsatser, SYV-vägledning, Traineeprogram. Svara på svenska, kort och konkret. Börja med en rad om deras situation, sedan punktlista med modulnamn i fet text och förklaring.';
     try{
-      var res=await fetch('https://api.anthropic.com/v1/messages',{
+      var res=await fetch('/api/chat',{
         method:'POST',
-        headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        headers:{'Content-Type':'application/json'},
         body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:500,messages:[{role:'user',content:prompt}]})
       });
       var data=await res.json();

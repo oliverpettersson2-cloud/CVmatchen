@@ -1,4 +1,14 @@
 import https from 'https';
+import crypto from 'crypto';
+
+// Maskerar PII (email, telefonnummer) innan det hamnar i Vercel-loggar.
+function maskPII(value) {
+  let s = typeof value === 'string' ? value : JSON.stringify(value);
+  if (!s) return s;
+  s = s.replace(/[\w.+-]+@[\w-]+\.[\w.-]+/g, '[email]');
+  s = s.replace(/(?<!\d)(\+?\d[\d\s-]{7,}\d)(?!\d)/g, '[tel]');
+  return s;
+}
 
 // ============================================================================
 // log_event — tillåtna event-typer och storleksgräns
@@ -76,6 +86,95 @@ export default async function handler(req, res) {
   function serviceHeaders() {
     const key = SUPABASE_SERVICE_KEY || SUPABASE_ANON_KEY;
     return { ...baseHeaders, 'apikey': key, 'Authorization': `Bearer ${key}` };
+  }
+
+  // ════════════════════════════════════════════════════════════════
+  // verifyAdmin — multi-tenant-skydd för admin_*-actions.
+  // HMAC-verifierar handläggarens session-token (samma signering som
+  // api/v1/auth/callback.js + refresh.js), slår upp admin-raden färskt
+  // ur DB (källa-på-sanning för kommun/enhet/roll), och säkerställer att
+  // begärd kommun/enhet/användare ligger inom adminens behörighet.
+  // Kastar { status, msg } vid fel. Returnerar verifierad admin-rad.
+  // ════════════════════════════════════════════════════════════════
+  async function verifyAdmin(token, opts = {}) {
+    const secret = process.env.MICROSOFT_CLIENT_SECRET;
+    if (!secret) throw { status: 500, msg: 'config_missing' };
+    if (!token || typeof token !== 'string') throw { status: 401, msg: 'no_token' };
+
+    const parts = token.split('.');
+    if (parts.length !== 2) throw { status: 401, msg: 'invalid_token_format' };
+    const [payloadB64, sig] = parts;
+    const expected = crypto.createHmac('sha256', secret).update(payloadB64).digest('base64url');
+    if (sig.length !== expected.length ||
+        !crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))) {
+      throw { status: 401, msg: 'invalid_signature' };
+    }
+
+    let payload;
+    try { payload = JSON.parse(Buffer.from(payloadB64, 'base64url').toString('utf8')); }
+    catch { throw { status: 401, msg: 'invalid_payload' }; }
+    if (!payload.expiresAt || Date.now() > payload.expiresAt) {
+      throw { status: 401, msg: 'expired' };
+    }
+
+    const adminRes = await makeRequest(
+      `${SUPABASE_URL}/rest/v1/admins?id=eq.${encodeURIComponent(payload.adminId)}&select=id,email,role,kommun_id,enhet_id&limit=1`,
+      { method: 'GET', headers: serviceHeaders() }
+    );
+    const rows = Array.isArray(adminRes.data) ? adminRes.data : [];
+    if (!rows.length) throw { status: 401, msg: 'admin_revoked' };
+    const admin = rows[0];
+    const isSuper = admin.role === 'superadmin';
+
+    if (!isSuper) {
+      if (opts.requestedKommunId != null &&
+          String(opts.requestedKommunId) !== String(admin.kommun_id)) {
+        throw { status: 403, msg: 'forbidden_kommun', admin };
+      }
+      if (opts.requestedEnhetId != null && admin.enhet_id != null &&
+          String(opts.requestedEnhetId) !== String(admin.enhet_id)) {
+        throw { status: 403, msg: 'forbidden_enhet', admin };
+      }
+    }
+
+    if (opts.requestedUserId) {
+      const uaRes = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${encodeURIComponent(opts.requestedUserId)}&select=kommun_id,enhet_id&limit=1`,
+        { method: 'GET', headers: serviceHeaders() }
+      );
+      const uas = Array.isArray(uaRes.data) ? uaRes.data : [];
+      if (!uas.length) throw { status: 404, msg: 'user_not_found', admin };
+      if (!isSuper && String(uas[0].kommun_id) !== String(admin.kommun_id)) {
+        throw { status: 403, msg: 'cross_tenant_user', admin };
+      }
+    }
+
+    return admin;
+  }
+
+  // Loggar nekade admin-försök till admin_activity_log (forensik vid
+  // misstänkt cross-tenant-åtkomst). Blockerar aldrig svaret.
+  async function logAdminDenied(adminId, action, msg) {
+    try {
+      await makeRequest(
+        `${SUPABASE_URL}/rest/v1/admin_activity_log`,
+        { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=minimal' } },
+        { admin_id: adminId || null, action: 'access_denied', detail: `${action}: ${msg}` }
+      );
+    } catch (e) { /* loggning får inte blockera */ }
+  }
+
+  // Wrappar verifyAdmin: returnerar { admin } eller skickar HTTP-fel + loggar.
+  async function requireAdmin(res, token, action, opts = {}) {
+    try {
+      const admin = await verifyAdmin(token, opts);
+      return { admin };
+    } catch (e) {
+      const status = e.status || 401;
+      if (status === 403) await logAdminDenied(e.admin?.id, action, e.msg);
+      res.status(status).json({ error: e.msg || 'unauthorized' });
+      return { admin: null };
+    }
   }
 
   try {
@@ -174,7 +273,7 @@ export default async function handler(req, res) {
         { user_id: userId, user_email: userEmail, event_type, metadata: safeMetadata }
       );
       if (insertRes.status >= 400) {
-        console.error('[log_event] insert failed:', insertRes.data);
+        console.error('[log_event] insert failed:', maskPII(insertRes.data));
         return res.status(500).json({ error: 'Loggning misslyckades' });
       }
       return res.status(200).json({ ok: true });
@@ -216,11 +315,21 @@ export default async function handler(req, res) {
     }
 
     if (action === 'admin_list_users') {
+      const { admin } = await requireAdmin(res, accessToken, action, {
+        requestedKommunId: filters?.kommun_id, requestedEnhetId: filters?.enhet_id
+      });
+      if (!admin) return;
+      // Icke-superadmin låses till sin egen kommun/enhet oavsett klient-filter
+      const safeFilters = { ...filters };
+      if (admin.role !== 'superadmin') {
+        safeFilters.kommun_id = admin.kommun_id;
+        if (admin.enhet_id != null) safeFilters.enhet_id = admin.enhet_id;
+      }
       // FIX: Sorterar på created_at — updated_at finns ej i user_assignments
       let url = `${SUPABASE_URL}/rest/v1/user_assignments?select=*&order=created_at.desc`;
-      if (filters?.enhet_id) url += `&enhet_id=eq.${filters.enhet_id}`;
-      if (filters?.kommun_id) url += `&kommun_id=eq.${filters.kommun_id}`;
-      if (filters?.status) url += `&status=eq.${filters.status}`;
+      if (safeFilters.enhet_id) url += `&enhet_id=eq.${safeFilters.enhet_id}`;
+      if (safeFilters.kommun_id) url += `&kommun_id=eq.${safeFilters.kommun_id}`;
+      if (safeFilters.status) url += `&status=eq.${safeFilters.status}`;
       if (filters?.limit) url += `&limit=${filters.limit}`;
       if (filters?.offset) url += `&offset=${filters.offset}`;
       const result = await makeRequest(url, { method: 'GET', headers: serviceHeaders() });
@@ -255,6 +364,10 @@ export default async function handler(req, res) {
 
     if (action === 'admin_get_user') {
       const uid = targetUserId || userId;
+      {
+        const { admin } = await requireAdmin(res, accessToken, action, { requestedUserId: uid });
+        if (!admin) return;
+      }
       const [assignRes, cvRes, progressRes, tasksRes, matchRes] = await Promise.all([
         makeRequest(`${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${uid}&select=*&limit=1`, { method: 'GET', headers: serviceHeaders() }),
         makeRequest(`${SUPABASE_URL}/rest/v1/cvs?user_id=eq.${uid}&select=data,updated_at&limit=1`, { method: 'GET', headers: serviceHeaders() }),
@@ -274,6 +387,10 @@ export default async function handler(req, res) {
     }
 
     if (action === 'assign_task') {
+      {
+        const { admin } = await requireAdmin(res, accessToken, action, { requestedUserId: targetUserId });
+        if (!admin) return;
+      }
       const task = {
         user_id: targetUserId,
         assigned_by: filters?.adminId || null,
@@ -332,38 +449,77 @@ export default async function handler(req, res) {
     }
 
     if (action === 'cancel_task') {
+      const taskLookup = await makeRequest(`${SUPABASE_URL}/rest/v1/tasks?id=eq.${taskId}&select=user_id&limit=1`, { method: 'GET', headers: serviceHeaders() });
+      const taskRows = Array.isArray(taskLookup.data) ? taskLookup.data : [];
+      if (!taskRows.length) return res.status(404).json({ error: 'task_not_found' });
+      {
+        const { admin } = await requireAdmin(res, accessToken, action, { requestedUserId: taskRows[0].user_id });
+        if (!admin) return;
+      }
       await makeRequest(`${SUPABASE_URL}/rest/v1/tasks?id=eq.${taskId}`, { method: 'PATCH', headers: serviceHeaders() }, { status: 'cancelled', updated_at: new Date().toISOString() });
       return res.status(200).json({ success: true });
     }
 
     if (action === 'admin_invite') {
+      const { admin } = await requireAdmin(res, accessToken, action, {
+        requestedKommunId: kommunId, requestedEnhetId: enhetId
+      });
+      if (!admin) return;
+      // Icke-superadmin: tvinga egen kommun/enhet + förbjud superadmin-roll
+      let inviteKommunId = kommunId, inviteEnhetId = enhetId, inviteRole = role || 'handlaggare';
+      if (admin.role !== 'superadmin') {
+        inviteKommunId = admin.kommun_id;
+        if (admin.enhet_id != null) inviteEnhetId = admin.enhet_id;
+        if (inviteRole === 'superadmin') return res.status(403).json({ error: 'forbidden_role' });
+      }
       const existing = await makeRequest(`${SUPABASE_URL}/rest/v1/admins?email=eq.${encodeURIComponent(email)}&limit=1`, { method: 'GET', headers: serviceHeaders() });
       if (Array.isArray(existing.data) && existing.data.length) return res.status(409).json({ error: 'E-postadressen finns redan' });
-      const crypto = await import('crypto');
       const inviteToken = crypto.randomBytes(32).toString('hex');
-      const result = await makeRequest(`${SUPABASE_URL}/rest/v1/admins`, { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=representation' } }, { name: personName || email.split('@')[0], email: email.toLowerCase(), role: role || 'handlaggare', kommun_id: kommunId || null, enhet_id: enhetId || null, invite_token: inviteToken, invite_expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() });
+      const result = await makeRequest(`${SUPABASE_URL}/rest/v1/admins`, { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=representation' } }, { name: personName || email.split('@')[0], email: email.toLowerCase(), role: inviteRole, kommun_id: inviteKommunId || null, enhet_id: inviteEnhetId || null, invite_token: inviteToken, invite_expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() });
       const rows = Array.isArray(result.data) ? result.data : [];
       return res.status(201).json({ admin: rows[0] || null, invite_token: inviteToken });
     }
 
     if (action === 'admin_list_admins') {
+      const { admin } = await requireAdmin(res, accessToken, action, {
+        requestedKommunId: filters?.kommun_id
+      });
+      if (!admin) return;
       let url = `${SUPABASE_URL}/rest/v1/admins?select=*,kommuner(name),enheter(name)&order=role.asc,name.asc`;
-      if (filters?.kommun_id) url += `&kommun_id=eq.${filters.kommun_id}`;
+      const scopeKommunId = admin.role === 'superadmin' ? filters?.kommun_id : admin.kommun_id;
+      if (scopeKommunId) url += `&kommun_id=eq.${scopeKommunId}`;
       const result = await makeRequest(url, { method: 'GET', headers: serviceHeaders() });
       return res.status(200).json({ data: Array.isArray(result.data) ? result.data : [] });
     }
 
     if (action === 'admin_stats') {
-      let taskUrl = `${SUPABASE_URL}/rest/v1/tasks?select=status,category,time_spent_sec,user_id`;
-      let userUrl = `${SUPABASE_URL}/rest/v1/user_assignments?select=status,kommun_id,enhet_id`;
-      if (filters?.kommun_id) userUrl += `&kommun_id=eq.${filters.kommun_id}`;
-      if (filters?.enhet_id)  userUrl += `&enhet_id=eq.${filters.enhet_id}`;
-      const [taskRes, userRes] = await Promise.all([
-        makeRequest(taskUrl, { method: 'GET', headers: serviceHeaders() }),
-        makeRequest(userUrl, { method: 'GET', headers: serviceHeaders() })
-      ]);
-      const tasks = Array.isArray(taskRes.data) ? taskRes.data : [];
+      const { admin } = await requireAdmin(res, accessToken, action, {
+        requestedKommunId: filters?.kommun_id, requestedEnhetId: filters?.enhet_id
+      });
+      if (!admin) return;
+      const isSuper = admin.role === 'superadmin';
+      const scopeKommunId = isSuper ? filters?.kommun_id : admin.kommun_id;
+      const scopeEnhetId = isSuper ? filters?.enhet_id
+        : (admin.enhet_id != null ? admin.enhet_id : filters?.enhet_id);
+      let userUrl = `${SUPABASE_URL}/rest/v1/user_assignments?select=status,kommun_id,enhet_id,user_id`;
+      if (scopeKommunId) userUrl += `&kommun_id=eq.${scopeKommunId}`;
+      if (scopeEnhetId)  userUrl += `&enhet_id=eq.${scopeEnhetId}`;
+      const userRes = await makeRequest(userUrl, { method: 'GET', headers: serviceHeaders() });
       const users = Array.isArray(userRes.data) ? userRes.data : [];
+      // Task-statistik scopas till denna kommuns deltagare. Superadmin utan
+      // kommun-filter får aggregat över hela plattformen (oförändrat beteende).
+      let tasks = [];
+      if (isSuper && !scopeKommunId) {
+        const taskRes = await makeRequest(`${SUPABASE_URL}/rest/v1/tasks?select=status,category,time_spent_sec,user_id`, { method: 'GET', headers: serviceHeaders() });
+        tasks = Array.isArray(taskRes.data) ? taskRes.data : [];
+      } else {
+        const statUserIds = users.map(u => u.user_id).filter(Boolean);
+        if (statUserIds.length) {
+          const idsFilter = statUserIds.map(id => `"${id}"`).join(',');
+          const taskRes = await makeRequest(`${SUPABASE_URL}/rest/v1/tasks?user_id=in.(${idsFilter})&select=status,category,time_spent_sec,user_id`, { method: 'GET', headers: serviceHeaders() });
+          tasks = Array.isArray(taskRes.data) ? taskRes.data : [];
+        }
+      }
       return res.status(200).json({
         users: { total: users.length, active: users.filter(u => u.status === 'active').length, recent: users.filter(u => u.status === 'recent').length, new_count: users.filter(u => u.status === 'new').length, inactive: users.filter(u => u.status === 'inactive').length },
         tasks: { total: tasks.length, completed: tasks.filter(t => t.status === 'completed').length, pending: tasks.filter(t => t.status === 'pending').length, active: tasks.filter(t => t.status === 'active').length, expired: tasks.filter(t => t.status === 'expired').length, total_time_sec: tasks.reduce((s, t) => s + (t.time_spent_sec || 0), 0) },
@@ -372,8 +528,13 @@ export default async function handler(req, res) {
     }
 
     if (action === 'admin_get_enheter') {
+      const { admin } = await requireAdmin(res, accessToken, action, {
+        requestedKommunId: filters?.kommun_id
+      });
+      if (!admin) return;
       let url = `${SUPABASE_URL}/rest/v1/enheter?select=*,kommuner(name)&order=name`;
-      if (filters?.kommun_id) url += `&kommun_id=eq.${filters.kommun_id}`;
+      const scopeKommunId = admin.role === 'superadmin' ? filters?.kommun_id : admin.kommun_id;
+      if (scopeKommunId) url += `&kommun_id=eq.${scopeKommunId}`;
       const result = await makeRequest(url, { method: 'GET', headers: serviceHeaders() });
       return res.status(200).json({ data: Array.isArray(result.data) ? result.data : [] });
     }
@@ -482,7 +643,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Unknown action: ' + action });
 
   } catch (err) {
-    console.error('Supabase API error:', err.message);
-    return res.status(500).json({ error: err.message });
+    console.error('Supabase API error:', maskPII(err.message));
+    return res.status(500).json({ error: 'Ett serverfel inträffade' });
   }
 }
