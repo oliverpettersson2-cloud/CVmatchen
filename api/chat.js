@@ -1,3 +1,6 @@
+import * as Sentry from '@sentry/node';
+Sentry.init({ dsn: process.env.SENTRY_DSN, environment: process.env.VERCEL_ENV || 'development' });
+
 // In-memory rate limiter. Per-instans (Vercel-container) — inte global,
 // så effektiv gräns är N_containers × LIMIT. Stoppar ändå en enskild
 // angripare som hamrar. För hård global gräns: byt till Upstash Redis.
@@ -79,6 +82,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json(data);
   } catch (error) {
+    Sentry.captureException(error);
     console.error('[chat] Anthropic-anrop misslyckades:', error.message);
     return res.status(500).json({ error: 'AI-tjänsten är tillfälligt otillgänglig' });
   }

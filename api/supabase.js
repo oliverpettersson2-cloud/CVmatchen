@@ -1,5 +1,7 @@
 import https from 'https';
 import crypto from 'crypto';
+import * as Sentry from '@sentry/node';
+Sentry.init({ dsn: process.env.SENTRY_DSN, environment: process.env.VERCEL_ENV || 'development' });
 
 // Maskerar PII (email, telefonnummer) innan det hamnar i Vercel-loggar.
 function maskPII(value) {
@@ -643,6 +645,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Unknown action: ' + action });
 
   } catch (err) {
+    Sentry.captureException(err);
     console.error('Supabase API error:', maskPII(err.message));
     return res.status(500).json({ error: 'Ett serverfel inträffade' });
   }

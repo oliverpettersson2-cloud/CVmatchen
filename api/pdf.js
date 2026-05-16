@@ -1,6 +1,8 @@
 const chromium = require('@sparticuz/chromium');
 const puppeteer = require('puppeteer-core');
 const path = require('path');
+const Sentry = require('@sentry/node');
+Sentry.init({ dsn: process.env.SENTRY_DSN, environment: process.env.VERCEL_ENV || 'development' });
 
 const ALLOWED_ORIGINS = ['https://cvmatchen.com', 'https://www.cvmatchen.com'];
 
@@ -76,6 +78,7 @@ module.exports = async (req, res) => {
     res.status(200).send(Buffer.from(pdf));
 
   } catch (error) {
+    Sentry.captureException(error);
     console.error('[pdf.js] error:', error.message);
     res.status(500).json({ error: 'PDF generation failed', message: error.message });
   } finally {

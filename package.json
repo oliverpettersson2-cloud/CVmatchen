@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "AI-powered CV builder for the Swedish job market",
   "dependencies": {
+    "@sentry/node": "^8.0.0",
     "@supabase/supabase-js": "^2.39.0",
     "@sparticuz/chromium": "119.0.2",
     "puppeteer-core": "21.3.8"
