@@ -6,6 +6,9 @@
 <title>CVmatchen — Handläggarvy</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+:focus-visible{outline:3px solid #1a73e8;outline-offset:2px;}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:9999;background:#1a73e8;color:#fff;padding:10px 16px;border-radius:0 0 6px 0;}
+.skip-link:focus{left:0;}
 :root{--bg:#f4f3f0;--sf:#fff;--sf2:#fafaf8;--bd:#e6e4e0;--bdl:#f0eeeb;--tx:#1a1917;--tx2:#6b6860;--mu:#9b978f;--ac:#d4a436;--acs:#fef5e0;--gn:#1a8a5a;--gnb:#e8f5ee;--bl:#2563eb;--blb:#e8effc;--or:#d97706;--orb:#fef3d6;--rd:#d94444;--rdb:#fce8e8;--nv:#0f1729;--sh:0 1px 3px rgba(0,0,0,.06);--r:10px;--tr:.2s ease}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;font-size:14px;-webkit-font-smoothing:antialiased}
@@ -759,6 +762,7 @@ td{padding:10px 13px;vertical-align:middle}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
+<a href="#huvudinnehall" class="skip-link">Hoppa till innehåll</a>
 
 <!-- ═══ LOGIN ═══ -->
 <div id="loginOverlay">
@@ -818,7 +822,7 @@ td{padding:10px 13px;vertical-align:middle}
         <div class="sb-name" id="sbName"></div>
         <div class="sb-role" id="sbRole"></div>
       </div>
-      <button class="sb-logout" onclick="logout()" title="Logga ut">
+      <button class="sb-logout" onclick="logout()" title="Logga ut" aria-label="Logga ut">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
           <polyline points="16 17 21 12 16 7"/>
@@ -828,7 +832,7 @@ td{padding:10px 13px;vertical-align:middle}
     </div>
   </aside>
 
-  <main class="main">
+  <main class="main" id="huvudinnehall">
     <div class="cnt">
 
       <!-- Listvy: page header + flikar -->
@@ -857,9 +861,9 @@ td{padding:10px 13px;vertical-align:middle}
 
           <!-- Toolbar: sökfält + filter -->
           <div class="tb">
-            <div class="sw"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" id="searchIn" placeholder="Sök namn eller e-post…"></div>
-            <select id="handlaggareFlt" style="min-width:160px"><option value="">Alla handläggare</option></select>
-            <select id="enhetFlt" style="min-width:140px"><option value="">Alla enheter</option></select>
+            <div class="sw"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" id="searchIn" placeholder="Sök namn eller e-post…" aria-label="Sök namn eller e-post"></div>
+            <select id="handlaggareFlt" aria-label="Filtrera på handläggare" style="min-width:160px"><option value="">Alla handläggare</option></select>
+            <select id="enhetFlt" aria-label="Filtrera på enhet" style="min-width:140px"><option value="">Alla enheter</option></select>
             <div class="sp"></div>
             <button class="btn" onclick="exportData()">Exportera</button>
           </div>
@@ -927,26 +931,26 @@ td{padding:10px 13px;vertical-align:middle}
 
 <!-- ═══ MODAL: Bjud in deltagare ═══ -->
 <div class="modal-ov" id="inviteModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeInviteModal()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="inviteModalTitle">
+    <button class="modal-close" onclick="closeInviteModal()" aria-label="Stäng">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
-    <div class="modal-h">Bjud in deltagare</div>
+    <div class="modal-h" id="inviteModalTitle">Bjud in deltagare</div>
     <div class="modal-s">Skicka en inbjudningslänk via e-post. Mottagaren får ett mail med en engångslänk för att skapa sitt konto.</div>
 
     <div class="modal-status" id="inviteStatus"></div>
 
     <div class="modal-field">
       <label class="modal-label">E-postadress *</label>
-      <input type="email" class="modal-input" id="inviteEmail" placeholder="förnamn.efternamn@exempel.se">
+      <input type="email" class="modal-input" id="inviteEmail" placeholder="förnamn.efternamn@exempel.se" aria-label="E-postadress" aria-required="true">
     </div>
     <div class="modal-field">
       <label class="modal-label">Namn (valfritt)</label>
-      <input type="text" class="modal-input" id="inviteName" placeholder="Förnamn Efternamn" style="padding-left:12px">
+      <input type="text" class="modal-input" id="inviteName" placeholder="Förnamn Efternamn" aria-label="Namn (valfritt)" style="padding-left:12px">
     </div>
     <div class="modal-field">
       <label class="modal-label">Personligt meddelande (valfritt)</label>
-      <textarea class="modal-textarea" id="inviteMsg" placeholder="Hej! Här kommer din inbjudan till CVmatchen…"></textarea>
+      <textarea class="modal-textarea" id="inviteMsg" placeholder="Hej! Här kommer din inbjudan till CVmatchen…" aria-label="Personligt meddelande (valfritt)"></textarea>
     </div>
 
     <div class="modal-actions">
@@ -958,11 +962,11 @@ td{padding:10px 13px;vertical-align:middle}
 
 <!-- ═══ MODAL: Bulk-tilldela uppgift ═══ -->
 <div class="modal-ov" id="bulkModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeBulkModal()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="bulkModalTitle">
+    <button class="modal-close" onclick="closeBulkModal()" aria-label="Stäng">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
-    <div class="modal-h">Tilldela uppgift till grupp</div>
+    <div class="modal-h" id="bulkModalTitle">Tilldela uppgift till grupp</div>
     <div class="modal-s">Samma uppgift skickas till <b id="bulkModalCount">0</b> deltagare. Varje deltagare får en egen instans av uppgiften.</div>
     <div class="modal-status" id="bulkStatus"></div>
     <div class="modal-field">
@@ -976,11 +980,11 @@ td{padding:10px 13px;vertical-align:middle}
     </div>
     <div class="modal-field">
       <label class="modal-label">Titel *</label>
-      <input type="text" class="modal-input" id="bulkTitle" placeholder="Vad ska deltagarna göra?" style="padding-left:12px">
+      <input type="text" class="modal-input" id="bulkTitle" placeholder="Vad ska deltagarna göra?" aria-label="Titel" aria-required="true" style="padding-left:12px">
     </div>
     <div class="modal-field">
       <label class="modal-label">Deadline</label>
-      <select id="bulkDeadline" style="width:100%;padding:9px 28px 9px 12px"><option value="3">Om 3 dagar</option><option value="7" selected>Om 1 vecka</option><option value="14">Om 2 veckor</option><option value="30">Om 1 månad</option></select>
+      <select id="bulkDeadline" aria-label="Deadline" style="width:100%;padding:9px 28px 9px 12px"><option value="3">Om 3 dagar</option><option value="7" selected>Om 1 vecka</option><option value="14">Om 2 veckor</option><option value="30">Om 1 månad</option></select>
     </div>
     <div class="modal-actions">
       <button class="btn" onclick="closeBulkModal()">Avbryt</button>
@@ -991,12 +995,12 @@ td{padding:10px 13px;vertical-align:middle}
 
 <!-- ═══ MODAL: Skapa uppgift från PowerPoint ═══ -->
 <div class="modal-ov" id="createTaskModal">
-  <div class="modal wizard">
+  <div class="modal wizard" role="dialog" aria-modal="true" aria-labelledby="createTaskModalTitle">
     <div class="wz-head">
-      <button class="modal-close" onclick="tryCloseCreateTask()" style="float:right;margin-top:-4px">
+      <button class="modal-close" onclick="tryCloseCreateTask()" aria-label="Stäng" style="float:right;margin-top:-4px">
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
-      <div class="wz-title">Skapa uppgift</div>
+      <div class="wz-title" id="createTaskModalTitle">Skapa uppgift</div>
       <div class="wz-sub">Bygg en uppgift från en PowerPoint eller från grunden. Allt sparas i biblioteket "Sparat material".</div>
     </div>
     <div class="wz-steps">
@@ -1018,10 +1022,10 @@ td{padding:10px 13px;vertical-align:middle}
 
 <!-- ═══ FÖRHANDSVISNING (hur deltagaren ser uppgiften) ═══ -->
 <div class="pv-ov" id="previewOv">
-  <div class="pv-frame">
+  <div class="pv-frame" role="dialog" aria-modal="true" aria-labelledby="previewOvTitle">
     <div class="pv-head">
-      <div class="pv-label">Förhandsvisning — så här ser deltagaren</div>
-      <button class="pv-close" onclick="closePreview()" title="Stäng">✕</button>
+      <div class="pv-label" id="previewOvTitle">Förhandsvisning — så här ser deltagaren</div>
+      <button class="pv-close" onclick="closePreview()" title="Stäng" aria-label="Stäng">✕</button>
     </div>
     <div class="pv-body" id="pvBody"></div>
   </div>
@@ -1029,12 +1033,12 @@ td{padding:10px 13px;vertical-align:middle}
 
 <!-- ═══ MODAL: AI-uppdaterings-redigerare ═══ -->
 <div class="modal-ov" id="pptEditorModal">
-  <div class="modal wizard" style="max-width:720px">
+  <div class="modal wizard" style="max-width:720px" role="dialog" aria-modal="true" aria-labelledby="pptEditorModalTitle">
     <div class="wz-head">
-      <button class="modal-close" onclick="closePptEditor()" style="float:right;margin-top:-4px">
+      <button class="modal-close" onclick="closePptEditor()" aria-label="Stäng" style="float:right;margin-top:-4px">
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
-      <div class="wz-title">Granska AI:s förslag</div>
+      <div class="wz-title" id="pptEditorModalTitle">Granska AI:s förslag</div>
       <div class="wz-sub">Godkänn, avvisa eller redigera varje förslag. När du är klar laddar du ner en uppdaterad pptx.</div>
     </div>
     <div class="modal-status" id="pptEditorStatus" style="margin:14px 26px 0"></div>
@@ -2106,11 +2110,11 @@ function renderTabUppgifter(data){
         ].map(q=>`<div class="qa-btn" onclick="quickAssign('${q.tmpl}')"><div class="qa-icon">${catIcon(q.cat)}</div><div class="qa-t">${q.t}</div></div>`).join('')}
       </div>
       <div style="display:flex;gap:6px;margin-bottom:6px">
-        <input type="text" id="udCustomTask" placeholder="Egen uppgift…" style="flex:1;padding:7px 10px">
-        <select id="udDeadline" style="min-width:110px"><option value="">Deadline</option><option value="1">Imorgon</option><option value="3">3 dagar</option><option value="7">1 vecka</option><option value="14">2 veckor</option></select>
+        <input type="text" id="udCustomTask" placeholder="Egen uppgift…" aria-label="Egen uppgift" style="flex:1;padding:7px 10px">
+        <select id="udDeadline" aria-label="Deadline" style="min-width:110px"><option value="">Deadline</option><option value="1">Imorgon</option><option value="3">3 dagar</option><option value="7">1 vecka</option><option value="14">2 veckor</option></select>
       </div>
       <div style="display:flex;gap:6px">
-        <select id="udDuration" style="flex:1"><option value="">Ingen timer</option><option value="10">10 min</option><option value="15">15 min</option><option value="30">30 min</option><option value="60">60 min</option></select>
+        <select id="udDuration" aria-label="Timer" style="flex:1"><option value="">Ingen timer</option><option value="10">10 min</option><option value="15">15 min</option><option value="30">30 min</option><option value="60">60 min</option></select>
         <button class="btn btn-primary" onclick="assignCustomTask()" style="white-space:nowrap">Tilldela</button>
       </div>
     </div>
@@ -2687,14 +2691,14 @@ function openAssignModuleModal(moduleId) {
   overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;padding:20px;';
   overlay.onclick = (e) => { if (e.target === overlay) closeAssignModuleModal(); };
   overlay.innerHTML = `
-    <div style="background:#fff;border-radius:16px;padding:28px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-height:90vh;overflow-y:auto;">
+    <div role="dialog" aria-modal="true" aria-labelledby="_amTitle" style="background:#fff;border-radius:16px;padding:28px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-height:90vh;overflow-y:auto;">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
         <div style="font-size:32px;flex-shrink:0;">${m.icon}</div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:11px;font-weight:700;color:var(--mu);letter-spacing:0.5px;text-transform:uppercase;">Tilldela övning till</div>
-          <div style="font-size:18px;font-weight:800;color:var(--tx);">${escapeHtml(userName)}</div>
+          <div id="_amTitle" style="font-size:18px;font-weight:800;color:var(--tx);">${escapeHtml(userName)}</div>
         </div>
-        <button onclick="closeAssignModuleModal()" style="background:rgba(0,0,0,0.04);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;color:var(--mu);">×</button>
+        <button onclick="closeAssignModuleModal()" aria-label="Stäng" style="background:rgba(0,0,0,0.04);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;color:var(--mu);">×</button>
       </div>
 
       <div style="padding:14px;background:rgba(0,0,0,0.03);border-radius:10px;margin-bottom:18px;">
@@ -2705,12 +2709,12 @@ function openAssignModuleModal(moduleId) {
       <div style="display:grid;gap:14px;">
         <div>
           <label style="display:block;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--mu);margin-bottom:6px;">Deadline</label>
-          <input type="date" id="_amDeadline" value="${ddStr}" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;font-size:14px;font-family:inherit;color:var(--tx);">
+          <input type="date" id="_amDeadline" value="${ddStr}" aria-label="Deadline" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;font-size:14px;font-family:inherit;color:var(--tx);">
         </div>
 
         <div>
           <label style="display:block;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--mu);margin-bottom:6px;">Personligt meddelande (valfritt)</label>
-          <textarea id="_amMessage" rows="3" placeholder="Hej! Jag har tilldelat dig denna övning. Hör av dig om du har frågor..." style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;font-size:13px;font-family:inherit;color:var(--tx);resize:vertical;"></textarea>
+          <textarea id="_amMessage" rows="3" placeholder="Hej! Jag har tilldelat dig denna övning. Hör av dig om du har frågor..." aria-label="Personligt meddelande (valfritt)" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;font-size:13px;font-family:inherit;color:var(--tx);resize:vertical;"></textarea>
         </div>
       </div>
 
@@ -2871,16 +2875,16 @@ function openCreateTaskModal() {
   overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;padding:20px;';
   overlay.onclick = (e) => { if (e.target === overlay) closeCreateTaskModal(); };
   overlay.innerHTML = `
-    <div style="background:#fff;border-radius:16px;max-width:560px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-height:92vh;overflow-y:auto;">
+    <div role="dialog" aria-modal="true" aria-labelledby="_ctTitle" style="background:#fff;border-radius:16px;max-width:560px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-height:92vh;overflow-y:auto;">
       <!-- Header -->
       <div style="padding:24px 26px 16px;border-bottom:1px solid var(--bd);position:sticky;top:0;background:#fff;z-index:1;">
         <div style="display:flex;align-items:flex-start;gap:14px;">
           <div style="font-size:26px;flex-shrink:0;">📋</div>
           <div style="flex:1;min-width:0;">
             <div style="font-size:11px;font-weight:700;color:var(--mu);letter-spacing:0.5px;text-transform:uppercase;">Skapa uppgift till</div>
-            <div style="font-size:18px;font-weight:800;color:var(--tx);">${escapeHtml(userName)}</div>
+            <div id="_ctTitle" style="font-size:18px;font-weight:800;color:var(--tx);">${escapeHtml(userName)}</div>
           </div>
-          <button onclick="closeCreateTaskModal()" style="background:rgba(0,0,0,0.04);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;color:var(--mu);flex-shrink:0;">×</button>
+          <button onclick="closeCreateTaskModal()" aria-label="Stäng" style="background:rgba(0,0,0,0.04);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;color:var(--mu);flex-shrink:0;">×</button>
         </div>
       </div>
 
@@ -2948,7 +2952,7 @@ function renderCreateTaskStep2() {
       <label style="display:block;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--mu);margin-bottom:6px;">Antal ${t.countLabel}</label>
       <div style="display:flex;align-items:center;gap:8px;">
         <button onclick="ctAdjustCount(-1)" style="width:38px;height:38px;border-radius:10px;border:1px solid var(--bd);background:#fff;color:var(--tx);font-size:18px;font-weight:700;cursor:pointer;font-family:inherit;">−</button>
-        <input type="number" id="_ctCountInput" value="${_ctCount}" min="${t.countMin}" max="${t.countMax}" oninput="ctSetCount(this.value)" style="flex:1;padding:9px 12px;border:1px solid var(--bd);border-radius:10px;font-size:18px;font-weight:700;font-family:inherit;color:var(--tx);text-align:center;">
+        <input type="number" id="_ctCountInput" value="${_ctCount}" min="${t.countMin}" max="${t.countMax}" oninput="ctSetCount(this.value)" aria-label="Antal ${t.countLabel}" style="flex:1;padding:9px 12px;border:1px solid var(--bd);border-radius:10px;font-size:18px;font-weight:700;font-family:inherit;color:var(--tx);text-align:center;">
         <button onclick="ctAdjustCount(1)" style="width:38px;height:38px;border-radius:10px;border:1px solid var(--bd);background:#fff;color:var(--tx);font-size:18px;font-weight:700;cursor:pointer;font-family:inherit;">+</button>
       </div>
       <div style="font-size:11px;color:var(--mu);margin-top:4px;text-align:center;">Min ${t.countMin} · Max ${t.countMax}</div>
@@ -2958,13 +2962,13 @@ function renderCreateTaskStep2() {
   // Deadline
   html += `<div>
     <label style="display:block;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--mu);margin-bottom:6px;">Deadline</label>
-    <input type="date" id="_ctDeadline" value="${ddStr}" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;font-size:14px;font-family:inherit;color:var(--tx);">
+    <input type="date" id="_ctDeadline" value="${ddStr}" aria-label="Deadline" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;font-size:14px;font-family:inherit;color:var(--tx);">
   </div>`;
 
   // Meddelande
   html += `<div>
     <label style="display:block;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--mu);margin-bottom:6px;">Personligt meddelande (valfritt)</label>
-    <textarea id="_ctMessage" rows="3" placeholder="Hej! Jag har skickat denna uppgift som hjälp för dig att komma vidare i din process..." style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;font-size:13px;font-family:inherit;color:var(--tx);resize:vertical;"></textarea>
+    <textarea id="_ctMessage" rows="3" placeholder="Hej! Jag har skickat denna uppgift som hjälp för dig att komma vidare i din process..." aria-label="Personligt meddelande (valfritt)" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;font-size:13px;font-family:inherit;color:var(--tx);resize:vertical;"></textarea>
   </div>`;
 
   html += '</div>';
@@ -3614,7 +3618,7 @@ function _legacyRenderMinaView_unused(){
       <div class="tw">
         <table>
           <thead><tr>
-            <th style="width:36px;text-align:center"><input type="checkbox" class="cb" id="cbAllMina" onchange="toggleAllMina(this.checked)"></th>
+            <th style="width:36px;text-align:center"><input type="checkbox" class="cb" id="cbAllMina" onchange="toggleAllMina(this.checked)" aria-label="Markera alla deltagare"></th>
             <th style="width:36px;text-align:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--mu);vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></th>
             <th>Namn</th>
             <th class="hm">Enhet</th>
@@ -3642,7 +3646,7 @@ function _legacyRenderMinaView_unused(){
               const avatarStyle = isPlaceholder ? 'background:rgba(245,158,11,0.12);color:#d97706;' : '';
               return `<tr onclick="openDetail('${uid}')">
                 <td style="text-align:center" onclick="event.stopPropagation()">
-                  <input type="checkbox" class="cb" data-uid="${uid}" ${checked?'checked':''} onchange="toggleSelected('${uid}',event)">
+                  <input type="checkbox" class="cb" data-uid="${uid}" ${checked?'checked':''} onchange="toggleSelected('${uid}',event)" aria-label="Markera deltagare">
                 </td>
                 <td style="text-align:center" onclick="event.stopPropagation()">
                   <button class="star-btn starred" data-uid="${uid}" onclick="toggleFavorite('${uid}',event)" title="Ta bort från Mina">
@@ -3976,12 +3980,12 @@ function renderWizStep1(){
 
     <div class="modal-field">
       <label class="modal-label">Titel *</label>
-      <input type="text" class="modal-input" value="${escapeHtml(wiz.title)}" oninput="wiz.title=this.value" placeholder="T.ex. Arbetsmarknaden i Sverige" style="padding-left:12px">
+      <input type="text" class="modal-input" value="${escapeHtml(wiz.title)}" oninput="wiz.title=this.value" placeholder="T.ex. Arbetsmarknaden i Sverige" aria-label="Titel" aria-required="true" style="padding-left:12px">
     </div>
 
     <div class="modal-field">
       <label class="modal-label">Syfte *</label>
-      <textarea class="modal-textarea" oninput="wiz.purpose=this.value" placeholder="Vad ska deltagaren lära sig?" style="min-height:70px">${escapeHtml(wiz.purpose)}</textarea>
+      <textarea class="modal-textarea" oninput="wiz.purpose=this.value" placeholder="Vad ska deltagaren lära sig?" aria-label="Syfte" aria-required="true" style="min-height:70px">${escapeHtml(wiz.purpose)}</textarea>
     </div>
 
     <div class="modal-field">
@@ -3992,11 +3996,11 @@ function renderWizStep1(){
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
       <div class="modal-field" style="margin-bottom:0">
         <label class="modal-label">Modulkategori</label>
-        <select onchange="wiz.category=this.value" style="width:100%;padding:9px 28px 9px 12px">${catOpts}</select>
+        <select onchange="wiz.category=this.value" aria-label="Modulkategori" style="width:100%;padding:9px 28px 9px 12px">${catOpts}</select>
       </div>
       <div class="modal-field" style="margin-bottom:0">
         <label class="modal-label">Beräknad tid</label>
-        <select onchange="wiz.estMinutes=parseInt(this.value)" style="width:100%;padding:9px 28px 9px 12px">
+        <select onchange="wiz.estMinutes=parseInt(this.value)" aria-label="Beräknad tid" style="width:100%;padding:9px 28px 9px 12px">
           <option value="10" ${wiz.estMinutes===10?'selected':''}>10 min</option>
           <option value="15" ${wiz.estMinutes===15?'selected':''}>15 min</option>
           <option value="30" ${wiz.estMinutes===30?'selected':''}>30 min</option>
@@ -4008,7 +4012,7 @@ function renderWizStep1(){
       </div>
       <div class="modal-field" style="margin-bottom:0">
         <label class="modal-label">Standard-deadline</label>
-        <input type="date" value="${wiz.deadline}" onchange="wiz.deadline=this.value" style="width:100%;padding:9px 12px">
+        <input type="date" value="${wiz.deadline}" onchange="wiz.deadline=this.value" aria-label="Standard-deadline" style="width:100%;padding:9px 12px">
       </div>
     </div>
     <div style="font-size:11px;color:var(--mu);margin-top:6px;line-height:1.45">
@@ -4429,7 +4433,7 @@ function renderPptEditor(){
       <div class="ppt-edit-new">
         <div class="ppt-edit-l">AI:s förslag${c.edited!==c.suggested?' <span style="color:var(--ac)">(redigerad av dig)</span>':''}</div>
         ${isEditing ? `
-          <textarea class="ppt-edit-textarea" oninput="pptEditorState.changes[${idx}].edited=this.value">${escapeHtml(c.edited)}</textarea>
+          <textarea class="ppt-edit-textarea" oninput="pptEditorState.changes[${idx}].edited=this.value" aria-label="AI:s förslag — redigera text">${escapeHtml(c.edited)}</textarea>
           <div style="display:flex;gap:6px;margin-top:6px">
             <button class="btn" style="font-size:11px;padding:5px 10px" onclick="pptEditorState.changes[${idx}]._editing=false;renderPptEditor()">Klar</button>
             <button class="btn" style="font-size:11px;padding:5px 10px" onclick="pptEditorState.changes[${idx}].edited=pptEditorState.changes[${idx}].suggested;pptEditorState.changes[${idx}]._editing=false;renderPptEditor()">Återställ AI:s text</button>
@@ -4782,11 +4786,11 @@ function renderWizStep3(){
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div class="modal-field" style="margin-bottom:0">
           <label class="modal-label">Uppgiftstyp för deltagaren</label>
-          <select onchange="wiz.taskType=this.value" style="width:100%;padding:9px 28px 9px 12px">${taskTypeOpts}</select>
+          <select onchange="wiz.taskType=this.value" aria-label="Uppgiftstyp för deltagaren" style="width:100%;padding:9px 28px 9px 12px">${taskTypeOpts}</select>
         </div>
         <div class="modal-field" style="margin-bottom:0">
           <label class="modal-label">Deadline</label>
-          <input type="date" value="${wiz.deadline}" onchange="wiz.deadline=this.value" style="width:100%;padding:9px 12px">
+          <input type="date" value="${wiz.deadline}" onchange="wiz.deadline=this.value" aria-label="Deadline" style="width:100%;padding:9px 12px">
         </div>
       </div>
 
@@ -5427,13 +5431,13 @@ async function previewDigitalModule() {
   overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;padding:20px;';
   overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
   overlay.innerHTML = `
-    <div style="background:#fff;border-radius:16px;max-width:680px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+    <div role="dialog" aria-modal="true" aria-labelledby="_dpTitle" style="background:#fff;border-radius:16px;max-width:680px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
       <div style="padding:20px 24px 14px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1;">
         <div>
           <div style="font-size:11px;font-weight:700;color:var(--mu);letter-spacing:0.5px;text-transform:uppercase;">Förhandsgranskning</div>
-          <div style="font-size:17px;font-weight:800;color:var(--tx);">🖥️ Digital modul: ${escapeHtml(wiz.title)}</div>
+          <div id="_dpTitle" style="font-size:17px;font-weight:800;color:var(--tx);">🖥️ Digital modul: ${escapeHtml(wiz.title)}</div>
         </div>
-        <button onclick="document.getElementById('_digitalPreviewOverlay')?.remove()" style="background:rgba(0,0,0,0.04);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;color:var(--mu);">×</button>
+        <button onclick="document.getElementById('_digitalPreviewOverlay')?.remove()" aria-label="Stäng" style="background:rgba(0,0,0,0.04);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;color:var(--mu);">×</button>
       </div>
       <div style="padding:20px 24px;">
         <!-- UNDER UPPBYGGNAD-banner -->
@@ -6013,7 +6017,7 @@ function renderMaterialView(){
     </div>
 
     <div class="mat-filters">
-      <input type="text" class="mat-search" placeholder="Sök i titel eller syfte…" value="${escapeHtml(materialFilter.q)}" oninput="materialFilter.q=this.value;renderMaterialView()">
+      <input type="text" class="mat-search" placeholder="Sök i titel eller syfte…" value="${escapeHtml(materialFilter.q)}" oninput="materialFilter.q=this.value;renderMaterialView()" aria-label="Sök i titel eller syfte">
       <div class="mat-chips">
         <div class="chip${materialFilter.cat===''?' act':''}" onclick="materialFilter.cat='';renderMaterialView()"><span>Alla kategorier</span><span class="chip-c">${sorted.length}</span></div>
         ${MODULE_CATS.map(c => catCounts[c.id]>0 ? `<div class="chip${materialFilter.cat===c.id?' act':''}" onclick="materialFilter.cat='${c.id}';renderMaterialView()"><span>${c.label}</span><span class="chip-c">${catCounts[c.id]}</span></div>` : '').join('')}

@@ -22,6 +22,9 @@
 <script src="intervju.js" defer></script>
 
 <style>
+  :focus-visible{outline:3px solid #1a73e8;outline-offset:2px;}
+  .skip-link{position:absolute;left:-9999px;top:0;z-index:9999;background:#1a73e8;color:#fff;padding:10px 16px;border-radius:0 0 6px 0;}
+  .skip-link:focus{left:0;}
   :root {
     --bg: #f5f2eb;
     --deep: #1a1a2e;
@@ -3004,6 +3007,7 @@
 </style>
 </head>
 <body>
+<a href="#huvudinnehall" class="skip-link">Hoppa till innehåll</a>
 
 <!-- ============================================================
      LOGIN-OVERLAY (OTP-flöde — speglar mobilen)
@@ -3030,7 +3034,7 @@
       <div class="auth-divider"><span>Deltagare</span></div>
 
       <div class="auth-subtitle" style="margin-bottom:14px;">Ange din e-postadress så skickar vi en <strong style="color:#fff;">6-siffrig kod</strong>. Kolla skräpposten om du inte fått den inom en minut.</div>
-      <input type="email" id="authEmail" class="auth-input" placeholder="din@epost.se" autocomplete="email" inputmode="email" onkeydown="if(event.key==='Enter') authSendOtp()">
+      <input type="email" id="authEmail" class="auth-input" placeholder="din@epost.se" aria-label="Din e-postadress" aria-required="true" autocomplete="email" inputmode="email" onkeydown="if(event.key==='Enter') authSendOtp()">
       <button class="auth-btn" id="authSendBtn" onclick="authSendOtp()">Skicka kod till min e-post</button>
       <div id="authStep1Error" class="auth-error"></div>
 
@@ -3047,12 +3051,12 @@
       </div>
       <div class="auth-subtitle">Ange koden från mailet nedan.</div>
       <div class="code-inputs" id="codeInputs">
-        <input class="code-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" onkeydown="codeKeydown(event,0)" oninput="codeInput(event,0)" onpaste="codePaste(event)">
-        <input class="code-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" onkeydown="codeKeydown(event,1)" oninput="codeInput(event,1)" onpaste="codePaste(event)">
-        <input class="code-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" onkeydown="codeKeydown(event,2)" oninput="codeInput(event,2)" onpaste="codePaste(event)">
-        <input class="code-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" onkeydown="codeKeydown(event,3)" oninput="codeInput(event,3)" onpaste="codePaste(event)">
-        <input class="code-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" onkeydown="codeKeydown(event,4)" oninput="codeInput(event,4)" onpaste="codePaste(event)">
-        <input class="code-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" onkeydown="codeKeydown(event,5)" oninput="codeInput(event,5)" onpaste="codePaste(event)">
+        <input class="code-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Verifieringskod siffra 1 av 6" autocomplete="one-time-code" onkeydown="codeKeydown(event,0)" oninput="codeInput(event,0)" onpaste="codePaste(event)">
+        <input class="code-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Verifieringskod siffra 2 av 6" autocomplete="one-time-code" onkeydown="codeKeydown(event,1)" oninput="codeInput(event,1)" onpaste="codePaste(event)">
+        <input class="code-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Verifieringskod siffra 3 av 6" autocomplete="one-time-code" onkeydown="codeKeydown(event,2)" oninput="codeInput(event,2)" onpaste="codePaste(event)">
+        <input class="code-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Verifieringskod siffra 4 av 6" autocomplete="one-time-code" onkeydown="codeKeydown(event,3)" oninput="codeInput(event,3)" onpaste="codePaste(event)">
+        <input class="code-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Verifieringskod siffra 5 av 6" autocomplete="one-time-code" onkeydown="codeKeydown(event,4)" oninput="codeInput(event,4)" onpaste="codePaste(event)">
+        <input class="code-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Verifieringskod siffra 6 av 6" autocomplete="one-time-code" onkeydown="codeKeydown(event,5)" oninput="codeInput(event,5)" onpaste="codePaste(event)">
       </div>
       <button class="auth-btn" id="authVerifyBtn" onclick="authVerifyCode()">Verifiera kod</button>
       <div id="authStep2Error" class="auth-error"></div>
@@ -3078,9 +3082,9 @@
         <div id="onbEmail" style="font-size:14px;color:rgba(255,255,255,0.7);"></div>
       </div>
 
-      <input id="onbFirstName" type="text" class="auth-input" placeholder="Förnamn *" autocomplete="given-name">
-      <input id="onbLastName" type="text" class="auth-input" placeholder="Efternamn *" autocomplete="family-name">
-      <input id="onbPhone" type="tel" class="auth-input" placeholder="Telefonnummer (valfritt)" autocomplete="tel" inputmode="tel">
+      <input id="onbFirstName" type="text" class="auth-input" placeholder="Förnamn *" aria-label="Förnamn" aria-required="true" autocomplete="given-name">
+      <input id="onbLastName" type="text" class="auth-input" placeholder="Efternamn *" aria-label="Efternamn" aria-required="true" autocomplete="family-name">
+      <input id="onbPhone" type="tel" class="auth-input" placeholder="Telefonnummer (valfritt)" aria-label="Telefonnummer (valfritt)" autocomplete="tel" inputmode="tel">
 
       <div id="onbErr" class="auth-error" style="margin-bottom:10px;"></div>
       <button class="auth-btn" onclick="authCompleteOnboarding()">Skapa mitt CV →</button>
@@ -3150,7 +3154,7 @@
 <!-- ============================================================
      HUVUDYTA
      ============================================================ -->
-<main id="main">
+<main id="main" tabindex="-1"><span id="huvudinnehall" tabindex="-1"></span>
 
   <!-- ===== HEJ-VYN ===== -->
   <section class="view active" id="view-hej">
@@ -3268,11 +3272,11 @@
         <div class="cv-step-content" id="step-profil">
           <div class="cv-section">
             <div class="cv-section-title">Personuppgifter</div>
-            <input type="text" class="cv-input" id="cv-name" placeholder="Ditt fullständiga namn" oninput="cvUpdate('name', this.value)">
-            <input type="text" class="cv-input" id="cv-title" placeholder="Yrkestitel (t.ex. Lärarvikarie)" oninput="cvUpdate('title', this.value)">
+            <input type="text" class="cv-input" id="cv-name" placeholder="Ditt fullständiga namn" aria-label="Ditt fullständiga namn" aria-required="true" oninput="cvUpdate('name', this.value)">
+            <input type="text" class="cv-input" id="cv-title" placeholder="Yrkestitel (t.ex. Lärarvikarie)" aria-label="Yrkestitel (t.ex. Lärarvikarie)" oninput="cvUpdate('title', this.value)">
             <div class="cv-row">
-              <input type="email" class="cv-input" id="cv-email" placeholder="E-postadress" oninput="cvUpdate('email', this.value)">
-              <input type="tel" class="cv-input" id="cv-phone" placeholder="Telefonnummer" oninput="cvUpdate('phone', this.value)">
+              <input type="email" class="cv-input" id="cv-email" placeholder="E-postadress" aria-label="E-postadress" oninput="cvUpdate('email', this.value)">
+              <input type="tel" class="cv-input" id="cv-phone" placeholder="Telefonnummer" aria-label="Telefonnummer" oninput="cvUpdate('phone', this.value)">
             </div>
           </div>
 
@@ -3318,7 +3322,7 @@
             <div class="cv-section-title">Kompetenser</div>
             <div class="chip-grid" id="skillsChips"></div>
             <div class="btn-row">
-              <input type="text" class="cv-input" id="newSkill" placeholder="t.ex. Kundservice" style="flex:1; margin-bottom:0;" onkeydown="if(event.key==='Enter'){cvAddSkill();}">
+              <input type="text" class="cv-input" id="newSkill" placeholder="t.ex. Kundservice" aria-label="Lägg till kompetens (t.ex. Kundservice)" style="flex:1; margin-bottom:0;" onkeydown="if(event.key==='Enter'){cvAddSkill();}">
               <button class="btn btn-secondary" onclick="cvAddSkill()" style="flex:0 0 auto;">Lägg till</button>
               <button class="btn btn-ai" onclick="cvAiSkills()" style="flex:0 0 auto;">✨ AI</button>
             </div>
@@ -3357,7 +3361,7 @@
         <div class="cv-step-content" id="step-text" style="display:none;">
           <div class="cv-section">
             <div class="cv-section-title">Profiltext</div>
-            <textarea class="cv-textarea" id="cv-summary" placeholder="Skriv en kort presentation om dig själv..." rows="8" oninput="cvUpdate('summary', this.value)"></textarea>
+            <textarea class="cv-textarea" id="cv-summary" placeholder="Skriv en kort presentation om dig själv..." aria-label="Profiltext — skriv en kort presentation om dig själv" rows="8" oninput="cvUpdate('summary', this.value)"></textarea>
             <div class="btn-row">
               <button class="btn btn-secondary" onclick="cvClearSummary()">🗑️ Rensa</button>
               <button class="btn btn-ai" onclick="cvAiSummary()" title="AI skriver ett förslag direkt i textrutan">✨ AI-förslag</button>
@@ -3369,7 +3373,7 @@
         <div class="cv-step-content" id="step-visa" style="display:none;">
           <div class="cv-section">
             <div class="cv-section-title">Mall</div>
-            <select class="cv-input" id="templateSelect" onchange="cvSelectTemplate(this.value)" style="margin-bottom: 10px;"></select>
+            <select class="cv-input" id="templateSelect" onchange="cvSelectTemplate(this.value)" aria-label="Välj CV-mall" style="margin-bottom: 10px;"></select>
             <div style="font-size:11px; color: rgba(255,255,255,0.4); line-height:1.5;">
               Välj en av 10 mallar — förhandsvisningen uppdateras direkt till höger.
             </div>
@@ -3447,12 +3451,13 @@
       <div class="matcha-search-bar">
         <input type="text" class="matcha-search-input" id="matchaSearch"
           placeholder="Yrke eller nyckelord (t.ex. butiksbiträde, lärare, personalchef)..."
+          aria-label="Sök jobb — yrke eller nyckelord"
           oninput="matchaSearchDebounce()"
           onkeydown="if(event.key==='Enter') matchaDoSearch()">
       </div>
 
       <div class="matcha-filters">
-        <select class="matcha-filter-select" id="matchaOrt" onchange="matchaSetOrt(this.value)">
+        <select class="matcha-filter-select" id="matchaOrt" onchange="matchaSetOrt(this.value)" aria-label="Filtrera jobb på ort">
           <option value="all">📍 Hela Sverige</option>
           <option value="skane">Skåne</option>
           <option value="hbg">Helsingborg</option>
@@ -3462,7 +3467,7 @@
           <option value="uppsala">Uppsala</option>
           <option value="linkoping">Linköping</option>
         </select>
-        <select class="matcha-filter-select" id="matchaTid" onchange="matchaSetTid(this.value)">
+        <select class="matcha-filter-select" id="matchaTid" onchange="matchaSetTid(this.value)" aria-label="Filtrera jobb på anställningsform">
           <option value="">⏰ Alla anställningar</option>
           <option value="FULL_TIME">Heltid</option>
           <option value="PART_TIME">Deltid</option>
@@ -3530,9 +3535,9 @@
   <!-- ===== UTBILDA DIG / AI-SYV-VYN (portad från mobilen) ===== -->
   <section class="view" id="view-aisyv">
     <!-- UTBILDNINGS-MODAL -->
-    <div id="edu-link-modal" onclick="if(event.target===this)this.style.display='none';" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;padding:24px;">
+    <div id="edu-link-modal" role="dialog" aria-modal="true" aria-labelledby="edu-link-modal-title" onclick="if(event.target===this)this.style.display='none';" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;padding:24px;">
       <div style="background:#1e2545;border:1.5px solid rgba(62,180,137,0.3);border-radius:20px;padding:24px 20px;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
-        <div style="font-size:18px;font-weight:900;color:#fff;margin-bottom:6px;">Du lämnar appen</div>
+        <div id="edu-link-modal-title" style="font-size:18px;font-weight:900;color:#fff;margin-bottom:6px;">Du lämnar appen</div>
         <div style="font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:18px;" id="edu-modal-site"></div>
         <div style="background:rgba(62,180,137,0.08);border:1px solid rgba(62,180,137,0.2);border-radius:12px;padding:12px 14px;margin-bottom:20px;">
           <div style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:rgba(62,180,137,0.7);margin-bottom:4px;">Skriv in på sidan</div>
@@ -3633,8 +3638,8 @@
 
         <!-- Input -->
         <div style="flex-shrink:0;padding:12px 4px;background:var(--deep);border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:10px;align-items:flex-end;">
-          <textarea id="edu-input" rows="1" placeholder="Skriv din fråga..." style="flex:1;background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.15);border-radius:14px;padding:12px 16px;color:#fff;font-size:15px;font-family:inherit;resize:none;outline:none;max-height:120px;overflow-y:auto;line-height:1.5;"></textarea>
-          <button id="edu-send" style="width:48px;height:48px;background:linear-gradient(135deg,#3eb489,#10b981);border:none;border-radius:14px;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">➤</button>
+          <textarea id="edu-input" rows="1" placeholder="Skriv din fråga..." aria-label="Skriv din fråga till AI-vägledaren" style="flex:1;background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.15);border-radius:14px;padding:12px 16px;color:#fff;font-size:15px;font-family:inherit;resize:none;outline:none;max-height:120px;overflow-y:auto;line-height:1.5;"></textarea>
+          <button id="edu-send" aria-label="Skicka fråga" style="width:48px;height:48px;background:linear-gradient(135deg,#3eb489,#10b981);border:none;border-radius:14px;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">➤</button>
         </div>
         <!-- Dold tillbaka-knapp längst ner (mobilen har den synlig, desktop använder header-knappen) -->
         <button id="edu-back-bottom" style="display:none;">← Tillbaka</button>
@@ -3723,7 +3728,7 @@
 <!-- ============================================================
      JOBBMODAL — matchar mobilens funktionalitet
      ============================================================ -->
-<div id="jobModal" class="edit-modal" data-edit-idx="-1">
+<div id="jobModal" class="edit-modal" data-edit-idx="-1" role="dialog" aria-modal="true" aria-labelledby="jobModalTitle">
   <div class="edit-modal-content">
     <div class="edit-modal-title" id="jobModalTitle">Lägg till arbetslivserfarenhet</div>
 
@@ -3733,14 +3738,14 @@
       <div id="jobModalExistingList" style="display:flex; flex-direction:column; gap: 4px;"></div>
     </div>
 
-    <label class="edit-modal-label">Jobbtitel *</label>
-    <input type="text" class="cv-input" id="jobTitle" placeholder="t.ex. Butiksbiträde">
+    <label class="edit-modal-label" for="jobTitle">Jobbtitel *</label>
+    <input type="text" class="cv-input" id="jobTitle" placeholder="t.ex. Butiksbiträde" aria-label="Jobbtitel" aria-required="true">
 
-    <label class="edit-modal-label">Företag *</label>
-    <input type="text" class="cv-input" id="jobCompany" placeholder="t.ex. ICA Maxi">
+    <label class="edit-modal-label" for="jobCompany">Företag *</label>
+    <input type="text" class="cv-input" id="jobCompany" placeholder="t.ex. ICA Maxi" aria-label="Företag" aria-required="true">
 
-    <label class="edit-modal-label">Plats</label>
-    <input type="text" class="cv-input" id="jobLocation" placeholder="Stad, land (valfritt)">
+    <label class="edit-modal-label" for="jobLocation">Plats</label>
+    <input type="text" class="cv-input" id="jobLocation" placeholder="Stad, land (valfritt)" aria-label="Plats — stad, land (valfritt)">
 
     <!-- Datumrad: Från / Till med månad+år -->
     <div style="display: flex; gap: 10px; margin-bottom: 12px; margin-top: 4px;">
@@ -3748,7 +3753,7 @@
       <div style="flex:1;">
         <div class="edit-modal-label" style="color: var(--accent2);">Från</div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-          <select class="cv-input" id="jobStartMonth" style="margin:0;" onchange="if(this.value)document.getElementById('jobStartYear').focus();">
+          <select class="cv-input" id="jobStartMonth" style="margin:0;" aria-label="Startmånad för jobbet" onchange="if(this.value)document.getElementById('jobStartYear').focus();">
             <option value="">Månad</option>
             <option value="Jan">Jan</option><option value="Feb">Feb</option>
             <option value="Mar">Mar</option><option value="Apr">Apr</option>
@@ -3757,7 +3762,7 @@
             <option value="Sep">Sep</option><option value="Okt">Okt</option>
             <option value="Nov">Nov</option><option value="Dec">Dec</option>
           </select>
-          <select class="cv-input" id="jobStartYear" style="margin:0;" onchange="if(this.value&&!document.getElementById('jobOngoing').checked)document.getElementById('jobEndMonth').focus();"></select>
+          <select class="cv-input" id="jobStartYear" style="margin:0;" aria-label="Startår för jobbet" onchange="if(this.value&&!document.getElementById('jobOngoing').checked)document.getElementById('jobEndMonth').focus();"></select>
         </div>
       </div>
 
@@ -3768,11 +3773,11 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
           <span class="edit-modal-label" style="margin:0;">Till</span>
           <label class="edit-modal-ongoing">
-            <input type="checkbox" id="jobOngoing" onchange="toggleJobOngoing(this)"> Pågående
+            <input type="checkbox" id="jobOngoing" aria-label="Pågående jobb" onchange="toggleJobOngoing(this)"> Pågående
           </label>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-          <select class="cv-input" id="jobEndMonth" style="margin:0;" onchange="if(this.value)document.getElementById('jobEndYear').focus();">
+          <select class="cv-input" id="jobEndMonth" style="margin:0;" aria-label="Slutmånad för jobbet" onchange="if(this.value)document.getElementById('jobEndYear').focus();">
             <option value="">Månad</option>
             <option value="Jan">Jan</option><option value="Feb">Feb</option>
             <option value="Mar">Mar</option><option value="Apr">Apr</option>
@@ -3781,7 +3786,7 @@
             <option value="Sep">Sep</option><option value="Okt">Okt</option>
             <option value="Nov">Nov</option><option value="Dec">Dec</option>
           </select>
-          <select class="cv-input" id="jobEndYear" style="margin:0;" onchange="if(this.value)document.getElementById('jobDesc1').focus();"></select>
+          <select class="cv-input" id="jobEndYear" style="margin:0;" aria-label="Slutår för jobbet" onchange="if(this.value)document.getElementById('jobDesc1').focus();"></select>
         </div>
       </div>
     </div>
@@ -3796,9 +3801,9 @@
         ✨ AI Autofyll
       </button>
     </div>
-    <textarea class="cv-textarea" id="jobDesc1" placeholder="• Första arbetsuppgift (t.ex. Kundservice och försäljning)" rows="2" style="resize:none; line-height: 1.5; margin-bottom: 8px;"></textarea>
-    <textarea class="cv-textarea" id="jobDesc2" placeholder="• Andra arbetsuppgift (t.ex. Lagerhantering och inventering)" rows="2" style="resize:none; line-height: 1.5; margin-bottom: 8px;"></textarea>
-    <textarea class="cv-textarea" id="jobDesc3" placeholder="• Tredje arbetsuppgift (t.ex. Koordinering med leverantörer)" rows="2" style="resize:none; line-height: 1.5; margin-bottom: 4px;"></textarea>
+    <textarea class="cv-textarea" id="jobDesc1" placeholder="• Första arbetsuppgift (t.ex. Kundservice och försäljning)" aria-label="Arbetsuppgift 1" rows="2" style="resize:none; line-height: 1.5; margin-bottom: 8px;"></textarea>
+    <textarea class="cv-textarea" id="jobDesc2" placeholder="• Andra arbetsuppgift (t.ex. Lagerhantering och inventering)" aria-label="Arbetsuppgift 2" rows="2" style="resize:none; line-height: 1.5; margin-bottom: 8px;"></textarea>
+    <textarea class="cv-textarea" id="jobDesc3" placeholder="• Tredje arbetsuppgift (t.ex. Koordinering med leverantörer)" aria-label="Arbetsuppgift 3" rows="2" style="resize:none; line-height: 1.5; margin-bottom: 4px;"></textarea>
 
     <button type="button" onclick="clearJobDesc()"
       style="width: 100%; margin-top: 4px; padding: 8px; background: rgba(255,80,80,0.08); border: 1px solid rgba(255,80,80,0.2); border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; color: rgba(255,100,100,0.7); font-family: inherit;">
@@ -3815,18 +3820,18 @@
 <!-- ============================================================
      UTBILDNINGSMODAL — matchar mobilens funktionalitet
      ============================================================ -->
-<div id="eduModal" class="edit-modal" data-edit-idx="-1">
+<div id="eduModal" class="edit-modal" data-edit-idx="-1" role="dialog" aria-modal="true" aria-labelledby="eduModalTitle">
   <div class="edit-modal-content">
     <div class="edit-modal-title" id="eduModalTitle">Lägg till utbildning</div>
 
-    <label class="edit-modal-label">Examen / Utbildning *</label>
-    <input type="text" class="cv-input" id="eduDegree" placeholder="t.ex. Samhällsvetenskaplig linje">
+    <label class="edit-modal-label" for="eduDegree">Examen / Utbildning *</label>
+    <input type="text" class="cv-input" id="eduDegree" placeholder="t.ex. Samhällsvetenskaplig linje" aria-label="Examen / Utbildning" aria-required="true">
 
-    <label class="edit-modal-label">Namn på skola / Universitet *</label>
-    <input type="text" class="cv-input" id="eduSchoolName" placeholder="t.ex. Katedralskolan">
+    <label class="edit-modal-label" for="eduSchoolName">Namn på skola / Universitet *</label>
+    <input type="text" class="cv-input" id="eduSchoolName" placeholder="t.ex. Katedralskolan" aria-label="Namn på skola / Universitet" aria-required="true">
 
-    <label class="edit-modal-label">Skolform</label>
-    <select class="cv-input" id="eduSchoolForm">
+    <label class="edit-modal-label" for="eduSchoolForm">Skolform</label>
+    <select class="cv-input" id="eduSchoolForm" aria-label="Skolform">
       <option value="">Välj skolform</option>
       <option value="Grundskola">Grundskola</option>
       <option value="Gymnasium">Gymnasium</option>
@@ -3846,7 +3851,7 @@
       <div style="flex:1;">
         <div class="edit-modal-label" style="color: var(--accent2);">Från</div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-          <select class="cv-input" id="eduStartMonth" style="margin:0;">
+          <select class="cv-input" id="eduStartMonth" style="margin:0;" aria-label="Startmånad för utbildningen">
             <option value="">Månad</option>
             <option value="Jan">Jan</option><option value="Feb">Feb</option>
             <option value="Mar">Mar</option><option value="Apr">Apr</option>
@@ -3855,7 +3860,7 @@
             <option value="Sep">Sep</option><option value="Okt">Okt</option>
             <option value="Nov">Nov</option><option value="Dec">Dec</option>
           </select>
-          <select class="cv-input" id="eduStartYear" style="margin:0;"></select>
+          <select class="cv-input" id="eduStartYear" style="margin:0;" aria-label="Startår för utbildningen"></select>
         </div>
       </div>
 
@@ -3865,11 +3870,11 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
           <span class="edit-modal-label" style="margin:0;">Till</span>
           <label class="edit-modal-ongoing">
-            <input type="checkbox" id="eduOngoing" onchange="toggleEduOngoing(this)"> Pågående
+            <input type="checkbox" id="eduOngoing" aria-label="Pågående utbildning" onchange="toggleEduOngoing(this)"> Pågående
           </label>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-          <select class="cv-input" id="eduEndMonth" style="margin:0;">
+          <select class="cv-input" id="eduEndMonth" style="margin:0;" aria-label="Slutmånad för utbildningen">
             <option value="">Månad</option>
             <option value="Jan">Jan</option><option value="Feb">Feb</option>
             <option value="Mar">Mar</option><option value="Apr">Apr</option>
@@ -3878,7 +3883,7 @@
             <option value="Sep">Sep</option><option value="Okt">Okt</option>
             <option value="Nov">Nov</option><option value="Dec">Dec</option>
           </select>
-          <select class="cv-input" id="eduEndYear" style="margin:0;"></select>
+          <select class="cv-input" id="eduEndYear" style="margin:0;" aria-label="Slutår för utbildningen"></select>
         </div>
       </div>
     </div>
@@ -3893,18 +3898,18 @@
 <!-- ============================================================
      CERTIFIKAT-MODAL
      ============================================================ -->
-<div id="certModal" class="edit-modal" data-edit-idx="-1">
+<div id="certModal" class="edit-modal" data-edit-idx="-1" role="dialog" aria-modal="true" aria-labelledby="certModalTitle">
   <div class="edit-modal-content">
     <div class="edit-modal-title" id="certModalTitle">Lägg till certifikat</div>
 
-    <label class="edit-modal-label">Certifikatets namn *</label>
-    <input type="text" class="cv-input" id="certName" placeholder="t.ex. Heta arbeten">
+    <label class="edit-modal-label" for="certName">Certifikatets namn *</label>
+    <input type="text" class="cv-input" id="certName" placeholder="t.ex. Heta arbeten" aria-label="Certifikatets namn" aria-required="true">
 
-    <label class="edit-modal-label">Utfärdare *</label>
-    <input type="text" class="cv-input" id="certIssuer" placeholder="t.ex. Brandskyddsföreningen">
+    <label class="edit-modal-label" for="certIssuer">Utfärdare *</label>
+    <input type="text" class="cv-input" id="certIssuer" placeholder="t.ex. Brandskyddsföreningen" aria-label="Utfärdare" aria-required="true">
 
-    <label class="edit-modal-label">Datum</label>
-    <input type="text" class="cv-input" id="certDate" placeholder="t.ex. Januari 2023">
+    <label class="edit-modal-label" for="certDate">Datum</label>
+    <input type="text" class="cv-input" id="certDate" placeholder="t.ex. Januari 2023" aria-label="Datum">
 
     <div class="edit-modal-buttons">
       <button class="btn btn-secondary" onclick="closeCertModal()">Avbryt</button>
@@ -3916,24 +3921,24 @@
 <!-- ============================================================
      REFERENS-MODAL
      ============================================================ -->
-<div id="refModal" class="edit-modal" data-edit-idx="-1">
+<div id="refModal" class="edit-modal" data-edit-idx="-1" role="dialog" aria-modal="true" aria-labelledby="refModalTitle">
   <div class="edit-modal-content">
     <div class="edit-modal-title" id="refModalTitle">Lägg till referens</div>
 
-    <label class="edit-modal-label">Namn *</label>
-    <input type="text" class="cv-input" id="refName" placeholder="För- och efternamn">
+    <label class="edit-modal-label" for="refName">Namn *</label>
+    <input type="text" class="cv-input" id="refName" placeholder="För- och efternamn" aria-label="Referensens namn" aria-required="true">
 
-    <label class="edit-modal-label">Titel / Roll *</label>
-    <input type="text" class="cv-input" id="refTitle" placeholder="t.ex. Butikschef på ICA">
+    <label class="edit-modal-label" for="refTitle">Titel / Roll *</label>
+    <input type="text" class="cv-input" id="refTitle" placeholder="t.ex. Butikschef på ICA" aria-label="Referensens titel / roll" aria-required="true">
 
     <div class="edit-modal-row">
       <div>
-        <label class="edit-modal-label">E-post</label>
-        <input type="email" class="cv-input" id="refEmail" placeholder="namn@företag.se">
+        <label class="edit-modal-label" for="refEmail">E-post</label>
+        <input type="email" class="cv-input" id="refEmail" placeholder="namn@företag.se" aria-label="Referensens e-post">
       </div>
       <div>
-        <label class="edit-modal-label">Telefon</label>
-        <input type="tel" class="cv-input" id="refPhone" placeholder="070-123 45 67">
+        <label class="edit-modal-label" for="refPhone">Telefon</label>
+        <input type="tel" class="cv-input" id="refPhone" placeholder="070-123 45 67" aria-label="Referensens telefon">
       </div>
     </div>
 
@@ -3947,9 +3952,9 @@
 <!-- ============================================================
      SPRÅK-PICKER (väljer språk → väljer nivå)
      ============================================================ -->
-<div id="languagePicker" class="picker-modal">
+<div id="languagePicker" class="picker-modal" role="dialog" aria-modal="true" aria-labelledby="languagePickerTitle">
   <div class="picker-content">
-    <div class="picker-title">Lägg till språk</div>
+    <div class="picker-title" id="languagePickerTitle">Lägg till språk</div>
     <div class="picker-sub">Klicka på ett språk för att välja nivå.</div>
     <div id="languagePickerList"></div>
     <div style="margin-top: 16px; text-align: right;">
@@ -3959,7 +3964,7 @@
 </div>
 
 <!-- Nivå-väljare som öppnas efter språk-val -->
-<div id="languageLevelPicker" class="picker-modal">
+<div id="languageLevelPicker" class="picker-modal" role="dialog" aria-modal="true" aria-labelledby="languageLevelTitle">
   <div class="picker-content" style="width: 420px;">
     <div class="picker-title" id="languageLevelTitle">Välj nivå</div>
     <div class="picker-sub">Hur bra behärskar du språket?</div>
@@ -3983,9 +3988,9 @@
 <!-- ============================================================
      KÖRKORT-PICKER
      ============================================================ -->
-<div id="licensePicker" class="picker-modal">
+<div id="licensePicker" class="picker-modal" role="dialog" aria-modal="true" aria-labelledby="licensePickerTitle">
   <div class="picker-content">
-    <div class="picker-title">Välj körkort &amp; licenser</div>
+    <div class="picker-title" id="licensePickerTitle">Välj körkort &amp; licenser</div>
     <div class="picker-sub">Kryssa i de körkort du har.</div>
     <div id="licensePickerList"></div>
     <div style="margin-top: 16px; text-align: right;">
@@ -3997,9 +4002,9 @@
 <!-- ============================================================
      INSTÄLLNINGAR-MODAL
      ============================================================ -->
-<div id="settingsModal">
+<div id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
   <div class="settings-content">
-    <h3>⚙️ Inställningar</h3>
+    <h3 id="settingsModalTitle">⚙️ Inställningar</h3>
 
     <div style="background: rgba(62,180,137,0.08); border: 1px solid rgba(62,180,137,0.25); border-radius: 12px; padding: 16px 18px; margin-bottom: 18px;">
       <div style="font-size: 13px; font-weight: 800; color: var(--accent2); margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
@@ -4585,7 +4590,7 @@
 <!-- Matcha-modaler (pedagogiska: frågar vad användaren vill göra härnäst) -->
 
 <!-- 1. Modal efter att ett jobb valts i steg 2 -->
-<div id="matchaAddedModal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);padding:20px;backdrop-filter:blur(4px);" onclick="if(event.target===this)this.style.display='none'">
+<div id="matchaAddedModal" role="dialog" aria-modal="true" aria-labelledby="matchaAddedTitle" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);padding:20px;backdrop-filter:blur(4px);" onclick="if(event.target===this)this.style.display='none'">
   <div style="background:#1e2440;border-radius:20px;padding:32px 28px;max-width:460px;width:100%;border:1.5px solid rgba(62,180,137,0.25);box-shadow:0 20px 60px rgba(0,0,0,0.5);">
     <div id="matchaAddedEmoji" style="font-size:42px;text-align:center;margin-bottom:16px;">✨</div>
     <div id="matchaAddedTitle" style="font-size:20px;font-weight:800;color:#fff;text-align:center;margin-bottom:14px;"></div>
@@ -4600,12 +4605,12 @@
 </div>
 
 <!-- 2. Modal efter att en profiltext valts i steg 3 -->
-<div id="matchaSavedModal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);padding:20px;backdrop-filter:blur(4px);" onclick="if(event.target===this)this.style.display='none'">
+<div id="matchaSavedModal" role="dialog" aria-modal="true" aria-labelledby="matchaSavedTitle" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);padding:20px;backdrop-filter:blur(4px);" onclick="if(event.target===this)this.style.display='none'">
   <div style="background:#1e2440;border-radius:20px;padding:32px 28px;max-width:460px;width:100%;border:1.5px solid rgba(62,180,137,0.25);box-shadow:0 20px 60px rgba(0,0,0,0.5);">
     <div style="font-size:52px;text-align:center;margin-bottom:14px;">✅</div>
     <div id="matchaSavedCounter" style="display:inline-block;margin:0 auto 14px;padding:5px 14px;background:rgba(62,180,137,0.15);border:1.5px solid rgba(62,180,137,0.4);border-radius:20px;font-size:12px;font-weight:800;color:#3eb489;letter-spacing:0.5px;text-align:center;width:auto;"></div>
     <div style="text-align:center;margin-bottom:14px;"></div>
-    <div style="font-size:22px;font-weight:900;color:#fff;text-align:center;margin-bottom:16px;">Profiltext sparad!</div>
+    <div id="matchaSavedTitle" style="font-size:22px;font-weight:900;color:#fff;text-align:center;margin-bottom:16px;">Profiltext sparad!</div>
 
     <div id="matchaSavedJobInfo" style="background:rgba(62,180,137,0.08);border:1px solid rgba(62,180,137,0.25);border-radius:12px;padding:14px 16px;margin-bottom:18px;">
       <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:rgba(62,180,137,0.8);margin-bottom:6px;">Matchad mot</div>
@@ -4637,11 +4642,11 @@
 <!-- ============================================================
      INTEGRITETSPOLICY / GDPR-MODAL
      ============================================================ -->
-<div id="privacyPolicyModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.78);backdrop-filter:blur(6px);overflow-y:auto;padding:24px;">
+<div id="privacyPolicyModal" role="dialog" aria-modal="true" aria-labelledby="privacyPolicyModalTitle" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.78);backdrop-filter:blur(6px);overflow-y:auto;padding:24px;">
   <div style="background:#12172a;border:1.5px solid rgba(255,255,255,0.08);border-radius:18px;padding:32px 28px 40px;max-width:680px;margin:20px auto;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
-      <div style="font-size:20px;font-weight:900;color:#fff;">📄 Integritetspolicy</div>
-      <button onclick="document.getElementById('privacyPolicyModal').style.display='none'" style="background:rgba(255,255,255,0.08);border:none;color:#fff;font-size:18px;width:36px;height:36px;border-radius:50%;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;">✕</button>
+      <div id="privacyPolicyModalTitle" style="font-size:20px;font-weight:900;color:#fff;">📄 Integritetspolicy</div>
+      <button onclick="document.getElementById('privacyPolicyModal').style.display='none'" aria-label="Stäng integritetspolicy" style="background:rgba(255,255,255,0.08);border:none;color:#fff;font-size:18px;width:36px;height:36px;border-radius:50%;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;">✕</button>
     </div>
 
     <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:20px;">Senast uppdaterad: april 2026</div>
@@ -4703,11 +4708,11 @@
 <!-- ============================================================
      ALLMÄNNA VILLKOR-MODAL
      ============================================================ -->
-<div id="termsModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.78);backdrop-filter:blur(6px);overflow-y:auto;padding:24px;">
+<div id="termsModal" role="dialog" aria-modal="true" aria-labelledby="termsModalTitle" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.78);backdrop-filter:blur(6px);overflow-y:auto;padding:24px;">
   <div style="background:#12172a;border:1.5px solid rgba(255,255,255,0.08);border-radius:18px;padding:32px 28px 40px;max-width:680px;margin:20px auto;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
-      <div style="font-size:20px;font-weight:900;color:#fff;">📋 Allmänna villkor</div>
-      <button onclick="document.getElementById('termsModal').style.display='none'" style="background:rgba(255,255,255,0.08);border:none;color:#fff;font-size:18px;width:36px;height:36px;border-radius:50%;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;">✕</button>
+      <div id="termsModalTitle" style="font-size:20px;font-weight:900;color:#fff;">📋 Allmänna villkor</div>
+      <button onclick="document.getElementById('termsModal').style.display='none'" aria-label="Stäng allmänna villkor" style="background:rgba(255,255,255,0.08);border:none;color:#fff;font-size:18px;width:36px;height:36px;border-radius:50%;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;">✕</button>
     </div>
     <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:20px;">Senast uppdaterad: april 2026</div>
     <div style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.8;">
