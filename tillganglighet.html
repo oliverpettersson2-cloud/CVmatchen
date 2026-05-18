@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tillgänglighetsredogörelse — CVmatchen</title>
+  <style>
+    :root { color-scheme: light; }
+    body {
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+      max-width: 720px; margin: 0 auto; padding: 40px 24px 80px;
+      color: #1a1a1a; background: #fff; line-height: 1.65;
+    }
+    h1 { font-size: 28px; margin-bottom: 4px; }
+    h2 { font-size: 19px; margin-top: 36px; border-bottom: 2px solid #e0e0e0; padding-bottom: 6px; }
+    h3 { font-size: 15px; margin-top: 24px; }
+    .meta { color: #555; font-size: 14px; margin-bottom: 8px; }
+    ul { padding-left: 22px; }
+    li { margin-bottom: 8px; }
+    a { color: #1558b0; }
+    a:focus-visible { outline: 3px solid #1a73e8; outline-offset: 2px; }
+    .box {
+      background: #f4f7fb; border: 1px solid #d4dde8;
+      border-radius: 8px; padding: 16px 20px; margin: 16px 0;
+    }
+    footer { margin-top: 48px; font-size: 13px; color: #777; }
+  </style>
+</head>
+<body>
+  <h1>Tillgänglighetsredogörelse</h1>
+  <p class="meta">Gäller webbplatsen och tjänsten CVmatchen (cvmatchen.com).</p>
+  <p>PathfinderAI AB står bakom CVmatchen. Vi vill att så många som möjligt ska kunna
+  använda tjänsten. Den här sidan beskriver hur CVmatchen uppfyller lagen om
+  tillgänglighet till digital offentlig service (DOS-lagen, 2018:1937), kända
+  brister och hur du kan rapportera problem.</p>
+
+  <h2>Hur tillgänglig är tjänsten?</h2>
+  <p>CVmatchen är <strong>delvis förenlig</strong> med nivå AA i standarden
+  WCAG 2.1. Delvis förenlig betyder att delar av innehållet inte är fullt
+  tillgängligt — se avsnittet nedan.</p>
+
+  <h2>Innehåll som inte är tillgängligt</h2>
+  <p>Följande brister är kända och planeras åtgärdade senast <strong>2026-06-30</strong>:</p>
+  <div class="box">
+    <h3>Test med skärmläsare</h3>
+    <p>Ett fullständigt test med skärmläsare (NVDA / VoiceOver) är ännu inte
+    genomfört på hela tjänsten, inklusive en genomgång av underrubriker i de
+    inloggade vyerna. Tangentbordsnavigering, fokushantering i dialogrutor,
+    rubriknivåer och dekorativa ikoner är åtgärdade.</p>
+  </div>
+
+  <h2>Vad vi har åtgärdat</h2>
+  <ul>
+    <li>Textkontrast — sekundär text höjd till en nivå som klarar kravet 4,5:1 (WCAG 1.4.3).</li>
+    <li>Synlig fokusmarkering för tangentbordsnavigering på alla interaktiva element.</li>
+    <li>Fokus hålls kvar inuti dialogrutor (modaler); Escape stänger dem.</li>
+    <li>Dekorativa emoji-ikoner döljs för skärmläsare så att de inte stör uppläsningen.</li>
+    <li>Genväg "Hoppa till innehåll" för tangentbordsanvändare.</li>
+    <li>Sidövergripande H1-rubrik på samtliga huvudvyer; rubriknivåer utan hopp.</li>
+    <li>Emoji-text som läggs till dynamiskt döljs också för skärmläsare.</li>
+    <li>Formulärfält har programmatiska etiketter (aria-label).</li>
+  </ul>
+
+  <h2>Rapportera brister</h2>
+  <p>Hittar du ett tillgänglighetsproblem som inte nämns här, eller behöver
+  innehåll i ett annat format, kontakta oss så åtgärdar vi det:</p>
+  <p><a href="mailto:info@cvmatchen.com">info@cvmatchen.com</a></p>
+
+  <h2>Tillsyn</h2>
+  <p>Myndigheten för digital förvaltning (DIGG) har ansvar för tillsyn av
+  DOS-lagen. Om du inte är nöjd med hur vi hanterar dina synpunkter kan du
+  <a href="https://www.digg.se/tdosanmalan">anmäla det till DIGG</a>.</p>
+
+  <h2>Hur vi tog fram redogörelsen</h2>
+  <p>Redogörelsen togs fram genom en intern granskning av CVmatchen i
+  kombination med automatiska tillgänglighetstester. Senast uppdaterad
+  2026-05-17.</p>
+
+  <footer>
+    PathfinderAI AB · Helsingborg · <a href="https://cvmatchen.com">cvmatchen.com</a>
+  </footer>
+</body>
+</html>
