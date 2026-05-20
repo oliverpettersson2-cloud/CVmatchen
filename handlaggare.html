@@ -879,9 +879,11 @@ td{padding:10px 13px;vertical-align:middle}
           </div>
 
           <!-- Tabell -->
+          <h2 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;">Deltagarlista</h2>
           <div class="tw">
             <table>
-              <thead><tr><th style="width:36px;text-align:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--mu);vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></th><th>Namn</th><th class="hm">Handläggare</th><th class="hm">Enhet</th><th>Senast aktiv</th><th class="hm">CV</th><th class="hm">Övningar</th><th class="hm">Uppgifter</th><th>Status</th></tr></thead>
+              <caption style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;">Lista över deltagare med namn, handläggare, enhet, senaste aktivitet och status</caption>
+              <thead><tr><th scope="col" style="width:36px;text-align:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--mu);vertical-align:middle" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;">Favorit</span></th><th scope="col">Namn</th><th scope="col" class="hm">Handläggare</th><th scope="col" class="hm">Enhet</th><th scope="col">Senast aktiv</th><th scope="col" class="hm">CV</th><th scope="col" class="hm">Övningar</th><th scope="col" class="hm">Uppgifter</th><th scope="col">Status</th></tr></thead>
               <tbody id="tBody"><tr><td colspan="9" class="loading">Laddar deltagare...</td></tr></tbody>
             </table>
             <div class="pg-bar"><span id="pgInfo"></span></div>
@@ -936,7 +938,7 @@ td{padding:10px 13px;vertical-align:middle}
     <button class="modal-close" onclick="closeInviteModal()" aria-label="Stäng">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
-    <div class="modal-h" id="inviteModalTitle">Bjud in deltagare</div>
+    <div class="modal-h" id="inviteModalTitle" role="heading" aria-level="2">Bjud in deltagare</div>
     <div class="modal-s">Skicka en inbjudningslänk via e-post. Mottagaren får ett mail med en engångslänk för att skapa sitt konto.</div>
 
     <div class="modal-status" id="inviteStatus"></div>
@@ -967,7 +969,7 @@ td{padding:10px 13px;vertical-align:middle}
     <button class="modal-close" onclick="closeBulkModal()" aria-label="Stäng">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
-    <div class="modal-h" id="bulkModalTitle">Tilldela uppgift till grupp</div>
+    <div class="modal-h" id="bulkModalTitle" role="heading" aria-level="2">Tilldela uppgift till grupp</div>
     <div class="modal-s">Samma uppgift skickas till <b id="bulkModalCount">0</b> deltagare. Varje deltagare får en egen instans av uppgiften.</div>
     <div class="modal-status" id="bulkStatus"></div>
     <div class="modal-field">

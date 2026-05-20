@@ -59,6 +59,12 @@
     <li>Sidövergripande H1-rubrik på samtliga huvudvyer; rubriknivåer utan hopp.</li>
     <li>Emoji-text som läggs till dynamiskt döljs också för skärmläsare.</li>
     <li>Formulärfält har programmatiska etiketter (aria-label).</li>
+    <li>Statusmeddelanden (toast/snackbar) tillkännages för skärmläsare via <code>role="status"</code> och <code>aria-live="polite"</code> (WCAG 4.1.3).</li>
+    <li>Mobila CV-stegsflikar är knappar med <code>role="tab"</code> i en <code>role="tablist"</code>, fullt tangentbordsstyrda.</li>
+    <li>Datatabeller har <code>caption</code> och <code>th scope="col"</code> för korrekt struktur i skärmläsare (WCAG 1.3.1).</li>
+    <li>Modaltitlar har semantisk rubriknivå (<code>role="heading" aria-level="2"</code>) så att de upptäcks med rubriknavigering.</li>
+    <li>Grupperade kryssrutor (t.ex. kompetensval) har <code>role="group"</code> + <code>aria-labelledby</code> för att läsas som en grupp.</li>
+    <li>Dekorativa SVG-ikoner i datatabeller är märkta med <code>aria-hidden="true"</code> och får alternativ text vid behov.</li>
   </ul>
 
   <h2>Rapportera brister</h2>
@@ -74,7 +80,7 @@
   <h2>Hur vi tog fram redogörelsen</h2>
   <p>Redogörelsen togs fram genom en intern granskning av CVmatchen i
   kombination med automatiska tillgänglighetstester. Senast uppdaterad
-  2026-05-17.</p>
+  2026-05-20.</p>
 
   <footer>
     PathfinderAI AB · Helsingborg · <a href="https://cvmatchen.com">cvmatchen.com</a>
