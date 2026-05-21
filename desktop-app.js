@@ -38,7 +38,8 @@
     'Svenska', 'Engelska', 'Danska', 'Tyska', 'Franska', 'Spanska',
     'Arabiska', 'Persiska (Farsi)', 'Somalisk', 'Kurdisk', 'Turkisk',
     'Polsk', 'Tigrinj', 'Bosnisk', 'Kroatisk', 'Italiensk',
-    'Vietnamesisk', 'Portugisisk', 'Mandarin (Kinesisk)', 'Urdu', 'Tamilsk', 'Lao'
+    'Vietnamesisk', 'Portugisisk', 'Mandarin (Kinesisk)', 'Urdu', 'Tamilsk', 'Lao',
+    'Ungerska', 'Slovakiska'
   ];
 
   const ALL_LICENSES = [
