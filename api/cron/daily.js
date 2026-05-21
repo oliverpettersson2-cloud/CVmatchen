@@ -105,6 +105,12 @@ async function publishDryRun(variantGroup) {
 }
 
 export default async function handler(req, res) {
+  // Feature-flag: agenten är dvalad tills du explicit aktiverar den.
+  // Hindrar att cron:en spammar Sentry innan SQL-migrationen är körd / envs satta.
+  if (process.env.MARKETING_AGENT_ENABLED !== 'true') {
+    return res.status(200).json({ skipped: 'MARKETING_AGENT_ENABLED != true' });
+  }
+
   const auth = requireCronAuth(req);
   if (!auth.ok) return res.status(auth.code).json({ error: auth.error });
 
