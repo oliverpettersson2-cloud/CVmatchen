@@ -25,48 +25,258 @@
   'use strict';
 
 var INTRO=[
-{id:'m1',icon:'📋',title:'Regler & Rättigheter',sub:'Närvaro, frånvaro & skyldigheter',color:'#3eb489',bc:'rgba(62,180,137,.3)',bg:'rgba(62,180,137,.07)',
+{id:'m1',icon:'📋',title:'Regler & Rättigheter',sub:'Närvaro, frånvaro & skyldigheter',color:'#3eb489',bc:'rgba(62,180,137,.3)',bg:'rgba(62,180,137,.07)',video:'/videos/m1-regler.mp4',
 lessons:[
-{t:'Välkommen — syfte, innehåll & mål',s:'🎯 SYFTE MED MODULEN\n\nAtt du ska förstå vad ekonomiskt bistånd (försörjningsstöd) är, vilka rättigheter och skyldigheter du har, och hur aktivitetskravet fungerar.\n\n📚 DETTA KOMMER DU LÄRA DIG\n\n• Vad ekonomiskt bistånd är och vem som beslutar\n• Vad aktivitetskravet innebär i praktiken\n• Hur du äger din egen planering\n• Dina rättigheter och skyldigheter\n• Hur du meddelar frånvaro korrekt\n\n✅ MÅL EFTER MODULEN\n\nDu ska känna dig trygg i hur systemet fungerar, vilka krav som ställs på dig — och framför allt hur du själv kan påverka din väg mot jobb och självförsörjning.\n\n▶ Klicka Nästa för att börja med videon från Attention.',a:'Den här modulen är grunden i plattformen och ska ge en tydlig förståelse för det svenska biståndssystemet. Efter modulen ska du kunna besvara: "Vad förväntas av mig?" och "Hur tar jag kontroll över min situation?"'},
-{t:'Ekonomiskt bistånd & försörjningsstöd',s:'Attention förklarar hur ekonomiskt bistånd (försörjningsstöd) fungerar i Sverige.\n\nEkonomiskt bistånd är samhällets sista skyddsnät när du inte kan försörja dig själv.\n\n💡 Det kallas också försörjningsstöd eller socialbidrag.\n\nKolla videon ovan i lugn och ro — nästa lektion går in på aktivitetskravet.',a:'Ekonomiskt bistånd regleras i Socialtjänstlagen (SoL). Rätten prövas individuellt av kommunens socialtjänst. Biståndet består av två delar: riksnorm (mat, kläder, hygien, fritid) + skäliga kostnader (hyra, el, hemförsäkring, arbetsresor). För att få bistånd måste du först ha uttömt andra möjligheter — a-kassa, sjukpenning, föräldrapenning, bostadsbidrag m.m.',yt:'https://www.youtube.com/embed/PieoOiL4Lug'},
-{t:'Vad är aktivitetskrav?',s:'Aktivitetskravet betyder att du måste vara AKTIV för att få ekonomiskt bistånd. Samhället hjälper dig — men du måste också göra din del.\n\n💡 DIN PLANERING = DITT PROJEKT\n\nDet viktigaste du kan ta med dig från den här lektionen:\n\nDu som söker bistånd ÄGER din egen planering.\n\nJu mer du är med och formar den — berättar om dina mål, styrkor och drömmar — desto större chans att aktiviteterna faktiskt leder dig framåt mot ett jobb.\n\nHandläggaren är din partner, inte din chef. Ni gör planen TILLSAMMANS.\n\n✅ Gör så här:\n• Kom förberedd till möten — vad vill DU?\n• Säg ifrån om en aktivitet inte känns meningsfull\n• Föreslå egna idéer (t.ex. en specifik kurs, praktikplats, yrke)\n• Var ärlig om vad som funkar och vad som inte gör det\n\n❌ Undvik:\n• Passivt "vänta och se" — det gör tiden längre\n• Tackar ja till allt utan att tänka efter\n• Låter någon annan bestämma över din framtid\n\nNär du äger din planering kommer aktiviteterna att kännas relevanta — inte som ett straff. Då blir vägen till självförsörjning snabbare och starkare.\n\n🎯 VAD ÄR AKTIVITET?\n\n✅ Delta i möten med din handläggare\n✅ Söka jobb aktivt — och kunna visa vad du gjort (lista, skärmdump, mejl)\n✅ Delta i praktik, utbildning eller annan anvisad aktivitet\n✅ Stå till arbetsmarknadens förfogande\n\n🔎 "STÅ TILL ARBETSMARKNADENS FÖRFOGANDE"\n\nDet betyder att du är:\n• Redo att ta ett jobb direkt om det dyker upp\n• Tillgänglig på telefon och mejl\n• Inte utomlands på semester\n• Inte sjukskriven utan intyg\n• Anmäld som arbetssökande hos Arbetsförmedlingen\n\n📝 DU MÅSTE KUNNA VISA VAD DU GJORT\n\nDokumentera varje vecka:\n• Vilka jobb har du sökt? (Antal + var)\n• Vilka möten har du varit på?\n• Vilka aktiviteter har du deltagit i?\n\nHandläggaren kan fråga när som helst. Ha alltid dina uppgifter i ordning.\n\n⚠️ OM DU INTE GÖR DIN DEL\n\nOm du tackar nej till ett rimligt jobb eller aktivitet utan giltigt skäl:\n• 1:a gången → varning\n• Upprepat → ersättningen sänks\n• Vägran → ansökan kan avslås helt\n\nDu blir aldrig "straffad" direkt — du får alltid en chans att förklara. Prata alltid med din handläggare OM du har problem.\n\n🛡️ GILTIGA SKÄL FÖR ATT INTE DELTA\n\n• Sjukdom (meddela + läkarintyg vid behov)\n• Vård av sjukt barn (VAB)\n• Begravning / akut familjekris\n• Arbetsintervju på annan tid\n• Studier som redan är godkända av handläggaren\n\n🤝 TILLSAMMANS NÅR VI MÅLET\n\nHandläggaren vill att DU ska lyckas. Det är deras jobb — och när du når självförsörjning vinner alla: du, din familj, och samhället.\n\nMen ingen kan göra det ÅT dig. Du måste äga processen.\n\nTips som gör skillnad:\n• Sätt ett tydligt eget mål — "Jag vill jobba som X inom Y månader"\n• Be om feedback — fråga vad DU kan göra bättre\n• Hör av dig mellan möten om något händer\n• Fira framstegen — varje litet steg räknas\n\n❗ VIKTIGT\n\nAlla beslut om aktivitetskrav är individuella.\nHar du funktionsnedsättning, små barn eller språkproblem — prata med din handläggare. Kravet anpassas efter din situation.\n\nDu kan alltid överklaga beslut du inte håller med om.',a:'Aktivitetskravet är lagstadgat i Socialtjänstlagen (SoL 4 kap. 4§). Kommunen får ställa krav på att den biståndsberättigade deltar i praktik eller kompetenshöjande åtgärd.\n\nKravet ska vara individanpassat — hänsyn tas till ålder, hälsa, familjesituation och språk. Vid giltig frånvaro (sjukdom, VAB) påverkas inte biståndet. Vid ogiltig frånvaro eller vägran kan handläggaren sänka eller avslå bistånd.\n\nForskning visar att individer som är delaktiga i sin planering och känner ägarskap över målen har betydligt högre chans att nå självförsörjning. Delaktighet är inte bara en rättighet — det är en framgångsfaktor.\n\nDu har alltid rätt att:\n- Få skriftligt beslut\n- Få motivering till beslutet\n- Överklaga till Förvaltningsrätten inom 3 veckor\n- Få hjälp med överklagan från socialtjänsten\n\nVanliga missförstånd:\n- "Jag måste söka 20 jobb i veckan" → Antalet bestäms individuellt.\n- "Aktivitetskrav = jag måste ta VILKET jobb som helst" → Nej, det ska vara rimligt utifrån din bakgrund.\n- "Om jag pluggar slipper jag kravet" → Studier måste vara godkända av handläggaren.'},
-{t:'Närvaro & frånvaro',s:'Om du blir sjuk eller inte kan komma:\n\n1️⃣ Meddela SAMMA DAG — helst innan aktiviteten börjar\n2️⃣ Ring, mejla eller sms:a din handläggare\n3️⃣ Lämna läkarintyg om det krävs (vanligtvis dag 8)\n\nOgiltig frånvaro = kan påverka din ersättning.',a:'Frånvaro ska alltid meddelas samma dag, helst innan aktiviteten börjar. Vid upprepad frånvaro kan handläggaren begära intyg eller uppdaterad planering. Förstadagsintyg kan krävas vid frekvent korttidsfrånvaro.'},
-{t:'Rättigheter & skyldigheter',s:'DINA RÄTTIGHETER:\n✅ En individuell plan\n✅ Tydlig information om beslut\n✅ Skälig handläggningstid\n✅ Överklaga beslut du inte håller med om\n✅ Bli bemött med respekt\n\nDINA SKYLDIGHETER:\n✅ Delta aktivt\n✅ Lämna korrekta uppgifter\n✅ Följa planen\n✅ Meddela ändringar (jobb, inkomst, boende)',a:'Du har rätt till en individuell plan, tydlig kommunikation och skälig handläggningstid. Beslut kan överklagas till förvaltningsrätten. Du har skyldighet att medverka aktivt, lämna korrekta uppgifter och följa beslutade aktiviteter. Felaktiga uppgifter kan leda till återkrav eller polisanmälan vid bidragsbrott.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Förstå vad ekonomiskt bistånd är, vilka rättigheter och skyldigheter du har, och hur kravet på aktivitet fungerar.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad ekonomiskt bistånd är och vem som beslutar, vad kravet på aktivitet innebär, hur du äger din egen planering, samt närvaro, frånvaro och dina rättigheter.'},
+{icon:'✅',h:'När du är klar ska du...',t:'känna dig trygg i hur systemet fungerar, veta vilka krav som ställs — och framför allt hur du själv kan påverka din väg mot jobb och självförsörjning.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och lektionerna, plus en kort skrivövning där du formulerar ett frånvaromeddelande.'}
+],
+a:'Den här modulen är grunden i plattformen och ska ge en tydlig förståelse för det svenska biståndssystemet. Efter modulen ska du kunna besvara: "Vad förväntas av mig?" och "Hur tar jag kontroll över min situation?"'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom vad ekonomiskt bistånd är, vad kravet på aktivitet innebär, och vilka rättigheter och skyldigheter du har. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Ekonomiskt bistånd & försörjningsstöd',
+cards:[
+{icon:'🛟',h:'Sista skyddsnätet',t:'Ekonomiskt bistånd är samhällets sista skyddsnät när du inte kan försörja dig själv.'},
+{icon:'🏷️',h:'Flera namn — samma sak',t:'Det kallas också försörjningsstöd eller socialbidrag.'},
+{icon:'🎬',h:'Se filmen ovan',t:'Attention förklarar hur ekonomiskt bistånd fungerar i Sverige. Nästa lektion går in på kravet på aktivitet.'}
+],a:'Ekonomiskt bistånd regleras i Socialtjänstlagen (SoL). Rätten prövas individuellt av kommunens socialtjänst. Biståndet består av två delar: riksnorm (mat, kläder, hygien, fritid) + skäliga kostnader (hyra, el, hemförsäkring, arbetsresor). För att få bistånd måste du först ha uttömt andra möjligheter — a-kassa, sjukpenning, föräldrapenning, bostadsbidrag m.m.',yt:'https://www.youtube.com/embed/PieoOiL4Lug'},
+{t:'Vad är aktivitetskrav?',
+cards:[
+{icon:'✅',h:'Vad räknas som aktivitet?',t:'Delta i möten, söka jobb aktivt, delta i praktik eller utbildning, och stå till arbetsmarknadens förfogande.'},
+{icon:'💡',h:'Du äger din planering',t:'Kom förberedd, föreslå egna idéer, säg ifrån. Handläggaren är din partner — ni gör planen tillsammans.'},
+{icon:'📝',h:'Visa vad du gjort',t:'Dokumentera varje vecka: sökta jobb, möten och aktiviteter. Handläggaren kan fråga när som helst.'},
+{icon:'🛡️',h:'Giltiga skäl finns',t:'Sjukdom, VAB, begravning eller en arbetsintervju är giltiga skäl. Meddela alltid.'},
+{icon:'⚠️',h:'Om du inte gör din del',t:'Tackar du nej till rimligt jobb utan skäl: först varning, sedan kan ersättningen sänkas. Du får alltid en chans att förklara.'}
+],
+a:'Aktivitetskravet är lagstadgat i Socialtjänstlagen (SoL 4 kap. 4§). Kommunen får ställa krav på att den biståndsberättigade deltar i praktik eller kompetenshöjande åtgärd.\n\nKravet ska vara individanpassat — hänsyn tas till ålder, hälsa, familjesituation och språk. Vid giltig frånvaro (sjukdom, VAB) påverkas inte biståndet. Vid ogiltig frånvaro eller vägran kan handläggaren sänka eller avslå bistånd.\n\nForskning visar att individer som är delaktiga i sin planering och känner ägarskap över målen har betydligt högre chans att nå självförsörjning. Delaktighet är inte bara en rättighet — det är en framgångsfaktor.\n\nDu har alltid rätt att:\n- Få skriftligt beslut\n- Få motivering till beslutet\n- Överklaga till Förvaltningsrätten inom 3 veckor\n- Få hjälp med överklagan från socialtjänsten\n\nVanliga missförstånd:\n- "Jag måste söka 20 jobb i veckan" → Antalet bestäms individuellt.\n- "Aktivitetskrav = jag måste ta VILKET jobb som helst" → Nej, det ska vara rimligt utifrån din bakgrund.\n- "Om jag pluggar slipper jag kravet" → Studier måste vara godkända av handläggaren.'},
+{t:'Närvaro & frånvaro',
+cards:[
+{icon:'📞',h:'Meddela samma dag',t:'Helst innan aktiviteten börjar — ring, mejla eller sms:a din handläggare.'},
+{icon:'📄',h:'Läkarintyg',t:'Lämnas om det krävs, vanligtvis från dag 8.'},
+{icon:'⚠️',h:'Ogiltig frånvaro',t:'Kan påverka din ersättning — så meddela alltid.'}
+],a:'Frånvaro ska alltid meddelas samma dag, helst innan aktiviteten börjar. Vid upprepad frånvaro kan handläggaren begära intyg eller uppdaterad planering. Förstadagsintyg kan krävas vid frekvent korttidsfrånvaro.'},
+{t:'Rättigheter & skyldigheter',
+cards:[
+{icon:'🛡️',h:'Dina rättigheter',t:'En individuell plan, tydlig information om beslut, skälig handläggningstid, och att bli bemött med respekt.'},
+{icon:'⚖️',h:'Rätt att överklaga',t:'Du kan överklaga beslut du inte håller med om.'},
+{icon:'🤝',h:'Dina skyldigheter',t:'Delta aktivt, lämna korrekta uppgifter, och följa planen.'},
+{icon:'🔔',h:'Meddela ändringar',t:'Säg till om jobb, inkomst eller boende ändras.'}
+],a:'Du har rätt till en individuell plan, tydlig kommunikation och skälig handläggningstid. Beslut kan överklagas till förvaltningsrätten. Du har skyldighet att medverka aktivt, lämna korrekta uppgifter och följa beslutade aktiviteter. Felaktiga uppgifter kan leda till återkrav eller polisanmälan vid bidragsbrott.'}
 ],
 ex:{type:'write',title:'Skriv ett frånvaromeddelande',desc:'Du är sjuk och kan inte delta i dagens aktivitet. Skriv ett korrekt och professionellt meddelande till din handläggare.',tips:'Inkludera: vem du är, vilken aktivitet du missar, varför du är frånvarande och när du förväntar dig att vara tillbaka.',ph:'Hej [handläggarens namn],\n\nJag heter... och deltar i...\n\nJag kan idag inte delta på grund av...\n\nJag förväntar mig att vara tillbaka...',min:80},
 quiz:[{q:'Vad är ekonomiskt bistånd?',o:['Samhällets sista skyddsnät när du inte kan försörja dig','En förmån alla får','En pension'],c:0},{q:'Vad kallas ekonomiskt bistånd också?',o:['Aktivitetsstöd','Studiemedel','Försörjningsstöd eller socialbidrag'],c:2},{q:'Vem bedömer rätten till bistånd?',o:['Arbetsförmedlingen','Kommunens socialtjänst','Försäkringskassan'],c:1},{q:'Vad betyder "stå till arbetsmarknadens förfogande"?',o:['Att vara arbetslös','Att ha jobb','Att vara redo att ta ett jobb direkt'],c:2},{q:'Vem äger din planering?',o:['Du själv — tillsammans med handläggaren','Handläggaren','Socialtjänsten'],c:0},{q:'Vad ökar chansen att nå självförsörjning?',o:['Att vänta passivt','Att vara delaktig och äga sin planering','Att tacka ja till allt'],c:1},{q:'Vad betyder aktivitetskrav?',o:['Du behöver inte meddela frånvaro','Du ska delta i planerade aktiviteter','Du kan göra vad du vill'],c:1},{q:'När ska du meddela frånvaro?',o:['Samma dag','Dagen efter','Nästa vecka'],c:0},{q:'Vad händer om du tackar nej till ett rimligt jobb?',o:['Du får mer bistånd','Ingenting','Ersättningen kan sänkas eller dras in'],c:2},{q:'Vad är en rättighet?',o:['Något du har rätt till','Något du är tvungen att göra','En aktivitet'],c:0}],
 pr:['Förklara mina skyldigheter på enkel svenska.','Skriv ett korrekt meddelande om sjukfrånvaro.','Sammanfatta aktivitetskrav i tre meningar.']},
-{id:'m2',icon:'💻',title:'SKills-systemet',sub:'Introduktion till SKills & din plan',color:'#f0c040',bc:'rgba(240,192,64,.3)',bg:'rgba(240,192,64,.07)',
+{id:'m2',icon:'💻',title:'SKills-systemet',sub:'Introduktion till SKills & din plan',color:'#f0c040',bc:'rgba(240,192,64,.3)',bg:'rgba(240,192,64,.07)',video:'/videos/m2-skills.mp4',
 lessons:[
-{t:'Vad är SKills?',s:'SKills är ett system där du ser din plan, dina aktiviteter och vad du ska göra.',a:'SKills är ett digitalt verktyg för planering, uppföljning och kommunikation mellan dig och din handläggare.'},
-{t:'Så använder du SKills',s:'Du loggar in, ser din plan och markerar vad du gjort.',a:'Du kan följa din utveckling, se deadlines och kommunicera med handläggare direkt i systemet.'},
-{t:'SKills + CVmatchen',s:'SKills visar vad du ska göra. CVmatchen hjälper dig göra det.',a:'CVmatchen genererar CV, profiltext och matchningar som du sedan kan använda när du söker jobb i din SKills-plan.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Förstå vad SKills är och hur du använder verktyget för att hålla koll på din plan och dina aktiviteter.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad SKills är, hur du använder det i praktiken, och hur det hänger ihop med CVmatchen.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna logga in i SKills, se och följa din plan, och veta hur SKills och CVmatchen kompletterar varandra.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och de tre lektionerna, plus en kort sorteringsövning.'}
+],
+a:'SKills är ditt digitala planeringsverktyg. Den här modulen ger dig snabbstarten.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen visar vad SKills är, hur du använder det, och hur det hänger ihop med CVmatchen. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Vad är SKills?',
+cards:[
+{icon:'💻',h:'Ditt planeringsverktyg',t:'SKills är ett digitalt verktyg där du ser din plan, dina aktiviteter och vad du ska göra.'},
+{icon:'🤝',h:'Du och handläggaren',t:'Det används för planering, uppföljning och kommunikation mellan dig och din handläggare.'}
+],
+a:'SKills är ett digitalt verktyg för planering, uppföljning och kommunikation mellan dig och din handläggare.'},
+{t:'Så använder du SKills',
+cards:[
+{icon:'🔑',h:'Logga in',t:'Du loggar in och kommer åt din plan.'},
+{icon:'📋',h:'Se din plan',t:'Du ser dina aktiviteter och deadlines.'},
+{icon:'✅',h:'Markera vad du gjort',t:'Du bockar av aktiviteter och följer din utveckling.'}
+],
+a:'Du kan följa din utveckling, se deadlines och kommunicera med handläggare direkt i systemet.'},
+{t:'SKills + CVmatchen',
+cards:[
+{icon:'🗺️',h:'SKills visar VAD',t:'SKills berättar vad du ska göra och när.'},
+{icon:'🚀',h:'CVmatchen hjälper dig GÖRA',t:'CVmatchen bygger CV, profiltext och matchningar du använder i din SKills-plan.'}
+],
+a:'CVmatchen genererar CV, profiltext och matchningar som du sedan kan använda när du söker jobb i din SKills-plan.'}
 ],
 ex:{type:'sort',title:'SKills eller CVmatchen?',desc:'Sortera funktionerna i rätt verktyg.',catA:'SKills',catB:'CVmatchen',items:[{l:'Se din plan',c:'A'},{l:'Skapa CV',c:'B'},{l:'Markera aktiviteter',c:'A'},{l:'Matcha mot jobb',c:'B'},{l:'Kommunicera med handläggare',c:'A'},{l:'Exportera PDF',c:'B'}]},
 quiz:[{q:'Vad är SKills?',o:['Ett planeringsverktyg','En jobbsökarsida','En CV-mall'],c:0},{q:'Vad kan du göra i SKills?',o:['Söka utbildning','Skriva CV','Följa din plan och kommunicera'],c:2},{q:'Hur hänger de ihop?',o:['Ingen koppling','SKills planerar, CVmatchen levererar','De är samma sak'],c:1}],
 pr:['Förklara SKills som om jag vore ny i Sverige.','Hjälp mig skapa en veckoplan.','Vad tänker jag på när jag loggar in i SKills?']},
-{id:'m3',icon:'🤖',title:'AI & CVmatchen',sub:'Hur AI hjälper dig hitta jobb',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+
+{id:'ai_gen',icon:'🧠',title:'AI som verktyg',sub:'Vad AI är, vilka modeller som finns & hur du använder dem klokt',color:'#38bdf8',bc:'rgba(56,189,248,.3)',bg:'rgba(56,189,248,.07)',video:'/videos/ai-som-verktyg.mp4',videoAfter:3,
 lessons:[
-{t:'Vad AI kan göra för dig',s:'AI hjälper dig skriva, förstå och hitta jobb snabbare.',a:'AI analyserar texter, skapar CV och profiltext och ger feedback baserat på dina styrkor och den jobbannons du söker.'},
-{t:'Hur CVmatchen fungerar',s:'1. Bygg ditt CV\n2. Sök bland riktiga jobb\n3. AI anpassar mot jobbet\n4. Exportera och skicka',a:'CVmatchen laddar jobbdata från Platsbanken, matchar din profil mot annonsens krav och genererar skräddarsytt CV och profiltext.'},
-{t:'Bra prompts = bättre resultat',s:'❌ "Hjälp mig."\n✅ "Skapa en pitch baserat på min erfarenhet som butikssäljare."',a:'En bra prompt är specifik och ger AI rätt kontext. Ju mer du berättar, desto bättre svar.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Förstå AI som verktyg INNAN du börjar använda CVmatchen eller andra AI-tjänster. Du blir betydligt mer effektiv när du vet vad AI är bra på, vad det är dåligt på, och varför det ibland hittar på saker som låter trovärdiga men inte stämmer.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad AI tekniskt är (mönster, inte magi), de stora språkmodellerna (ChatGPT, Claude, Gemini), när AI hjälper och när du måste tänka själv, samt prompt-formeln Roll+Uppgift+Kontext och de viktigaste integritetsreglerna.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta när AI hjälper, när du ska tänka själv, och vad du aldrig ska dela. Du har grunden för att skriva bra prompts och kan välja rätt verktyg för rätt uppgift — utan att riskera dina personuppgifter.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 8 minuter för kort, video och reflektion. Lägg till 5 minuter för quizet — 7 frågor som befäster det viktigaste innan du går vidare.'}
 ],
-ex:{type:'build',title:'Skriv din egen AI-prompt',desc:'Fyll i dessa delar för att bygga en kraftfull prompt.',fields:[{l:'Vad söker du för jobb?',ph:'t.ex. lagerarbetare, kock, säljare...',hint:'Var specifik.'},{l:'Vilken erfarenhet har du?',ph:'t.ex. 2 år i butik, kör truck...'},{l:'Vad ska AI hjälpa dig med?',ph:'t.ex. skriva profiltext, förbättra CV...',hint:'Var tydlig med uppdraget.'}]},
-quiz:[{q:'Vad kan AI hjälpa med?',o:['Inget','Bara skriva brev','Skriva CV, profiltext och ge feedback'],c:2},{q:'Vad gör CVmatchen?',o:['Söker jobb åt dig','Matchar ditt CV mot jobbannonser med AI','Skickar ansökan'],c:1},{q:'Vad är en bra prompt?',o:['Specifik med rätt kontext','Kort och vag','Så lång som möjligt'],c:0}],
-pr:['Skapa en kort pitch baserat på min erfarenhet.','Förklara denna jobbannons på enkel svenska.','Ge mig tre förbättringar till mitt CV.']}
+a:'Denna modul ger dig grunden för att förstå AI som teknik och verktyg. Det är förkunskap inför CVmatchen-modulen — där du tillämpar allt praktiskt i jobbsöket.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'En kort introduktion till vad AI egentligen är — mönster, inte magi — och till de stora språkmodellerna du kommer att stöta på. Filmen ger dig helhetsbilden innan lektionerna går in på detaljerna.'},
+
+{t:'Vad är AI egentligen?',
+cards:[
+{icon:'🧠',h:'Mönster, inte magi',t:'AI förutsäger nästa ord baserat på miljarder texter den läst. Inget mer mystiskt än så.'},
+{icon:'📚',h:'Tränad på internet',t:'Wikipedia, böcker, kod, webbsidor — fram till en viss datum (s.k. kunskapsstopp).'},
+{icon:'🤖',h:'Inte människa',t:'AI förstår inte som du. Den ser mönster, men har inga känslor, inga åsikter, ingen vilja.'},
+{icon:'⚡',h:'Superpraktikant',t:'Tänk på AI som en jättesnabb praktikant som läst allt — men behöver tydliga instruktioner.'}
+],
+a:'AI (artificiell intelligens) handlar i praktiken om stora språkmodeller (LLM:er) som tränats på enorma textmängder. De räknar fram statistiskt mest sannolika nästa ord. Det är inte "tänkande" i mänsklig mening — men det är otroligt användbart när du vet vad det är bra på.'},
+
+{t:'De stora modellerna — vem är vem?',
+cards:[
+{icon:'💬',h:'ChatGPT (OpenAI)',t:'Mest känd. Bred kompetens. Används i CVmatchen för chatten.'},
+{icon:'🧠',h:'Claude (Anthropic)',t:'Lång minne, försiktig & ärlig. Stark på resonemang och långa texter.'},
+{icon:'🌐',h:'Gemini (Google)',t:'Multimodal — ser bilder, video, ljud. Bra för visuella uppgifter.'},
+{icon:'🔓',h:'Llama / Mistral (öppna)',t:'Du kan köra själv lokalt. Mindre kraftfulla men gratis och privata.'}
+],
+a:'Modellerna utvecklas snabbt — Claude 4.x och GPT-5 är aktuella i 2026. Skillnaderna jämnas ut, men de har olika "personligheter": Claude är mer försiktig, ChatGPT mer kreativ, Gemini mer datadriven. För svenska jobbsökare räcker ChatGPT eller Claude utmärkt.'},
+
+{t:'Vad AI är bra på — och dåligt på',
+cards:[
+{icon:'✅',h:'Bra: Skriva',t:'Sammanfatta, översätta, formulera utkast, korrekturläsa, koda.'},
+{icon:'✅',h:'Bra: Förklara',t:'Förenkla komplexa texter, förklara begrepp på olika nivåer.'},
+{icon:'❌',h:'Dåligt: Räkna & fakta',t:'Matte, exakta siffror, färska nyheter, lokala detaljer — kontrollera alltid.'},
+{icon:'❌',h:'Dåligt: Döma & välja',t:'AI ska inte ta beslut åt dig. Du är fortfarande chefen — AI är assistenten.'}
+],
+a:'Generellt: AI är fantastisk på språk och struktur, svagare på exakthet och dom. När du jobbar med jobbansökningar är det perfekt — text och struktur. När du ska räkna lön eller välja yrke — använd AI som bollplank, inte orakel.'},
+
+{t:'Bra prompts = bättre resultat',
+cards:[
+{icon:'❌',h:'Vag prompt',t:'"Hjälp mig" — AI gissar och du får generiska svar.'},
+{icon:'✅',h:'Specifik prompt',t:'"Skriv en pitch som butikssäljare med 3 års erfarenhet."'},
+{icon:'🧠',h:'Tre delar i en bra prompt',t:'Roll (vem är du), Uppgift (vad ska AI göra), Kontext (din situation).'},
+{icon:'🔄',h:'Iterera',t:'Inte nöjd? Be om revidering: "Gör den kortare", "mer formell". AI lyssnar.'}
+],
+a:'En bra prompt liknar en bra arbetsorder: tydlig, specifik, med rätt bakgrund. Ju mer relevant info du ger — desto bättre svar. Och var inte rädd för att be om ändringar. AI blir aldrig sur.'},
+
+{t:'Begränsningar & integritet — vad du måste veta',
+cards:[
+{icon:'🔒',h:'Dela ALDRIG',t:'Personnummer, lösenord, bankuppgifter, känslig sjukinfo, andras personuppgifter.'},
+{icon:'📋',h:'Testa själv',t:'"Skulle jag visa detta för en främling?" Är svaret nej — dela inte med AI.'},
+{icon:'🤯',h:'Hallucinationer',t:'AI kan hitta på fakta som låter trovärdiga. Kontrollera alltid viktiga uppgifter.'},
+{icon:'⚖️',h:'Du är ansvarig',t:'AI skriver — du läser, granskar och tar ansvar för det du skickar in.'}
+],
+a:'AI-tjänster sparar oftast dina meddelanden för att förbättra modellerna. Det betyder att allt du skriver kan teoretiskt läsas av människor på företaget bakom AI:n. CVmatchen är byggd med integritet i fokus — men generella regeln är: dela inte mer än nödvändigt.'},
+
+{t:'Hur gick det? — sammanfattning',
+cards:[
+{icon:'🧐',h:'Vad var nytt?',t:'Vilken modell hade du inte hört talas om innan?'},
+{icon:'🚀',h:'Nästa steg',t:'Nu går vi vidare till CVmatchen — där tillämpar vi allt detta praktiskt.'},
+{icon:'❓',h:'Frågor?',t:'Du kan alltid fråga AI:n i CVmatchen om något känns oklart.'},
+{icon:'🏆',h:'Klar!',t:'Du har grunden. Nu kör vi quizet för att befästa kunskapen.'}
+],
+a:'Att förstå verktyget INNAN man använder det är skillnaden mellan att låta sig kastas runt — eller styra själv. Du har nu förkunskapen för att använda AI klokt i jobbsöket.'}
+],
+ex:{type:'write',title:'Skriv din första AI-prompt',desc:'Skriv en prompt med alla tre delar: Roll, Uppgift, Kontext. Använd din egen bakgrund.',tips:'Exempel: "Jag är (roll) en undersköterska med 5 års erfarenhet. (Uppgift) Skriv en kort profiltext för en jobbansökan. (Kontext) Jag söker tjänst på äldreboende i Helsingborg och vill betona min lugna och tydliga kommunikation."',ph:'Jag är...\n\nSkriv...\n\nJag söker...',min:60},
+quiz:[
+{q:'Hur fungerar AI tekniskt sett?',o:['Det tänker som en människa','Det förutsäger nästa ord baserat på mönster','Det söker svar på Google'],c:1},
+{q:'Vilken modell är från Anthropic?',o:['ChatGPT','Claude','Gemini'],c:1},
+{q:'Vad är AI INTE bra på?',o:['Sammanfatta texter','Översätta','Exakt matematik och färska fakta'],c:2},
+{q:'Vad är de tre delarna i en bra prompt?',o:['Roll, Uppgift, Kontext','Hej, fråga, tack','Namn, ålder, mål'],c:0},
+{q:'Vad ska du ALDRIG dela med AI?',o:['Din yrkesbakgrund','Personnummer och lösenord','Vad du söker för jobb'],c:1},
+{q:'Vad är en "hallucination" hos AI?',o:['En bild AI genererat','När AI hittar på fakta som låter trovärdiga','När AI vägrar svara'],c:1},
+{q:'Vem ansvarar för det AI skriver åt dig?',o:['AI-företaget','OpenAI/Anthropic','Du själv'],c:2}
+],
+pr:['Förklara skillnaden mellan ChatGPT och Claude på enkel svenska.','Skriv en pitch baserat på min bakgrund.','Vad ska jag tänka på när jag delar information med AI?']},
+
+{id:'m3',icon:'🤖',title:'AI & CVmatchen',sub:'Förstå CVmatchen — verktyget som matchar dig mot riktiga jobb',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/m3-cvmatchen.mp4',videoAfter:3,
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Förstå CVmatchen specifikt — vad plattformen gör, hur den funkar, och vad som är unikt jämfört med LinkedIn eller Arbetsförmedlingens egen söktjänst. Översikten du behöver innan du dyker djupare in i matchnings-tekniken i nästa modul.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad CVmatchen är som plattform, det 4-stegs flöde du går igenom (CV → jobb → matchning → export), match/partial/missing-logiken som färgkodar dina träffar, och vad du faktiskt får ut konkret per ansökan.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna använda CVmatchen självständigt för att söka jobb anpassat efter dig. Du förstår färgkodningen, vet när en match är sök-värd (>70%), och har en realistisk känsla för hur lång tid en ansökan tar när du är van.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 6 minuter för kort, video och reflektion. Quiz och övning lägger till 5–8 minuter om du vill befästa kunskapen direkt innan du provar plattformen skarpt.'}
+],
+a:'Du har redan grunden om AI från förra modulen ("AI som verktyg"). Den här modulen tillämpar AI:n i ett konkret verktyg — CVmatchen — som är byggt för svenska jobbsökare och används av kommuner runt om i Sverige.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen ger dig översikten av CVmatchen — vad plattformen gör och hur det fyrstegsflöde du ska jobba i hänger ihop. Efter den vet du vad du har framför dig innan lektionerna går in på djupet.'},
+
+{t:'Vad är CVmatchen?',
+cards:[
+{icon:'🇸🇪',h:'Svensk plattform',t:'Byggd för svenska jobbsökare. Stöd för svenska, lätt svenska, samt andra språk.'},
+{icon:'🔗',h:'Kopplad till Platsbanken',t:'Hämtar färska annonser direkt från Arbetsförmedlingens databas.'},
+{icon:'🤖',h:'AI-driven matchning',t:'Jämför din profil mot annonsens krav — ord för ord, kompetens för kompetens.'},
+{icon:'🎓',h:'Pedagogiskt fokus',t:'Inte bara ett verktyg — också en träningsplattform med moduler som denna.'}
+],
+a:'CVmatchen är utvecklad av PathfinderAI AB och säljs till svenska kommuner som en del av deras arbetsmarknadsinsatser. Skillnaden mot LinkedIn eller Arbetsförmedlingens egen söktjänst: AI-anpassning av CV och profiltext per annons — automatiskt.'},
+
+{t:'Hur CVmatchen fungerar — 4 steg',
+cards:[
+{icon:'1️⃣',h:'Bygg ditt CV',t:'Fyll i din erfarenhet — eller låt AI dra den från LinkedIn. Du startar med din historia.'},
+{icon:'2️⃣',h:'Hitta riktiga jobb',t:'CVmatchen hämtar tusentals färska annonser från Platsbanken.'},
+{icon:'3️⃣',h:'AI matchar & anpassar',t:'Din profil skräddarsys mot varje annons — automatiskt, på sekunder.'},
+{icon:'4️⃣',h:'Exportera & skicka',t:'PDF-CV redo att skicka — anpassad till just det jobbet du söker.'}
+],
+a:'Hela flödet — från tom profil till skickad ansökan — tar i regel under 10 minuter när du blivit van. Du kan när som helst pausa och fortsätta senare. All data lagras säkert i din profil.'},
+
+{t:'Vad får du ut? — match-resultaten',
+cards:[
+{icon:'🚦',h:'Färgkodat resultat',t:'AI:n färgmarkerar varje koppling: grönt, gult, rött. Du ser direkt var du står.'},
+{icon:'📊',h:'En procent-siffra',t:'Sammanvägd match — över 70% = sök! Under 40% = leta vidare.'},
+{icon:'💡',h:'Tre profiltext-utkast',t:'AI skriver tre olika versioner att välja mellan eller mixa.'},
+{icon:'🎓',h:'Djupare i nästa modul',t:'I "Matcha med AI" tränar du hur du tolkar färgerna och flyttar dem.'}
+],
+a:'Match-resultaten är CVmatchens huvudleverans. Den här modulen ger dig översikten — exakt hur match/partial/missing fungerar och hur du styr resultatet får du i nästa modul "Matcha med AI".'},
+
+{t:'Hur gick det? — sammanfattning',
+cards:[
+{icon:'🧐',h:'Vad var nytt?',t:'Att CVmatchen är kopplad till Platsbanken? Eller att flödet tar under 10 minuter när du är van?'},
+{icon:'🚀',h:'Nästa steg',t:'Gå vidare till "Matcha med AI" — där du djupdyker i matchnings-logiken.'},
+{icon:'❓',h:'Fastnat?',t:'Ställ frågor direkt till AI-coachen i CVmatchen-appen.'},
+{icon:'🏆',h:'Klar!',t:'Du förstår vad CVmatchen är och hur flödet ser ut. Nu testar vi det i quizet.'}
+],
+a:'Den här modulen är översikten. När du förstår vad CVmatchen är och hur flödet fungerar går nästa modul djupare in i matchnings-logiken — där tränar du hur du läser färgerna och flyttar resultaten.'}
+],
+ex:{type:'build',title:'Förbered en jobbsökning',desc:'Tänk dig en jobbannons du vill söka — fyll i dessa fält.',fields:[{l:'Vilket jobb söker du?',ph:'t.ex. lagerarbetare, kock, säljare...',hint:'Var specifik.'},{l:'3 styrkor du har som matchar',ph:'t.ex. erfarenhet av truck, lugn, lagspelare...'},{l:'1 lucka du behöver adressera',ph:'t.ex. saknar B-körkort men kan ta det...',hint:'Var ärlig — det imponerar mer än att överdriva.'}]},
+quiz:[
+{q:'Vad är CVmatchen kopplad till?',o:['LinkedIn','Platsbanken (Arbetsförmedlingen)','Indeed'],c:1},
+{q:'Vilka är de 4 stegen i CVmatchen?',o:['Sök / klicka / skicka / vänta','Bygg CV / Hitta jobb / AI matchar / Exportera','Logga in / surf / mejla / klar'],c:1},
+{q:'Vad är CVmatchens styrka jämfört med andra jobbsajter?',o:['Flest annonser','AI-anpassning av CV och profiltext per annons','Lägst pris'],c:1},
+{q:'När är match-procenten sök-värd?',o:['Under 30%','Över 70%','Spelar ingen roll'],c:1},
+{q:'Hur många profiltext-utkast genererar AI per matchning?',o:['Ett','Tre','Tio'],c:1},
+{q:'Vart djupdyker du i match-logiken (färger, ATS, nyckelord)?',o:['I CVmatchen-modulen','I modulen "Matcha med AI"','I modulen "CV-byggaren"'],c:1},
+{q:'Hur lång tid tar hela flödet — från tom profil till skickad ansökan, när du är van?',o:['Under 10 minuter','En timme','En arbetsdag'],c:0}
+],
+pr:['Förklara skillnaden mellan Match, Partial och Missing.','Hjälp mig formulera en partial-match till en starkare formulering.','Vad ska jag skriva när jag saknar en kompetens?']}
 ];
 
 var ARBETE=[
 {id:'a0',icon:'📊',title:'Arbetsmarknaden',sub:'Sverige, Skåne & Öresundsregionen',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/arbetsmarknaden.mp4',
 lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Förstå hur arbetsmarknaden faktiskt ser ut — i Sverige, i Skåne och i Öresundsregionen. När du vet var jobben finns och vilka sektorer som växer kan du rikta ditt jobbsökande dit chanserna är störst.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Den svenska arbetsmarknaden 2026 med färska siffror, Skåne i förhållande till resten av landet och till Danmark, samt vilka sektorer som faktiskt anställer i Helsingborg — och hur Öresundsbron öppnar en hel andra arbetsmarknad.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna läsa arbetsmarknaden bortom rubrikerna — veta var bristen på personal är störst, förstå pendlingen över Öresund, och kunna peka ut vilka sektorer i din region som anställer just nu.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 6 minuter för film och de tre lektionerna. Lägg till några minuter för kart-övningen där du själv utforskar arbetslösheten stad för stad i Skåne.'}
+],
+a:'Den här modulen ger dig faktabilden av arbetsmarknaden — grunden du behöver innan du börjar söka jobb på riktigt. Siffrorna bygger på SCB och Eurostat.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen ger dig en överblick av läget på arbetsmarknaden — Sverige, Skåne och Öresundsregionen. Den sätter ramen för lektionerna som sedan går in på siffrorna och möjligheterna.'},
 {t:'Den svenska arbetsmarknaden',
-s:'Sverige har ca 5,2 miljoner sysselsatta — av 10,6 miljoner invånare.\n\n📊 Arbetslöshet 2026 (Eurostat):\n🇸🇪 Sverige: 9,7% — bland EU:s högsta\n📍 Skåne: ~10%\n🏙️ Helsingborg: ~9,8%\n👶 Ungdomar 15–24: 30,1%\n\n💡 Paradoxalt nog saknar Sverige 30 000+ specialister inom IT & cyber — samtidigt som lågutbildade har svårt att hitta jobb.\n\nStörsta sektorer:\n🏥 Vård & omsorg — störst\n🏗️ Bygg — pressad av höga räntor\n🚚 Lager & logistik — snabbväxande\n💻 IT & digitalt — lägst arbetslöshet',
+cards:[
+{icon:'👥',h:'5,2 miljoner i arbete',t:'Sverige har cirka 5,2 miljoner sysselsatta — av 10,6 miljoner invånare.'},
+{icon:'📊',h:'Arbetslöshet 2026',t:'Sverige 9,7% — bland EU:s högsta. Skåne ~10%, Helsingborg ~9,8%. Bland unga 15–24 år: 30,1%.'},
+{icon:'💡',h:'Paradoxen',t:'Samtidigt saknar Sverige 30 000+ specialister inom IT & cyber — medan lågutbildade har svårt att hitta jobb. Den mismatchen är dagens största strukturproblem.'},
+{icon:'🏥',h:'Största sektorer',t:'Vård & omsorg störst. Bygg pressat av höga räntor. Lager & logistik växer snabbt. IT & digitalt har lägst arbetslöshet.'}
+],
 a:'Arbetsmarknaden mäts av SCB via AKU (Arbetskraftsundersökning) och rapporteras till Eurostat enligt ILO-standard. Ungdomsarbetslöshet 15–24 år är ca dubbelt det totala. Strukturproblemet 2026: en mismatch mellan tillgänglig arbetskraft och faktiskt behov — 30 000+ specialister saknas inom IT/cybersäkerhet.'},
 {t:'Skåne och Öresundsregionen',
-s:'Skåne — 1,4 miljoner invånare. Sveriges tredje största exportlän.\n\n📊 Arbetslöshet:\n🇸🇪 Sverige: 9,7%\n🇩🇰 Danmark: 2,7% (officiell, Statistics Denmark)\n\n💱 Valutan gör skillnaden ännu större:\n1 DKK = 1,45 SEK idag (2026)\nSamma jobb kan ge 30–50% mer hem efter växling!\n\n👥 ~20 000 svenskar pendlar dagligen över Öresund till danska jobb.',
+cards:[
+{icon:'📍',h:'Skåne',t:'1,4 miljoner invånare — Sveriges tredje största exportlän.'},
+{icon:'📊',h:'Två länder, två siffror',t:'Sverige 9,7% arbetslöshet. Danmark 2,7% officiellt (Statistics Denmark) — en helt annan arbetsmarknad granne med dig.'},
+{icon:'💱',h:'Valutan gör skillnad',t:'1 dansk krona = 1,45 svenska kronor (2026). Samma jobb kan ge 30–50% mer hem efter växling.'},
+{icon:'👥',h:'20 000 pendlar dagligen',t:'Cirka 20 000 svenskar pendlar varje dag över Öresund till danska jobb. EU:s fria rörlighet gör regionen till en gemensam arbetsmarknad.'}
+],
 a:'Öresundsbron öppnade 2000 och integrerade arbetsmarknaden. EU-medborgarskap ger fri rörlighet. Den danska "officiella" siffran (2,7%) är registerbaserad (Statistics Denmark) — Eurostats LFS-mätning ligger på ~6,5% (jämförbar med Sveriges 9,7%). Båda är korrekta — olika metoder. Valutaeffekten har förstärkts 2024–2026 i takt med att SEK försvagats. Skatt betalas i arbetslandet, deklaration krävs i båda länder.'},
 {t:'Helsingborgs arbetsmarknad',
-s:'Helsingborg är Sveriges 8:e största stad — ~115 000 invånare.\n\nStarka sektorer lokalt:\n🏭 Industri & livsmedel (Findus, IKEA, Perstorp)\n🚢 Logistik & hamn (en av Sveriges 5 största)\n🏥 Vård & Region Skåne — största arbetsgivaren\n🛒 Handel & service\n\n⛴️ Färjan till Helsingör tar 20 min — Region Hovedstaden ligger granne!\n\n💼 Stadsomvandlingen H+ skapar tusentals nya jobb framöver.',
+cards:[
+{icon:'🏙️',h:'Sveriges 8:e största stad',t:'Helsingborg har cirka 115 000 invånare.'},
+{icon:'🏭',h:'Starka sektorer lokalt',t:'Industri & livsmedel (Findus, IKEA, Perstorp), logistik & hamn (en av Sveriges 5 största), vård via Region Skåne, samt handel & service.'},
+{icon:'⛴️',h:'Danmark 20 minuter bort',t:'Färjan till Helsingör tar 20 minuter — Region Hovedstaden ligger granne.'},
+{icon:'💼',h:'H+ skapar nya jobb',t:'Stadsomvandlingsprojektet H+ skapar tusentals nya jobb i Helsingborg framöver.'}
+],
 a:'H+ stadsomvandlingsprojektet skapar tusentals nya jobb i Helsingborg. Arbetsförmedlingen Helsingborg: Järnvägsgatan 14. Jobbtorg Helsingborg erbjuder kostnadsfri matchning och coachning för invånare. Helsingborgs hamn är en av Sveriges fem största — drar lager, truck och logistik-jobb. Vården (Region Skåne) har konstant rekryteringsbehov, särskilt undersköterskor och sjuksköterskor.'}
 ],
 ex:{type:'arb-map',title:'Utforska arbetslösheten i Skåne',desc:'Interaktiv karta nedan — klicka på en stad för att se arbetslöshet, sektorer och insikter. Data från SCB och Arbetsförmedlingen.'},
@@ -86,57 +296,128 @@ quiz:[
 ],
 pr:['Vilka jobb finns just nu i Helsingborg?','Hur söker jag jobb i Danmark som bor i Sverige?','Vilka branscher rekryterar mest i Skåne nu?','Räkna ut min faktiska timlön i Danmark efter växling.','Vilka utbildningar leder snabbast till jobb inom vård i Helsingborg?']},
 
-{id:'a_match',icon:'🎯',title:'Matcha med AI',sub:'Förstå matchningslogiken innan du kör skarpt',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/matcha.mp4',
+{id:'a_match',icon:'🎯',title:'Matcha med AI',sub:'Förstå matchningslogiken innan du kör skarpt',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/matcha.mp4',videoAfter:3,
 lessons:[
-{t:'Vad är AI-matchning?',
-s:'CVmatchen AI läser ditt CV och en jobbannons — och hittar kopplingarna.\n\nResultatet:\n🟢 MATCH — du har kompetensen exakt\n🟡 PARTIAL — du har något liknande\n🔴 MISSING — du saknar det\n\nPlus tre anpassade profiltexter att välja bland.',
-a:'Matchning bygger på NLP (Natural Language Processing). AI jämför semantisk likhet — inte bara exakta ord. "Truckkörning" kan matcha "truck A+B". Partial match är extra viktigt: det visar var du är nära och kan lyfta fram överförbar kompetens.'},
-{t:'Nyckelord — vad händer med dem?',
-s:'Annonsen bryts ner i nyckelord som AI jämför med ditt CV:\n\n🟢 MATCH = Lyft fram tydligt i CV, överst\n🟡 PARTIAL = Formulera om, visa kopplingen\n🔴 MISSING = Var ärlig, nämn viljan att lära\n\nMålet: Maximera MATCH, förklara PARTIAL.',
-a:'ATS-system (Applicant Tracking Systems) filtrerar bort CV utan rätt nyckelord. Rekryterare skummar CV på 6-7 sekunder. AI-matchning hjälper dig passera ATS och fånga blicken — rätt ord, rätt plats, rätt vinkel.'},
-{t:'De tre profiltexterna',
-s:'AI genererar alltid tre versioner:\n\n📌 Erfarenhetsfokus\n"5 år inom lager, van vid WMS..."\n\n💡 Motivationsfokus\n"Driven av att effektivisera..."\n\n🏆 Kompetens & resultat\n"Reducerade plocktid med 23%..."\n\nVälj den som passar — eller blanda delar!',
-a:'De tre vinklarna matchar olika rekryteringsstilar. Erfarenhet passar traditionella rekryterare och stora bolag. Motivation passar kulturfokuserade bolag och startups. Resultat passar datadriven rekrytering och chefsroller. Blanda gärna delar.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Bemästra CVmatchens matchnings-logik så du kan STYRA resultatet — inte bara konsumera det. När du förstår VARFÖR färgerna ser ut som de gör kan du flytta dem uppåt och få fler träffar på de jobb du verkligen vill ha.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'AI-matchning på djupet (NLP & semantisk likhet), nyckelord & ATS-systemen som filtrerar CV automatiskt, samt de tre profiltexterna och när du väljer vilken. Allt med konkreta exempel från svenska arbetsmarknaden.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta hur du maximerar MATCH (gröna), omformulerar PARTIAL (gula) till starkare formuleringar, och hanterar MISSING (röda) ärligt utan att skrämma rekryteraren. Du kan tolka procent-resultatet och vet när det är värt att söka.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 7 minuter för kort, video och reflektion. Räkna med ytterligare 5–10 minuter om du vill göra quizet och övningen direkt efter — då sitter logiken på riktigt.'}
+],
+a:'Förkunskap: du har gjort modulen "AI & CVmatchen" (m3) som introducerade match/partial/missing. Här går vi djupare — så du kan tävla på samma villkor som rekryterare och deras ATS-system.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen förklarar grunderna i hur CVmatchens matchning fungerar och varför träffarna färgkodas som de gör. Den lägger grunden så att lektionerna sedan kan visa hur du styr resultatet.'},
+
+{t:'Vad är AI-matchning — på djupet?',
+cards:[
+{icon:'🧠',h:'NLP-driven',t:'Bygger på Natural Language Processing. AI jämför betydelse, inte bara exakta ord.'},
+{icon:'🔗',h:'Semantisk likhet',t:'"Truckkörning" matchar "truck A+B". Du behöver inte ha exakt samma ord som annonsen.'},
+{icon:'🟡',h:'Partial = guld',t:'Visar var du är nära. Här ligger din chans att lyfta fram överförbar kompetens.'},
+{icon:'⚙️',h:'Inte felfri',t:'AI kan missa kontext. Granska alltid — du vet bäst vad du faktiskt kan.'}
+],
+a:'Matchning bygger på vektorisering av text — meningar blir koordinater i ett semantiskt rum. Närbesläktade begrepp hamnar nära varandra geometriskt. Det är så AI kan se att "kundbemötande" och "service" är samma kompetens — utan att orden är identiska.'},
+
+{t:'Nyckelord & ATS — det dolda spelet',
+cards:[
+{icon:'🤖',h:'ATS rangordnar',t:'Applicant Tracking Systems läser CV automatiskt och rangordnar — saknas nyckelord hamnar du längre ned i högen.'},
+{icon:'📊',h:'Stora bolag använder dem',t:'Vanligast hos stora arbetsgivare och rekryteringsbyråer. Småföretag granskar oftare manuellt.'},
+{icon:'⏱️',h:'Få sekunder per CV',t:'Rekryterare lägger i regel under 10 sekunder på första genomläsningen (Ladders-studie 2018: 7,4 sek).'},
+{icon:'🎯',h:'Maximera MATCH',t:'Lyft de gröna orden överst i CV. Omformulera gula så kopplingen blir tydlig.'}
+],
+a:'Nyckelord ska finnas i tre lager: profiltext, kompetenslista och i konkreta arbetsuppgifter. Inte bara listas — visas i kontext. AI-matchningen i CVmatchen hjälper dig hitta vilka ord som behövs för en specifik annons.'},
+
+{t:'De tre profiltexterna — vinklar att välja mellan',
+cards:[
+{icon:'📌',h:'Erfarenhetsfokus',t:'"5 år inom lager, van vid WMS." Passar stora bolag, traditionella rekryterare.'},
+{icon:'💡',h:'Motivationsfokus',t:'"Driven av att effektivisera flöden." Passar startups, kulturfokuserade bolag.'},
+{icon:'🏆',h:'Kompetens & resultat',t:'"Reducerade plocktid med 23%." Passar datadrivna roller och chefsjobb.'},
+{icon:'🧩',h:'Blanda gärna',t:'Inget tvång att välja en. Mixa delar för perfekt match mot just den annonsen.'}
+],
+a:'Tre profiltexter är inte godtyckligt — varje vinkel löser ett specifikt rekryteringsproblem. Vid karriärskifte → Motivation (du har inte rätt erfarenhet). Vid intern karriär → Resultat (du behöver visa progression). Vid första jobbet → Erfarenhet (utbildning + småjobb + praktik).'},
+
+{t:'Hur gick det? — sammanfattning',
+cards:[
+{icon:'🧐',h:'Vad var nytt?',t:'NLP, semantisk likhet — eller hur de tre profiltext-vinklarna fungerar?'},
+{icon:'🚀',h:'Nästa steg',t:'Testa skarpt — kör din egen profil genom CVmatchen och se färgerna live.'},
+{icon:'❓',h:'Frågor?',t:'AI-coachen i CVmatchen kan analysera en specifik annons åt dig.'},
+{icon:'🏆',h:'Klar!',t:'Du är beredd. Quiz visar att kunskapen sitter.'}
+],
+a:'Matchningslogiken är CVmatchens kärna — när du förstår den styr du resultatet. När du inte förstår den blir du frustrerad av "varför fick jag bara 42%". Nu vet du varför färgerna ser ut som de gör — och hur du kan flytta dem uppåt.'}
 ],
 ex:{type:'match-trainer',title:'Träna matchningslogiken',desc:'Info → Quiz → Miniövning — förstå allt innan du kör skarpt.'},
 quiz:[
 {q:'Vad innebär "partial match"?',o:['Du saknar kompetensen helt','Du har liknande erfarenhet — kan formuleras om','Du har exakt kompetensen'],c:1},
+{q:'Vad bygger AI-matchningen tekniskt på?',o:['Slumpgenerator','NLP — semantisk likhet, betydelse','Manuell granskning'],c:1},
 {q:'Varför är nyckelord kritiska i CV?',o:['Rekryterare läser dem sist','Ser proffsigare ut','ATS-system filtrerar bort CV utan rätt nyckelord'],c:2},
+{q:'Hur lång tid lägger en rekryterare i regel på första genomläsningen?',o:['30 sekunder','2 minuter','Under 10 sekunder'],c:2},
+{q:'Vad gör ATS-system i praktiken?',o:['Skickar autosvar till alla sökanden','Rangordnar CV automatiskt — saknas nyckelord hamnar du längre ned','Bokar intervjuer åt rekryteraren'],c:1},
 {q:'Vilken profiltext-vinkel passar bäst vid karriärskifte?',o:['Motivationsfokus','Kompetens & resultat','Erfarenhetsfokus'],c:0},
-{q:'Hur många nyckelord analyserar AI:n per annons?',o:['10–20','50–100','200+'],c:2},
-{q:'Hur lång tid har en rekryterare på första genomläsningen?',o:['30 sekunder','2 minuter','6–7 sekunder'],c:2},
-{q:'Hur stor andel CV stoppas av ATS-system?',o:['10%','35%','75%'],c:2},
-{q:'Vilken vinkel passar bäst för traditionella stora bolag?',o:['Erfarenhetsfokus','Motivationsfokus','Resultatfokus'],c:0},
-{q:'Vilken vinkel passar bäst för en datadriven chefsroll?',o:['Erfarenhetsfokus','Motivationsfokus','Kompetens & resultat'],c:2},
+{q:'Vilken vinkel passar bäst för datadrivna chefsroller?',o:['Erfarenhetsfokus','Motivationsfokus','Kompetens & resultat'],c:2},
 {q:'Vad betyder MISSING-flaggan?',o:['Sök inte jobbet','Visa viljan att lära','Ljug om kompetensen'],c:1},
-{q:'Måste man välja en av de tre profiltexterna?',o:['Ja, bara en','Nej, kan blanda delar','Bara om man inte har erfarenhet'],c:1}
+{q:'Måste man välja EN av de tre profiltext-varianterna?',o:['Ja, bara en','Nej, kan blanda delar','Bara om man inte har erfarenhet'],c:1}
 ],
 pr:['Analysera min matchning mot denna annons: [klistra in]','Vilken profiltext-vinkel passar bäst för mitt fall?','Skriv om detta CV-avsnitt för bättre nyckelordsmatch.','Hitta de viktigaste nyckelorden i denna annons: [klistra in]','Föreslå hur jag kan formulera om "MISSING"-områden positivt.']},
 
-{id:'a_cv',icon:'📄',title:'CV-byggaren',sub:'Förstå varje del INNAN du fyller i ditt riktiga CV',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/cv-byggaren.mp4',
+{id:'a_cv',icon:'📄',title:'CV-byggaren',sub:'Förstå varje del INNAN du fyller i ditt riktiga CV',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/cv-byggaren.mp4',videoAfter:3,
 lessons:[
-{t:'Vad är ett bra CV?',
-s:'Ditt CV är din marknadsföring — inte din biografi.\n\n✅ Anpassat per ansökan\n✅ Lätt att skumma (6-7 sek)\n✅ Rätt nyckelord på rätt plats\n✅ Ärligt och konkret\n\nCVmatchen hjälper dig bygga strukturerat med AI-stöd.',
-a:'ATS (Applicant Tracking Systems) skannar CV automatiskt. Upp till 75% av CV:n läses aldrig av en människa om de inte passerar ATS. Rätt nyckelord = passerar filtret. Tydlig struktur = fångar blicken de 6-7 sekunder rekryteraren ger det.'},
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Bygg ett CV som FUNGERAR — anpassat per ansökan, läsbart för både rekryterare och ATS-system, och ärligt om både styrkor och luckor. Tänk på CV:t som din marknadsföring, inte din biografi.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad som faktiskt gör ett CV bra (under 10 sekunder vid första urval), profiltext-formeln Vem+Kan+Söker, hur man skriver arbetsuppgifter som säljer (Handling+Skala/Resultat), samt de vanligaste flosklerna att undvika.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna skriva varje CV-del medvetet — inte bara fylla i fält i blindo. Du vet vilka ord rekryterare reagerar på, hur du kvantifierar utan att överdriva, och varför du behöver flera versioner av ditt CV.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 7 minuter för kort, video och reflektion. Sedan är du redo att fylla i CVmatchens CV-byggare med struktur — räkna med 15–20 minuter för ett första utkast.'}
+],
+a:'Innan du börjar fylla i CVmatchens CV-byggare — förstå varje del. Då blir resultatet starkare. Den här modulen ger dig formlerna och vinklarna som rekryterare faktiskt reagerar på.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen visar vad som faktiskt gör ett CV starkt — och varför de första sekunderna avgör. Se den först, så blir formlerna i lektionerna lättare att ta till sig.'},
+
+{t:'Vad gör ett CV BRA?',
+cards:[
+{icon:'🎯',h:'Marknadsföring',t:'CV är din marknadsföring — inte din biografi. Vad du sålde till köparen, inte allt du gjort.'},
+{icon:'🔄',h:'Anpassat',t:'Justera per ansökan. Olika tjänster behöver olika versioner av dig.'},
+{icon:'👀',h:'Skumbart',t:'Rekryteraren skummar — sätt det viktigaste högst upp och först i varje rad.'},
+{icon:'✅',h:'Ärligt & konkret',t:'Aldrig ljug. Använd siffror där det går — det är trovärdigare än adjektiv.'}
+],
+a:'Ett CV läses i regel under 10 sekunder vid första urvalet. Tydlig struktur, rätt nyckelord och konkreta resultat avgör om du går vidare. Floskler som "driven team-spelare" säger ingenting — siffror och specifika exempel säger allt.'},
+
 {t:'Profiltext — sälj dig på 4 rader',
-s:'❌ "Jag är driven och söker ett stimulerande jobb."\n\n✅ "Lagerarbetare med 4 år på PostNord. Truck A+B, WMS-erfarenhet och 100% leveransprecision Q3 2025. Söker nästa steg inom logistik i Helsingborg."\n\nFormeln: Vem + Kan + Söker = Stark profiltext',
-a:'AI i CVmatchen genererar 3 alternativ: personlig inledning, styrka/passion och samarbetsfokus. Välj ett och finjustera. Profiltexten ska vara 3-5 meningar och anpassas till varje specifik ansökan.'},
-{t:'Arbetsuppgifter som säljer',
-s:'❌ "Jobbade i kassan och hjälpte kunder."\n\n✅ "Hanterade 200+ kundtransaktioner/dag. Ansvarade för kassaavstämning och reklamationshantering. Belönades Årets medarbetare Q2."\n\nFormeln: HANDLING + SKALA/RESULTAT = Säljer!',
-a:'AI genererar 3 bullet points per anställning baserat på titel + företag. Kom ihåg: mätbara resultat (%, antal, kronor) är alltid starkare än vaga beskrivningar. Granska alltid vad AI föreslår — du vet bäst vad du faktiskt gjort.'}
+cards:[
+{icon:'❌',h:'Floskel',t:'"Jag är driven och söker ett stimulerande jobb." — Säger inget.'},
+{icon:'✅',h:'Konkret',t:'"Lagerarbetare med 4 år på PostNord. Truck A+B, WMS-erfarenhet. Söker nästa steg inom logistik i Helsingborg."'},
+{icon:'🧩',h:'Formeln',t:'Vem är du + Vad du kan + Vad du söker = stark profiltext.'},
+{icon:'📏',h:'Längd',t:'3–5 meningar. Längre = den läses inte. Kortare = säger för lite.'}
+],
+a:'CVmatchen genererar profiltext-utkast åt dig — välj en, blanda eller skriv eget. Granska alltid AI:n: den vet inte vilka av dina meriter som är mest relevanta för just det här jobbet. (Strategi för olika vinklar lär du dig i modulen "Matcha med AI".)'},
+
+{t:'Arbetsuppgifter som faktiskt säljer',
+cards:[
+{icon:'❌',h:'Vagt',t:'"Jobbade i kassan och hjälpte kunder." — Säger ingenting unikt.'},
+{icon:'✅',h:'Skarpt',t:'"Hanterade 200+ kundtransaktioner/dag. Ansvarade för kassaavstämning och reklamationer."'},
+{icon:'🧮',h:'Formeln',t:'HANDLING + SKALA/RESULTAT = stark beskrivning. Använd siffror där du kan.'},
+{icon:'📝',h:'Uppskatta',t:'Minns du inte exakt? Ange ett rimligt intervall ("ca 150-200/dag") — bättre än vagt.'}
+],
+a:'CVmatchen genererar bullet points baserat på titel + företag. AI gissar baserat på vad rollen vanligtvis innebär — DU har de unika detaljerna. Granska och förfina. Mätbara resultat (%, antal, kronor, tid) lyfter en bullet rejält.'},
+
+{t:'Hur gick det? — sammanfattning',
+cards:[
+{icon:'🧐',h:'Vad var nytt?',t:'Vilken formel sätter sig — Vem+Kan+Söker eller Handling+Skala?'},
+{icon:'🚀',h:'Nästa steg',t:'Öppna CV-byggaren i CVmatchen och börja med din profiltext.'},
+{icon:'❓',h:'Frågor?',t:'AI-coachen kan kvantifiera dina arbetsuppgifter åt dig.'},
+{icon:'🏆',h:'Klar!',t:'Du har verktygen. Quizet säkrar att kunskapen sitter.'}
+],
+a:'Formlerna är skelettet — dina specifika fakta är köttet. När du fyller i CVmatchen efter denna modul: tänk på formeln, var ärlig, var konkret. Då blir CV:t starkt.'}
 ],
 ex:{type:'cv-trainer',title:'Träna CV-byggaren',desc:'4 infoskärmar · 6 quizfrågor · Mini-bygge — sedan är du redo för ditt riktiga CV!'},
 quiz:[
-{q:'Hur lång tid lägger en rekryterare på första genomläsningen?',o:['2 minuter','5 minuter','6–7 sekunder','30 sekunder'],c:2},
+{q:'Hur lång tid lägger en rekryterare i regel på första genomläsningen?',o:['2 minuter','5 minuter','Under 10 sekunder','30 sekunder'],c:2},
 {q:'Vad ska profiltexten besvara?',o:['Vem du är, vad du kan, vad du söker','Ålder, adress och lön','Dina hobbies','Alla jobb du haft'],c:0},
+{q:'Hur lång ska profiltexten vara?',o:['1 mening','3–5 meningar','En hel sida'],c:1},
 {q:'Vilken formel gäller för starka arbetsuppgifter?',o:['Lång och detaljerad','Handling + Skala/Resultat','Känsla + Personlighet','Kopia från annonsen'],c:1},
-{q:'Hur stor andel CV läses aldrig av en människa?',o:['10%','35%','75%'],c:2},
-{q:'Inom hur många rader bestämmer 60% av rekryterare ja/nej?',o:['Första 4','Första 10','Halva CV:t'],c:0},
-{q:'Hur många mätbara resultat ska man ha per anställning?',o:['Inga, känslor räcker','Minst 1–2 där det går','Bara om de är spektakulära'],c:1},
-{q:'Mätbara resultat är _____ trovärdigare än vaga beskrivningar.',o:['Lika','2x','10x'],c:1},
-{q:'Hur många CV bör du ha per yrkesroll?',o:['Bara ett','Upp till 3','Minst 10'],c:1},
+{q:'Vad gör en bullet stark?',o:['Många adjektiv','Mätbara resultat — siffror, %, antal','Personliga åsikter'],c:1},
+{q:'Minns du inte siffrorna exakt — vad gör du?',o:['Hittar på','Anger ett rimligt intervall ("ca 150–200/dag")','Hoppar över'],c:1},
 {q:'Vad är värst för ett CV?',o:['Nyckelord','Floskler som "driven team-spelare"','Konkreta siffror'],c:1},
-{q:'Vad är "ATS"?',o:['En CV-mall','Applicant Tracking System','Anställningstest'],c:1}
+{q:'CV är din _____ — inte din biografi.',o:['Dagbok','Marknadsföring','Loggbok'],c:1},
+{q:'Behöver du anpassa CV per ansökan?',o:['Nej, ett räcker','Ja — olika tjänster kräver olika versioner av dig','Bara om du söker chefsjobb'],c:1},
+{q:'Vad gör CVmatchens AI för dina arbetsuppgifter?',o:['Inget','Föreslår bullet points baserat på titel + företag — du granskar och förfinar','Ringer dina referenser'],c:1}
 ],
 pr:['Skriv en profiltext för: [yrkestitel, erfarenhet, stad]','Gör dessa arbetsuppgifter starkare: [klistra in]','Föreslå 8 kompetenser för en [yrkestitel].','Kvantifiera dessa arbetsuppgifter — uppskatta siffror om jag inte minns exakt.','Gör mitt CV ATS-vänligt utan att förlora läsbarhet.']},
 
@@ -150,13 +431,73 @@ lessons:[{t:'Vad är styrkor?',s:'Styrkor är saker du är bra på.\nExempel: ly
 ex:{type:'build',title:'Identifiera dina styrkor',desc:'Beskriv dina starkaste egenskaper med konkreta exempel.',fields:[{l:'Min starkaste styrka',ph:'T.ex. Jag är lösningsorienterad...',hint:'Egenskap du fått beröm för.'},{l:'Konkret exempel',ph:'T.ex. På mitt förra jobb hanterade jag...',ta:true},{l:'Vad motiverar dig mest?',ph:'T.ex. Hjälpa andra, lösa problem...',ta:true,hint:'Din drivkraft hjälper dig hitta rätt jobb.'}]},
 quiz:[{q:'Vad är en styrka?',o:['En examen','Beteende där du presterar bra','En arbetsuppgift'],c:1},{q:'Vad är en drivkraft?',o:['En skyldighet','Inre motivation','Ett mål'],c:1},{q:'Varför är styrkor viktiga?',o:['De är inte viktiga','Hjälper dig argumentera för kompetens','Arbetsgivare bryr sig inte'],c:1}],
 pr:['Sammanfatta mina styrkor: …','Vilka styrkor passar denna annons?','Beskriv min starkaste egenskap för CV.']},
-{id:'a3',icon:'🎯',title:'SMARTA mål',sub:'Sätt tydliga mål',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
-lessons:[{t:'Vad är SMARTA mål?',s:'SMARTA mål hjälper dig att veta vad du ska göra. Tydliga och möjliga att följa upp.',a:'SMART är en metod för tydliga, mätbara och realistiska mål.'},{t:'Genomgång av SMART',s:'S – Specifikt\nM – Mätbart\nA – Accepterat\nR – Realistiskt\nT – Tidsbundet',a:'Saknas ett av kraven är målet otydligt och svårt att följa upp.'},{t:'Exempel',s:'❌ "Jag ska söka jobb."\n✅ "Jag ska söka 3 jobb/vecka via CVmatchen under april."',a:'Det smarta målet är specifikt, mätbart, accepterat, realistiskt och tidsbundet.'}],
+{id:'a3',icon:'🎯',title:'SMARTA mål',sub:'Sätt tydliga mål',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/a3-smart.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Lära dig sätta mål som är tydliga, möjliga att följa upp — och som faktiskt går att nå.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad SMARTA mål är, en genomgång av de fem bokstäverna, och exempel på svaga mål jämfört med starka.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna formulera ett eget SMART mål och veta hur du följer upp det.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektionerna, plus en övning där du skriver ditt eget mål.'}
+],
+a:'SMART är en metod för tydliga, mätbara och realistiska mål. Den här modulen ger dig mallen.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom vad SMARTA mål är, de fem bokstäverna, och hur ett otydligt mål blir skarpt. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Vad är SMARTA mål?',
+cards:[
+{icon:'🎯',h:'Tydliga mål',t:'SMARTA mål hjälper dig veta exakt vad du ska göra.'},
+{icon:'📈',h:'Går att följa upp',t:'Du kan se om du är på rätt väg — inte bara hoppas.'}
+],
+a:'SMART är en metod för tydliga, mätbara och realistiska mål.'},
+{t:'Genomgång av SMART',
+cards:[
+{icon:'🔍',h:'S — Specifikt',t:'Målet är tydligt och konkret.'},
+{icon:'📏',h:'M — Mätbart',t:'Du kan se framstegen.'},
+{icon:'👍',h:'A — Accepterat',t:'Du står själv bakom målet.'},
+{icon:'⚖️',h:'R — Realistiskt',t:'Det är möjligt att nå.'},
+{icon:'📅',h:'T — Tidsbundet',t:'Det har en deadline.'}
+],
+a:'Saknas ett av kraven är målet otydligt och svårt att följa upp.'},
+{t:'Exempel',
+cards:[
+{icon:'❌',h:'Inte SMART',t:'"Jag ska söka jobb." — för otydligt, går inte att följa upp.'},
+{icon:'✅',h:'SMART',t:'"Jag ska söka 3 jobb per vecka via CVmatchen under april." — specifikt, mätbart och tidsbundet.'}
+],
+a:'Det smarta målet är specifikt, mätbart, accepterat, realistiskt och tidsbundet.'}
+],
 ex:{type:'build',title:'Skriv ditt SMARTA mål',desc:'Fyll i varje del av SMART-mallen.',fields:[{l:'S — Specifikt',ph:'T.ex. Söka som lagerarbetare via CVmatchen'},{l:'M — Mätbart',ph:'T.ex. Minst 3 ansökningar/vecka',hint:'Sätt ett konkret antal.'},{l:'A — Accepterat',ph:'T.ex. Ja, jag har 2 timmar varje förmiddag'},{l:'R — Realistiskt',ph:'T.ex. Ja, jag har dator och CV klart'},{l:'T — Tidsbundet',ph:'T.ex. Senast 31 maj 2026',hint:'Sätt ett datum.'},{l:'Ditt kompletta mål',ph:'Skriv ihop hela målet här...',ta:true}]},
 quiz:[{q:'Vad betyder S i SMART?',o:['Snabbt','Specifikt','Socialt'],c:1},{q:'Vad betyder T i SMART?',o:['Tydligt','Tidsbundet','Tillgängligt'],c:1},{q:'Vilket är ett SMART mål?',o:['"Söka jobb"','"3 jobb/vecka under april via CVmatchen"','"Jobb snart"'],c:1}],
 pr:['Hjälp mig skriva ett SMART mål.','Gör detta mål SMART: "Bli bättre på att söka jobb."','Kontrollera om mitt mål är SMART.']},
-{id:'a4',icon:'🎤',title:'Min pitch',sub:'30 sekunder om dig',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
-lessons:[{t:'Vad är en pitch?',s:'En kort presentation av vem du är, vad du kan och vad du söker.',a:'Strukturerad, kortfattad presentation för intervjuer, nätverksevent och ansökan.'},{t:'3-stegsmodellen',s:'1. Vem jag är\n2. Vad jag kan\n3. Vad jag söker',a:'Tre delar som bygger upp en tydlig bild. Håll det under 30 sekunder.'},{t:'Exempel',s:'"Jag heter Sara. Jag är bra på service. Jag söker jobb i butik."',a:'"Jag heter Sara och har 4 års erfarenhet av kundservice. Stark på problemlösning. Söker butik eller reception."'}],
+{id:'a4',icon:'🎤',title:'Min pitch',sub:'30 sekunder om dig',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/a4-pitch.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎤',h:'Vad är syftet?',t:'Lära dig bygga en kort, tydlig presentation av dig själv som fastnar hos den som lyssnar.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad en pitch är, en enkel modell i tre steg, och exempel på en svag pitch jämfört med en stark.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna säga din egen pitch på under 30 sekunder.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en övning där du skriver din egen pitch.'}
+],
+a:'En pitch är en kort presentation av vem du är, vad du kan och vad du söker.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom vad en pitch är, modellen i tre steg, och hur en svag pitch blir stark. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Vad är en pitch?',
+cards:[
+{icon:'🎤',h:'Kort presentation',t:'En pitch presenterar vem du är, vad du kan och vad du söker — på kort tid.'},
+{icon:'⏱️',h:'30 sekunder',t:'Tänk dig att du har en hissresa på dig. Vad säger du?'}
+],
+a:'Strukturerad, kortfattad presentation för intervjuer, nätverksevent och ansökan.'},
+{t:'3-stegsmodellen',
+cards:[
+{icon:'1️⃣',h:'Vem jag är',t:'Ditt namn och din bakgrund — kort.'},
+{icon:'2️⃣',h:'Vad jag kan',t:'Dina styrkor och din erfarenhet.'},
+{icon:'3️⃣',h:'Vad jag söker',t:'Vilken typ av jobb du är ute efter.'}
+],
+a:'Tre delar som bygger upp en tydlig bild. Håll det under 30 sekunder.'},
+{t:'Exempel',
+cards:[
+{icon:'❌',h:'För tunt',t:'"Jag heter Sara. Jag är bra på service. Jag söker jobb i butik." — säger för lite.'},
+{icon:'✅',h:'Starkt',t:'"Jag heter Sara — fyra år inom kundservice. Stark på problemlösning. Söker butik eller reception."'}
+],
+a:'Den starka pitchen är konkret: en siffra, en styrka och ett tydligt mål.'}
+],
 ex:{type:'build',title:'Bygg din pitch',desc:'Fyll i 3-stegsmodellen.',fields:[{l:'1. VEM ÄR DU?',ph:'T.ex. Jag heter Maria och har 5 år i kundservice...',ta:true,hint:'Max 2 meningar.'},{l:'2. VAD KAN DU?',ph:'T.ex. Mina sidor är kundkontakt, kassahantering...',ta:true},{l:'3. VAD SÖKER DU?',ph:'T.ex. Jag söker en ny tjänst inom butik...',ta:true},{l:'Din kompletta pitch',ph:'Skriv ihop alla tre delar...',ta:true,hint:'Läs högt — ca 25-30 sekunder.'}]},
 quiz:[{q:'Vad är en pitch?',o:['Ett CV','Kort presentation av vem du är','En jobbannons'],c:1},{q:'Tre delar som ska ingå?',o:['Namn, ålder, adress','Vem jag är, vad jag kan, vad jag söker','Skola, jobb, hobby'],c:1},{q:'Hur lång?',o:['5 minuter','Under 30 sekunder','2 meningar max'],c:1}],
 pr:['Skapa en pitch baserat på mina styrkor.','Förbättra min pitch.','Gör min pitch kortare.']},
@@ -175,8 +516,39 @@ lessons:[{t:'Varför strategi?',s:'En plan gör det lättare att hitta jobb.',a:
 ex:{type:'build',title:'Bygg din strategi',desc:'Skapa en konkret jobbsökstrategi.',fields:[{l:'Ditt mål',ph:'T.ex. Lagerarbetare senast 1 juni',ta:true},{l:'Kanaler du använder',ph:'T.ex. CVmatchen, Platsbanken, LinkedIn...',hint:'Minst 2-3.'},{l:'Din veckoplan',ph:'Måndag: \nTisdag: \nOnsdag: \nTorsdag: \nFredag: ',ta:true},{l:'Hur följer du upp?',ph:'T.ex. Räknar ansökningar per vecka...',ta:true}]},
 quiz:[{q:'Varför strategi?',o:['Behövs inte','Minskar stress och ökar träffsäkerhet','Krav'],c:1},{q:'Tre delar?',o:['CV, ansökan, intervju','Mål, aktiviteter, uppföljning','LinkedIn, e-post, telefon'],c:1},{q:'Vad är en veckoplan?',o:['Lista med jobb','Planering av dagliga aktiviteter','Kalender'],c:1}],
 pr:['Skapa strategi baserat på mina mål.','Gör min veckoplan mer realistisk.','Hjälp mig prioritera aktiviteter.']},
-{id:'a8',icon:'🤝',title:'Intervju-grunder',sub:'Förberedelse & trygghet',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
-lessons:[{t:'Vad är en intervju?',s:'Intervjun är ett samtal där arbetsgivaren vill lära känna dig.',a:'Strukturerad bedömning av kompetens, beteende och motivation — och ditt tillfälle att bedöma jobbet.'},{t:'Vanliga frågor',s:'• Berätta om dig själv\n• Varför söker du jobbet?\n• Styrkor?\n• Svagheter?',a:'Förbered konkreta svar. Använd din pitch för "berätta om dig själv".'},{t:'Kroppsspråk',s:'Sitt rakt, le, titta i kameran.',a:'Lugn röst, tydlig struktur. Pauser är okej — visar att du tänker.'}],
+{id:'a8',icon:'🤝',title:'Intervju-grunder',sub:'Förberedelse & trygghet',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/a8-intervju.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Förbereda dig inför jobbintervjun — så att du känner dig trygg och kan visa vad du går för.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad en intervju är, vanliga frågor, kroppsspråk, och hur du avslutar starkt.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta vad som händer i en intervju, ha förberett dina svar, och känna dig lugnare inför mötet.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och lektionerna, plus en övning där du skriver dina intervjusvar.'}
+],
+a:'Intervjun är en strukturerad bedömning av kompetens, beteende och motivation — och ditt tillfälle att bedöma jobbet. Den här modulen gör dig redo.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen förbereder dig inför intervjun — vad som händer, vanliga frågor och hur du känner dig trygg. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Vad är en intervju?',
+cards:[
+{icon:'💬',h:'Ett samtal',t:'Arbetsgivaren vill lära känna dig — din kompetens och motivation.'},
+{icon:'🔄',h:'Det går åt två håll',t:'Det är också din chans att bedöma om jobbet passar dig.'}
+],
+a:'Strukturerad bedömning av kompetens, beteende och motivation — och ditt tillfälle att bedöma jobbet.'},
+{t:'Vanliga frågor',
+cards:[
+{icon:'🙋',h:'Berätta om dig själv',t:'Använd din pitch som start.'},
+{icon:'🎯',h:'Varför söker du jobbet?',t:'Visa att du vet något om företaget.'},
+{icon:'💪',h:'Dina styrkor?',t:'Ge ett konkret exempel.'},
+{icon:'🌱',h:'Dina svagheter?',t:'En äkta svaghet — och hur du jobbar på den.'}
+],
+a:'Förbered konkreta svar. Använd din pitch för "berätta om dig själv".'},
+{t:'Kroppsspråk',
+cards:[
+{icon:'🪑',h:'Sitt rakt',t:'En öppen, rak hållning.'},
+{icon:'😊',h:'Le och ha ögonkontakt',t:'Titta in i kameran eller på den du pratar med.'},
+{icon:'🗣️',h:'Lugn röst, ta pauser',t:'Pauser är okej — de visar att du tänker.'}
+],
+a:'Lugn röst, tydlig struktur. Pauser är okej — visar att du tänker.'}
+],
 ex:{type:'build',title:'Förbered dina intervjusvar',desc:'Skriv svar på de vanligaste frågorna.',fields:[{l:'"Berätta om dig själv"',ph:'Jag heter... och har...',ta:true,hint:'Max 60 sek.'},{l:'"Varför söker du jobbet?"',ph:'Jag söker för att...',ta:true},{l:'"Din styrka?"',ph:'Min starkaste egenskap är... t.ex...',ta:true,hint:'Ge konkret exempel!'},{l:'"Din svaghet?"',ph:'Jag kan ibland vara... men jobbar på det...',ta:true,hint:'Äkta svaghet + hur du jobbar på den.'}]},
 quiz:[{q:'Syftet med intervjun?',o:['Testa kunskaper','Arbetsgivaren lär känna dig','Skriva kontrakt'],c:1},{q:'Vanlig intervjufråga?',o:['"Favoritfilm?"','"Berätta om dig själv"','"Vad tjänar du?"'],c:1},{q:'Bra kroppsspråk?',o:['Kryssa armarna','Sitta rakt, le, ögonkontakt','Titta ner'],c:1}],
 pr:['Hjälp mig svara: Berätta om dig själv.','Förbättra mina intervjusvar.','Frågor att förbereda inför lagerintervju?']},
@@ -193,7 +565,32 @@ pr:['Formulera lugna intervjusvar.','Trygghetsplan inför imorgon.','3 bra fråg
 
 {id:'a_akassa',icon:'🛡️',title:'A-kassa & Facket',sub:'Ditt ekonomiska skyddsnät',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',lessons:[{t:'Vad är A-kassa?',s:'A-kassa = Arbetslöshetsersättning.\n\nOm du förlorar jobbet kan du få pengar under söktiden.\n\n✅ Max ca 80% av lönen\n✅ Upp till 300 dagar\n✅ Kräver aktiv jobbsökning\n✅ Du söker via din a-kassa, inte AF\n\nKostnad: ca 80-130 kr/mån',a:'Grundvillkor: arbetat minst 80 tim/mån i 12 månader. Inkomstrelaterad ersättning ger upp till 1 200 kr/dag de första 200 dagarna. Alfakassan tar emot alla branscher.'},{t:'Välj rätt a-kassa',s:'Det finns 24 a-kassor i Sverige.\n\n🏥 Kommunal → vård & omsorg\n🏗️ Byggnads → bygg\n💼 Alfa-kassan → passar alla\n💻 Unionen → tjänstemän\n\nalfakassan.se om du är osäker',a:'Alfakassan är öppen för alla som inte tillhör en specifik branschkassa. Ny på arbetsmarknaden eller byter bransch? Alfa är tryggt val.'},{t:'Facket — vad och varför?',s:'Facket förhandlar dina löner och villkor.\n\n✅ Kollektivavtal → schyssta villkor\n✅ Juridisk hjälp vid tvist\n✅ Löneförhandlingsstöd\n\nCa 65% av svenska arbetstagare är fackanslutna.\nKostnad: ca 200-400 kr/mån',a:'De tre stora: LO (blå krage), TCO (tjänstemän), SACO (akademiker). Kollektivavtal täcker ca 90% av arbetstagare även utan fackmedlemskap — men juridisk hjälp kräver medlemskap.'}],ex:{type:'build',title:'Planera ditt skyddsnät',desc:'Sätt upp din A-kassa och fackplan.',fields:[{l:'Vilken bransch jobbar du i/siktar på?',ph:'T.ex. Lager, vård, bygg...'},{l:'Vilken a-kassa passar?',ph:'T.ex. Alfa-kassan — passar alla',hint:'alfakassan.se'},{l:'Vilket fackförbund?',ph:'T.ex. Kommunal, Transport, Unionen...'},{l:'Är du med? Om nej — nästa steg?',ph:'T.ex. Ansöker till Alfa-kassan den här veckan...'}]},quiz:[{q:'Vad krävs för A-kassa?',o:['Bara AF-inskriven','Arbetat 80 tim/mån i 12 mån + aktivt söka','Vara med i facket','Fast anst.'],c:1},{q:'Vad kostar A-kassan?',o:['Gratis','80-130 kr/mån','500 kr/mån','1000 kr/mån'],c:1},{q:'Vad ger kollektivavtal?',o:['Bara löneökning','Schyssta branschvillkor','Obligatorisk fackansl.','Gratis juridik alla'],c:1},{q:'Vilken a-kassa passar alla?',o:['Kommunal','Alfa-kassan','Unionen','Byggnads'],c:1}],pr:['Vilken a-kassa för [yrke]?','Skillnad facket vs a-kassan?','A-kassan om jag jobbar extra?']},
 
-{id:'a_brev',icon:'✉️',title:'Personligt brev',sub:'Skrivet rätt öppnar det dörren',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',lessons:[{t:'Vad är ett personligt brev?',s:'CV:et visar VAD du gjort. Brevet visar VEM du är och VARFÖR just detta jobb.\n\nStruktur:\n1. Fånga intresset (1 mening)\n2. Varför jobbet + företaget?\n3. Dina matchande styrkor\n4. Avslutning + call to action\n\nMax 1 sida / ca 300 ord.',a:'Rekryterare läser brevet för att bedöma personlighet och motivation. Generiska brev sorteras bort. Anpassa varje brev — 20-30 min per ansökan.'},{t:'Öppningsmening — gör den oemotståndlig',s:'❌ "Jag söker härmed tjänsten som..."\n\n✅ "Tre år på PostNords lager lärde mig att logistik handlar om mer än orderrader — det handlar om att hela kedjan håller."\n\nFånga — rapportera inte!',a:'Öppningar som fastnar: en situation, ett resultat eller en insikt. Undvik: "Jag heter X och söker tjänsten som Y" — det vet rekryteraren redan.'},{t:'Avslutning med call to action',s:'✅ "Jag ser fram emot att berätta mer i en intervju."\n✅ "Jag hör av mig på fredag om ni inte hört av er."\n\nVara proaktiv — det visar självförtroende.\n\nUndvik: "Hoppas höra från er" — för passivt.',a:'Proaktiv avslutning ökar callback-frekvensen. Tacka för läsningen. Undvik att be om ursäkter för bristande kompetens.'}],ex:{type:'write',title:'Skriv din öppningsmening',desc:'Skriv de 2-3 starkaste inledningsmeningarna för ett personligt brev till ett jobb du söker.',tips:'Börja med en situation, ett resultat eller en insikt — inte "Jag söker härmed...". Visa VEM du är.',ph:'T.ex. "Tre år i lager lärde mig att logistik handlar om mer än orderrader..."',min:80},quiz:[{q:'Vad visar brevet som CV inte visar?',o:['Löneönskemål','Vem du är och varför just detta jobb','Alla utbildningar','Adress'],c:1},{q:'Vilken öppning är starkast?',o:['"Jag söker härmed tjänsten"','"Jag heter Anna och är intresserad"','"300 orderrader/dag lärde mig att tempo och precision inte utesluter varandra."','Alla lika bra'],c:2},{q:'Hur långt bör brevet vara?',o:['1-2 meningar','Ca 300 ord / 1 sida','2-3 sidor','Så långt som möjligt'],c:1},{q:'Vad visar proaktiv avslutning?',o:['Desperation','Självförtroende och genuint intresse','Stress','Dålig etikett'],c:1}],pr:['Skriv personligt brev: [annons + styrkor]','Förbättra min öppningsmening: [klistra in]','Gör detta brev mer specifikt: [klistra in]']},
+{id:'a_brev',icon:'✉️',title:'Personligt brev',sub:'Skrivet rätt öppnar det dörren',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/abrev-brev.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Förstå vad ett personligt brev ska göra — och hur du skriver ett som faktiskt öppnar dörren.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad brevet är till för, dess fyra delar, hur du skriver en stark öppningsmening och en proaktiv avslutning.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna bygga ett personligt brev med rätt struktur, skriva en öppning som fångar, och avsluta proaktivt.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och de tre lektionerna, plus en skrivövning där du formulerar din egen öppningsmening.'}
+],
+a:'Det personliga brevet visar vem du är och varför just det här jobbet. Den här modulen ger dig formeln.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen visar vad ett personligt brev är, hur det är uppbyggt, och hur du får det att nå fram. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Vad är ett personligt brev?',cards:[
+{icon:'🆚',h:'CV vs. brev',t:'CV:t visar VAD du gjort. Brevet visar VEM du är och VARFÖR just det här jobbet.'},
+{icon:'🪝',h:'1 — Fånga intresset',t:'En stark inledande mening.'},
+{icon:'🏢',h:'2 — Varför jobbet?',t:'Varför just det här jobbet och företaget.'},
+{icon:'💪',h:'3 — Dina styrkor',t:'De styrkor som matchar tjänsten.'},
+{icon:'📣',h:'4 — Avslutning',t:'En tydlig uppmaning. Håll hela brevet till max en sida — runt 300 ord.'}
+],a:'Rekryterare läser brevet för att bedöma personlighet och motivation. Generiska brev sorteras bort. Anpassa varje brev — 20-30 min per ansökan.'},{t:'Öppningsmening — gör den oemotståndlig',cards:[
+{icon:'❌',h:'Undvik det generiska',t:'"Jag söker härmed tjänsten som..." — det säger ingenting och läses inte vidare.'},
+{icon:'✅',h:'Börja med något konkret',t:'"Tre år på PostNords lager lärde mig att logistik handlar om mer än orderrader — det handlar om att hela kedjan håller."'},
+{icon:'🎯',h:'Fånga — rapportera inte',t:'Inled med en situation, ett resultat eller en insikt. Inte ditt namn — det vet rekryteraren redan.'}
+],a:'Öppningar som fastnar: en situation, ett resultat eller en insikt. Undvik: "Jag heter X och söker tjänsten som Y" — det vet rekryteraren redan.'},{t:'Avslutning med call to action',cards:[
+{icon:'❌',h:'Undvik det passiva',t:'"Hoppas att jag får höra från er" — för svagt.'},
+{icon:'✅',h:'Var proaktiv',t:'"Jag ser fram emot att berätta mer i en intervju." Eller: "Jag hör av mig på fredag om ni inte hört av er."'},
+{icon:'💪',h:'Det visar självförtroende',t:'En proaktiv avslutning ökar chansen att bli kontaktad. Tacka för läsningen — be inte om ursäkt.'}
+],a:'Proaktiv avslutning ökar callback-frekvensen. Tacka för läsningen. Undvik att be om ursäkter för bristande kompetens.'}],ex:{type:'write',title:'Skriv din öppningsmening',desc:'Skriv de 2-3 starkaste inledningsmeningarna för ett personligt brev till ett jobb du söker.',tips:'Börja med en situation, ett resultat eller en insikt — inte "Jag söker härmed...". Visa VEM du är.',ph:'T.ex. "Tre år i lager lärde mig att logistik handlar om mer än orderrader..."',min:80},quiz:[{q:'Vad visar brevet som CV inte visar?',o:['Löneönskemål','Vem du är och varför just detta jobb','Alla utbildningar','Adress'],c:1},{q:'Vilken öppning är starkast?',o:['"Jag söker härmed tjänsten"','"Jag heter Anna och är intresserad"','"300 orderrader/dag lärde mig att tempo och precision inte utesluter varandra."','Alla lika bra'],c:2},{q:'Hur långt bör brevet vara?',o:['1-2 meningar','Ca 300 ord / 1 sida','2-3 sidor','Så långt som möjligt'],c:1},{q:'Vad visar proaktiv avslutning?',o:['Desperation','Självförtroende och genuint intresse','Stress','Dålig etikett'],c:1}],pr:['Skriv personligt brev: [annons + styrkor]','Förbättra min öppningsmening: [klistra in]','Gör detta brev mer specifikt: [klistra in]']},
 
 {id:'a_natverk',icon:'🤝',title:'Nätverkande & dolda jobbet',sub:'40-50% av jobben annonseras aldrig',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',lessons:[{t:'Den dolda arbetsmarknaden',s:'Upp till 50% av alla jobb tillsätts utan annons.\n\nHur?\n• Intern rekrytering\n• Tips från nätverk\n• Spontanansökningar\n• LinkedIn-kontakter\n\nSöker du bara annonser missar du hälften!',a:'Studier visar 40-50% av tjänstetillsättningar sker via nätverk. Ju mer senior tjänst, desto vanligare med nätverksrekrytering.'},{t:'Hur nätverkar du praktiskt?',s:'1. LinkedIn — kontaktförfrågan + kort meddelande\n2. Informella möten — "Kan vi ta en kaffe?"\n3. AF-evenemang & jobbmässor\n4. Gamla kontakter — ex-kollegor, klasskompisar\n5. Branschföreningar\n\nGe innan du tar!',a:'"Kan du berätta om hur det är att jobba på X?" öppnar fler dörrar än "Har ni lediga tjänster?". LinkedIn InMail har ca 30% svarsfrekvens.'},{t:'Spontanansökan — hur?',s:'Strukturen:\n1. Adressera rätt person\n2. Visa att du känner till företaget\n3. Förklara värdet du tillför\n4. Be om 20 min möte\n\n"Hej [namn], jag har följt [företag] och tror min bakgrund i [X] kan tillföra [Y]."',a:'Spontanansökningar har högre callback-frekvens — lägre konkurrens. Bäst timing: efter expansion-nyheter. LinkedIn är bästa kanalen.'}],ex:{type:'build',title:'Din nätverksstrategi',desc:'Konkret plan för nätverkande i jobbsöket.',fields:[{l:'3 personer att kontakta den här veckan',ph:'T.ex. Ex-kollega på ICA, kompis på Peab...',ta:true,hint:'Tänk brett!'},{l:'Företag för spontanansökan',ph:'T.ex. IKEA Helsingborg, Region Skåne...'},{l:'Öppningsmeningen till spontanansökan',ph:'Hej [namn], jag har följt [företag] och tror min bakgrund i...',ta:true},{l:'LinkedIn-mål den här veckan',ph:'T.ex. Kontaktförfrågan till 3 + kommentera 2 inlägg',hint:'Regelbundenhet > kvantitet'}]},quiz:[{q:'Andel jobb utan annons?',o:['10-15%','40-50%','5%','80%'],c:1},{q:'Bästa sättet att börja nätverka?',o:['"Har ni lediga tjänster?"','Fråga om råd — visa intresse','Skicka CV till alla','Vänta passivt'],c:1},{q:'Vad är spontanansökan?',o:['En sen ansökan','Kontakt utan utlyst tjänst','Ansökan utan brev','Via telefon'],c:1},{q:'Varför hög callback för spontanansökningar?',o:['Ser bättre ut','Lägre konkurrens','Obligatoriskt','Företag föredrar det'],c:1}],pr:['LinkedIn-meddelande för informellt möte.','Spontanansökan till [företag] för [roll].','Hitta rätt kontaktperson på LinkedIn?']},
 
@@ -231,11 +628,39 @@ pr:['Vilka jobb finns i Danmark för [yrke] nära Helsingör?','Förklara steg f
 ];
 
 var HALSA=[
-{id:'h1',icon:'🧠',title:'Mental hälsa & stress',sub:'Hantera press och mående',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h1',icon:'🧠',title:'Mental hälsa & stress',sub:'Hantera press och mående',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h1-stress.mp4',
 lessons:[
-{t:'Stress — vän eller fiende?',s:'Lite stress är bra — det skärper fokus.\nFör mycket stress under för lång tid = skadligt.\n\nVarningssignaler:\n• Sömnsvårigheter\n• Irritation & oro\n• Koncentrationssvårigheter\n• Trötthet som inte går över\n• Ont i nacke/huvud/mage',a:'Kronisk stress påverkar immunsystemet, minnet och hjärtfunktionen. Kortisol (stresshormonet) är nödvändigt akut men skadligt långsiktigt. Ca 30% av sjukskrivningar i Sverige beror på psykisk ohälsa.'},
-{t:'Vad hjälper faktiskt?',s:'✅ Rörelse — 30 min/dag räcker\n✅ Sömn — 7-9 timmar\n✅ Socialt stöd — prata med någon\n✅ Andningsövningar — 4-7-8-metoden\n✅ Naturvistelse — sänker kortisol\n\n❌ Alkohol — tillfällig lättnad, förvärrar\n❌ Skärm sent — stör melatonin',a:'Forskning visar att 30 min promenad om dagen är lika effektivt som antidepressiva vid mild till måttlig depression. Mindfulness 10 min/dag sänker kortisolnivåer mätbart efter 8 veckor.'},
-{t:'Hjälp finns — ta den!',s:'I Sverige har du rätt till hjälp.\n\n📞 Vårdguiden: 1177\n💬 Mind Självmordslinjen: 90101\n🏥 Vårdcentral — remiss till kurator\n💻 1177.se — självhjälp online\n🤝 Jobbtorg & handläggare — stöd\n\nAtt söka hjälp är styrka — inte svaghet.',a:'Tidigt stöd förhindrar allvarligare ohälsa. Kurator på vårdcentral kostar samma som läkarbesök (200-300 kr). Psykologisk behandling via KBT-online är gratis via 1177 i många regioner.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Förstå hur stress fungerar, känna igen varningssignaler — och veta vad som faktiskt hjälper.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Stress som vän och fiende, kroppens varningssignaler, vad som hjälper, och var du hittar hjälp.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna känna igen din egen stress, ha verktyg som hjälper dig, och veta vart du vänder dig vid behov.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och lektionerna, plus en lugn övning där du gör din egen stressanalys.'}
+],
+a:'Mental hälsa är grunden för allt annat. Den här modulen ger dig en lugn genomgång — ta den i din egen takt.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går lugnt igenom stress, varningssignaler och vad som hjälper. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Stress — vän eller fiende?',
+cards:[
+{icon:'🎯',h:'Lite stress är bra',t:'Det skärper fokus och hjälper dig prestera.'},
+{icon:'⏳',h:'För mycket, för länge',t:'Långvarig stress blir skadlig för kroppen.'},
+{icon:'😴',h:'Varningssignaler',t:'Sömnsvårigheter, oro och irritation, koncentrationssvårigheter.'},
+{icon:'🤕',h:'Kroppen säger ifrån',t:'Trötthet som inte går över, värk i nacke, huvud eller mage.'}
+],a:'Kronisk stress påverkar immunsystemet, minnet och hjärtfunktionen. Kortisol (stresshormonet) är nödvändigt akut men skadligt långsiktigt. Ca 30% av sjukskrivningar i Sverige beror på psykisk ohälsa.'},
+{t:'Vad hjälper faktiskt?',
+cards:[
+{icon:'🏃',h:'Rörelse',t:'30 minuter om dagen räcker.'},
+{icon:'😴',h:'Sömn',t:'7–9 timmar — grunden för allt.'},
+{icon:'🤝',h:'Socialt stöd',t:'Prata med någon — bär inte ensam.'},
+{icon:'🌳',h:'Naturen',t:'Tid utomhus sänker stresshormonet.'},
+{icon:'⚠️',h:'Undvik',t:'Alkohol förvärrar. Skärm sent stör sömnen.'}
+],a:'Forskning visar att 30 min promenad om dagen är lika effektivt som antidepressiva vid mild till måttlig depression. Mindfulness 10 min/dag sänker kortisolnivåer mätbart efter 8 veckor.'},
+{t:'Hjälp finns — ta den!',
+cards:[
+{icon:'📞',h:'1177 Vårdguiden',t:'Råd om hälsa — dygnet runt.'},
+{icon:'💬',h:'Mind — 90101',t:'Självmordslinjen, när det är tungt.'},
+{icon:'🏥',h:'Vårdcentralen',t:'Be om remiss till kurator. 1177.se har självhjälp online.'},
+{icon:'💪',h:'Styrka — inte svaghet',t:'Att söka hjälp är modigt. Tidigt stöd förhindrar att det blir värre.'}
+],a:'Tidigt stöd förhindrar allvarligare ohälsa. Kurator på vårdcentral kostar samma som läkarbesök (200-300 kr). Psykologisk behandling via KBT-online är gratis via 1177 i många regioner.'}
 ],
 ex:{type:'build',title:'Din stressanalys',desc:'Kartlägg din stress och planera motståndet.',
 fields:[
@@ -252,11 +677,43 @@ quiz:[
 ],
 pr:['Ge mig en konkret stresshanteringsplan för en jobbsökare.','Vad är KBT och hur fungerar det?','Enkla andningsövningar mot ångest?']},
 
-{id:'h2',icon:'😴',title:'Sömn & återhämtning',sub:'Grunden för allt annat',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h2',icon:'😴',title:'Sömn & återhämtning',sub:'Grunden för allt annat',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h2-somn.mp4',
 lessons:[
-{t:'Varför sömn är #1',s:'Under sömn:\n🧠 Hjärnan bearbetar information\n💪 Kroppen repareras\n🛡️ Immunsystemet stärks\n❤️ Hjärtat återhämtar sig\n\nVuxna behöver: 7-9 timmar/natt\n\nKronisk sömnbrist → sämre minne, humör, immunförsvar och beslutsfattande.',a:'Sömnbrist ger samma kognitivt nedsatt tillstånd som alkoholpåverkan. En vuxen som sover 6 tim/natt i 10 dagar presterar som om de vakat i 24 timmar. Sömnen är inte lyx — den är biologi.'},
-{t:'Sömnhygien — 6 regler',s:'1. Lägg dig och vakna samma tid — varje dag\n2. Mörkt, svalt, tyst rum (18-20°C)\n3. Inga skärmar 1 tim innan\n4. Undvik koffein efter kl 14\n5. Lugn rutin: bok, stretching, dusch\n6. Sängen = bara sömn (inte skärmtid)',a:'Blåljus från skärmar hämmar melatoninproduktionen med upp till 50%. Sömnrummet bör vara 18-20°C — för varmt stör djupsömnen. Regelbunden läggtid är viktigare än sovtid.'},
-{t:'Om du inte kan sova',s:'Lig inte vaken och kämp!\n\nGör istället:\n• Gå upp och gör något lugnt 20 min\n• Skriv ner oroliga tankar på papper\n• Prova 4-7-8-andning\n• Progressiv muskelavslappning\n\nUndvik:\n• Titta på klockan\n• Ta melatonin regelbundet utan läkarråd\n• "Sova ikapp" på helger',a:'Sömnrestriktion (paradoxal sovterapi) är mest effektiv behandling för insomni. Begränsa sängtiden initialt till faktisk sovtid — det bygger sömndriven. Remiss till sömnenhet via 1177 om problem kvarstår.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'😴',h:'Vad är syftet?',t:'Förstå varför sömn är grunden för allt annat — och få konkreta verktyg för att sova bättre.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Varför sömn är så viktigt, sex regler för sömnhygien, och vad du gör när du inte kan sova.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna bygga en sömnrutin som faktiskt fungerar för dig.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och lektioner, plus en övning där du gör din egen sömnplan.'}
+],
+a:'Sömnen är inte lyx — den är biologi. Den här modulen ger dig grunderna.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom varför sömnen är så viktig, sex regler för sömnhygien, och vad du gör om du inte kan sova. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Varför sömn är #1',
+cards:[
+{icon:'🧠',h:'Hjärnan',t:'Bearbetar dagens intryck medan du sover.'},
+{icon:'💪',h:'Kroppen',t:'Repareras och byggs upp under natten.'},
+{icon:'🛡️',h:'Immunförsvaret',t:'Stärks medan du sover.'},
+{icon:'🛏️',h:'7–9 timmar',t:'Det de flesta vuxna behöver. Kronisk sömnbrist ger sämre minne, humör och beslut.'}
+],
+a:'Sömnbrist ger ett liknande kognitivt nedsatt tillstånd som alkoholpåverkan. Sömnen är inte lyx — den är biologi.'},
+{t:'Sömnhygien — 6 regler',
+cards:[
+{icon:'⏰',h:'Samma tider',t:'Lägg dig och vakna lika dags — varje dag.'},
+{icon:'🌡️',h:'Svalt & mörkt',t:'18–20°C, tyst och mörkt rum.'},
+{icon:'📵',h:'Skärmfri timme',t:'Inga skärmar sista timmen innan du sover.'},
+{icon:'☕',h:'Ingen koffein',t:'Stoppa kaffe och te efter kl 14.'},
+{icon:'🛁',h:'Lugn rutin',t:'Bok, stretching eller en dusch.'},
+{icon:'🛌',h:'Sängen = sömn',t:'Använd sängen bara till sömn — inte till skärmtid.'}
+],
+a:'Blåljus från skärmar hämmar melatoninproduktionen med upp till 50%. Regelbunden läggtid är viktigare än exakt sovtid.'},
+{t:'Om du inte kan sova',
+cards:[
+{icon:'🚶',h:'Gå upp 20 min',t:'Ligg inte vaken och kämpa — gör något lugnt och kom tillbaka.'},
+{icon:'✏️',h:'Skriv ner oron',t:'Töm huvudet på oroliga tankar genom att skriva på ett papper.'},
+{icon:'🌬️',h:'4-7-8-andning',t:'Andas in på fyra, håll i sju, andas ut på åtta.'},
+{icon:'🚫',h:'Undvik',t:'Titta inte på klockan, ta inte melatonin på egen hand, sov inte ikapp på helger.'}
+],
+a:'Vid långvariga sömnproblem — kontakta 1177 för råd, eller be om en remiss via vårdcentralen.'}
 ],
 ex:{type:'build',title:'Din sömnplan',desc:'Bygg en sömnrutin som faktiskt fungerar.',
 fields:[
@@ -677,11 +1134,38 @@ pr:['Bygg en personlig hälsoplan för min situation.','Hur förbättrar jag sö
 ];
 
 var EKONOMI=[
-{id:'e1',icon:'💳',title:'Budget & vardagsekonomi',sub:'Koll på pengarna — varje månad',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e1',icon:'💳',title:'Budget & vardagsekonomi',sub:'Koll på pengarna — varje månad',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e1-budget.mp4',
 lessons:[
-{t:'Varför budget?',s:'Budget = du bestämmer vart pengarna går.\n\nIngen budget = pengarna bestämmer själva.\n\nEnkel metod — 50/30/20:\n• 50% → Behov (hyra, mat, räkningar)\n• 30% → Vill ha (nöje, kläder, kaffe)\n• 20% → Spara & skulder\n\nAnpassa efter din situation!',a:'En budget behöver inte vara komplicerad. Grundprincipen: vet vad som kommer in, vet vad som går ut, ta beslut om resten. Digitala verktyg: Saldokollen (gratis app), bankens budget-funktion, enkelt Excel-ark.'},
-{t:'Fasta vs rörliga kostnader',s:'Fasta kostnader (samma varje mån):\n🏠 Hyra\n📱 Telefon\n💡 El & försäkringar\n\nRörliga kostnader (varierar):\n🛒 Mat\n🚌 Transport\n🎬 Nöje\n\nFasta är svåra att påverka.\nRörliga kan du styra direkt.',a:'Genomsnittlig hushållsekonomi i Sverige: hyra ca 30-40% av inkomst, mat 15-20%, transport 10-15%. Rörliga kostnader är där beteendeförändringar ger direkt effekt. En kaffemaskin hemma = 1 500-3 000 kr/år sparat vs köpkaffe.'},
-{t:'Kom igång på 10 minuter',s:'1. Räkna vad som kommer in (inkomst/mån)\n2. Lista alla fasta kostnader\n3. Kolla kontoutdrag — vad gick pengarna till?\n4. Sätt gränser per kategori\n5. Följ upp en gång i veckan (5 min)\n\nVerktyg: bankens app, Google Sheets, anteckningsbok.',a:'Saldoappen hämtar transaktioner automatiskt och kategoriserar dem. De flesta banker har inbyggd budgetfunktion. En pappersbudget med penna fungerar lika bra — det viktiga är att göra det, inte vilken teknik du använder.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Få kontroll över pengarna — så att du bestämmer vart de går, varje månad.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Varför en budget behövs, 50/30/20-metoden, fasta jämfört med rörliga kostnader, och hur du kommer igång.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna göra en enkel budget, veta vilka kostnader du kan påverka, och ha en plan för att följa upp.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och lektionerna, plus en övning där du gör din egen månadsbudget.'}
+],
+a:'En budget behöver inte vara komplicerad. Den här modulen ger dig grunderna och en metod att börja med.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom varför du behöver en budget, 50/30/20-metoden, och hur du kommer igång på tio minuter. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Varför budget?',
+cards:[
+{icon:'🧭',h:'Du bestämmer',t:'Med en budget styr du vart pengarna går. Utan budget bestämmer pengarna själva.'},
+{icon:'5️⃣',h:'50 % — Behov',t:'Hyra, mat, räkningar.'},
+{icon:'3️⃣',h:'30 % — Vill ha',t:'Nöje, kläder, kaffe.'},
+{icon:'2️⃣',h:'20 % — Spara & skulder',t:'Anpassa siffrorna efter din situation.'}
+],a:'En budget behöver inte vara komplicerad. Grundprincipen: vet vad som kommer in, vet vad som går ut, ta beslut om resten. Digitala verktyg: Saldokollen (gratis app), bankens budget-funktion, enkelt Excel-ark.'},
+{t:'Fasta vs rörliga kostnader',
+cards:[
+{icon:'🏠',h:'Fasta kostnader',t:'Samma varje månad — hyra, telefon, el och försäkringar.'},
+{icon:'🛒',h:'Rörliga kostnader',t:'Varierar — mat, transport och nöje.'},
+{icon:'🔒',h:'Fasta — svåra att påverka',t:'De ligger ofta bundna i avtal.'},
+{icon:'🎚️',h:'Rörliga — du styr direkt',t:'Här ger en förändring effekt redan denna månad.'}
+],a:'Genomsnittlig hushållsekonomi i Sverige: hyra ca 30-40% av inkomst, mat 15-20%, transport 10-15%. Rörliga kostnader är där beteendeförändringar ger direkt effekt. En kaffemaskin hemma = 1 500-3 000 kr/år sparat vs köpkaffe.'},
+{t:'Kom igång på 10 minuter',
+cards:[
+{icon:'1',h:'Räkna inkomsten',t:'Vad kommer in varje månad?'},
+{icon:'2',h:'Lista fasta kostnader',t:'Allt som dras automatiskt.'},
+{icon:'3',h:'Kolla kontoutdraget',t:'Vart gick pengarna egentligen?'},
+{icon:'4',h:'Sätt gränser & följ upp',t:'En gräns per kategori, och 5 minuters koll i veckan.'}
+],a:'Saldoappen hämtar transaktioner automatiskt och kategoriserar dem. De flesta banker har inbyggd budgetfunktion. En pappersbudget med penna fungerar lika bra — det viktiga är att göra det, inte vilken teknik du använder.'}
 ],
 ex:{type:'build',title:'Din månadsbudget',desc:'Räkna ut vad du har kvar när räkningarna är betalda.',
 fields:[
@@ -719,11 +1203,41 @@ quiz:[
 ],
 pr:['Har jag rätt till bostadsbidrag med inkomst X och hyra Y?','Vad gör jag om hyresvärden vill höja hyran?','Hur hittar jag lägenhet i Helsingborg utan kö?']},
 
-{id:'e3',icon:'🆘',title:'Ekonomiskt bistånd & bidrag',sub:'Hjälp finns — ta reda på vad du har rätt till',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e3',icon:'🆘',title:'Ekonomiskt bistånd & bidrag',sub:'Hjälp finns — ta reda på vad du har rätt till',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e3-bistand.mp4',
 lessons:[
-{t:'Ekonomiskt bistånd (försörjningsstöd)',s:'Om du inte kan försörja dig själv har du rätt till ekonomiskt bistånd från kommunen.\n\nVad täcks?\n✅ Mat\n✅ Hyra\n✅ El\n✅ Kläder\n✅ Hemförsäkring\n\nDu ansöker hos: Socialkontoret i Helsingborg\n\nDu måste stå till arbetsmarknadens förfogande!',a:'Ekonomiskt bistånd är behovsprövat och individbaserat. Riksnormen för 2024: ensamstående ca 4 700 kr/mån + hyra. Du måste söka alla andra bidrag du har rätt till. Krav: aktivt jobbsök, delta i insatser, inga omotiverade tillgångar.'},
-{t:'Bidrag du kanske inte vet om',s:'📦 Barnbidrag: 1 250 kr/barn/mån (automatiskt)\n🏠 Bostadsbidrag: FK, inkomstbaserat\n👶 Föräldrapenning: 90% av lön (max 20 år)\n📚 Studiestöd (CSN): 11 300 kr/mån heltid\n🧑 Aktivitetsstöd: ca 80% av a-kassa vid AF-program\n♿ Assistansersättning: för funktionsnedsättning\n🎂 Äldreförsörjningsstöd: 65+ med låg pension',a:'Sverige har ca 50 olika bidragsformer. Många undersöker inte vad de har rätt till. Kollas via: fk.se (Försäkringskassan), af.se, kommunens socialtjänst, och 1177.se. Ekonomirådgivning gratis via kommunen (skuldsanering och budgetrådgivning).'},
-{t:'Skulder & skuldsanering',s:'Har du skulder du inte kan betala?\n\nSteg 1: Budget — vad har du råd att betala?\nSteg 2: Kontakta borgenären — ofta går avbetalningsplan\nSteg 3: Kronofogden — bestrida felaktiga krav\nSteg 4: Skuldsanering — via ansökan till KFM\n\nKronofogden har gratis budget-rådgivning!\nKommunens budget-rådgivare: gratis!',a:'Skuldsanering ger skuldfrihet efter 5 år (3 år vid allvarliga omständigheter). Kräver att man har skulder man inte kan betala på överskådlig tid. Ansökan via Kronofogdemyndigheten. Konsumentverkets Hallå Konsument: 0771-42 33 00.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Veta vilket ekonomiskt stöd som finns — och våga ta reda på vad just du har rätt till.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad ekonomiskt bistånd är, bidrag många missar, och hur du tar dig ur en skuldsituation.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta var du ansöker om bistånd, känna till flera bidrag du kan ha rätt till, och veta att det finns gratis skuldrådgivning.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och de tre lektionerna, plus en övning där du kartlägger din egen bidragssituation.'}
+],
+a:'Ekonomiskt bistånd och bidrag är till för att hjälpa dig — men du måste ofta själv ta reda på vad du har rätt till. Den här modulen ger dig överblicken.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen ger dig hela bilden — vad ekonomiskt bistånd är, vilka bidrag som finns, och hur du hanterar skulder. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Ekonomiskt bistånd (försörjningsstöd)',
+cards:[
+{icon:'🆘',h:'Stöd när du inte klarar dig',t:'Kan du inte försörja dig själv har du rätt till ekonomiskt bistånd från kommunen.'},
+{icon:'🧺',h:'Vad täcks?',t:'Det mest grundläggande — mat, hyra, el, kläder och hemförsäkring.'},
+{icon:'🏛️',h:'Var ansöker du?',t:'Hos kommunens socialkontor. Stödet är behovsprövat och individuellt.'},
+{icon:'📞',h:'Ett krav',t:'Du ska stå till arbetsmarknadens förfogande och söka jobb aktivt.'}
+],
+a:'Ekonomiskt bistånd är behovsprövat och individbaserat. Du måste söka alla andra bidrag du har rätt till. Krav: aktivt jobbsök, delta i insatser, inga omotiverade tillgångar.'},
+{t:'Bidrag du kanske inte vet om',
+cards:[
+{icon:'👶',h:'Barnbidrag',t:'1 250 kr per barn och månad — betalas ut automatiskt.'},
+{icon:'🏠',h:'Bostadsbidrag',t:'Inkomstbaserat — söks via Försäkringskassan.'},
+{icon:'📚',h:'Studiestöd (CSN)',t:'Bidrag och lån om du studerar.'},
+{icon:'📋',h:'Aktivitetsstöd',t:'Vid program hos Arbetsförmedlingen. Kolla även fk.se och kommunen.'}
+],
+a:'Sverige har ca 50 olika bidragsformer. Många undersöker inte vad de har rätt till. Kollas via: fk.se (Försäkringskassan), af.se, kommunens socialtjänst, och 1177.se. Ekonomirådgivning gratis via kommunen.'},
+{t:'Skulder & skuldsanering',
+cards:[
+{icon:'📊',h:'1 — Gör en budget',t:'Vad har du råd att betala?'},
+{icon:'🤝',h:'2 — Kontakta borgenären',t:'Ofta går det att komma överens om en avbetalningsplan.'},
+{icon:'⚖️',h:'3 — Kronofogden',t:'Bestrid felaktiga krav.'},
+{icon:'🆓',h:'4 — Skuldsanering',t:'Vid skulder du inte kan betala — skuldfri efter 5 år. Kommunens budgetrådgivning är gratis.'}
+],
+a:'Skuldsanering ger skuldfrihet efter 5 år (3 år vid allvarliga omständigheter). Ansökan via Kronofogdemyndigheten. Konsumentverkets Hallå Konsument: 0771-42 33 00.'}
 ],
 ex:{type:'build',title:'Din bidragsöversikt',desc:'Koll på vilka bidrag du kan ha rätt till.',
 fields:[
@@ -757,11 +1271,38 @@ quiz:[
 ],
 pr:['Hitta billigaste mobilabonnemang för mitt behov.','Vad kan jag skära i min budget med 500 kr/mån?','Jämför hemförsäkringar för hyresrätt.']},
 
-{id:'e5',icon:'🐷',title:'Spara & buffert',sub:'Trygghet börjar med 1000 kr',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e5',icon:'🐷',title:'Spara & buffert',sub:'Trygghet börjar med 1000 kr',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e5-buffert.mp4',
 lessons:[
-{t:'Varför buffert?',s:'En buffert är pengar du ALDRIG rör — tills du MÅSTE.\n\nVad bufferten räddar dig från:\n🚗 Oväntad bilreparation\n🦷 Akut tandläkare\n🏠 Tvättmaskin går sönder\n📱 Mobilen tappas\n\nMål 1: 1 000 kr\nMål 2: 10 000 kr\nMål 3: 3 månaders levnadskostnader',a:'Finansforskare visar att ett hushåll med 10 000 kr i buffert har dramatiskt lägre sannolikhet att hamna i skuldfällan vid oförutsedda händelser. Buffert = förhindrar att en liten kris blir en stor.'},
-{t:'Spara på låg inkomst',s:'Det spelar ingen roll om du sparar 100 kr/mån.\n\nStrategier:\n• Automatisk överföring på lönedagen\n• Spara myntet (avrunda till jämnt)\n• 52-veckors-utmaningen (1 kr vecka 1, 2 kr vecka 2...)\n• Sälj saker du inte behöver (Blocket)\n\n100 kr/mån = 1 200 kr om ett år',a:'Beteendeekonomi: automatiska sparöverföringar (pay yourself first) är den mest effektiva sparmetoden. Hjärnan behandlar pengar som gått till sparande annorlunda än kvar-pengar. Spara innan du konsumerar.'},
-{t:'Ränta på ränta — tidens kraft',s:'Om du sparar 500 kr/mån i 30 år med 5% ränta:\n\n→ Totalt inbetalat: 180 000 kr\n→ Totalt sparat: ~416 000 kr!\n\nTiden är den viktigaste faktorn.\n\nBörja idag — inte när du har "råd".\n\nKontoformer:\n• Sparkonto: låg ränta, alltid tillgängligt\n• ISK: för fonder och aktier (schablonbeskattning)',a:'Compound interest (ränta på ränta) är Einsteins "åttonde underverk". Skillnaden mellan att börja spara 25 vs 35 är astronomisk. ISK (investeringssparkonto) är skattemässigt fördelaktigt för långsiktigt fondsparande — betalas schablonskatt på ~0.9% av värdet istället för 30% på vinst.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🐷',h:'Vad är syftet?',t:'Förstå varför en buffert ger trygghet — och få konkreta sätt att bygga den, även på låg inkomst.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Varför en buffert behövs, delmål att sikta på, sparande på låg inkomst, och ränta på ränta.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna sätta ett eget sparmål och veta hur du når det.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och lektioner, plus en övning där du gör din egen sparplan.'}
+],
+a:'Trygghet börjar med 1 000 kr. Den här modulen visar hur du tar dig dit — steg för steg.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom varför en buffert behövs, delmål att sikta på, sparande på låg inkomst, och kraften i ränta på ränta. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Varför buffert?',
+cards:[
+{icon:'🛡️',h:'Pengar för det oväntade',t:'En buffert räddar dig från bilreparationen, tandläkaren eller mobilen som går sönder.'},
+{icon:'🎯',h:'Sätt delmål',t:'Mål 1: 1 000 kr. Mål 2: 10 000 kr. Mål 3: tre månaders levnadskostnader.'},
+{icon:'😌',h:'Kris blir problem',t:'Med en buffert blir det oväntade ett problem du löser — inte en kris.'}
+],
+a:'Ett hushåll med 10 000 kr i buffert har dramatiskt lägre risk att hamna i skuldfällan vid oförutsedda händelser.'},
+{t:'Spara på låg inkomst',
+cards:[
+{icon:'🔁',h:'Automatisk överföring',t:'Lägg en överföring på lönedagen — då händer sparandet av sig självt.'},
+{icon:'🪙',h:'Spara småpengarna',t:'Avrunda och spara småmynten — litet och regelbundet ger resultat.'},
+{icon:'📦',h:'Sälj det du inte behöver',t:'Sälj saker via Blocket och lägg pengarna i bufferten.'}
+],
+a:'Automatiska sparöverföringar — "pay yourself first" — är den mest effektiva sparmetoden. Spara innan du konsumerar.'},
+{t:'Ränta på ränta',
+cards:[
+{icon:'⏳',h:'Tidens kraft',t:'500 kr/mån i 30 år blir ungefär 416 000 kr — det mesta är ränta.'},
+{icon:'🏦',h:'Sparkonto',t:'Låg ränta, men pengarna är alltid tillgängliga — perfekt för bufferten.'},
+{icon:'📈',h:'ISK',t:'Investeringssparkonto — för fonder och aktier på lång sikt.'}
+],
+a:'Ränta på ränta gör att tiden blir din viktigaste faktor. ISK är skattemässigt fördelaktigt för långsiktigt fondsparande.'}
 ],
 ex:{type:'build',title:'Din sparplan',desc:'Starta din buffert — oavsett hur liten.',
 fields:[
@@ -1120,8 +1661,39 @@ lessons:[{t:'Vad är digital närvaro?',s:'Digital närvaro är allt som finns o
 ex:{type:'build',title:'Analysera ditt fotavtryck',desc:'Snabb analys + förbättringsplan.',fields:[{l:'Googla ditt namn — vad hittar du?',ph:'T.ex. Instagram, gammal blogg...',ta:true,hint:'Sök på ditt namn nu.'},{l:'Vad bör tas bort?',ph:'T.ex. Gamla partybilder...',ta:true},{l:'Vad bör läggas till?',ph:'T.ex. Uppdatera LinkedIn-bild...',ta:true},{l:'Ditt nästa steg',ph:'T.ex. Byt profilbild idag.',hint:'Gör det nu!'}]},
 quiz:[{q:'Vad är digital närvaro?',o:['Att ha dator','Allt om dig på internet','En e-postadress'],c:1},{q:'Varför googlar arbetsgivare?',o:['Nyfikenhet','Professionell bakgrundskoll','Lag'],c:1},{q:'Vad ta bort?',o:['Yrkeshistorik','Stötande bilder och kommentarer','Profilbild'],c:1}],
 pr:['Sammanfatta mitt fotavtryck: …','5 förbättringar för min närvaro.','Vad tittar arbetsgivare på?']},
-{id:'d2',icon:'🔵',title:'LinkedIn-grunder',sub:'Din profil online',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Varför LinkedIn?',s:'LinkedIn är en jobbsida där arbetsgivare hittar dig.',a:'Världens största professionella nätverk. Rekryterare söker och verifierar kandidater där.'},{t:'5 viktigaste delar',s:'1. Profilbild\n2. Rubrik\n3. Om mig\n4. Erfarenhet\n5. Kompetenser',a:'Dessa påverkar hur ofta du visas i sökningar.'},{t:'Rubrik & Om mig',s:'Rubrik = vad du gör.\nOm mig = vem du är.',a:'Rubrik: yrkesroll + styrkor + bransch.\nOm mig: 3-5 meningar med pitch, erfarenhet och mål.'}],
+{id:'d2',icon:'🔵',title:'LinkedIn-grunder',sub:'Din profil online',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d2-linkedin.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Förstå varför LinkedIn är viktigt — och hur du bygger en profil som rekryterare hittar.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Varför LinkedIn, de fem delar som räknas, och hur du skriver din rubrik och din om mig-text.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna bygga en komplett LinkedIn-profil med rubrik, om mig-text och rätt nyckelord.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektionerna, plus en övning där du skriver din egen profiltext.'}
+],
+a:'LinkedIn är världens största professionella nätverk. Den här modulen ger dig grunden.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen visar varför LinkedIn är viktigt, vilka delar som räknas, och hur du bygger en profil som syns. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Varför LinkedIn?',
+cards:[
+{icon:'🔍',h:'Rekryterare söker där',t:'LinkedIn är en jobbsida där arbetsgivare aktivt hittar dig.'},
+{icon:'🌐',h:'Världens största yrkesnätverk',t:'Det är också där rekryterare verifierar kandidater.'}
+],
+a:'Världens största professionella nätverk. Rekryterare söker och verifierar kandidater där.'},
+{t:'5 viktigaste delar',
+cards:[
+{icon:'📷',h:'Profilbild',t:'Skapar förtroende.'},
+{icon:'🏷️',h:'Rubrik',t:'Vad du gör — på en rad.'},
+{icon:'📝',h:'Om mig',t:'Vem du är.'},
+{icon:'💼',h:'Erfarenhet',t:'Dina tidigare roller.'},
+{icon:'🛠️',h:'Kompetenser',t:'Det du kan.'}
+],
+a:'Dessa påverkar hur ofta du visas i sökningar.'},
+{t:'Rubrik & Om mig',
+cards:[
+{icon:'🏷️',h:'Rubriken',t:'Vad du gör — yrkesroll, styrkor och bransch.'},
+{icon:'📝',h:'Om mig',t:'Vem du är — 3–5 meningar med pitch, erfarenhet och mål.'}
+],
+a:'Rubrik: yrkesroll + styrkor + bransch. Om mig: 3-5 meningar med pitch, erfarenhet och mål.'}
+],
 ex:{type:'build',title:'Bygg din LinkedIn-profil',desc:'Skriv delarna — kopiera sedan direkt till LinkedIn.',fields:[{l:'Rubrik',ph:'T.ex. Lagerarbetare med truck-erfarenhet',hint:'Max 120 tecken.'},{l:'Om mig — pitch',ph:'T.ex. Engagerad med 4 år i logistik.',ta:true},{l:'Om mig — styrkor',ph:'T.ex. Struktur, effektivitet och teamarbete.',ta:true},{l:'Om mig — mål',ph:'T.ex. Söker utmaning i Helsingborg.',ta:true}]},
 quiz:[{q:'Varför är LinkedIn viktigt?',o:['Nöjessida','Rekryterare söker där','Obligatoriskt'],c:1},{q:'Vad ska rubriken ha?',o:['Favoritfilm','Yrkesroll + styrkor + bransch','Alla utbildningar'],c:1},{q:'Vad ska Om mig ha?',o:['Familjebakgrund','Pitch, erfarenhet och mål','Lista med jobb'],c:1}],
 pr:['LinkedIn-rubrik baserat på min erfarenhet.','Om mig i 3 meningar.','Förbättra min profil: …']},
@@ -1140,8 +1712,41 @@ lessons:[{t:'Vad är BankID?',s:'BankID är din digitala legitimation i Sverige.
 ex:{type:'build',title:'Din BankID-checklista',desc:'Säkerställ att du har BankID och vet hur du använder det.',fields:[{l:'Har du BankID? Vilken bank?',ph:'T.ex. Ja, Mobilt BankID via Swedbank / Nej, behöver ordna'},{l:'Vilka e-tjänster behöver du nu?',ph:'T.ex. FK Mina sidor, 1177, AF digitalt...',hint:'Logga in och testa var och en'},{l:'Har du aktiverat digital brevlåda?',ph:'T.ex. Ja via minmeddelanden.se / Nej — gör det nu',hint:'minmeddelanden.se — gratis'},{l:'Vad gör du om du kontaktas om BankID?',ph:'T.ex. Lägger på och ringer banken på officiellt nummer...',ta:true}]},
 quiz:[{q:'Vad är BankID?',o:['Ett bankkort','Digital legitimation och signering i Sverige','En bank-app','Ett kreditkort'],c:1},{q:'Vad gör du om någon ringer och ber dig använda BankID?',o:['Gör som de säger om det låter trovärdigt','Lägg på och ring din bank direkt','Signera om det verkar okej','Fråga vad de vill'],c:1},{q:'Var ansöker du om BankID?',o:['Skatteverket','Din svenska bank','Polisen','Posten'],c:1},{q:'Vad är Mina meddelanden?',o:['E-post från vänner','Digital brevlåda för myndighetspost','SMS-tjänst','En app'],c:1}],
 pr:['Vilka e-tjänster behöver jag som jobbsökare?','Förklara BankID för någon som aldrig hört talas om det.','Vad gör jag om jag inte har BankID ännu?']},
-{id:'d6',icon:'🔍',title:'Söka jobb digitalt',sub:'Platsbanken, AF och jobboarderna',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'De viktigaste jobboarderna',s:'Sverige-specifika:\n🏛️ Platsbanken (AF) — störst, gratis\n💼 LinkedIn Jobs — nätverk + jobb\n🔵 Blocket Jobb — lokala jobb\n⭐ Indeed.se — aggregerar alla\n\nFiltrera ALLTID på ort!\n→ Helsingborg / Skåne',a:'Platsbanken är officiell och kopplad till AF. Alla arbetsgivare med lönestöd måste annonsera där. Indeed aggregerar alla sajter. Sätt upp jobbagenter — de sparar tid.'},{t:'Jobbagenter — din automatiska jobbsökare',s:'En jobbagent = en sökning som körs automatiskt.\n\nSå gör du:\n1. Sök på Platsbanken\n2. Klicka "Spara sökning"\n3. Välj daglig e-post\n4. Upprepa på LinkedIn och Indeed\n\nDu får nya jobb direkt i inkorgen — gratis!\n→ Sätt upp minst 3 agenter idag.',a:'Jobbagenter är ett av de mest underutnyttjade verktygen. Bästa inställning: sök på yrkestitlar, Helsingborg + Skåne. Justera löpande om du får för många/få träffar.'},{t:'Hitta rätt med sökfilter',s:'På Platsbanken, filtrera:\n📍 Ort: Helsingborg, Skåne\n💼 Yrkeskategori\n⏰ Heltid/deltid\n📅 Sista 7 dagarna\n\nSök på kompetensord:\n"truck", "undersköterska", "kundtjänst"\n\n💡 Sök tidigt — många jobb fylls inom 3 dagar!',a:'Platsbanken uppdateras kontinuerligt. Sök på kompetensnyckelord, inte bara titlar. "Truck" hittar alla jobb som nämner truckkompetens oavsett titel.'}],
+{id:'d6',icon:'🔍',title:'Söka jobb digitalt',sub:'Platsbanken, AF och jobboarderna',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d6-digitalt.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🔍',h:'Vad är syftet?',t:'Sätta upp en komplett digital jobbsökning så att nya jobb hittar dig — automatiskt.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'De viktigaste jobboarderna, hur jobbagenter fungerar, och hur du filtrerar smart på Platsbanken.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha minst tre jobbagenter uppsatta och veta hur du filtrerar rätt.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och lektioner, plus en övning där du sätter upp din egen jobbsökning.'}
+],
+a:'En digital jobbsökning tar fem minuter att sätta upp — och sparar dig timmar varje vecka.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom de viktigaste jobboarderna, hur du sätter upp jobbagenter, och hur du filtrerar smart. Se den först, så blir lektionerna lättare att följa.'},
+{t:'De viktigaste jobboarderna',
+cards:[
+{icon:'🏛️',h:'Platsbanken',t:'Störst och gratis — kopplad till Arbetsförmedlingen.'},
+{icon:'💼',h:'LinkedIn Jobs',t:'Nätverk och jobb i ett.'},
+{icon:'🔵',h:'Blocket Jobb',t:'Lokala jobb nära dig.'},
+{icon:'⭐',h:'Indeed.se',t:'Aggregerar annonser från alla sajter.'}
+],
+a:'Alla arbetsgivare med lönestöd måste annonsera på Platsbanken. Filtrera alltid på ort — Helsingborg och Skåne.'},
+{t:'Jobbagenter',
+cards:[
+{icon:'🔁',h:'En sparad sökning',t:'En jobbagent är en sökning som körs automatiskt åt dig.'},
+{icon:'📧',h:'Nya jobb i inkorgen',t:'Du får färska annonser varje dag — helt gratis.'},
+{icon:'3️⃣',h:'Så sätter du upp en',t:'Sök på Platsbanken, klicka "Spara sökning", välj daglig e-post — upprepa på LinkedIn och Indeed.'}
+],
+a:'Jobbagenter är ett av de mest underutnyttjade verktygen. Sätt upp minst tre — idag.'},
+{t:'Hitta rätt med sökfilter',
+cards:[
+{icon:'📍',h:'Ort',t:'Filtrera på Helsingborg och Skåne.'},
+{icon:'⏰',h:'Omfattning',t:'Välj heltid eller deltid.'},
+{icon:'📅',h:'Senaste 7 dagarna',t:'Se de färska annonserna först.'},
+{icon:'⚡',h:'Sök tidigt',t:'Många jobb fylls inom 3 dagar — ansök direkt vid en match.'}
+],
+a:'Sök på kompetensord, inte bara titlar. "Truck" hittar alla jobb som nämner truckkompetens — oavsett jobbtitel.'}
+],
 ex:{type:'build',title:'Din digitala jobbsök-setup',desc:'Sätt upp en komplett digital jobbsökning idag.',fields:[{l:'Vilket yrke söker du? Skriv din sökterm',ph:'T.ex. lagerarbetare, undersköterska, kundtjänst...'},{l:'Har du satt upp jobbagenter? Var?',ph:'T.ex. Ja på Platsbanken och LinkedIn / Nej — gör det nu',hint:'Gör det nu — tar 5 min!'},{l:'Vilka 3 jobboarder ska du använda?',ph:'T.ex. Platsbanken, LinkedIn, Blocket Jobb'},{l:'Söktaktik — hur ofta och när?',ph:'T.ex. Kolla inkorgen varje morgon, ansök direkt vid match'}]},
 quiz:[{q:'Vilken jobboard är störst och gratis i Sverige?',o:['LinkedIn','Platsbanken (AF)','Indeed','Monster'],c:1},{q:'Vad är en jobbagent?',o:['En person som söker jobb åt dig','Automatisk sökning som mailar nya jobb','En rekryterare','En app'],c:1},{q:'Hur snabbt bör du söka ett jobb du hittar?',o:['Vänta och tänk','Inom 3 dagar — många fylls snabbt','Samla och sök på fredag','Spelar ingen roll'],c:1},{q:'Vilket filter är viktigast på Platsbanken?',o:['Lön','Ort — annars drunknar du i annonser','Arbetsgivare','Publikationsdatum'],c:1}],
 pr:['Hitta 5 bästa jobben för [yrke] i Helsingborg.','Hur sätter jag upp jobbagent på Platsbanken?','Vilken sökterm ger bäst träffar för [yrke]?']},
@@ -1220,33 +1825,80 @@ pr:['Vilka digitala kompetenser saknar jag för [yrke]?','Bygg min digitala karr
 ];
 
 var STUDIER=[
-{id:'s0',icon:'🗺️',title:'Utbildningskartan',sub:'Vad finns i Studier-kategorin?',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s0',icon:'🗺️',title:'Utbildningskartan',sub:'Vad finns i Studier-kategorin?',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s0-karta.mp4',
 lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Få överblick över hela det svenska utbildningssystemet — och hjälp att hitta var just du ska börja.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Alla utbildningsformer på en blick, snabba vägar jämfört med längre satsningar, och hur du hittar din egen startpunkt.'},
+{icon:'✅',h:'När du är klar ska du...',t:'känna till de viktigaste utbildningsformerna och kunna peka ut var du ska börja — eller veta att en SYV kan hjälpa dig.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 5 minuter för film och de tre lektionerna, plus AI-övningen som kartlägger din startpunkt.'}
+],
+a:'Det svenska utbildningssystemet har fler ingångar för vuxna än de flesta länder. Den här modulen ger dig kartan.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen ger dig hela kartan över det svenska utbildningssystemet — utbildningsformerna, snabba vägar och längre satsningar. Se den först, så blir lektionerna lättare att följa.'},
 {t:'Alla utbildningsformer på en blick',
-s:'I Studier-kategorin hittar du 20 moduler som täcker hela det svenska utbildningssystemet:\n\n🇸🇪 SFI — Lär dig svenska gratis\n📚 Komvux — Komplettera betyg som vuxen\n🏡 Folkhögskola — Studera i gemenskap\n🎓 YH — Kortaste vägen till yrke (1-2 år)\n📝 HP — Högskoleprovet förbättrar antagning\n🏫 Gymnasiekomplettering — Öppna fler dörrar\n💰 CSN — Finansiera studierna\n🌍 Validering — Erkänn utländsk utbildning',
+cards:[
+{icon:'🇸🇪',h:'SFI',t:'Lär dig svenska gratis.'},
+{icon:'📚',h:'Komvux',t:'Komplettera betyg som vuxen.'},
+{icon:'🏡',h:'Folkhögskola',t:'Studera i gemenskap.'},
+{icon:'🎓',h:'YH',t:'Kortaste vägen till yrke — 1–2 år.'},
+{icon:'📝',h:'Högskoleprovet',t:'Förbättrar din antagning till högskola.'},
+{icon:'🌍',h:'Validering',t:'Erkänn en utbildning från utlandet.'}
+],
 a:'Det svenska utbildningssystemet erbjuder fler ingångar för vuxna än de flesta länder. Fri rörlighet, avgiftsfria alternativ och generöst CSN-stöd gör det möjligt att byta bana i alla åldrar. Ca 15% av vuxna saknar gymnasieexamen — Komvux och folkhögskola är inkörsportarna.'},
 {t:'Snabba vägar vs. längre satsningar',
-s:'Vill du ut i arbete SNABBT?\n\n⚡ Korta certifieringskurser (1-8 veckor)\n🏗️ AMU via AF — gratis, behåll ersättning\n🔨 Lärling & YA — jobba och lär parallellt\n🎓 YH — 1-2 år med praktik (LIA) inbyggd\n\nVill du satsa längre?\n\n🏫 Gymn-komplettering → YH → Jobb\n🎓 Komvux → Uni → Karriär (3-5 år)\n📚 Folkhögskola → Hitta din riktning',
+cards:[
+{icon:'⚡',h:'Korta certifieringskurser',t:'1–8 veckor — direkt anställningsbar.'},
+{icon:'🏗️',h:'Arbetsmarknadsutbildning',t:'Gratis via AF — du kan behålla ersättning.'},
+{icon:'🎓',h:'YH — bästa kompromissen',t:'1–2 år, praktisk, med LIA inbyggd.'},
+{icon:'📈',h:'Längre satsningar',t:'Komvux → universitet, eller folkhögskola för att hitta din riktning.'}
+],
 a:'Kortare praktiska utbildningar leder snabbare till arbete men ger lägre startlön. Akademiska utbildningar tar längre men ger bättre löneutveckling. YH är ofta den bästa kompromissen — praktisk, kort och direkt arbetsmarknadsanpassad.'},
 {t:'Hitta din startpunkt',
-s:'Hitta rätt modul med dessa frågor:\n\n1. Kan du svenska? Nej → Börja med SFI\n2. Har du gymnasieexamen? Nej → Komvux GY-vux\n3. Har du utl. utbildning? → Kolla Validering\n4. Vill ha jobb snabbt? → AMU eller Certifieringar\n5. Vet inte vad du vill? → Prata med SYV (gratis!)\n6. Allt klart? → Välj YH, Uni eller Folkhögskola\n\nGör övningen nedan så hjälper AI dig att hitta rätt.',
+cards:[
+{icon:'💬',h:'Kan du svenska?',t:'Nej → börja med SFI.'},
+{icon:'🎓',h:'Har du gymnasieexamen?',t:'Nej → Komvux.'},
+{icon:'⚡',h:'Vill du jobba snabbt?',t:'→ Arbetsmarknadsutbildning eller korta kurser.'},
+{icon:'🧭',h:'Vet du inte?',t:'Prata med en SYV — gratis. Det är den effektivaste investeringen du kan göra.'}
+],
 a:'SYV (Studie- och yrkesvägledare) finns gratis hos kommunen, Komvux och AF. Ett möte tar 30-60 min och är den effektivaste investeringen du kan göra. Boka via helsingborg.se eller studera.nu.'}
 ],
 ex:{type:'ai-survey',title:'Kartlägg din startpunkt',desc:'Berätta om din situation och AI-SYV ger dig en personlig rekommendation om vilka moduler du ska börja med.'},
 quiz:[{q:'Vad är YH-utbildning?',o:['4-årig universitetsutbildning','1-2 år arbetsmarknadsanpassad utbildning med praktik','En gymnasiekurs'],c:1},{q:'Vad är AMU?',o:['Gratis arbetsmarknadsutbildning via AF','En universitetsexamen','En avgiftsbelagd kurs'],c:0},{q:'Vilka utbildningar är gratis för vuxna?',o:['Komvux, SFI, YH och folkhögskola','Inga är gratis','Bara SFI'],c:0},{q:'Vad hjälper SYV med?',o:['Bara CV-skrivning','Bara för gymnasieelever','Utbildnings- och karriärplanering — gratis'],c:2},{q:'Vad är CSN?',o:['En utbildningsplattform','Myndigheten för studiestöd — bidrag och lån','En skola'],c:1}],
 pr:['Vilken utbildning passar mig baserat på min bakgrund?','Hur snabbt kan jag nå arbete via utbildning?','Förklara skillnaden YH och Komvux på enkel svenska.']},
 
-{id:'s1',icon:'🎓',title:'Vad är YH-utbildning?',sub:'Yrkeshögskola — snabbaste vägen till jobb',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s1',icon:'🎓',title:'Vad är YH-utbildning?',sub:'Yrkeshögskola — snabbaste vägen till jobb',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/yh-utbildning.mp4',
 lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Förstå vad en YH-utbildning är och varför den ofta är den snabbaste vägen till jobb. Du ska kunna avgöra om YH passar dig — och veta hur du tar nästa steg.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad yrkeshögskola är och hur den skiljer sig från universitet, vilka fördelar den ger, och hur du hittar och söker en utbildning som matchar ditt yrkesmål.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta vad YH innebär, känna till LIA och studiemedel, och kunna hitta en konkret YH-utbildning på yrkeshogskolan.se som passar dig.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 5 minuter för film och de tre lektionerna. Lägg till några minuter för övningen där du själv letar fram en utbildning.'}
+],
+a:'YH — yrkeshögskola — är en eftergymnasial utbildningsform som styrs av arbetslivets behov. Den här modulen ger dig grunden för att förstå och välja en YH-utbildning.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen ger dig hela bilden av YH-utbildningar — vad de är, hur de är uppbyggda, vilka yrken som har starkast efterfrågan, och vanliga fallgropar att undvika. Se den först, så blir lektionerna lättare att följa.'},
 {t:'Vad är en YH-utbildning?',
-s:'YH betyder Yrkeshögskola. Det är en utbildning som är skapad för arbetsmarknaden.\n\nDen är kortare än ett universitetet — oftast 1-2 år.\nDu studerar det du behöver för ett specifikt yrke.',
-a:'Yrkeshögskolan (YH) är en eftergymnasial utbildningsform som styrs av arbetslivets behov. Utbildningarna är arbetsmarknadsanpassade, ofta med hög andel LIA (Lärande i Arbete) och leder direkt till kvalificerade yrkesroller.',
-yt:'https://www.youtube.com/embed/dQw4w9WgXcQ'},
+cards:[
+{icon:'🎓',h:'Yrkeshögskola',t:'YH betyder yrkeshögskola — en eftergymnasial utbildning som är skapad direkt för arbetsmarknaden.'},
+{icon:'⏱️',h:'Kort och fokuserad',t:'Oftast 1–2 år — betydligt kortare än ett universitet.'},
+{icon:'🎯',h:'Riktad mot ett yrke',t:'Du läser exakt det du behöver för ett specifikt yrke — inget överflödigt.'}
+],
+a:'Yrkeshögskolan (YH) är en eftergymnasial utbildningsform som styrs av arbetslivets behov. Utbildningarna är arbetsmarknadsanpassade, ofta med hög andel LIA (Lärande i Arbete) och leder direkt till kvalificerade yrkesroller.'},
 {t:'Fördelar med YH',
-s:'✅ Kortare tid än universitetet\n✅ Praktik ingår (LIA)\n✅ Bra chans till jobb efteråt\n✅ Du kan få studiemedel från CSN\n✅ Gratis att söka och studera',
+cards:[
+{icon:'⏱️',h:'Kortare studietid',t:'Kortare än universitetet — du kommer ut i arbete snabbare.'},
+{icon:'🤝',h:'Praktik ingår',t:'LIA — lärande i arbete — är praktik ute på ett företag, ofta din väg in till jobb.'},
+{icon:'💼',h:'Bra jobbchanser',t:'En hög andel av de examinerade är i arbete kort efter examen.'},
+{icon:'💰',h:'CSN och gratis',t:'Du kan få studiemedel från CSN, och det är gratis att söka och studera.'}
+],
 a:'YH-utbildningar har hög arbetsmarknadsrelevans. Ca 85% av examinerade studenter är i arbete inom 6 månader. LIA (Lärande i Arbete) ger praktisk erfarenhet och ofta direktkontakt med framtida arbetsgivare.'},
 {t:'Hitta en YH-utbildning',
-s:'Gå till: yrkeshogskolan.se\n\nDär kan du söka på:\n• Ort (t.ex. Helsingborg)\n• Yrke (t.ex. lagerlogistik)\n• Starttid',
+cards:[
+{icon:'🔎',h:'yrkeshogskolan.se',t:'På Myndigheten för yrkeshögskolans sajt hittar du alla godkända YH-utbildningar.'},
+{icon:'🧭',h:'Sök smart',t:'Filtrera på ort (t.ex. Helsingborg), yrke (t.ex. lagerlogistik) och starttid.'},
+{icon:'📝',h:'Ansök via antagning.se',t:'Själva ansökan görs på antagning.se — kolla behörighetskraven för varje utbildning.'}
+],
 a:'På Myh.se (Myndigheten för yrkeshögskolan) hittar du alla godkända YH-utbildningar. Filtrera på ort, inriktning och distans/plats. Ansökan sker via antagning.se.'}
 ],
 ex:{type:'build',title:'Hitta din YH-utbildning',desc:'Utforska YH och identifiera en utbildning som passar dig.',
@@ -1263,17 +1915,39 @@ links:[
 quiz:[{q:'Vad är en YH-utbildning?',o:['En arbetsmarknadsanpassad yrkesutbildning','En universitetsutbildning','En gymnasieutbildning'],c:0},{q:'Hur lång är en typisk YH-utbildning?',o:['1-2 år','4-5 år','6 månader'],c:0},{q:'Vad är LIA?',o:['En typ av lärare','En ansökningssida','Lärande i Arbete — praktik'],c:2},{q:'Var hittar du YH-utbildningar?',o:['arbetsformedlingen.se','yrkeshogskolan.se','csn.se'],c:1},{q:'Kan du få CSN under YH?',o:['Bara om du arbetar parallellt','Ja, studiemedel betalas ut','Nej'],c:1}],
 pr:['Vilka YH-utbildningar finns inom logistik i Skåne?','Vad krävs för att söka till en YH inom IT?','Förklara skillnaden mellan YH och universitet.']},
 
-{id:'s2',icon:'📚',title:'Komvux',sub:'Läsa in gymnasiebetyg som vuxen',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s2',icon:'📚',title:'Komvux',sub:'Läsa in gymnasiebetyg som vuxen',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s2-komvux.mp4',
 lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Förstå vad Komvux är och hur du kan använda det för att komplettera din utbildning som vuxen — på dina villkor.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad Komvux är och vad du kan läsa där, varför man läser på Komvux, och hur du ansöker steg för steg.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta att Komvux är gratis och löpande, vad du kan läsa, och kunna göra en konkret ansökan till din kommun.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och de tre lektionerna, plus några minuter för övningen där du skissar din egen Komvux-plan.'}
+],
+a:'Komvux — kommunal vuxenutbildning — är en del av det offentliga skolväsendet och är avgiftsfritt. Den här modulen visar hur du kan använda det.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen ger dig hela bilden av Komvux — vad du kan läsa, varför, och hur du ansöker. Se den först, så blir lektionerna lättare att följa.'},
 {t:'Vad är Komvux?',
-s:'Komvux = Kommunal Vuxenutbildning.\n\nDu kan läsa:\n• Grundläggande kurser (som grundskolan)\n• Gymnasiekurser\n• Yrkesutbildningar\n\nDet är gratis och du kan börja när som helst.',
-a:'Komvux är en del av det offentliga skolväsendet. Det ger vuxna möjlighet att komplettera sin utbildning på grundläggande eller gymnasial nivå, eller läsa yrkesutbildningar. Utbildningen är avgiftsfri och du kan studera i din egen takt.',
-yt:'https://www.youtube.com/embed/dQw4w9WgXcQ'},
+cards:[
+{icon:'🏛️',h:'Kommunal vuxenutbildning',t:'Komvux är en del av det offentliga skolväsendet — utbildning för dig som är vuxen.'},
+{icon:'📚',h:'Tre saker du kan läsa',t:'Grundläggande kurser (motsvarar grundskolan), gymnasiekurser, och yrkesutbildningar.'},
+{icon:'💛',h:'Gratis & flexibelt',t:'Det är avgiftsfritt, du kan börja när som helst, och du studerar i din egen takt.'}
+],
+a:'Komvux är en del av det offentliga skolväsendet. Det ger vuxna möjlighet att komplettera sin utbildning på grundläggande eller gymnasial nivå, eller läsa yrkesutbildningar. Utbildningen är avgiftsfri och du kan studera i din egen takt.'},
 {t:'Varför läsa på Komvux?',
-s:'Du kanske:\n• Saknar gymnasieexamen\n• Behöver ett bättre betyg\n• Vill byta yrke\n• Behöver lära dig svenska\n\nKomvux kan öppna dörrar till jobb och vidare studier.',
+cards:[
+{icon:'🎓',h:'Saknar gymnasieexamen',t:'Läs in det som fattas — i din egen takt.'},
+{icon:'📈',h:'Behöver bättre betyg',t:'Höj ett betyg för att bli behörig till en utbildning eller ett jobb.'},
+{icon:'🔄',h:'Vill byta yrke',t:'Komvux är ofta första steget mot en ny bana.'},
+{icon:'🚪',h:'Öppnar dörrar',t:'Behörighet till YH, universitet och många jobb kräver godkänd gymnasieutbildning.'}
+],
 a:'Behörighet till YH, universitet och många arbeten kräver godkänd gymnasieutbildning. Komvux är det snabbaste sättet att komplettera betyg som vuxen och är anpassat för dem som jobbar eller har familj.'},
 {t:'Hur ansöker du?',
-s:'1. Gå till din kommuns hemsida\n2. Sök "Komvux ansökan"\n3. Fyll i formuläret\n4. Välj kurser du vill läsa\n\nI Helsingborg: helsingborg.se/komvux',
+cards:[
+{icon:'🌐',h:'1 — Kommunens hemsida',t:'Gå till din kommuns hemsida och sök på "Komvux ansökan".'},
+{icon:'📝',h:'2 — Fyll i & välj kurser',t:'Fyll i formuläret och välj de kurser du vill läsa.'},
+{icon:'📅',h:'3 — Löpande ansökan',t:'Ansökan är löpande — du kan börja vid nästa terminsstart.'},
+{icon:'📍',h:'I Skåne',t:'Skånevux samordnar vuxenutbildningen i regionen — sök på Skånevux.'}
+],
 a:'Ansökan görs direkt till kommunen. I Skåne kan du också titta på Skanevux.se som samordnar vuxenutbildning i regionen. Ansökan är löpande — du kan börja vid nästa terminsstart.'}
 ],
 ex:{type:'komvux-ai',title:'Din Komvux-plan',desc:'Berätta om din situation och få förslag på kurser.',
@@ -1286,18 +1960,41 @@ fields:[
 quiz:[{q:'Vad betyder Komvux?',o:['Kommunalt Vuxencenter','Kommunal Vuxenutbildning','Kompetens och Utbildning'],c:1},{q:'Är Komvux gratis?',o:['Ja, det är avgiftsfritt','Nej, det kostar','Bara om du är arbetslös'],c:0},{q:'Vad kan du läsa på Komvux?',o:['Grundläggande, gymnasiekurser och yrkesutbildning','Bara matematik','Bara universitetsförberedande'],c:0},{q:'Var hittar du Komvux i Helsingborg?',o:['komvux.se','skanevux.se','helsingborg.se/komvux'],c:2}],
 pr:['Vilka Komvux-kurser behöver jag för att söka YH?','Hur snabbt kan jag läsa klart gymnasiet via Komvux?','Vad är skillnaden mellan Komvux och SFI?']},
 
-{id:'s3',icon:'🇸🇪',title:'SFI — Svenska för invandrare',sub:'Lär dig svenska kostnadsfritt',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s3',icon:'🇸🇪',title:'SFI — Svenska för invandrare',sub:'Lär dig svenska kostnadsfritt',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s3-sfi.mp4',
 lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Förstå vad SFI är, vilka nivåer som finns, och hur du lär dig svenska så snabbt som möjligt.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad SFI är och vad du lär dig, de tre studievägarna och kurserna A–D, samt konkreta tips för att lära dig svenska snabbare.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta hur SFI är upplagt, vilken studieväg som passar dig, och ha en plan för att öva svenska även utanför klassrummet.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och de tre lektionerna, plus några minuter för övningen där du gör din egen svenska-plan.'}
+],
+a:'SFI — svenska för invandrare — är en kommunal, kostnadsfri utbildning i svenska. Den här modulen ger dig överblicken.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen ger dig hela bilden av SFI — vad det är, vilka nivåer som finns, och hur du lär dig snabbare. Se den först, så blir lektionerna lättare att följa.'},
 {t:'Vad är SFI?',
-s:'SFI = Svenska för invandrare.\n\nDet är en gratis kurs för dig som är ny i Sverige och inte kan svenska.\n\nDu lär dig:\n• Läsa och skriva svenska\n• Prata och förstå\n• Använda svenska i vardagen',
-a:'SFI är en kommunal utbildning som ger grundläggande kunskaper i svenska. Det finns fyra studievägar (1-3) och kurserna A-D beroende på din bakgrund och tidigare utbildning.',
-yt:'https://www.youtube.com/embed/dQw4w9WgXcQ'},
+cards:[
+{icon:'🇸🇪',h:'Svenska för invandrare',t:'En gratis kurs för dig som är ny i Sverige och vill lära dig svenska.'},
+{icon:'📖',h:'Läsa & skriva',t:'Du lär dig att läsa och skriva svenska.'},
+{icon:'💬',h:'Prata & förstå',t:'Du lär dig att prata och att förstå.'},
+{icon:'🏡',h:'Svenska i vardagen',t:'Du lär dig använda svenska i affären, hos läkaren och på jobbet.'}
+],
+a:'SFI är en kommunal utbildning som ger grundläggande kunskaper i svenska. Det finns tre studievägar (1-3) och kurserna A-D beroende på din bakgrund och tidigare utbildning.'},
 {t:'Nivåer och studievägar',
-s:'SFI har olika nivåer:\n\nStudieväg 1 — för dig med lite skolbakgrund\nStudieväg 2 — för dig med gymnasienivå\nStudieväg 3 — för dig med högskoleutbildning\n\nDu testas och placeras på rätt nivå.',
+cards:[
+{icon:'1️⃣',h:'Studieväg 1',t:'För dig med lite skolbakgrund.'},
+{icon:'2️⃣',h:'Studieväg 2',t:'För dig med ungefär gymnasienivå.'},
+{icon:'3️⃣',h:'Studieväg 3',t:'För dig med högskoleutbildning.'},
+{icon:'📊',h:'Kurser A–D',t:'Du testas och placeras på rätt nivå, och arbetar dig uppåt mot kurs D.'}
+],
 a:'SFI är indelad i kurserna A, B, C och D. Kurs D är den avancerade nivån. Avklarad SFI öppnar dörrar till Komvux Svenska som andraspråk och vidare studier på svenska.'},
 {t:'Tips för att lära sig snabbare',
-s:'💡 Prata svenska varje dag\n💡 Titta på TV och filmer på svenska\n💡 Läs enkla nyheter (t.ex. 8sidor.se)\n💡 Öva med appen Duolingo\n💡 Prata med grannar och kollegor',
-a:'Forskning visar att kombinationen av formell undervisning och aktiv användning i vardagen ger snabbast resultat. Podcast "Lär dig svenska" och SVT Play med undertexter är utmärkta gratis resurser.'}
+cards:[
+{icon:'💬',h:'Prata varje dag',t:'Använd svenska lite varje dag — det är det som verkligen fungerar.'},
+{icon:'📺',h:'TV & film',t:'Titta på svensk TV och film, gärna med undertexter.'},
+{icon:'📰',h:'Läs enkelt',t:'Läs enkla nyheter, till exempel på sajten 8 sidor.'},
+{icon:'📱',h:'Öva i mobilen',t:'Använd en språkapp som komplement till lektionerna.'}
+],
+a:'Forskning visar att kombinationen av formell undervisning och aktiv användning i vardagen ger snabbast resultat. SVT Play med undertexter och enkla nyhetssajter är utmärkta gratis resurser.'}
 ],
 ex:{type:'build',title:'Din svenska-plan',desc:'Skapa en plan för att förbättra din svenska utanför klassrummet.',
 fields:[
@@ -1337,17 +2034,39 @@ quiz:[
 ],
 pr:['Vilka folkhögskolor finns nära Helsingborg?','Hur ansöker jag till folkhögskola?','Vad är skillnaden mellan folkhögskola och Komvux?']},
 
-{id:'s5',icon:'💰',title:'CSN & studiebidrag',sub:'Finansiera dina studier',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s5',icon:'💰',title:'CSN & studiebidrag',sub:'Finansiera dina studier',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s5-csn.mp4',
 lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Förstå hur du kan finansiera dina studier med CSN — så att ekonomin inte stoppar dig.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad CSN är och hur bidrag och lån fungerar, ungefär hur mycket du kan få, och hur du ansöker steg för steg.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta skillnaden mellan bidrag och lån, ha en känsla för beloppen, och kunna göra en ansökan på csn.se.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och de tre lektionerna, plus några minuter för övningen där du räknar på din egen CSN.'}
+],
+a:'CSN — Centrala studiestödsnämnden — administrerar det svenska studiestödssystemet. Den här modulen ger dig grunden för att planera din studieekonomi.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen ger dig hela bilden av CSN — bidrag och lån, beloppen, och hur du ansöker. Se den först, så blir lektionerna lättare att följa.'},
 {t:'Vad är CSN?',
-s:'CSN = Centrala studiestödsnämnden.\n\nDe betalar ut pengar till dig när du studerar.\n\nDet finns två delar:\n• Studiebidrag — pengar du inte behöver betala tillbaka\n• Studielån — pengar du lånar och betalar tillbaka senare',
-a:'CSN administrerar det svenska studiestödssystemet. Studiemedel består av bidragsdelen (ca 1/3) och lånedelen (ca 2/3). Lånet betalas tillbaka med låg ränta under lång tid.',
-yt:'https://www.youtube.com/embed/dQw4w9WgXcQ'},
+cards:[
+{icon:'🏛️',h:'Centrala studiestödsnämnden',t:'CSN betalar ut pengar till dig när du studerar.'},
+{icon:'🎁',h:'Bidrag',t:'Pengar du inte behöver betala tillbaka — ungefär en tredjedel av studiemedlet.'},
+{icon:'🏦',h:'Lån',t:'Pengar du lånar och betalar tillbaka senare, med låg ränta under lång tid.'}
+],
+a:'CSN administrerar det svenska studiestödssystemet. Studiemedel består av bidragsdelen (ca 1/3) och lånedelen (ca 2/3). Lånet betalas tillbaka med låg ränta under lång tid.'},
 {t:'Vad kan du få?',
-s:'2026 — ungefärliga belopp:\n\n📦 Heltid:\n• Bidrag: ca 3 400 kr/mån\n• Lån: ca 7 900 kr/mån\n• Totalt: ca 11 300 kr/mån\n\nDu väljer själv om du vill ta lånet.',
+cards:[
+{icon:'🎁',h:'Bidrag',t:'Cirka 3 400 kr per månad vid heltidsstudier (2026, ungefärligt).'},
+{icon:'🏦',h:'Lån',t:'Cirka 7 900 kr per månad — du väljer själv om du vill ta det.'},
+{icon:'💰',h:'Totalt',t:'Tillsammans runt 11 300 kr per månad vid heltid.'},
+{icon:'⚖️',h:'Beror på',t:'Beloppet påverkas av ålder, studietakt och om du har barn.'}
+],
 a:'Beloppet beror på ålder, studietakt och om du har barn. Du kan ta ut 1/4, 1/2, 3/4 eller heltid. Bidragsdelen kräver ingen återbetalning. Lånedelen återbetalas från det år du tjänar över gränsen.'},
 {t:'Hur ansöker du?',
-s:'1. Gå till csn.se\n2. Logga in med BankID\n3. Välj "Studiemedel"\n4. Fyll i uppgifter om din utbildning\n5. Skicka in\n\nDu ansöker per termin.',
+cards:[
+{icon:'🌐',h:'1 — csn.se',t:'Gå till csn.se och logga in med BankID.'},
+{icon:'📝',h:'2 — Studiemedel',t:'Välj Studiemedel och fyll i uppgifter om din utbildning.'},
+{icon:'📅',h:'3 — Per termin',t:'Du ansöker en gång per termin — ansökan öppnar oftast två månader innan start.'},
+{icon:'🎯',h:'Studera i rätt takt',t:'Du måste studera i den takt du ansökt om — annars kan CSN kräva tillbaka pengar.'}
+],
 a:'Ansökan öppnar normalt 2 månader innan terminsstart. Du behöver intyg från skolan. Pengarna betalas ut månadsvis. Viktigt: du måste studera i den takt du ansökt om — annars kan CSN kräva tillbaka pengar.'}
 ],
 ex:{type:'build',title:'Räkna på din CSN',desc:'Beräkna vad du kan få och planera din ekonomi.',
@@ -1366,18 +2085,38 @@ quiz:[
 ],
 pr:['Hur mycket CSN kan jag få för en YH-utbildning heltid?','Vad händer med CSN om jag jobbar extra?','Förklara hur CSN-lånet återbetalas.']},
 
-{id:'s6',icon:'📝',title:'Söka utbildning',sub:'Steg-för-steg ansökan',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s6',icon:'📝',title:'Söka utbildning',sub:'Steg-för-steg ansökan',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s6-utbildning.mp4',
 lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'📝',h:'Vad är syftet?',t:'Lära dig söka till en utbildning — steg för steg, hela vägen till en plats.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Antagning.se, ansökningsprocessens sex steg, och hur meritvärde och urval fungerar.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna göra en konkret ansökningsplan med rätt datum.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och lektioner, plus en övning där du gör din egen ansökningsplan.'}
+],
+a:'Antagning.se hanteras av Universitets- och högskolerådet. Den här modulen tar dig genom hela ansökan.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom Antagning.se, ansökningsprocessen steg för steg, och hur meritvärde och urval fungerar. Se den först, så blir lektionerna lättare att följa.'},
 {t:'Antagning.se',
-s:'antagning.se är Sveriges officiella ansökningssajt.\n\nHär söker du till:\n• Universitet och högskola\n• YH-utbildningar\n• Många andra kurser\n\nDet är gratis att söka.',
-a:'Antagning.se hanteras av Universitets- och högskolerådet (UHR). Du kan söka upp till 20 utbildningar per antagningsomgång. Urval sker via meritvärde (betyg eller högskoleprov).',
-yt:'https://www.youtube.com/embed/dQw4w9WgXcQ'},
+cards:[
+{icon:'🎓',h:'Universitet & högskola',t:'Här söker du till högskoleutbildningar i hela Sverige.'},
+{icon:'🛠️',h:'YH-utbildningar',t:'Många yrkeshögskoleutbildningar söks också via Antagning.se.'},
+{icon:'💸',h:'Gratis att söka',t:'Du kan söka upp till 20 utbildningar per antagningsomgång.'}
+],
+a:'Antagning.se hanteras av Universitets- och högskolerådet (UHR). Urval sker via meritvärde — betyg eller högskoleprov.'},
 {t:'Ansökningsprocessen',
-s:'Steg:\n1. Skapa konto på antagning.se\n2. Sök de utbildningar du vill ha\n3. Bifoga betyg och dokument\n4. Skicka in i tid\n5. Vänta på besked\n6. Svara JA eller NEJ till platsen',
-a:'Viktiga datum: Vårens antagning — sista ansökan 15 april. Höstens antagning — sista ansökan 15 oktober. Kontrollera alltid specifika datum för varje utbildning.'},
+cards:[
+{icon:'1️⃣',h:'Skapa konto & sök',t:'Skapa konto på antagning.se och sök de utbildningar du vill ha.'},
+{icon:'2️⃣',h:'Bifoga & skicka in',t:'Bifoga betyg och dokument — skicka in i tid.'},
+{icon:'3️⃣',h:'Besked & svar',t:'Vänta på besked, och svara sedan ja eller nej till din plats.'}
+],
+a:'Viktiga datum: vårens antagning — sista ansökan 15 april. Höstens antagning — sista ansökan 15 oktober. Kontrollera alltid datumet för just din utbildning.'},
 {t:'Meritvärde och urval',
-s:'Ditt meritvärde räknas ut från dina betyg.\n\nA = 20 poäng\nB = 17,5\nC = 15\nD = 12,5\nE = 10\nF = 0\n\nHögskoleprov (HP) kan ge extra poäng.',
-a:'Urvalsgrupper: betygsurval (BG) och högskoleprovurval (HP). Poäng från arbetslivserfarenhet (MERITPOÄNG) kan addera upp till 2.5 extra poäng på betyget. Högskoleprov ger max 2.0 extra poäng.'}
+cards:[
+{icon:'🅰️',h:'A = 20 poäng',t:'Högsta betyget. E ger 10 poäng — godkänt. B, C och D ligger däremellan.'},
+{icon:'✏️',h:'Högskoleprovet',t:'Kan ge extra poäng om dina betyg inte räcker hela vägen.'},
+{icon:'💼',h:'Arbetslivserfarenhet',t:'Kan ge meritpoäng — upp till 2,5 extra poäng på betyget.'}
+],
+a:'Urvalsgrupper: betygsurval (BG) och högskoleprovurval (HP). Du tävlar i den grupp där du står starkast.'}
 ],
 ex:{type:'build',title:'Din ansökningsplan',desc:'Planera din utbildningsansökan steg för steg.',
 fields:[
@@ -1696,16 +2435,39 @@ quiz:[
 ],
 pr:['Vad kan jag göra under min etableringstid?','Finns Snabbspåret för sjuksköterskor?','Hur kombinerar jag SFI med AMU under etableringsplanen?']},
 
-{id:'s18',icon:'🧭',title:'SYV — Studie- och yrkesvägledning',sub:'Gratis professionell vägledning',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s18',icon:'🧭',title:'SYV — Studie- och yrkesvägledning',sub:'Gratis professionell vägledning',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s18-syv.mp4',
 lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Förstå vad en studie- och yrkesvägledare kan hjälpa dig med — och att det är gratis hjälp du har rätt till.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad en SYV är och vad de hjälper dig med, var du hittar en, och vad du kan ta upp på ett möte.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta att SYV-vägledning är gratis och oberoende, var du bokar ett möte, och hur du förbereder dig.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och de tre lektionerna, plus några minuter för övningen där du förbereder ditt eget SYV-möte.'}
+],
+a:'SYV — studie- och yrkesvägledare — är legitimerade vägledare med specialistkompetens i utbildnings- och arbetsmarknadsfrågor. Den här modulen visar hur du använder den gratis hjälpen.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen ger dig hela bilden av vad en SYV gör — i en samtalsform. Se den först, så blir lektionerna lättare att följa.'},
 {t:'Vad är SYV?',
-s:'SYV = Studie- och yrkesvägledare.\n\nDe hjälper dig att:\n• Hitta rätt utbildning\n• Förstå arbetsmarknaden\n• Sätta upp en realistisk plan\n• Välja rätt mellan YH, uni, Komvux...\n\nDet är helt GRATIS.',
+cards:[
+{icon:'🧭',h:'Studie- och yrkesvägledare',t:'En legitimerad expert på utbildning och arbetsmarknad.'},
+{icon:'🗺️',h:'Hjälper dig att',t:'Hitta rätt utbildning, förstå arbetsmarknaden, sätta en realistisk plan, och välja mellan YH, universitet och Komvux.'},
+{icon:'🔒',h:'Gratis & oberoende',t:'SYV-vägledning är helt gratis. Vägledaren har tystnadsplikt och säljer ingenting.'}
+],
 a:'SYV är legitimerade vägledare med specialistkompetens i utbildnings- och arbetsmarknadsfrågor. De är anställda på kommuner, skolor och Arbetsförmedlingen. De har tystnadsplikt och är oberoende — de säljer inget.'},
 {t:'Var hittar du en SYV?',
-s:'Du kan träffa SYV på flera ställen:\n\n🏢 Kommunens vuxenutbildning (Komvux)\n→ Kontakta direkt och boka tid\n\n🏛️ Arbetsförmedlingen\n→ Be din handläggare om SYV-möte\n\n🏫 Folkhögskola\n→ Har egen SYV\n\n📱 Studera.nu — digital vägledning\n→ Chat och telefon, gratis',
+cards:[
+{icon:'🏢',h:'Komvux',t:'Kommunens vuxenutbildning — kontakta dem direkt och boka en tid.'},
+{icon:'🏛️',h:'Arbetsförmedlingen',t:'Be din handläggare om ett SYV-möte.'},
+{icon:'🏫',h:'Folkhögskola',t:'Folkhögskolor har egna vägledare.'},
+{icon:'📱',h:'Studera.nu',t:'Digital vägledning via chatt och telefon — gratis.'}
+],
 a:'I Helsingborg: kontakta Vuxenutbildningen via helsingborg.se. Studera.nu erbjuder kostnadsfri vägledning på distans via telefon, chatt eller video. UHR driver också vägledning för akademiska frågor via antagning.se.'},
 {t:'Vad kan du ta upp på mötet?',
-s:'Ta gärna upp:\n\n✅ "Vilket yrke passar mig?"\n✅ "Vilken utbildning behöver jag?"\n✅ "Hur lång tid tar det?"\n✅ "Kan jag försörja mig under studier?"\n✅ "Vilket är mitt nästa steg?"\n\nIngen fråga är för liten!',
+cards:[
+{icon:'🤔',h:'Vilket yrke passar mig?',t:'Vägledaren hjälper dig koppla intressen och styrkor till yrken.'},
+{icon:'🎓',h:'Vilken utbildning behöver jag?',t:'Och hur lång tid tar vägen dit?'},
+{icon:'💰',h:'Hur försörjer jag mig?',t:'Hur du kan klara ekonomin under studietiden.'},
+{icon:'👉',h:'Vad är mitt nästa steg?',t:'Ingen fråga är för liten — fråga på.'}
+],
 a:'Förbered dig inför mötet: lista dina intressen, din utbildningsbakgrund och dina mål. Ju mer du berättar, desto bättre hjälp får du. Be om en skriftlig sammanfattning av planen efter mötet.'}
 ],
 ex:{type:'build',title:'Förbered ditt SYV-möte',desc:'Formulera dina frågor och mål inför mötet.',
