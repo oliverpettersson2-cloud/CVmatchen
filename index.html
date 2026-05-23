@@ -9291,6 +9291,16 @@ var D={
     var h=D.hdr(pct,idx+1,tot,true,'D.backToList()');
     h+='<div class="cat-label" style="color:'+m.color+';">'+m.icon+' '+m.title+'</div>';
     h+='<div class="lesson-title">'+les.t+'</div>';
+    // 2-meningars beskrivning av introduktionsfilmen (visas under rubriken)
+    if(les.vdesc){
+      h+='<div style="font-size:14px;line-height:1.6;color:rgba(255,255,255,.7);margin-bottom:16px;">'+les.vdesc+'</div>';
+    }
+    // Modul-introduktionsfilm — visas på video-steget (intro:'video')
+    if(les.intro==='video' && m.video){
+      h+='<div style="border-radius:12px;overflow:hidden;background:#000;margin-bottom:16px;box-shadow:0 4px 20px rgba(0,0,0,.3);">';
+      h+='<video controls playsinline preload="metadata" style="width:100%;display:block;"><source src="'+m.video+'" type="video/mp4">Din webbläsare stöder inte video.</video>';
+      h+='</div>';
+    }
     // Pre-intro (syfte/mål/innehåll) FÖRE videon
     if(les.pre){
       h+='<div style="background:rgba(62,180,137,.07);border:1px solid rgba(62,180,137,.25);border-radius:12px;padding:14px 16px;margin-bottom:16px;white-space:pre-wrap;font-size:14px;line-height:1.6;color:rgba(255,255,255,.85);">'+les.pre+'</div>';
@@ -9301,7 +9311,18 @@ var D={
       h+='<iframe src="'+les.yt+'" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen allow="accelerometer; encrypted-media; picture-in-picture"></iframe>';
       h+='</div>';
     }
-    h+='<div class="lesson-box">'+les.s+'</div>';
+    // Nya kort-strukturen — rendera cards[] om de finns, annars gamla brödtexten
+    if(Array.isArray(les.cards) && les.cards.length){
+      les.cards.forEach(function(c){
+        h+='<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;margin-bottom:10px;">';
+        if(c.icon)h+='<div style="font-size:22px;line-height:1;margin-bottom:6px;">'+c.icon+'</div>';
+        if(c.h)h+='<div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:4px;">'+c.h+'</div>';
+        if(c.t)h+='<div style="font-size:13px;line-height:1.55;color:rgba(255,255,255,.72);">'+c.t+'</div>';
+        h+='</div>';
+      });
+    }else if(les.s){
+      h+='<div class="lesson-box">'+les.s+'</div>';
+    }
     if(les.a){
       h+='<div style="border-left:3px solid '+m.color+';background:rgba(255,255,255,.03);border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:20px;">';
       h+='<div style="font-size:9px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:'+m.color+';margin-bottom:6px;opacity:.8;">📖 Fördjupning</div>';
@@ -9316,7 +9337,7 @@ var D={
     h+='</div>';
     document.getElementById('ovnModview').innerHTML=h;
     // Lås Nästa-knappen: 5 sek för text, 15 sek om video finns (tvingar läsning/visning)
-    var hasVideo=les.yt && les.yt.indexOf('dQw4w9WgXcQ')===-1;
+    var hasVideo=(les.yt && les.yt.indexOf('dQw4w9WgXcQ')===-1) || (les.intro==='video' && m.video);
     var lockMs=hasVideo?15000:5000, lockSec=hasVideo?15:5;
     var remain=lockSec;
     var tickInt=setInterval(function(){

@@ -5977,11 +5977,24 @@
       const deep = l.a || '';
       const yt   = l.yt || '';
       const pre  = l.pre || '';
-      html += '<div style="font-size:11px; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; color:' + (mod.color || '#60a5fa') + '; margin-bottom:10px;">📘 LEKTION ' + (i + 1) + ' / ' + lessons.length + '</div>';
+      // Steg-etikett: Översikt / Introduktionsfilm är egna intro-steg,
+      // riktiga lektioner numreras separat (utan att räkna med intro-stegen).
+      var _realLessons = lessons.filter(function(x){ return !x.intro; });
+      var _stepLabel;
+      if (l.intro === 'overview') _stepLabel = '🚀 ÖVERSIKT';
+      else if (l.intro === 'video') _stepLabel = '🎬 INTRODUKTIONSFILM';
+      else _stepLabel = '📘 LEKTION ' + (_realLessons.indexOf(l) + 1) + ' / ' + _realLessons.length;
+      html += '<div style="font-size:11px; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; color:' + (mod.color || '#60a5fa') + '; margin-bottom:10px;">' + _stepLabel + '</div>';
       html += '<div class="lesson-card">';
       html += '<div class="lesson-title">' + escape(l.t || '') + '</div>';
-      // Modul-introduktionsvideo (visas bara på lektion 1)
-      if (i === 0 && mod.video) {
+      // 2-meningars beskrivning av introduktionsfilmen (visas under rubriken)
+      if (l.vdesc) {
+        html += '<div style="font-size:14px; line-height:1.6; color:rgba(255,255,255,0.7); margin:4px 0 16px;">' + escape(l.vdesc) + '</div>';
+      }
+      // Modul-introduktionsvideo: visas på video-lektionen. Fallback till
+      // lektion 0 för moduler som ännu inte delats upp i intro-steg.
+      var _videoLessonExists = lessons.some(function(x){ return x.intro === 'video'; });
+      if (mod.video && (l.intro === 'video' || (i === 0 && !_videoLessonExists))) {
         html += '<div style="margin:10px 0 18px; border-radius:12px; overflow:hidden; background:#000; box-shadow:0 4px 24px rgba(0,0,0,0.3);">';
         html += '<video controls preload="metadata" style="width:100%; display:block;" poster="">';
         html += '<source src="' + escapeAttr(mod.video) + '" type="video/mp4">';
@@ -6000,7 +6013,19 @@
         html += '<iframe src="' + escapeAttr(yt) + '" style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" allowfullscreen allow="accelerometer; encrypted-media; picture-in-picture"></iframe>';
         html += '</div>';
       }
-      html += '<div class="lesson-text">' + escape(text) + '</div>';
+      if (Array.isArray(l.cards) && l.cards.length) {
+        html += '<div class="lesson-cards">';
+        l.cards.forEach(function(c) {
+          html += '<div class="lesson-card-item">';
+          if (c.icon) html += '<div class="lesson-card-icon">' + escape(c.icon) + '</div>';
+          if (c.h)    html += '<div class="lesson-card-h">' + escape(c.h) + '</div>';
+          if (c.t)    html += '<div class="lesson-card-t">' + escape(c.t) + '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
+      } else if (text) {
+        html += '<div class="lesson-text">' + escape(text) + '</div>';
+      }
       if (deep) {
         html += '<details style="margin-top:14px;">';
         html += '<summary style="cursor:pointer; color:rgba(255,255,255,0.5); font-size:12px; font-weight:700;">Visa fördjupning</summary>';
@@ -6024,7 +6049,7 @@
       html += '<button id="trainNextBtn" disabled onclick="' + nextStep + '" style="background:' + (mod.color || '#60a5fa') + '; color:#fff; border:none; padding:10px 22px; border-radius:8px; font-weight:700; cursor:not-allowed; font-family:inherit; opacity:0.4;">⏳ ' + nextLabel + '</button>';
       html += '</div>';
       // Lås Nästa-knappen: 5 sek för textlektion, 15 sek om videon finns (tvingar att se videon)
-      const hasVideo = yt && yt.indexOf('dQw4w9WgXcQ') === -1;
+      const hasVideo = (yt && yt.indexOf('dQw4w9WgXcQ') === -1) || (l.intro === 'video' && mod.video);
       const lockMs = hasVideo ? 15000 : 5000;
       const lockSec = hasVideo ? 15 : 5;
       // Visa nedräkning i knapptexten

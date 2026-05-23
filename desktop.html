@@ -1549,6 +1549,27 @@
   }
   .lesson-title { font-size: 18px; font-weight: 800; margin-bottom: 12px; }
   .lesson-text { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.85); white-space: pre-wrap; }
+  .lesson-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 14px 0 4px;
+  }
+  .lesson-card-item {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 12px;
+    padding: 16px 16px 14px;
+    transition: transform .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .lesson-card-item:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.22);
+    background: rgba(255,255,255,0.06);
+  }
+  .lesson-card-icon { font-size: 24px; line-height: 1; margin-bottom: 10px; }
+  .lesson-card-h { font-size: 13px; font-weight: 800; letter-spacing: 0.3px; color: #fff; margin-bottom: 6px; }
+  .lesson-card-t { font-size: 13px; line-height: 1.55; color: rgba(255,255,255,0.72); }
   .lesson-deep {
     margin-top: 14px;
     padding: 14px;
