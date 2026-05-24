@@ -3822,18 +3822,36 @@ const AI_QUOTA_PER_MONTH = 10;
 // ═══════════════════════════════════════════════════════════════════════
 const ACTIVE_MODULES = [
   // Intro
-  {id:'m1',     cat:'intro',   icon:'📋', title:'Regler & Rättigheter',  sub:'Närvaro, frånvaro & skyldigheter'},
-  {id:'m2',     cat:'intro',   icon:'💻', title:'SKills-systemet',        sub:'Introduktion till SKills & din plan'},
-  {id:'m3',     cat:'intro',   icon:'🤖', title:'AI & CVmatchen',         sub:'Hur AI hjälper dig hitta jobb'},
+  {id:'m1',     cat:'intro',   icon:'📋', title:'Regler & Rättigheter',     sub:'Närvaro, frånvaro & skyldigheter'},
+  {id:'m2',     cat:'intro',   icon:'💻', title:'SKills-systemet',           sub:'Introduktion till SKills & din plan'},
+  {id:'m3',     cat:'intro',   icon:'🤖', title:'AI & CVmatchen',            sub:'Hur AI hjälper dig hitta jobb'},
+  {id:'ai_gen', cat:'intro',   icon:'🧠', title:'AI som verktyg',            sub:'Vad AI är & hur du använder det klokt'},
   // Arbete
-  {id:'a0',     cat:'arbete',  icon:'📊', title:'Arbetsmarknaden',        sub:'Sverige, Skåne & Öresundsregionen'},
-  {id:'a_cv',   cat:'arbete',  icon:'📄', title:'CV-byggaren',            sub:'Förstå varje del av ditt CV'},
-  {id:'a_match',cat:'arbete',  icon:'🎯', title:'Matcha med AI',          sub:'Förstå matchningslogiken'},
+  {id:'a0',     cat:'arbete',  icon:'📊', title:'Arbetsmarknaden',           sub:'Sverige, Skåne & Öresundsregionen'},
+  {id:'a_match',cat:'arbete',  icon:'🎯', title:'Matcha med AI',             sub:'Förstå matchningslogiken'},
+  {id:'a_cv',   cat:'arbete',  icon:'📄', title:'CV-byggaren',               sub:'Förstå varje del av ditt CV'},
+  {id:'a3',     cat:'arbete',  icon:'🎯', title:'SMARTA mål',                sub:'Sätt tydliga mål'},
+  {id:'a4',     cat:'arbete',  icon:'🎤', title:'Min pitch',                 sub:'30 sekunder om dig'},
+  {id:'a8',     cat:'arbete',  icon:'🤝', title:'Intervju-grunder',          sub:'Förberedelse & trygghet'},
+  {id:'a_brev', cat:'arbete',  icon:'✉️', title:'Personligt brev',           sub:'Skrivet rätt öppnar det dörren'},
+  // Digital
+  {id:'d2',     cat:'digital', icon:'🔵', title:'LinkedIn-grunder',          sub:'Din profil online'},
+  {id:'d6',     cat:'digital', icon:'🔍', title:'Söka jobb digitalt',        sub:'Platsbanken, AF och jobboarderna'},
+  // Ekonomi
+  {id:'e1',     cat:'ekonomi', icon:'💳', title:'Budget & vardagsekonomi',   sub:'Koll på pengarna — varje månad'},
+  {id:'e3',     cat:'ekonomi', icon:'🆘', title:'Ekonomiskt bistånd & bidrag', sub:'Hjälp finns — ta reda på vad du har rätt till'},
+  {id:'e5',     cat:'ekonomi', icon:'🐷', title:'Spara & buffert',           sub:'Trygghet börjar med 1000 kr'},
+  // Hälsa
+  {id:'h1',     cat:'hälsa',   icon:'🧠', title:'Mental hälsa & stress',     sub:'Hantera press och mående'},
+  {id:'h2',     cat:'hälsa',   icon:'😴', title:'Sömn & återhämtning',       sub:'Grunden för allt annat'},
   // Studier
-  {id:'s0',     cat:'studier', icon:'🗺️', title:'Utbildningskartan',      sub:'Vad finns i Studier-kategorin?'},
-  {id:'s1',     cat:'studier', icon:'🎓', title:'Vad är YH-utbildning?',  sub:'Yrkeshögskola — snabbaste vägen till jobb'},
-  {id:'s2',     cat:'studier', icon:'📚', title:'Komvux',                 sub:'Komplettera betyg som vuxen'},
-  {id:'s3',     cat:'studier', icon:'🏡', title:'Folkhögskola',           sub:'Studera i gemenskap'}
+  {id:'s0',     cat:'studier', icon:'🗺️', title:'Utbildningskartan',         sub:'Vad finns i Studier-kategorin?'},
+  {id:'s1',     cat:'studier', icon:'🎓', title:'Vad är YH-utbildning?',     sub:'Yrkeshögskola — snabbaste vägen till jobb'},
+  {id:'s2',     cat:'studier', icon:'📚', title:'Komvux',                    sub:'Komplettera betyg som vuxen'},
+  {id:'s3',     cat:'studier', icon:'🇸🇪', title:'SFI — Svenska för invandrare', sub:'Lär dig svenska kostnadsfritt'},
+  {id:'s5',     cat:'studier', icon:'💰', title:'CSN & studiebidrag',        sub:'Finansiera dina studier'},
+  {id:'s6',     cat:'studier', icon:'📝', title:'Söka utbildning',           sub:'Steg-för-steg ansökan'},
+  {id:'s18',    cat:'studier', icon:'🧭', title:'SYV — Studie- och yrkesvägledning', sub:'Gratis professionell vägledning'}
 ];
 function getAiQuotaKey(){
   const m = new Date();
