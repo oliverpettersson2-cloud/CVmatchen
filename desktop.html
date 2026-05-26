@@ -315,6 +315,38 @@
     padding: 2px;  /* 2-3mm luft mellan panel-kant och CV-dokument */
   }
 
+  /* ============================================================
+     VISA-MODE — Mall + Mina CV ovan, preview i mitten, Spara/Export under
+     ============================================================ */
+  .cv-visa-bar { display: none; }
+  .cv-visa-bar__group { display: flex; align-items: center; gap: 10px; }
+  .cv-visa-bar__group--end { margin-left: auto; }
+  #view-cv .cv-layout.visa-mode {
+    grid-template-columns: 1fr;
+    grid-template-areas: "top" "preview" "bottom";
+    max-width: 760px;
+    margin: 0 auto;
+    gap: 18px;
+  }
+  #view-cv .cv-layout.visa-mode .cv-edit-panel { display: none; }
+  #view-cv .cv-layout.visa-mode .cv-visa-bar {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 16px 20px;
+  }
+  #view-cv .cv-layout.visa-mode .cv-visa-bar--top { grid-area: top; }
+  #view-cv .cv-layout.visa-mode .cv-visa-bar--bottom { grid-area: bottom; justify-content: center; }
+  #view-cv .cv-layout.visa-mode .cv-preview-panel {
+    grid-area: preview;
+    position: static;
+    max-height: none;
+  }
+
   /* CV-stegindikator — premium pill design med nummer */
   .cv-steps {
     display: flex;
@@ -3280,6 +3312,20 @@
   <!-- ===== CV-VYN ===== -->
   <section class="view" id="view-cv">
     <div class="cv-layout">
+      <!-- Visa-mode: Top toolbar (Mall + Mina CV + Tillbaka) -->
+      <div class="cv-visa-bar cv-visa-bar--top">
+        <div class="cv-visa-bar__group">
+          <span style="font-size:11px;color:rgba(255,255,255,0.72);text-transform:uppercase;letter-spacing:0.5px;font-weight:700;">Mall</span>
+          <select class="cv-input" id="templateSelect" onchange="cvSelectTemplate(this.value)" aria-label="Välj CV-mall" style="min-width:200px;"></select>
+        </div>
+        <div class="cv-visa-bar__group">
+          <button class="btn btn-secondary" onclick="cvShowPicker()" style="white-space:nowrap;">📄 Mina CV (max 3)</button>
+        </div>
+        <div class="cv-visa-bar__group cv-visa-bar__group--end">
+          <button type="button" class="cv-step-nav-back" onclick="cvStepBack()">← Tillbaka och redigera</button>
+        </div>
+      </div>
+
       <div class="cv-edit-panel">
         <!-- Steg-indikator -->
         <div class="cv-steps">
@@ -3393,34 +3439,8 @@
         </div>
 
         <div class="cv-step-content" id="step-visa" style="display:none;">
-          <div class="cv-section">
-            <div class="cv-section-title">Mall</div>
-            <select class="cv-input" id="templateSelect" onchange="cvSelectTemplate(this.value)" aria-label="Välj CV-mall" style="margin-bottom: 10px;"></select>
-            <div style="font-size:11px; color: rgba(255, 255, 255, 0.72); line-height:1.5;">
-              Välj en av 10 mallar — förhandsvisningen uppdateras direkt till höger.
-            </div>
-          </div>
-
-          <div class="cv-section">
-            <div class="cv-section-title">Mina CV</div>
-            <button class="btn btn-secondary" onclick="cvShowPicker()" style="width:100%;margin-bottom:8px;">
-              📄 Visa / byt mellan mina CV (max 3)
-            </button>
-            <div style="font-size:11px; color:rgba(255, 255, 255, 0.72); line-height:1.5;">
-              Öppna ett tidigare CV för att redigera — eller starta nytt om du vill ha flera.
-            </div>
-          </div>
-
-          <div class="cv-section">
-            <div class="cv-section-title">Spara &amp; exportera</div>
-            <div class="save-actions">
-              <button class="btn btn-primary" onclick="cvSaveAndStore()">👤 Spara till profil</button>
-              <button class="btn btn-accent" onclick="cvExportPDF()">📥 Exportera PDF</button>
-            </div>
-            <div style="font-size:12px; color:rgba(255, 255, 255, 0.72); margin-top:12px; text-align:center;">
-              CV:t sparas både lokalt och i molnet — synlig på mobil också.
-            </div>
-          </div>
+          <!-- Tom: innehållet (Mall, Mina CV, Spara, Exportera) ligger i cv-visa-bar
+               ovan + under preview-panelen så förhandsvisningen får full bredd. -->
         </div>
 
         <!-- Step-navigation: Tillbaka (röd) + Nästa (grön) -->
@@ -3435,6 +3455,12 @@
         <div class="cv-document cv-classic" id="cvDocument">
           <!-- Renderas av JS -->
         </div>
+      </div>
+
+      <!-- Visa-mode: Bottom toolbar (Spara + Exportera) -->
+      <div class="cv-visa-bar cv-visa-bar--bottom">
+        <button class="btn btn-primary" onclick="cvSaveAndStore()" style="font-size:14px;padding:14px 24px;">👤 Spara till profil</button>
+        <button class="btn btn-accent" onclick="cvExportPDF()" style="font-size:14px;padding:14px 24px;">📥 Exportera PDF</button>
       </div>
     </div>
   </section>

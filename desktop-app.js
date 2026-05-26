@@ -1178,10 +1178,12 @@
     const stepContent = document.getElementById('step-' + step);
     if (stepContent) stepContent.style.display = 'block';
 
-    // Göm preview på alla steg utom Visa — edit-panelen tar då hela bredden
+    // Göm preview på alla steg utom Visa — edit-panelen tar då hela bredden.
+    // På Visa-steget: visa-mode = top-toolbar + preview center + bottom-toolbar.
     const layout = document.querySelector('#view-cv .cv-layout');
     if (layout) {
       layout.classList.toggle('preview-hidden', step !== 'visa');
+      layout.classList.toggle('visa-mode', step === 'visa');
     }
 
     // Render step-specific content
