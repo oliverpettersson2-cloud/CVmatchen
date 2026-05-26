@@ -690,7 +690,46 @@ ex:{type:'build',title:'Din trygghetsplan',desc:'Plan för att känna dig trygg 
 quiz:[{q:'Tydlig kommunikation?',o:['Prata länge','Korta strukturerade meningar','Aldrig pausa'],c:1},{q:'Minska nervositet?',o:['Undvika förberedelse','Djupandning och förberedelse','Prata snabbt'],c:1},{q:'Sist i intervjun?',o:['Bara gå','Frågor, tack och nästa steg?','Fråga om du fick jobbet'],c:1}],
 pr:['Formulera lugna intervjusvar.','Trygghetsplan inför imorgon.','3 bra frågor att ställa i slutet.']},
 
-{id:'a_akassa',icon:'🛡️',title:'A-kassa & Facket',sub:'Ditt ekonomiska skyddsnät',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',lessons:[{t:'Vad är A-kassa?',s:'A-kassa = Arbetslöshetsersättning.\n\nOm du förlorar jobbet kan du få pengar under söktiden.\n\n✅ Max ca 80% av lönen\n✅ Upp till 300 dagar\n✅ Kräver aktiv jobbsökning\n✅ Du söker via din a-kassa, inte AF\n\nKostnad: ca 80-130 kr/mån',a:'Grundvillkor: arbetat minst 80 tim/mån i 12 månader. Inkomstrelaterad ersättning ger upp till 1 200 kr/dag de första 200 dagarna. Alfakassan tar emot alla branscher.'},{t:'Välj rätt a-kassa',s:'Det finns 24 a-kassor i Sverige.\n\n🏥 Kommunal → vård & omsorg\n🏗️ Byggnads → bygg\n💼 Alfa-kassan → passar alla\n💻 Unionen → tjänstemän\n\nalfakassan.se om du är osäker',a:'Alfakassan är öppen för alla som inte tillhör en specifik branschkassa. Ny på arbetsmarknaden eller byter bransch? Alfa är tryggt val.'},{t:'Facket — vad och varför?',s:'Facket förhandlar dina löner och villkor.\n\n✅ Kollektivavtal → schyssta villkor\n✅ Juridisk hjälp vid tvist\n✅ Löneförhandlingsstöd\n\nCa 65% av svenska arbetstagare är fackanslutna.\nKostnad: ca 200-400 kr/mån',a:'De tre stora: LO (blå krage), TCO (tjänstemän), SACO (akademiker). Kollektivavtal täcker ca 90% av arbetstagare även utan fackmedlemskap — men juridisk hjälp kräver medlemskap.'}],ex:{type:'build',title:'Planera ditt skyddsnät',desc:'Sätt upp din A-kassa och fackplan.',fields:[{l:'Vilken bransch jobbar du i/siktar på?',ph:'T.ex. Lager, vård, bygg...'},{l:'Vilken a-kassa passar?',ph:'T.ex. Alfa-kassan — passar alla',hint:'alfakassan.se'},{l:'Vilket fackförbund?',ph:'T.ex. Kommunal, Transport, Unionen...'},{l:'Är du med? Om nej — nästa steg?',ph:'T.ex. Ansöker till Alfa-kassan den här veckan...'}]},quiz:[{q:'Vad krävs för A-kassa?',o:['Bara AF-inskriven','Arbetat 80 tim/mån i 12 mån + aktivt söka','Vara med i facket','Fast anst.'],c:1},{q:'Vad kostar A-kassan?',o:['Gratis','80-130 kr/mån','500 kr/mån','1000 kr/mån'],c:1},{q:'Vad ger kollektivavtal?',o:['Bara löneökning','Schyssta branschvillkor','Obligatorisk fackansl.','Gratis juridik alla'],c:1},{q:'Vilken a-kassa passar alla?',o:['Kommunal','Alfa-kassan','Unionen','Byggnads'],c:1}],pr:['Vilken a-kassa för [yrke]?','Skillnad facket vs a-kassan?','A-kassan om jag jobbar extra?']},
+{id:'a_akassa',icon:'🛡️',title:'A-kassa & Facket',sub:'Ditt ekonomiska skyddsnät',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/aakassa-skyddsnat.mp4',lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🛡️',h:'Vad är syftet?',t:'Förstå skillnaden mellan a-kassa och fack — och välja rätt skydd för dig.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad a-kassa är, vilka villkor som gäller, hur du väljer kassa, och vad facket gör för dig.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta vilken a-kassa och vilket fack som passar din bransch — och vad det kostar.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en planeringsövning.'}
+],
+a:'A-kassan är arbetslöshetsersättning, facket förhandlar villkor — två olika saker, båda värda att förstå.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom vad a-kassan är, grundvillkoren, hur du väljer rätt kassa, och vad facket gör. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Vad är A-kassa?',
+cards:[
+{icon:'💰',h:'Upp till 80 % av lönen',t:'De första 200 dagarna.'},
+{icon:'📅',h:'Upp till 300 dagar',t:'Hela ersättningsperioden.'},
+{icon:'🔍',h:'Kräver aktiv jobbsökning',t:'Du måste söka jobb varje vecka.'},
+{icon:'🏢',h:'Söks via din a-kassa',t:'Inte via Arbetsförmedlingen.'}
+],
+a:'Grundvillkor: arbetat minst 80 timmar/mån i 12 månader. Inkomstrelaterad ersättning kan ge upp till 1 200 kr/dag de första 200 dagarna.'},
+{t:'Välj rätt a-kassa',
+cards:[
+{icon:'🏥',h:'Kommunal',t:'Vård och omsorg.'},
+{icon:'🏗️',h:'Byggnads',t:'Bygg och anläggning.'},
+{icon:'💼',h:'Unionen',t:'Tjänstemän.'},
+{icon:'🌐',h:'Alfa-kassan',t:'Passar alla branscher — tryggt val om du är osäker.'}
+],
+a:'Alfakassan är öppen för alla som inte tillhör en specifik branschkassa. Ny på arbetsmarknaden eller byter bransch? Alfa är ett tryggt val.'},
+{t:'Facket — vad och varför?',
+cards:[
+{icon:'📜',h:'Kollektivavtal',t:'Säkrar schyssta branschvillkor.'},
+{icon:'⚖️',h:'Juridisk hjälp',t:'Vid tvist med arbetsgivaren.'},
+{icon:'💬',h:'Löneförhandlingsstöd',t:'Du står inte ensam.'}
+],
+a:'De tre stora: LO (blå krage), TCO (tjänstemän), SACO (akademiker). Kollektivavtal täcker ca 90 % av arbetstagare — men juridisk hjälp kräver medlemskap.'},
+{t:'Vad det kostar',
+cards:[
+{icon:'🛡️',h:'A-kassan',t:'80–130 kr/mån — en billig försäkring.'},
+{icon:'🤝',h:'Facket',t:'200–400 kr/mån — inkluderar oftast a-kassan.'}
+],
+a:'Inte med ännu? alfakassan.se fungerar för alla — skaffa skyddet idag.'}
+],ex:{type:'build',title:'Planera ditt skyddsnät',desc:'Sätt upp din A-kassa och fackplan.',fields:[{l:'Vilken bransch jobbar du i/siktar på?',ph:'T.ex. Lager, vård, bygg...'},{l:'Vilken a-kassa passar?',ph:'T.ex. Alfa-kassan — passar alla',hint:'alfakassan.se'},{l:'Vilket fackförbund?',ph:'T.ex. Kommunal, Transport, Unionen...'},{l:'Är du med? Om nej — nästa steg?',ph:'T.ex. Ansöker till Alfa-kassan den här veckan...'}]},quiz:[{q:'Vad krävs för A-kassa?',o:['Bara AF-inskriven','Arbetat 80 tim/mån i 12 mån + aktivt söka','Vara med i facket','Fast anst.'],c:1},{q:'Vad kostar A-kassan?',o:['Gratis','80-130 kr/mån','500 kr/mån','1000 kr/mån'],c:1},{q:'Vad ger kollektivavtal?',o:['Bara löneökning','Schyssta branschvillkor','Obligatorisk fackansl.','Gratis juridik alla'],c:1},{q:'Vilken a-kassa passar alla?',o:['Kommunal','Alfa-kassan','Unionen','Byggnads'],c:1}],pr:['Vilken a-kassa för [yrke]?','Skillnad facket vs a-kassan?','A-kassan om jag jobbar extra?']},
 
 {id:'a_brev',icon:'✉️',title:'Personligt brev',sub:'Skrivet rätt öppnar det dörren',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/abrev-brev.mp4',
 lessons:[
@@ -719,7 +758,42 @@ a:'Det personliga brevet visar vem du är och varför just det här jobbet. Den 
 {icon:'💪',h:'Det visar självförtroende',t:'En proaktiv avslutning ökar chansen att bli kontaktad. Tacka för läsningen — be inte om ursäkt.'}
 ],a:'Proaktiv avslutning ökar callback-frekvensen. Tacka för läsningen. Undvik att be om ursäkter för bristande kompetens.'}],ex:{type:'write',title:'Skriv din öppningsmening',desc:'Skriv de 2-3 starkaste inledningsmeningarna för ett personligt brev till ett jobb du söker.',tips:'Börja med en situation, ett resultat eller en insikt — inte "Jag söker härmed...". Visa VEM du är.',ph:'T.ex. "Tre år i lager lärde mig att logistik handlar om mer än orderrader..."',min:80},quiz:[{q:'Vad visar brevet som CV inte visar?',o:['Löneönskemål','Vem du är och varför just detta jobb','Alla utbildningar','Adress'],c:1},{q:'Vilken öppning är starkast?',o:['"Jag söker härmed tjänsten"','"Jag heter Anna och är intresserad"','"300 orderrader/dag lärde mig att tempo och precision inte utesluter varandra."','Alla lika bra'],c:2},{q:'Hur långt bör brevet vara?',o:['1-2 meningar','Ca 300 ord / 1 sida','2-3 sidor','Så långt som möjligt'],c:1},{q:'Vad visar proaktiv avslutning?',o:['Desperation','Självförtroende och genuint intresse','Stress','Dålig etikett'],c:1}],pr:['Skriv personligt brev: [annons + styrkor]','Förbättra min öppningsmening: [klistra in]','Gör detta brev mer specifikt: [klistra in]']},
 
-{id:'a_natverk',icon:'🤝',title:'Nätverkande & dolda jobbet',sub:'40-50% av jobben annonseras aldrig',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',lessons:[{t:'Den dolda arbetsmarknaden',s:'Upp till 50% av alla jobb tillsätts utan annons.\n\nHur?\n• Intern rekrytering\n• Tips från nätverk\n• Spontanansökningar\n• LinkedIn-kontakter\n\nSöker du bara annonser missar du hälften!',a:'Studier visar 40-50% av tjänstetillsättningar sker via nätverk. Ju mer senior tjänst, desto vanligare med nätverksrekrytering.'},{t:'Hur nätverkar du praktiskt?',s:'1. LinkedIn — kontaktförfrågan + kort meddelande\n2. Informella möten — "Kan vi ta en kaffe?"\n3. AF-evenemang & jobbmässor\n4. Gamla kontakter — ex-kollegor, klasskompisar\n5. Branschföreningar\n\nGe innan du tar!',a:'"Kan du berätta om hur det är att jobba på X?" öppnar fler dörrar än "Har ni lediga tjänster?". LinkedIn InMail har ca 30% svarsfrekvens.'},{t:'Spontanansökan — hur?',s:'Strukturen:\n1. Adressera rätt person\n2. Visa att du känner till företaget\n3. Förklara värdet du tillför\n4. Be om 20 min möte\n\n"Hej [namn], jag har följt [företag] och tror min bakgrund i [X] kan tillföra [Y]."',a:'Spontanansökningar har högre callback-frekvens — lägre konkurrens. Bäst timing: efter expansion-nyheter. LinkedIn är bästa kanalen.'}],ex:{type:'build',title:'Din nätverksstrategi',desc:'Konkret plan för nätverkande i jobbsöket.',fields:[{l:'3 personer att kontakta den här veckan',ph:'T.ex. Ex-kollega på ICA, kompis på Peab...',ta:true,hint:'Tänk brett!'},{l:'Företag för spontanansökan',ph:'T.ex. IKEA Helsingborg, Region Skåne...'},{l:'Öppningsmeningen till spontanansökan',ph:'Hej [namn], jag har följt [företag] och tror min bakgrund i...',ta:true},{l:'LinkedIn-mål den här veckan',ph:'T.ex. Kontaktförfrågan till 3 + kommentera 2 inlägg',hint:'Regelbundenhet > kvantitet'}]},quiz:[{q:'Andel jobb utan annons?',o:['10-15%','40-50%','5%','80%'],c:1},{q:'Bästa sättet att börja nätverka?',o:['"Har ni lediga tjänster?"','Fråga om råd — visa intresse','Skicka CV till alla','Vänta passivt'],c:1},{q:'Vad är spontanansökan?',o:['En sen ansökan','Kontakt utan utlyst tjänst','Ansökan utan brev','Via telefon'],c:1},{q:'Varför hög callback för spontanansökningar?',o:['Ser bättre ut','Lägre konkurrens','Obligatoriskt','Företag föredrar det'],c:1}],pr:['LinkedIn-meddelande för informellt möte.','Spontanansökan till [företag] för [roll].','Hitta rätt kontaktperson på LinkedIn?']},
+{id:'a_natverk',icon:'🤝',title:'Nätverkande & dolda jobbet',sub:'40-50% av jobben annonseras aldrig',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/anatverk-natverk.mp4',lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🤝',h:'Vad är syftet?',t:'Lära dig hitta de jobb som aldrig annonseras — och ta dig in i dem.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Den dolda arbetsmarknaden, kanaler för nätverkande och hur du gör en spontanansökan.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna skriva en egen spontanansökan och ha en nätverksstrategi för veckan.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en övning där du planerar dina kontakter.'}
+],
+a:'40–50 % av tjänstetillsättningar sker via nätverk — det är den dolda arbetsmarknaden.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom den dolda arbetsmarknaden, hur du nätverkar praktiskt och hur du bygger en spontanansökan. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Den dolda arbetsmarknaden',
+cards:[
+{icon:'🕵️',h:'Upp till 50 %',t:'Av alla jobb tillsätts utan att annonsera.'},
+{icon:'🤐',h:'Intern rekrytering',t:'Tjänster fylls innan de når annonsen.'},
+{icon:'🗣️',h:'Tips från nätverk',t:'Någon känner någon — det är ofta så det funkar.'},
+{icon:'📨',h:'Spontanansökningar',t:'Företag rekryterar gärna när rätt person dyker upp.'}
+],
+a:'Söker du bara annonser missar du hälften av jobben. Ju mer senior tjänsten är, desto vanligare med nätverksrekrytering.'},
+{t:'Hur nätverkar du praktiskt?',
+cards:[
+{icon:'💼',h:'LinkedIn',t:'Kontaktförfrågan + kort meddelande.'},
+{icon:'☕',h:'Kaffemöten',t:'"Kan vi ta en kaffe?" — fråga om råd, inte jobb.'},
+{icon:'🏛️',h:'AF-evenemang & mässor',t:'Möt arbetsgivare ansikte mot ansikte.'},
+{icon:'👥',h:'Gamla kontakter',t:'Ex-kollegor och klasskompisar.'},
+{icon:'🎓',h:'Branschföreningar',t:'Samlar både folk och möjligheter.'}
+],
+a:'"Kan du berätta om hur det är att jobba på X?" öppnar fler dörrar än "Har ni lediga tjänster?". Ge innan du tar.'},
+{t:'Spontanansökan — så gör du',
+cards:[
+{icon:'1️⃣',h:'Adressera rätt person',t:'Hitta en faktisk chef eller rekryterande person.'},
+{icon:'2️⃣',h:'Visa att du känner företaget',t:'Nämn något konkret — en produkt, en nyhet, ett värde.'},
+{icon:'3️⃣',h:'Förklara värdet du tillför',t:'Vad du kan ge — inte vad du vill ha.'},
+{icon:'4️⃣',h:'Be om 20 min möte',t:'Inte om ett jobb — bara om ett samtal.'}
+],
+a:'Spontanansökningar har högre callback-frekvens — lägre konkurrens. Bäst timing: efter expansion-nyheter. LinkedIn är bästa kanalen.'}
+],ex:{type:'build',title:'Din nätverksstrategi',desc:'Konkret plan för nätverkande i jobbsöket.',fields:[{l:'3 personer att kontakta den här veckan',ph:'T.ex. Ex-kollega på ICA, kompis på Peab...',ta:true,hint:'Tänk brett!'},{l:'Företag för spontanansökan',ph:'T.ex. IKEA Helsingborg, Region Skåne...'},{l:'Öppningsmeningen till spontanansökan',ph:'Hej [namn], jag har följt [företag] och tror min bakgrund i...',ta:true},{l:'LinkedIn-mål den här veckan',ph:'T.ex. Kontaktförfrågan till 3 + kommentera 2 inlägg',hint:'Regelbundenhet > kvantitet'}]},quiz:[{q:'Andel jobb utan annons?',o:['10-15%','40-50%','5%','80%'],c:1},{q:'Bästa sättet att börja nätverka?',o:['"Har ni lediga tjänster?"','Fråga om råd — visa intresse','Skicka CV till alla','Vänta passivt'],c:1},{q:'Vad är spontanansökan?',o:['En sen ansökan','Kontakt utan utlyst tjänst','Ansökan utan brev','Via telefon'],c:1},{q:'Varför hög callback för spontanansökningar?',o:['Ser bättre ut','Lägre konkurrens','Obligatoriskt','Företag föredrar det'],c:1}],pr:['LinkedIn-meddelande för informellt möte.','Spontanansökan till [företag] för [roll].','Hitta rätt kontaktperson på LinkedIn?']},
 
 {id:'a_lon',icon:'💰',title:'Löneförhandling',sub:'Vet du vad du är värd?',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/alon-lon.mp4',lessons:[
 {t:'Översikt',intro:'overview',
@@ -757,9 +831,81 @@ cards:[
 a:'Förmånsförhandling är ofta enklare än lön. Prioritera: värdefullt för dig men billigt för arbetsgivaren.'}
 ],ex:{type:'build',title:'Din förhandlingsplan',desc:'Förbered löneförhandlingen konkret.',fields:[{l:'Vilket jobb?',ph:'T.ex. Lagerarbetare på PostNord...'},{l:'Vad säger marknadsdata?',ph:'T.ex. Medianlön lagerarbetare Skåne: 28 000 kr',hint:'lonestatistik.se — gratis'},{l:'Ditt öppningsbud',ph:'T.ex. 31 000 kr — 10% över minimum',hint:'Lite över ditt minimum'},{l:'Dina 3 argument',ph:'1. X år erfarenhet WMS\n2. Marknadsdata visar Y\n3. Jag tillför Z...',ta:true}]},quiz:[{q:'När lyfter du lön?',o:['I första intervjun','När erbjudandet är på bordet','I CV:et','Aldrig'],c:1},{q:'Smartaste öppningsbudet?',o:['Exakt vad du vill ha','5-10% över ditt minimum','Så högt som möjligt','Ett spann'],c:1},{q:'Lönen är låst — vad gör du?',o:['Tacka nej direkt','Förhandla förmåner','Acceptera tyst','Be om skriftlig bekräftelse'],c:1},{q:'Vad kostar det att inte förhandla?',o:['Ingenting','100 000+ kr/år','5 000 kr','Bara prestige'],c:1}],pr:['Löneförhandling för [roll] Helsingborg.','Marknadslön [yrke] Skåne?','Tacka nej till för lågt erbjudande.']},
 
-{id:'a_uppf',icon:'📬',title:'Uppföljning efter ansökan',sub:'De som följer upp får fler intervjuer',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',lessons:[{t:'Varför följa upp?',s:'De flesta söker och väntar passivt.\n\nUppföljning:\n✅ Visar genuint intresse\n✅ Håller dig top-of-mind\n✅ Ger info om processen\n✅ Skiljer dig från mängden\n\n20-30% högre chans till intervju!',a:'Uppföljning uppfattas som professionellt i Sverige om det görs rätt. Rätt ton: nyfiken och positiv — inte påträngande.'},{t:'När och hur?',s:'⏰ Timing:\n• 5-7 dagar efter ansökan\n• Inom 24h efter intervju (tackmejl)\n• Om deadline passerat\n\n📧 E-post är bäst.\n\n✅ 3-5 meningar\n✅ Referera till ansökan\n✅ Bekräfta intresset',a:'Max 2 uppföljningar totalt. Tackmejl inom 24h. Undvik att ringa om inte kontaktinfo anger det.'},{t:'Hantera tystnad',s:'Tystnad ≠ Nej.\n\nProcesser tar 2-6 veckor.\n\nVad du gör:\n1. Skicka en artig uppföljning\n2. Fortsätt söka parallellt\n3. Sätt en egen deadline\n\nAldrig vredgade meddelanden.',a:'Rekrytering försinkas ofta av interna processer och semester. Om du fått annat erbjudande — meddela omgående och tacka för processen.'}],ex:{type:'write',title:'Skriv ditt uppföljningsmejl',desc:'Skriv ett professionellt uppföljningsmejl för en ansökan du skickat.',tips:'Kort: Referera till ansökan, bekräfta intresse, fråga om status. Max 4-5 meningar.',ph:'Hej [namn],\n\nJag skickade ansökan till [tjänst] förra veckan och ville höra om ni hunnit titta igenom den.\n\nJag är fortsatt genuint intresserad och ser fram emot att höra om er process.\n\nMed vänliga hälsningar\n[Ditt namn]',min:60},quiz:[{q:'Timing för uppföljning?',o:['2 timmar','5-7 dagar','1 månad','Aldrig'],c:1},{q:'Bäst kanal?',o:['Ring alltid','E-post i de flesta fall','Brev','Besök'],c:1},{q:'Vad vid tystnad?',o:['Avbryt processen','Max 2 artiga uppföljningar + söka parallellt','Ring varje dag','Klagomål'],c:1},{q:'Tackmejl efter intervju?',o:['Nästa vecka','Inom 24 timmar','Behövs inte','Bara om du vill ha jobbet'],c:1}],pr:['Uppföljningsmejl: [tjänst, företag, datum].','Formulera att jag fått annat erbjudande.','Tackmejl efter intervju som [roll] på [företag].']},
+{id:'a_uppf',icon:'📬',title:'Uppföljning efter ansökan',sub:'De som följer upp får fler intervjuer',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/auppf-uppfoljning.mp4',lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'📬',h:'Vad är syftet?',t:'Lära dig följa upp ansökningar och intervjuer rätt — för att bli ihågkommen.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Varför uppföljning fungerar, när du gör det, hur du formulerar dig, och hur du hanterar tystnad.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna skriva ett professionellt uppföljningsmejl direkt.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en skrivövning.'}
+],
+a:'20–30 % högre chans till intervju — bara genom att följa upp.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom varför uppföljning fungerar, när du följer upp, hur du formulerar dig och hur du hanterar tystnad. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Varför följa upp?',
+cards:[
+{icon:'💡',h:'Visar genuint intresse',t:'Du skiljer dig från mängden.'},
+{icon:'👀',h:'Top-of-mind',t:'Rekryteraren minns dig när beslut fattas.'},
+{icon:'📊',h:'Info om processen',t:'Du vet vad som händer härnäst.'}
+],
+a:'Uppföljning uppfattas som professionellt i Sverige om det görs rätt. Rätt ton: nyfiken och positiv — inte påträngande.'},
+{t:'När och hur?',
+cards:[
+{icon:'📩',h:'5–7 dagar efter ansökan',t:'Bekräfta intresset.'},
+{icon:'⚡',h:'Inom 24h efter intervju',t:'Skicka ett kort tackmejl.'},
+{icon:'📧',h:'E-post är bäst',t:'Bättre än telefon i de flesta fall.'},
+{icon:'📝',h:'3–5 meningar',t:'Referera till ansökan, bekräfta intresset.'}
+],
+a:'Max 2 uppföljningar totalt. Tackmejl inom 24h. Undvik att ringa om inte kontaktinfo anger det.'},
+{t:'Hantera tystnad',
+cards:[
+{icon:'⏳',h:'Tystnad är inte nej',t:'Processer tar 2–6 veckor. Semestrar och interna beslut tar tid.'},
+{icon:'📨',h:'En artig uppföljning',t:'Sedan släpper du den.'},
+{icon:'🚀',h:'Sök parallellt',t:'Lägg aldrig alla ägg i en korg.'}
+],
+a:'Om du fått ett annat erbjudande — meddela omgående och tacka för processen. Aldrig vredgade meddelanden.'}
+],ex:{type:'write',title:'Skriv ditt uppföljningsmejl',desc:'Skriv ett professionellt uppföljningsmejl för en ansökan du skickat.',tips:'Kort: Referera till ansökan, bekräfta intresse, fråga om status. Max 4-5 meningar.',ph:'Hej [namn],\n\nJag skickade ansökan till [tjänst] förra veckan och ville höra om ni hunnit titta igenom den.\n\nJag är fortsatt genuint intresserad och ser fram emot att höra om er process.\n\nMed vänliga hälsningar\n[Ditt namn]',min:60},quiz:[{q:'Timing för uppföljning?',o:['2 timmar','5-7 dagar','1 månad','Aldrig'],c:1},{q:'Bäst kanal?',o:['Ring alltid','E-post i de flesta fall','Brev','Besök'],c:1},{q:'Vad vid tystnad?',o:['Avbryt processen','Max 2 artiga uppföljningar + söka parallellt','Ring varje dag','Klagomål'],c:1},{q:'Tackmejl efter intervju?',o:['Nästa vecka','Inom 24 timmar','Behövs inte','Bara om du vill ha jobbet'],c:1}],pr:['Uppföljningsmejl: [tjänst, företag, datum].','Formulera att jag fått annat erbjudande.','Tackmejl efter intervju som [roll] på [företag].']},
 
-{id:'a_ref',icon:'⭐',title:'Referenshantering',sub:'Dina referenser kan avgöra erbjudandet',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',lessons:[{t:'Vem väljer du?',s:'Bra referens:\n✅ Tidigare chef eller arbetsledare\n✅ Kollega som sett dig prestera\n✅ Lärare eller handledare\n\nUndvik:\n❌ Familj och vänner\n❌ Konfliktrelationer\n❌ Ingen kontakt på 5+ år\n\nFråga alltid om lov INNAN!',a:'Rekryterare kontaktar referenserna i slutskedet. En dålig referens kan stoppa erbjudandet. Ha alltid 2-3 referensers kontakt redo.'},{t:'Förbered dina referenser',s:'Ring eller mejla INNAN:\n\n1. Berätta om jobbet\n2. Påminn om gemensamma projekt\n3. Lyft styrkor du vill att de nämner\n4. Skicka ditt CV\n\nFörberedd referens = starkare svar!',a:'Oförberedda svarar generellt. Förberedda berättar specifika historier. Ge 3-5 nyckelord att lyfta. Tacka alltid din referens efteråt.'},{t:'Saknar du formella referenser?',s:'Ny i Sverige? Lång uppehåll?\n\n✅ Volontärarbete → ny referens snabbt\n✅ Praktik via AF\n✅ Lärare / SFI-lärare / handläggare\n✅ Kompetensintyg\n\nVara ärlig: "Mina referenser är från hemlandet."',a:'I internationell rekrytering är referensbrev (letter of recommendation) vanligt. Att ljuga om referenser är vanligaste orsaken till indragna erbjudanden.'}],ex:{type:'build',title:'Din referensplan',desc:'Förbered dina 3 bästa referenser.',fields:[{l:'Referens 1 — namn, relation, kontakt',ph:'T.ex. Maria Svensson, f.d. chef ICA, maria@... 070-XXX',hint:'Fråga om lov INNAN!'},{l:'Referens 2 — namn, relation, kontakt',ph:'T.ex. Ahmed Karim, kollega PostNord, ahmed@...'},{l:'Referens 3 — namn, relation, kontakt',ph:'T.ex. Anna Berg, handledare YH, anna@...'},{l:'Vad ska de lyfta? (2-3 styrkor)',ph:'T.ex. Pålitlighet, truckvana, samarbete...',ta:true,hint:'Skicka detta till dina referenser!'}]},quiz:[{q:'Bäst som referens?',o:['Bästa vännen','Mamma','Tidigare chef','Bekant som tycker om dig'],c:2},{q:'När förbereder du?',o:['När rekryteraren frågar','INNAN du anger dem','Behövs inte','Sista dagen'],c:1},{q:'Saknar formella? Vad gör du?',o:['Uppfinn kontakter','Neka','Volontärarbeta/praktik/fråga lärare','Ge familjens kontakt'],c:2},{q:'Efter att referens hjälpt dig?',o:['Ingenting','Tacka — oavsett utfall','Pengar','Undvik kontakt'],c:1}],pr:['Mejl för att förbereda referens inför [intervju].','Formulera att jag saknar referens från Sverige.','Referensbrev för min f.d. kollega.']},
+{id:'a_ref',icon:'⭐',title:'Referenshantering',sub:'Dina referenser kan avgöra erbjudandet',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/aref-referenser.mp4',lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'⭐',h:'Vad är syftet?',t:'Lära dig välja, fråga och förbereda referenser så de stärker din ansökan.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vem som är en bra referens, vem du undviker, hur du förbereder, och alternativ om du saknar formella.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha en lista med 2–3 förberedda referenser klara att skicka.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en övning där du planerar dina referenser.'}
+],
+a:'Rekryterare kontaktar referenserna i slutskedet. En dålig referens kan stoppa hela erbjudandet.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom vem du ska välja, vem du ska undvika, hur du förbereder din referens och vad du gör om du saknar formella referenser. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Vem väljer du?',
+cards:[
+{icon:'👔',h:'Tidigare chef',t:'Har sett dig leverera under ansvar.'},
+{icon:'🤝',h:'Kollega',t:'Har sett dig prestera i vardagen.'},
+{icon:'🎓',h:'Lärare eller handledare',t:'Vet hur du fungerar i en grupp.'}
+],
+a:'Välj någon som har sett dig prestera — och som du litar på säger något positivt om dig.'},
+{t:'Vem undviker du?',
+cards:[
+{icon:'👪',h:'Familj och nära vänner',t:'Saknar trovärdighet för rekryterare.'},
+{icon:'😤',h:'Konfliktrelationer',t:'Risk för negativa kommentarer.'},
+{icon:'🕰️',h:'Ingen kontakt på 5+ år',t:'Kommer inte ihåg dig tillräckligt väl.'}
+],
+a:'Fråga alltid om lov INNAN du anger någon som referens. En referens du inte förvarnat kan kosta dig jobbet.'},
+{t:'Förbered dina referenser',
+cards:[
+{icon:'📞',h:'Ring eller mejla innan',t:'Innan rekryteraren gör det.'},
+{icon:'💼',h:'Berätta om jobbet',t:'Företag, roll och vad de söker.'},
+{icon:'📄',h:'Skicka ditt CV',t:'Så de har faktauppgifterna rätt.'},
+{icon:'💡',h:'Lyft 2–3 styrkor',t:'Som du vill att de särskilt nämner.'}
+],
+a:'Oförberedda referenser svarar generellt. Förberedda berättar specifika historier. Tacka alltid din referens efteråt.'},
+{t:'Saknar du formella referenser?',
+cards:[
+{icon:'🤲',h:'Volontärarbete',t:'Ny referens snabbt — och meriterande.'},
+{icon:'📋',h:'Praktik via AF',t:'Handledaren blir din referens.'},
+{icon:'👩‍🏫',h:'SFI-lärare eller handläggare',t:'Räknas som professionell referens.'},
+{icon:'📄',h:'Kompetensintyg',t:'Skriftliga intyg från tidigare arbete.'}
+],
+a:'Var ärlig: "mina referenser är från hemlandet" är helt OK. Att ljuga om referenser är den vanligaste orsaken till indragna erbjudanden.'}
+],ex:{type:'build',title:'Din referensplan',desc:'Förbered dina 3 bästa referenser.',fields:[{l:'Referens 1 — namn, relation, kontakt',ph:'T.ex. Maria Svensson, f.d. chef ICA, maria@... 070-XXX',hint:'Fråga om lov INNAN!'},{l:'Referens 2 — namn, relation, kontakt',ph:'T.ex. Ahmed Karim, kollega PostNord, ahmed@...'},{l:'Referens 3 — namn, relation, kontakt',ph:'T.ex. Anna Berg, handledare YH, anna@...'},{l:'Vad ska de lyfta? (2-3 styrkor)',ph:'T.ex. Pålitlighet, truckvana, samarbete...',ta:true,hint:'Skicka detta till dina referenser!'}]},quiz:[{q:'Bäst som referens?',o:['Bästa vännen','Mamma','Tidigare chef','Bekant som tycker om dig'],c:2},{q:'När förbereder du?',o:['När rekryteraren frågar','INNAN du anger dem','Behövs inte','Sista dagen'],c:1},{q:'Saknar formella? Vad gör du?',o:['Uppfinn kontakter','Neka','Volontärarbeta/praktik/fråga lärare','Ge familjens kontakt'],c:2},{q:'Efter att referens hjälpt dig?',o:['Ingenting','Tacka — oavsett utfall','Pengar','Undvik kontakt'],c:1}],pr:['Mejl för att förbereda referens inför [intervju].','Formulera att jag saknar referens från Sverige.','Referensbrev för min f.d. kollega.']},
 
 {id:'a_plan',icon:'🗓️',title:'Din 30-dagarsplan',sub:'Från övningar till riktigt jobb',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
 lessons:[
@@ -781,8 +927,50 @@ quiz:[
 {q:'Hur lång är snittiden att hitta jobb?',o:['1-2 veckor','3-6 månader','1 år','Omedelbart'],c:1}
 ],
 pr:['Bygg min 30-dagarsplan baserat på: [situation, yrke, mål]','Hur prioriterar jag om jag har begränsat med tid?','Motiverande veckoplan för jobbsöket.']},
-{id:'a_denmark',icon:'🇩🇰',title:'Jobba i Danmark',sub:'Öresund — din närmaste arbetsmarknad',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
-lessons:[{t:'Varför Danmark?',s:'Danmark har ~2,6% arbetslöshet — Sverige har 8,8%.\nHelsingborg har 11,3%.\n\nDet är 20 minuter med färja till en av Europas starkaste arbetsmarknader.\n\nCa 20 000 personer pendlar dagligen Sverige ↔ Danmark.\n\nPopulära branscher för helsingborgare:\n🏗️ Bygg & anläggning\n🏥 Vård & omsorg\n🚛 Lager & transport\n🍽️ Restaurang & hotell\n🏭 Industri & teknik\n\nDanska löner är ofta 20-40% högre än svenska.',a:'Danmark är ett av världens rikaste länder med stark arbetsmarknad. Bristen på arbetskraft är utbredd. Danska arbetsgivare rekryterar aktivt i Helsingborg via mässan "Tura till jobbet" (hålls varje år). EURES och Öresunddirekt hjälper med allt praktiskt kring gränsarbete.'},{t:'Vad krävs? EU-medborgare vs andra',s:'Som EU-medborgare har du fri rörlighet.\nDu behöver INGET arbetstillstånd.\n\nNär du fått jobbet:\n\n1️⃣ Danskt CPR-nummer\n(personnummer — söks på Borgerservice)\n\n2️⃣ NemKonto\n(danskt bankkonto för löneutbetalning)\n\n3️⃣ Registrera dig hos SKAT\n(danska Skatteverket — skattekort)\n\n4️⃣ Dansk A-kasse\n(om du vill ha dansk a-ersättning)\n\nÖresunddirekt hjälper med alla steg!\nGratis rådgivning: oresunddirekt.se',a:'CPR-nummer söks på Borgerservice i Helsingör — boka tid online. NemKonto = danskt bankkonto. Nordea och Handelsbanken har kontor på båda sidor. SKAT utfärdar skattekort (skattemyndigheten.dk). Utan skattekort dras 55% i skatt tills det är ordnat. Danska A-kassor (t.ex. ASE, Faglig Fælles Forbund 3F) — du väljer branschrelevant kasse.'},{t:'Öresunddirekt & skatt',s:'Öresunddirekt är en gratis tjänst som hjälper dig med allt kring att jobba i Danmark.\n\noresunddirekt.se — svenska och danska handläggare\n\nDe svarar på:\n✅ Skatt och pension\n✅ A-kasse och försäkringar\n✅ Barnbidrag och sociala förmåner\n✅ Hur du registrerar dig\n✅ Rättigheter som gränsarbetare\n\n⚠️ Skattefrågan:\nBor du i Sverige, jobbar i Danmark = betalar DANSK skatt på danska inkomster.\nDeklarerar i BÅDA länderna!\n\nÖresund-skatteöverenskommelsen reglerar detta.',a:'Gränsarbetare beskattas i arbetslandet (Danmark) för danska inkomster. Du deklarerar dock i Sverige som bosättningsland. Öresund-avtalet undviker dubbelbeskattning. Pension: du tjänar in dansk ATP-pension parallellt med din svenska. Sjukpenning: FK (Sverige) betalar om du bor i Sverige. Barnbidrag: betalas av det land där barnet bor (Sverige). Ring Öresunddirekt INNAN du börjar — det undviker dyra misstag.'},{t:'Inte EU-medborgare? Så här går det till',s:'Har du uppehållstillstånd i Sverige men är inte EU-medborgare?\n\n✅ Du KAN ha rätt att jobba i Danmark om:\nDu haft permanent uppehållstillstånd i Sverige i minst 5 år\n(= EG-uppehållstillstånd / EU:s långtidsboende-status)\n\n❌ Vanligt tidsbegränsat tillstånd (TUT) räcker INTE.\n\nFörsta steget alltid:\nRing Öresunddirekt: oresunddirekt.se\nEller EURES: eures.europa.eu\n\nDe utreder din specifika situation gratis.',a:'Regler för tredjelandsmedborgare (icke-EU) styrs av EU-direktiv 2003/109 om långtidsboende. 5 års sammanhangände lagligt boende i Sverige ger i regel rätt till rörlighet i andra EU-länder. Men Danmark har särskilda undantag inom EU (för rättsliga och inrikes frågor) och tillämpar reglerna strikt. Kontakta alltid Öresunddirekt eller en rådgivare före jobbansökan — det undviker besvikelse.'}],
+{id:'a_denmark',icon:'🇩🇰',title:'Jobba i Danmark',sub:'Öresund — din närmaste arbetsmarknad',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/adenmark-danmark.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🇩🇰',h:'Vad är syftet?',t:'Förstå hur du tar dig in på den danska arbetsmarknaden — och vad du behöver praktiskt.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Varför Danmark är aktuellt, vad som krävs som EU-medborgare, Öresunddirekt, och hur skatten fungerar.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta vilka 4 steg du behöver ta — och vart du ringer för gratis rådgivning.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en planeringsövning.'}
+],
+a:'20 minuters färja till en av Europas starkaste arbetsmarknader — Öresund är inte en gräns, det är din arbetsmarknad.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom varför Danmark är aktuellt, vad som krävs som EU-medborgare, Öresunddirekt och hur skatten fungerar. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Varför Danmark?',
+cards:[
+{icon:'🇩🇰',h:'Arbetslöshet 2,6 %',t:'Sverige ligger på 8,8 %. Skillnaden är enorm.'},
+{icon:'⛴️',h:'20 min med färja',t:'En av Europas starkaste arbetsmarknader — nära.'},
+{icon:'🚇',h:'20 000 pendlare/dag',t:'Du är inte ensam — det finns ett helt system.'},
+{icon:'💰',h:'20–40 % högre lön',t:'Danska löner ligger ofta över svenska för samma yrke.'}
+],
+a:'Danmark är ett av världens rikaste länder med stark arbetsmarknad. Helsingborg är en hub för dansk rekrytering — mässan "Tura till jobbet" hålls varje år.'},
+{t:'Vad krävs som EU-medborgare?',
+cards:[
+{icon:'🇪🇺',h:'Fri rörlighet',t:'Inget arbetstillstånd behövs — du är EU-medborgare.'},
+{icon:'1️⃣',h:'CPR-nummer',t:'Danskt personnummer — söks på Borgerservice i Helsingör.'},
+{icon:'2️⃣',h:'NemKonto',t:'Danskt bankkonto för löneutbetalning.'},
+{icon:'3️⃣',h:'Skattekort hos SKAT',t:'Utan skattekort dras 55 % i skatt tills det är ordnat.'},
+{icon:'4️⃣',h:'Dansk A-kasse',t:'Frivilligt — om du vill ha dansk a-ersättning.'}
+],
+a:'Boka tid online för CPR. Nordea och Handelsbanken har kontor på båda sidor. Danska A-kassor som ASE eller 3F — välj branschrelevant.'},
+{t:'Öresunddirekt & skatt',
+cards:[
+{icon:'🌐',h:'oresunddirekt.se',t:'Gratis rådgivning — svenska och danska handläggare.'},
+{icon:'💸',h:'Skattefrågan',t:'Bor i Sverige + jobbar i Danmark = dansk skatt på danska inkomster.'},
+{icon:'📋',h:'Deklarera i BÅDA',t:'Öresund-avtalet undviker dubbelbeskattning.'},
+{icon:'⚠️',h:'Ring INNAN du börjar',t:'Det undviker dyra misstag.'}
+],
+a:'Gränsarbetare beskattas i arbetslandet. Sverige är bosättningsland. Pension: dansk ATP parallellt med svensk. Barnbidrag: betalas av landet där barnet bor (Sverige).'},
+{t:'Inte EU-medborgare?',
+cards:[
+{icon:'✅',h:'PUT i 5 år',t:'Permanent uppehållstillstånd i 5+ år = EG-uppehållstillstånd. Kan ge rätt till rörlighet.'},
+{icon:'❌',h:'TUT räcker inte',t:'Tidsbegränsat tillstånd ger inte rätt att jobba i Danmark.'},
+{icon:'📞',h:'Ring Öresunddirekt först',t:'De utreder din specifika situation gratis.'}
+],
+a:'Regler för icke-EU styrs av EU-direktiv 2003/109. Danmark tillämpar reglerna strikt — kontakta alltid Öresunddirekt eller en rådgivare före jobbansökan.'}
+],
 ex:{type:'build',title:'Din danska jobbplan',desc:'Planera dina första steg mot ett jobb i Danmark.',fields:[{l:'Vilket yrke söker du i Danmark?',ph:'T.ex. truckförare, undersköterska, kock, lagerarbetare...',hint:'Samma yrke som i Sverige — men danska löner!'},{l:'Har du sökt på jobnet.dk eller EURES?',ph:'T.ex. Ja, hittade 3 annonser för truckförare nära Helsingör / Nej — gör det nu',hint:'jobnet.dk = Platsbanken i Danmark. Gratis.'},{l:'Vad är ditt första praktiska steg?',ph:'T.ex. Ringa Öresunddirekt, boka tid för CPR-nummer på Borgerservice...',ta:true,hint:'oresunddirekt.se — gratis rådgivning'},{l:'Har du koll på skattefrågan?',ph:'T.ex. Nej — ringer Öresunddirekt / Ja, förstår att jag betalar dansk skatt',hint:'Ring INNAN du börjar — undviker dyra misstag!'}]},
 quiz:[{q:'Vad är Danmarks arbetslöshet 2025?',o:['~8%','~5%','~2,6%','~12%'],c:2},{q:'Vad behöver EU-medborgare för att jobba i Danmark?',o:['Arbetstillstånd','Ingenting — fri rörlighet gäller','Danskt pass','Visum'],c:1},{q:'Kan du jobba i Danmark med bara svenskt uppehållstillstånd?',o:['Å ja, uppehållstillstånd räcker','Öresunddirekt utreder — beror på om du haft PUT i 5+ år','Ja alltid om du bor i Sverige','Nej aldrig'],c:1},{q:'Vad är ett CPR-nummer?',o:['Danskt körkort','Danskt personnummer — krävs för lön och skatt','En a-kasse','Danskt ID-kort'],c:1},{q:'Vad gör Öresunddirekt?',o:['Söker jobb åt dig','Gratis rådgivning om gränsarbete Sverige-Danmark','Danskt BankID','Taxiservice över sundet'],c:1},{q:'Var betalar du skatt om du bor i Sverige och jobbar i Danmark?',o:['Bara i Sverige','Bara i Danmark — men deklarerar i båda','Ingen skatt alls','Bara i EU'],c:1},{q:'Vad är dansk A-kasse?',o:['Danskt personnummer','Dansk a-kassa — ger ersättning om du blir arbetslös i Danmark','En bank','Danskt Skatteverk'],c:1}],
 pr:['Vilka jobb finns i Danmark för [yrke] nära Helsingör?','Förklara steg för steg hur jag börjar jobba i Danmark som svensk.','Vad tjänar en [yrke] i Danmark jämfört med Sverige?']}
