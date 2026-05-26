@@ -421,8 +421,38 @@ quiz:[
 ],
 pr:['Skriv en profiltext för: [yrkestitel, erfarenhet, stad]','Gör dessa arbetsuppgifter starkare: [klistra in]','Föreslå 8 kompetenser för en [yrkestitel].','Kvantifiera dessa arbetsuppgifter — uppskatta siffror om jag inte minns exakt.','Gör mitt CV ATS-vänligt utan att förlora läsbarhet.']},
 
-{id:'a1',icon:'🧠',title:'Mina kompetenser',sub:'Hårda, mjuka & överförbara',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
-lessons:[{t:'Vad är kompetenser?',s:'Kompetenser är saker du kan. Det kan vara något du lärt dig i skolan, på jobbet eller i livet.\n\nExempel: köra bil, prata med kunder, laga mat.',a:'Kompetenser är förmågor du använder för att utföra arbetsuppgifter. De delas in i hårda (tekniska) och mjuka (sociala) kompetenser.'},{t:'Hårda och mjuka',s:'Hårda = saker du kan mäta (Excel, truckkort).\nMjuka = hur du är med andra (samarbete, tålamod).',a:'Hårda kompetenser kan testas eller certifieras. Mjuka handlar om beteenden, kommunikation och problemlösning.'},{t:'Överförbara kompetenser',s:'Överförbara kompetenser är saker du kan använda i många jobb.\n\nExempel: service, planering, ansvar.',a:'Generella förmågor som fungerar i olika branscher. Viktiga när du byter yrke.'}],
+{id:'a1',icon:'🧠',title:'Mina kompetenser',sub:'Hårda, mjuka & överförbara',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/a1-kompetenser.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🧠',h:'Vad är syftet?',t:'Lära dig se vad du faktiskt kan — och hur du beskriver det i CV och intervju.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad en kompetens är, skillnaden hårda vs mjuka, och vad överförbara kompetenser betyder.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna lista dina egna hårda, mjuka och överförbara kompetenser.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en sorteringsövning.'}
+],
+a:'Kompetenser är förmågor du använder för att utföra arbetsuppgifter.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom vad kompetenser är, skillnaden mellan hårda och mjuka, och vad överförbara kompetenser betyder. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Vad är kompetenser?',
+cards:[
+{icon:'📚',h:'Lärt i skolan',t:'Det du har läst eller utbildat dig till.'},
+{icon:'💼',h:'Lärt på jobbet',t:'Det du har gjort i tidigare roller.'},
+{icon:'🌍',h:'Lärt i livet',t:'Hobbyer, ideellt arbete och vardagsförmågor räknas också.'}
+],
+a:'En kompetens är något du kan — och kan visa. Den kan vara lärt på många olika sätt.'},
+{t:'Hårda och mjuka',
+cards:[
+{icon:'🔧',h:'Hårda — mätbara',t:'Truckkort, Excel, körkort, kassahantering. Kan testas eller styrkas med intyg.'},
+{icon:'🤝',h:'Mjuka — sociala',t:'Kommunikation, samarbete, tålamod, empati. Hur du är med andra människor.'}
+],
+a:'Hårda kompetenser kan certifieras. Mjuka kompetenser handlar om beteenden — minst lika viktiga i många jobb.'},
+{t:'Överförbara kompetenser',
+cards:[
+{icon:'🛎️',h:'Service',t:'Bemötande och kundkontakt.'},
+{icon:'🗂️',h:'Planering',t:'Att strukturera och hålla deadlines.'},
+{icon:'🎯',h:'Ansvar',t:'Att ta initiativ och se till att saker blir gjorda.'}
+],
+a:'Överförbara kompetenser fungerar i många yrken — extra viktiga när du byter bransch.'}
+],
 ex:{type:'sort',title:'Hård eller mjuk kompetens?',desc:'Sortera kompetenserna i rätt kategori.',catA:'🔧 Hård kompetens',catB:'🤝 Mjuk kompetens',items:[{l:'Excel',c:'A'},{l:'Tålamod',c:'B'},{l:'Truckkort',c:'A'},{l:'Samarbete',c:'B'},{l:'Körkort B',c:'A'},{l:'Kommunikation',c:'B'},{l:'Kassahantering',c:'A'},{l:'Empati',c:'B'}]},
 quiz:[{q:'Vad är en kompetens?',o:['En utbildning','En förmåga att utföra arbetsuppgifter','Ett certifikat'],c:1},{q:'Vad är en hård kompetens?',o:['Att vara tålmodig','Excel eller truckkort','Att lyssna'],c:1},{q:'Vad är en mjuk kompetens?',o:['Körkort','Samarbete och kommunikation','Programmering'],c:1}],
 pr:['Sammanfatta mina kompetenser baserat på: …','Vilka kompetenser passar denna annons?','Förklara hårda vs mjuka kompetenser.']},
@@ -501,8 +531,39 @@ a:'Den starka pitchen är konkret: en siffra, en styrka och ett tydligt mål.'}
 ex:{type:'build',title:'Bygg din pitch',desc:'Fyll i 3-stegsmodellen.',fields:[{l:'1. VEM ÄR DU?',ph:'T.ex. Jag heter Maria och har 5 år i kundservice...',ta:true,hint:'Max 2 meningar.'},{l:'2. VAD KAN DU?',ph:'T.ex. Mina sidor är kundkontakt, kassahantering...',ta:true},{l:'3. VAD SÖKER DU?',ph:'T.ex. Jag söker en ny tjänst inom butik...',ta:true},{l:'Din kompletta pitch',ph:'Skriv ihop alla tre delar...',ta:true,hint:'Läs högt — ca 25-30 sekunder.'}]},
 quiz:[{q:'Vad är en pitch?',o:['Ett CV','Kort presentation av vem du är','En jobbannons'],c:1},{q:'Tre delar som ska ingå?',o:['Namn, ålder, adress','Vem jag är, vad jag kan, vad jag söker','Skola, jobb, hobby'],c:1},{q:'Hur lång?',o:['5 minuter','Under 30 sekunder','2 meningar max'],c:1}],
 pr:['Skapa en pitch baserat på mina styrkor.','Förbättra min pitch.','Gör min pitch kortare.']},
-{id:'a5',icon:'📋',title:'Förstå jobbannonser',sub:'Krav och dolda signaler',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
-lessons:[{t:'Hur en annons är uppbyggd',s:'En jobbannons berättar vad jobbet är, vad du ska göra och vad arbetsgivaren söker.',a:'Rollbeskrivning, arbetsuppgifter, krav, meriterande kompetenser, personlighet och info om arbetsgivaren.'},{t:'Krav vs önskemål',s:'Krav = måste ha.\nÖnskemål = bra att ha.',a:'Krav är minimikrav. Önskemål ger fördel men är inte nödvändiga.'},{t:'Dolda signaler',s:'"Flexibel" eller "självständig" = hur du ska vara.',a:'Kulturella signaler: tempo, ansvarsnivå, arbetsmiljö och förväntningar på dig.'}],
+{id:'a5',icon:'📋',title:'Förstå jobbannonser',sub:'Krav och dolda signaler',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/a5-annonser.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'📋',h:'Vad är syftet?',t:'Lära dig läsa en jobbannons på riktigt — och hitta vad arbetsgivaren egentligen söker.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Hur en annons är uppbyggd, skillnaden krav vs önskemål, och vad dolda signaler i texten betyder.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna sortera krav, önskemål och kulturella signaler i en annons.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en sorteringsövning.'}
+],
+a:'Att läsa en annons rätt är skillnaden mellan en ansökan som träffar — och en som missar.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom hur en annons är uppbyggd, vad som är krav respektive önskemål, och hur du läser de dolda signalerna. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Hur en annons är uppbyggd',
+cards:[
+{icon:'💼',h:'Rollbeskrivning',t:'Vad jobbet är.'},
+{icon:'📝',h:'Arbetsuppgifter',t:'Vad du ska göra.'},
+{icon:'🎯',h:'Krav',t:'Vad arbetsgivaren måste ha.'},
+{icon:'⭐',h:'Meriterande',t:'Bra att ha — ger fördel.'}
+],
+a:'En annons säger både vad arbetsgivaren behöver och vilken person de söker.'},
+{t:'Krav vs önskemål',
+cards:[
+{icon:'✅',h:'Krav',t:'Måste ha för att komma till intervju.'},
+{icon:'💫',h:'Önskemål',t:'Bra att ha — ger dig en fördel.'}
+],
+a:'Saknar du ett krav — sök ändå, men var medveten om att andra som har det går först.'},
+{t:'Dolda signaler',
+cards:[
+{icon:'💨',h:'Flexibel',t:'Hög-tempo, växlande uppgifter.'},
+{icon:'🎯',h:'Självständig',t:'Förväntas ta egna initiativ.'},
+{icon:'🤝',h:'Strukturerad',t:'Ordning, planering, system.'}
+],
+a:'Kulturella signaler säger vilket tempo, vilken ansvarsnivå och vilken arbetsmiljö du kan vänta dig.'}
+],
 ex:{type:'sort',title:'Krav eller önskemål?',desc:'Sortera varje punkt.',catA:'Krav (måste ha)',catB:'Önskemål (meriterande)',items:[{l:'Truckkort A+B',c:'A'},{l:'Erfarenhet av WMS',c:'B'},{l:'Körkort B',c:'A'},{l:'Engelska i tal',c:'B'},{l:'Kan arbeta skift',c:'A'},{l:'Erfarenhet av LEAN',c:'B'}]},
 quiz:[{q:'Vad är ett krav?',o:['Bra att ha','Måste ha för jobbet','Önskad egenskap'],c:1},{q:'Vad är ett önskemål?',o:['Obligatorisk kompetens','Extra kompetens som ger fördel','Personlighet'],c:1},{q:'Vad är en dold signal?',o:['Felstavning','Kulturella signaler om tempo','Lönen'],c:1}],
 pr:['Förklara denna annons: [klistra in]','Viktigaste kompetenserna?','Sammanfatta kravprofilen i 3 punkter.']},
@@ -511,8 +572,41 @@ lessons:[{t:'Vad är matchning?',s:'Matchning = jämföra dig med jobbet.',a:'An
 ex:{type:'build',title:'Din matchningsanalys',desc:'Välj en annons och gör matchningsanalysen.',fields:[{l:'Vilket jobb?',ph:'T.ex. Lagerarbetare hos PostNord'},{l:'3 viktigaste krav',ph:'1. \n2. \n3. ',ta:true,hint:'Vad nämns först?'},{l:'Dina styrkor som matchar',ph:'T.ex. Truckkort och 2 år lager...',ta:true},{l:'Dina luckor',ph:'T.ex. Saknar WMS-erfarenhet...',ta:true},{l:'Plan för att täppa till luckorna',ph:'T.ex. Kurs via Komvux...',ta:true,hint:'Luckor är möjligheter!'}]},
 quiz:[{q:'Vad är matchning?',o:['Söka många jobb','Jämföra kompetenser med kravprofilen','Skriva CV'],c:1},{q:'Vad är en lucka?',o:['Paus i jobbsök','En kompetens du saknar','Fel i CV'],c:1},{q:'Hur hjälper CVmatchen?',o:['Söker jobb åt dig','Anpassar CV mot annons med AI','Skickar ansökan'],c:1}],
 pr:['Analysera annons — styrkor och luckor?','Hur förbättrar jag matchningen?','Vilka kompetenser behöver jag?']},
-{id:'a7',icon:'🗓️',title:'Jobbsökstrategi',sub:'Plan och uppföljning',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
-lessons:[{t:'Varför strategi?',s:'En plan gör det lättare att hitta jobb.',a:'Strategi minskar stress, ökar träffsäkerhet och strukturerar jobbsökandet.'},{t:'3 delar',s:'1. Mål\n2. Aktiviteter\n3. Uppföljning',a:'Mål ger riktning, aktiviteter ger struktur, uppföljning håller dig på rätt spår.'},{t:'Veckoplanering',s:'Måndag = söka jobb. Tisdag = uppdatera CV.',a:'Varva intensiva uppgifter med enklare för att hålla motivationen.'}],
+{id:'a7',icon:'🗓️',title:'Jobbsökstrategi',sub:'Plan och uppföljning',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/a7-strategi.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🗓️',h:'Vad är syftet?',t:'Bygga en strategi för jobbsöket — så det blir struktur istället för stress.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Varför en strategi behövs, de tre delarna (mål, aktiviteter, uppföljning), och en konkret veckoplan.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha en egen veckoplan med konkreta dagsaktiviteter.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och lektioner, plus en övning där du bygger din veckoplan.'}
+],
+a:'En strategi minskar stress, ökar träffsäkerhet och strukturerar jobbsökandet.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom varför du behöver en strategi, de tre delarna mål–aktiviteter–uppföljning, och en konkret veckoplan. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Varför strategi?',
+cards:[
+{icon:'😌',h:'Mindre stress',t:'Du vet vad du ska göra — varje dag.'},
+{icon:'🎯',h:'Högre träffsäkerhet',t:'Du söker rätt jobb — inte allt.'},
+{icon:'📐',h:'Struktur',t:'Veckan får en form du kan följa.'}
+],
+a:'Utan strategi blir jobbsöket lätt slumpmässigt — och det märks i resultaten.'},
+{t:'3 delar',
+cards:[
+{icon:'1️⃣',h:'Mål',t:'Vart du är på väg — vilket yrke, var, när.'},
+{icon:'2️⃣',h:'Aktiviteter',t:'Vad du gör varje vecka för att nå målet.'},
+{icon:'3️⃣',h:'Uppföljning',t:'Vad som funkade — och inte. Justera löpande.'}
+],
+a:'Mål ger riktning, aktiviteter ger struktur, uppföljning håller dig på rätt spår.'},
+{t:'Veckoplanering',
+cards:[
+{icon:'💪',h:'Måndag',t:'Sök 3 nya jobb.'},
+{icon:'📝',h:'Tisdag',t:'Anpassa CV och brev.'},
+{icon:'🤝',h:'Onsdag',t:'Nätverka — kontakta någon.'},
+{icon:'🎓',h:'Torsdag',t:'Lär dig något nytt.'},
+{icon:'📊',h:'Fredag',t:'Följ upp veckan.'}
+],
+a:'Varva intensiva uppgifter med enklare — det håller motivationen uppe.'}
+],
 ex:{type:'build',title:'Bygg din strategi',desc:'Skapa en konkret jobbsökstrategi.',fields:[{l:'Ditt mål',ph:'T.ex. Lagerarbetare senast 1 juni',ta:true},{l:'Kanaler du använder',ph:'T.ex. CVmatchen, Platsbanken, LinkedIn...',hint:'Minst 2-3.'},{l:'Din veckoplan',ph:'Måndag: \nTisdag: \nOnsdag: \nTorsdag: \nFredag: ',ta:true},{l:'Hur följer du upp?',ph:'T.ex. Räknar ansökningar per vecka...',ta:true}]},
 quiz:[{q:'Varför strategi?',o:['Behövs inte','Minskar stress och ökar träffsäkerhet','Krav'],c:1},{q:'Tre delar?',o:['CV, ansökan, intervju','Mål, aktiviteter, uppföljning','LinkedIn, e-post, telefon'],c:1},{q:'Vad är en veckoplan?',o:['Lista med jobb','Planering av dagliga aktiviteter','Kalender'],c:1}],
 pr:['Skapa strategi baserat på mina mål.','Gör min veckoplan mer realistisk.','Hjälp mig prioritera aktiviteter.']},
@@ -552,8 +646,41 @@ a:'Lugn röst, tydlig struktur. Pauser är okej — visar att du tänker.'}
 ex:{type:'build',title:'Förbered dina intervjusvar',desc:'Skriv svar på de vanligaste frågorna.',fields:[{l:'"Berätta om dig själv"',ph:'Jag heter... och har...',ta:true,hint:'Max 60 sek.'},{l:'"Varför söker du jobbet?"',ph:'Jag söker för att...',ta:true},{l:'"Din styrka?"',ph:'Min starkaste egenskap är... t.ex...',ta:true,hint:'Ge konkret exempel!'},{l:'"Din svaghet?"',ph:'Jag kan ibland vara... men jobbar på det...',ta:true,hint:'Äkta svaghet + hur du jobbar på den.'}]},
 quiz:[{q:'Syftet med intervjun?',o:['Testa kunskaper','Arbetsgivaren lär känna dig','Skriva kontrakt'],c:1},{q:'Vanlig intervjufråga?',o:['"Favoritfilm?"','"Berätta om dig själv"','"Vad tjänar du?"'],c:1},{q:'Bra kroppsspråk?',o:['Kryssa armarna','Sitta rakt, le, ögonkontakt','Titta ner'],c:1}],
 pr:['Hjälp mig svara: Berätta om dig själv.','Förbättra mina intervjusvar.','Frågor att förbereda inför lagerintervju?']},
-{id:'a9',icon:'⭐',title:'STAR-metoden',sub:'Konkreta exempel i intervjun',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
-lessons:[{t:'Vad är STAR?',s:'S – Situation\nT – Task (uppgift)\nA – Action (vad DU gjorde)\nR – Result (resultatet)',a:'Beprövad metod för strukturerade, övertygande svar på beteendefrågor.'},{t:'I praktiken',s:'"Kund blev upprörd (S). Lösa snabbt (T). Lyssnade & ersatte (A). Kund nöjd, beröm av chef (R)."',a:'Fokusera på VAD DU gjorde — inte vad teamet gjorde.'},{t:'Vanliga STAR-frågor',s:'"Berätta om en utmaning du löst."\n"Exempel på bra samarbete?"',a:'Börjar med: "Ge ett exempel på…", "Berätta om…", "Hur hanterade du…"'}],
+{id:'a9',icon:'⭐',title:'STAR-metoden',sub:'Konkreta exempel i intervjun',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/a9-star.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'⭐',h:'Vad är syftet?',t:'Lära dig svara på beteendefrågor i intervjun med struktur — konkret och övertygande.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad STAR är, en genomgång av varje bokstav, och vanliga frågor som passar metoden.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna bygga ett komplett STAR-svar utifrån en egen situation.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en övning där du skriver ditt eget STAR-svar.'}
+],
+a:'STAR är beprövad metod för strukturerade, övertygande svar på beteendefrågor.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom varje bokstav i STAR — Situation, Task, Action, Result — och vilka intervjufrågor som passar metoden. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Vad är STAR?',
+cards:[
+{icon:'🅂',h:'S — Situation',t:'Var och när hände det?'},
+{icon:'🅃',h:'T — Task',t:'Vad var din uppgift?'},
+{icon:'🄰',h:'A — Action',t:'Vad gjorde DU? Inte teamet — du.'},
+{icon:'🅁',h:'R — Result',t:'Vad blev resultatet? Siffror om du har dem.'}
+],
+a:'Fyra delar — tillsammans gör de ditt svar tydligt och övertygande.'},
+{t:'I praktiken',
+cards:[
+{icon:'😡',h:'S — Situation',t:'En kund blev upprörd över en felleverans.'},
+{icon:'🎯',h:'T — Task',t:'Min uppgift var att lösa det snabbt utan att förlora kunden.'},
+{icon:'👂',h:'A — Action',t:'Jag lyssnade, bad om ursäkt och ersatte produkten samma dag.'},
+{icon:'🎉',h:'R — Result',t:'Kunden blev nöjd och kom tillbaka. Min chef berömde hanteringen.'}
+],
+a:'Fokusera på VAD DU gjorde — inte vad teamet gjorde.'},
+{t:'Vanliga STAR-frågor',
+cards:[
+{icon:'💪',h:'Utmaning',t:'"Berätta om en utmaning du löst."'},
+{icon:'🤝',h:'Samarbete',t:'"Ge ett exempel på bra samarbete."'},
+{icon:'😤',h:'Konflikt',t:'"Hur hanterade du en svår kund eller kollega?"'}
+],
+a:'Alla frågor som börjar med "berätta om", "ge ett exempel" eller "hur hanterade du" passar STAR.'}
+],
 ex:{type:'build',title:'Bygg ditt STAR-svar',desc:'Välj en situation och bygg ett fullständigt svar.',fields:[{l:'S — Situation',ph:'T.ex. Jobbade på ICA en fredagskväll...',ta:true,hint:'Beskriv kort.'},{l:'T — Din uppgift',ph:'T.ex. Hålla flödet igång...',ta:true},{l:'A — Vad DU gjorde',ph:'T.ex. Öppnade extra kassa, kommunicerade...',ta:true,hint:'DU — inte teamet.'},{l:'R — Resultatet',ph:'T.ex. Kö minskade, chef berömde mig...',ta:true,hint:'Mätbart = starkt.'},{l:'Komplett STAR-svar',ph:'Skriv hela svaret naturligt...',ta:true}]},
 quiz:[{q:'S i STAR?',o:['Styrka','Situation','Strategi'],c:1},{q:'R i STAR?',o:['Roll','Resultat','Relation'],c:1},{q:'Vilken fråga passar STAR?',o:['"Heter du?"','"Utmaning du löst?"','"Lönen?"'],c:1}],
 pr:['STAR-svar baserat på: …','Förbättra mitt STAR-svar.','Hitta ett STAR-exempel från mitt liv.']},
@@ -594,7 +721,41 @@ a:'Det personliga brevet visar vem du är och varför just det här jobbet. Den 
 
 {id:'a_natverk',icon:'🤝',title:'Nätverkande & dolda jobbet',sub:'40-50% av jobben annonseras aldrig',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',lessons:[{t:'Den dolda arbetsmarknaden',s:'Upp till 50% av alla jobb tillsätts utan annons.\n\nHur?\n• Intern rekrytering\n• Tips från nätverk\n• Spontanansökningar\n• LinkedIn-kontakter\n\nSöker du bara annonser missar du hälften!',a:'Studier visar 40-50% av tjänstetillsättningar sker via nätverk. Ju mer senior tjänst, desto vanligare med nätverksrekrytering.'},{t:'Hur nätverkar du praktiskt?',s:'1. LinkedIn — kontaktförfrågan + kort meddelande\n2. Informella möten — "Kan vi ta en kaffe?"\n3. AF-evenemang & jobbmässor\n4. Gamla kontakter — ex-kollegor, klasskompisar\n5. Branschföreningar\n\nGe innan du tar!',a:'"Kan du berätta om hur det är att jobba på X?" öppnar fler dörrar än "Har ni lediga tjänster?". LinkedIn InMail har ca 30% svarsfrekvens.'},{t:'Spontanansökan — hur?',s:'Strukturen:\n1. Adressera rätt person\n2. Visa att du känner till företaget\n3. Förklara värdet du tillför\n4. Be om 20 min möte\n\n"Hej [namn], jag har följt [företag] och tror min bakgrund i [X] kan tillföra [Y]."',a:'Spontanansökningar har högre callback-frekvens — lägre konkurrens. Bäst timing: efter expansion-nyheter. LinkedIn är bästa kanalen.'}],ex:{type:'build',title:'Din nätverksstrategi',desc:'Konkret plan för nätverkande i jobbsöket.',fields:[{l:'3 personer att kontakta den här veckan',ph:'T.ex. Ex-kollega på ICA, kompis på Peab...',ta:true,hint:'Tänk brett!'},{l:'Företag för spontanansökan',ph:'T.ex. IKEA Helsingborg, Region Skåne...'},{l:'Öppningsmeningen till spontanansökan',ph:'Hej [namn], jag har följt [företag] och tror min bakgrund i...',ta:true},{l:'LinkedIn-mål den här veckan',ph:'T.ex. Kontaktförfrågan till 3 + kommentera 2 inlägg',hint:'Regelbundenhet > kvantitet'}]},quiz:[{q:'Andel jobb utan annons?',o:['10-15%','40-50%','5%','80%'],c:1},{q:'Bästa sättet att börja nätverka?',o:['"Har ni lediga tjänster?"','Fråga om råd — visa intresse','Skicka CV till alla','Vänta passivt'],c:1},{q:'Vad är spontanansökan?',o:['En sen ansökan','Kontakt utan utlyst tjänst','Ansökan utan brev','Via telefon'],c:1},{q:'Varför hög callback för spontanansökningar?',o:['Ser bättre ut','Lägre konkurrens','Obligatoriskt','Företag föredrar det'],c:1}],pr:['LinkedIn-meddelande för informellt möte.','Spontanansökan till [företag] för [roll].','Hitta rätt kontaktperson på LinkedIn?']},
 
-{id:'a_lon',icon:'💰',title:'Löneförhandling',sub:'Vet du vad du är värd?',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',lessons:[{t:'Ta reda på rätt lönenivå',s:'Innan du förhandlar — känn marknaden.\n\n📊 Källor:\n• lonestatistik.se — gratis & pålitlig\n• SCB — branschdata\n• Ditt fackförbund\n• LinkedIn Salary\n• Fråga nätverket\n\nSkåne-löner ca 5-10% lägre än Stockholm.',a:'Kom med ett specifikt tal, inte ett spann — spann tolkas alltid mot den lägre siffran. Öppna 5-10% över ditt minimum.'},{t:'Timing och formulering',s:'NÄR: Efter att erbjudandet är på bordet.\n\nHUR:\n✅ "Baserat på min erfarenhet och marknadsdata tänkte jag mig runt X kr."\n\n❌ "Jag behöver minst X" (ultimatum)\n❌ "Vad brukar ni betala?" (svag)\n\nPausen är din vän.',a:'Förhandling förväntas — arbetsgivare räknar med motbud. Att inte förhandla kostar i snitt 100 000+ kr/år. Förbered 3 argument: marknadsdata, erfarenhet, mervärde.'},{t:'Hela paketet — inte bara lönen',s:'Om lönen är låst, förhandla:\n\n📅 Extra semesterdagar\n⏰ Flex / distans\n📚 Utbildningsbudget\n🏋️ Friskvårdsbidrag\n\nEn dag extra semester = ca 5 000 kr/år.',a:'Förmånsförhandling är ofta enklare. Prioritera: vad är värdefullt för dig men billigt för arbetsgivaren? Friskvård och hemarbete är ofta lätta att få.'}],ex:{type:'build',title:'Din förhandlingsplan',desc:'Förbered löneförhandlingen konkret.',fields:[{l:'Vilket jobb?',ph:'T.ex. Lagerarbetare på PostNord...'},{l:'Vad säger marknadsdata?',ph:'T.ex. Medianlön lagerarbetare Skåne: 28 000 kr',hint:'lonestatistik.se — gratis'},{l:'Ditt öppningsbud',ph:'T.ex. 31 000 kr — 10% över minimum',hint:'Lite över ditt minimum'},{l:'Dina 3 argument',ph:'1. X år erfarenhet WMS\n2. Marknadsdata visar Y\n3. Jag tillför Z...',ta:true}]},quiz:[{q:'När lyfter du lön?',o:['I första intervjun','När erbjudandet är på bordet','I CV:et','Aldrig'],c:1},{q:'Smartaste öppningsbudet?',o:['Exakt vad du vill ha','5-10% över ditt minimum','Så högt som möjligt','Ett spann'],c:1},{q:'Lönen är låst — vad gör du?',o:['Tacka nej direkt','Förhandla förmåner','Acceptera tyst','Be om skriftlig bekräftelse'],c:1},{q:'Vad kostar det att inte förhandla?',o:['Ingenting','100 000+ kr/år','5 000 kr','Bara prestige'],c:1}],pr:['Löneförhandling för [roll] Helsingborg.','Marknadslön [yrke] Skåne?','Tacka nej till för lågt erbjudande.']},
+{id:'a_lon',icon:'💰',title:'Löneförhandling',sub:'Vet du vad du är värd?',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/alon-lon.mp4',lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'💰',h:'Vad är syftet?',t:'Lära dig förhandla lön och förmåner — utan att skämmas eller skämma ut dig.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Hur du tar reda på marknadslön, timing och formulering, och hur du förhandlar hela paketet.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha en konkret förhandlingsplan med öppningsbud och argument.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och lektioner, plus en övning där du bygger din egen plan.'}
+],
+a:'Att inte förhandla kostar i snitt 100 000+ kr/år — år efter år.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom marknadsdata, timing, formulering och hur du förhandlar hela paketet — inte bara lönen. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Ta reda på rätt lönenivå',
+cards:[
+{icon:'🌐',h:'lonestatistik.se',t:'Gratis och pålitlig — börja här.'},
+{icon:'🏛️',h:'SCB',t:'Branschdata och löneutveckling.'},
+{icon:'🛡️',h:'Facket',t:'Ditt förbund har egna siffror.'},
+{icon:'📍',h:'Skåne',t:'Räkna med 5–10 % under Stockholm.'}
+],
+a:'Kom med ett specifikt tal, inte ett spann — spann tolkas alltid mot den lägre siffran. Öppna 5–10 % över ditt minimum.'},
+{t:'Timing och formulering',
+cards:[
+{icon:'⏰',h:'När',t:'Lyft lönen när erbjudandet är på bordet — inte i första intervjun.'},
+{icon:'✅',h:'Bra',t:'"Baserat på erfarenhet och marknadsdata tänkte jag mig runt X kronor."'},
+{icon:'❌',h:'Undvik',t:'"Jag behöver minst X" — ultimatum. Eller "Vad brukar ni betala?" — svagt.'},
+{icon:'🤐',h:'Pausen',t:'Är din vän. Säg ditt tal, vänta — låt motparten bryta tystnaden.'}
+],
+a:'Förhandling förväntas. Förbered 3 argument: marknadsdata, erfarenhet, mervärde.'},
+{t:'Hela paketet — inte bara lönen',
+cards:[
+{icon:'📅',h:'Extra semesterdagar',t:'1 dag ≈ 5 000 kr/år i värde.'},
+{icon:'💻',h:'Flex eller distans',t:'Ofta enkelt att få — stort värde för dig.'},
+{icon:'📚',h:'Utbildningsbudget',t:'Pengar för kurser och certifikat.'},
+{icon:'🏋️',h:'Friskvårdsbidrag',t:'Skattefritt — upp till 5 000 kr/år.'}
+],
+a:'Förmånsförhandling är ofta enklare än lön. Prioritera: värdefullt för dig men billigt för arbetsgivaren.'}
+],ex:{type:'build',title:'Din förhandlingsplan',desc:'Förbered löneförhandlingen konkret.',fields:[{l:'Vilket jobb?',ph:'T.ex. Lagerarbetare på PostNord...'},{l:'Vad säger marknadsdata?',ph:'T.ex. Medianlön lagerarbetare Skåne: 28 000 kr',hint:'lonestatistik.se — gratis'},{l:'Ditt öppningsbud',ph:'T.ex. 31 000 kr — 10% över minimum',hint:'Lite över ditt minimum'},{l:'Dina 3 argument',ph:'1. X år erfarenhet WMS\n2. Marknadsdata visar Y\n3. Jag tillför Z...',ta:true}]},quiz:[{q:'När lyfter du lön?',o:['I första intervjun','När erbjudandet är på bordet','I CV:et','Aldrig'],c:1},{q:'Smartaste öppningsbudet?',o:['Exakt vad du vill ha','5-10% över ditt minimum','Så högt som möjligt','Ett spann'],c:1},{q:'Lönen är låst — vad gör du?',o:['Tacka nej direkt','Förhandla förmåner','Acceptera tyst','Be om skriftlig bekräftelse'],c:1},{q:'Vad kostar det att inte förhandla?',o:['Ingenting','100 000+ kr/år','5 000 kr','Bara prestige'],c:1}],pr:['Löneförhandling för [roll] Helsingborg.','Marknadslön [yrke] Skåne?','Tacka nej till för lågt erbjudande.']},
 
 {id:'a_uppf',icon:'📬',title:'Uppföljning efter ansökan',sub:'De som följer upp får fler intervjuer',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',lessons:[{t:'Varför följa upp?',s:'De flesta söker och väntar passivt.\n\nUppföljning:\n✅ Visar genuint intresse\n✅ Håller dig top-of-mind\n✅ Ger info om processen\n✅ Skiljer dig från mängden\n\n20-30% högre chans till intervju!',a:'Uppföljning uppfattas som professionellt i Sverige om det görs rätt. Rätt ton: nyfiken och positiv — inte påträngande.'},{t:'När och hur?',s:'⏰ Timing:\n• 5-7 dagar efter ansökan\n• Inom 24h efter intervju (tackmejl)\n• Om deadline passerat\n\n📧 E-post är bäst.\n\n✅ 3-5 meningar\n✅ Referera till ansökan\n✅ Bekräfta intresset',a:'Max 2 uppföljningar totalt. Tackmejl inom 24h. Undvik att ringa om inte kontaktinfo anger det.'},{t:'Hantera tystnad',s:'Tystnad ≠ Nej.\n\nProcesser tar 2-6 veckor.\n\nVad du gör:\n1. Skicka en artig uppföljning\n2. Fortsätt söka parallellt\n3. Sätt en egen deadline\n\nAldrig vredgade meddelanden.',a:'Rekrytering försinkas ofta av interna processer och semester. Om du fått annat erbjudande — meddela omgående och tacka för processen.'}],ex:{type:'write',title:'Skriv ditt uppföljningsmejl',desc:'Skriv ett professionellt uppföljningsmejl för en ansökan du skickat.',tips:'Kort: Referera till ansökan, bekräfta intresse, fråga om status. Max 4-5 meningar.',ph:'Hej [namn],\n\nJag skickade ansökan till [tjänst] förra veckan och ville höra om ni hunnit titta igenom den.\n\nJag är fortsatt genuint intresserad och ser fram emot att höra om er process.\n\nMed vänliga hälsningar\n[Ditt namn]',min:60},quiz:[{q:'Timing för uppföljning?',o:['2 timmar','5-7 dagar','1 månad','Aldrig'],c:1},{q:'Bäst kanal?',o:['Ring alltid','E-post i de flesta fall','Brev','Besök'],c:1},{q:'Vad vid tystnad?',o:['Avbryt processen','Max 2 artiga uppföljningar + söka parallellt','Ring varje dag','Klagomål'],c:1},{q:'Tackmejl efter intervju?',o:['Nästa vecka','Inom 24 timmar','Behövs inte','Bara om du vill ha jobbet'],c:1}],pr:['Uppföljningsmejl: [tjänst, företag, datum].','Formulera att jag fått annat erbjudande.','Tackmejl efter intervju som [roll] på [företag].']},
 
