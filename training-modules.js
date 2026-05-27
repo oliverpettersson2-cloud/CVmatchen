@@ -456,8 +456,40 @@ a:'Överförbara kompetenser fungerar i många yrken — extra viktiga när du b
 ex:{type:'sort',title:'Hård eller mjuk kompetens?',desc:'Sortera kompetenserna i rätt kategori.',catA:'🔧 Hård kompetens',catB:'🤝 Mjuk kompetens',items:[{l:'Excel',c:'A'},{l:'Tålamod',c:'B'},{l:'Truckkort',c:'A'},{l:'Samarbete',c:'B'},{l:'Körkort B',c:'A'},{l:'Kommunikation',c:'B'},{l:'Kassahantering',c:'A'},{l:'Empati',c:'B'}]},
 quiz:[{q:'Vad är en kompetens?',o:['En utbildning','En förmåga att utföra arbetsuppgifter','Ett certifikat'],c:1},{q:'Vad är en hård kompetens?',o:['Att vara tålmodig','Excel eller truckkort','Att lyssna'],c:1},{q:'Vad är en mjuk kompetens?',o:['Körkort','Samarbete och kommunikation','Programmering'],c:1}],
 pr:['Sammanfatta mina kompetenser baserat på: …','Vilka kompetenser passar denna annons?','Förklara hårda vs mjuka kompetenser.']},
-{id:'a2',icon:'💪',title:'Styrkor & drivkrafter',sub:'Vad motiverar dig?',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
-lessons:[{t:'Vad är styrkor?',s:'Styrkor är saker du är bra på.\nExempel: lyssna, hjälpa andra, jobba snabbt.',a:'Styrkor är återkommande beteenden där du presterar bra. De kan vara personliga eller yrkesmässiga.'},{t:'Drivkrafter',s:'Drivkrafter är saker som gör dig motiverad.\nExempel: hjälpa andra, lära nytt, tjäna pengar.',a:'Inre motivationsfaktorer som påverkar hur du trivs och presterar.'},{t:'Koppla till jobb',s:'"Jag är bra med människor → passar i service."',a:'Att koppla styrkor till arbetsuppgifter gör det lättare att argumentera för din kompetens i CV och intervju.'}],
+{id:'a2',icon:'💪',title:'Styrkor & drivkrafter',sub:'Vad motiverar dig?',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/a2-styrkor.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'💪',h:'Vad är syftet?',t:'Lära dig se dina styrkor och drivkrafter — och koppla dem till rätt jobb.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad en styrka är, vanliga drivkrafter, och hur du parar ihop dem med yrken som passar.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna lista 3 styrkor och 3 drivkrafter — med konkreta exempel.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en övning där du fyller i dina egna.'}
+],
+a:'Att känna sina styrkor är grunden för att argumentera för sig själv i CV och intervju.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom vad styrkor och drivkrafter är, ger konkreta exempel, och visar hur du kopplar dem till yrken. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Vad är styrkor?',
+cards:[
+{icon:'🔁',h:'Återkommande beteende',t:'Något du gör utan att tänka.'},
+{icon:'⭐',h:'Du presterar bra',t:'Och andra märker det också.'},
+{icon:'💡',h:'Exempel',t:'Lyssna, hjälpa andra, jobba snabbt, lösa problem.'}
+],
+a:'Styrkor är förmågor du fått beröm för — i vardagen, på jobbet eller i skolan.'},
+{t:'Drivkrafter',
+cards:[
+{icon:'❤️',h:'Hjälpa andra',t:'Du mår bra av att stötta människor.'},
+{icon:'📚',h:'Lära nytt',t:'Du tycker om att utvecklas.'},
+{icon:'💰',h:'Tjäna pengar',t:'Ekonomisk trygghet driver dig.'},
+{icon:'🎯',h:'Påverka',t:'Du vill göra skillnad — för någon eller något.'}
+],
+a:'Drivkrafter är inre motivationsfaktorer. De påverkar hur du trivs och presterar i ett jobb.'},
+{t:'Koppla till jobb',
+cards:[
+{icon:'🛎️',h:'Service',t:'Du är bra med människor → restaurang, butik, reception.'},
+{icon:'🏥',h:'Vård',t:'Du tycker om att hjälpa → undersköterska, vårdbiträde.'},
+{icon:'🎓',h:'Utbildning',t:'Du gillar att förklara → lärare, handledare, coach.'}
+],
+a:'Att koppla styrkor till arbetsuppgifter gör det lättare att argumentera för din kompetens.'}
+],
 ex:{type:'build',title:'Identifiera dina styrkor',desc:'Beskriv dina starkaste egenskaper med konkreta exempel.',fields:[{l:'Min starkaste styrka',ph:'T.ex. Jag är lösningsorienterad...',hint:'Egenskap du fått beröm för.'},{l:'Konkret exempel',ph:'T.ex. På mitt förra jobb hanterade jag...',ta:true},{l:'Vad motiverar dig mest?',ph:'T.ex. Hjälpa andra, lösa problem...',ta:true,hint:'Din drivkraft hjälper dig hitta rätt jobb.'}]},
 quiz:[{q:'Vad är en styrka?',o:['En examen','Beteende där du presterar bra','En arbetsuppgift'],c:1},{q:'Vad är en drivkraft?',o:['En skyldighet','Inre motivation','Ett mål'],c:1},{q:'Varför är styrkor viktiga?',o:['De är inte viktiga','Hjälper dig argumentera för kompetens','Arbetsgivare bryr sig inte'],c:1}],
 pr:['Sammanfatta mina styrkor: …','Vilka styrkor passar denna annons?','Beskriv min starkaste egenskap för CV.']},
@@ -567,8 +599,40 @@ a:'Kulturella signaler säger vilket tempo, vilken ansvarsnivå och vilken arbet
 ex:{type:'sort',title:'Krav eller önskemål?',desc:'Sortera varje punkt.',catA:'Krav (måste ha)',catB:'Önskemål (meriterande)',items:[{l:'Truckkort A+B',c:'A'},{l:'Erfarenhet av WMS',c:'B'},{l:'Körkort B',c:'A'},{l:'Engelska i tal',c:'B'},{l:'Kan arbeta skift',c:'A'},{l:'Erfarenhet av LEAN',c:'B'}]},
 quiz:[{q:'Vad är ett krav?',o:['Bra att ha','Måste ha för jobbet','Önskad egenskap'],c:1},{q:'Vad är ett önskemål?',o:['Obligatorisk kompetens','Extra kompetens som ger fördel','Personlighet'],c:1},{q:'Vad är en dold signal?',o:['Felstavning','Kulturella signaler om tempo','Lönen'],c:1}],
 pr:['Förklara denna annons: [klistra in]','Viktigaste kompetenserna?','Sammanfatta kravprofilen i 3 punkter.']},
-{id:'a6',icon:'🔍',title:'Matchning & analys',sub:'Dina styrkor vs jobbet',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
-lessons:[{t:'Vad är matchning?',s:'Matchning = jämföra dig med jobbet.',a:'Analys av hur kompetenser, erfarenhet och styrkor passar mot kravprofilen.'},{t:'Styrkor vs luckor',s:'Styrkor = det du kan.\nLuckor = det du behöver lära.',a:'Luckor löses ofta med kort utbildning. De är möjligheter!'},{t:'CVmatchen som verktyg',s:'1. Bygg CV\n2. Sök annonser\n3. AI matchar\n4. Exportera',a:'CVmatchen analyserar annonsens krav mot din profil och genererar skräddarsytt CV.'}],
+{id:'a6',icon:'🔍',title:'Matchning & analys',sub:'Dina styrkor vs jobbet',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/a6-matchning.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🔍',h:'Vad är syftet?',t:'Lära dig jämföra dig själv med ett jobb — och se var du står starkt eller har luckor.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad matchning är, skillnaden styrkor vs luckor, och hur CVmatchen-verktyget hjälper dig.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna göra en egen matchningsanalys mot en jobbannons.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en övning där du analyserar en riktig annons.'}
+],
+a:'Matchning ger riktning — och visar exakt vilka kompetenser du behöver lyfta eller lära dig.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom vad matchning är, hur CVmatchens AI tänker med färgerna grönt-gult-rött, och varför luckor är möjligheter. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Vad är matchning?',
+cards:[
+{icon:'📋',h:'Vad kräver annonsen?',t:'Krav, önskemål och de dolda signalerna.'},
+{icon:'💼',h:'Vad har du i bagaget?',t:'Erfarenhet, utbildning och styrkor.'},
+{icon:'🔍',h:'Var matchar det?',t:'Där du är stark — och var luckorna finns.'}
+],
+a:'Matchning är jämförelsen mellan dig och jobbet — bortom magkänsla, med struktur.'},
+{t:'Styrkor vs luckor',
+cards:[
+{icon:'✅',h:'Styrkor',t:'Det du redan kan — lyft fram tydligt.'},
+{icon:'📚',h:'Luckor',t:'Det du behöver lära — ofta räcker en kort kurs.'},
+{icon:'💡',h:'Tänk om',t:'Luckor är möjligheter — inte hinder.'}
+],
+a:'Båda sidor är lika viktiga. En lucka som syns kan fyllas — en lucka som du gömmer blir ett problem.'},
+{t:'CVmatchen som verktyg',
+cards:[
+{icon:'1️⃣',h:'Bygg CV',t:'I appen — eller importera från LinkedIn.'},
+{icon:'2️⃣',h:'Sök annonser',t:'Färska jobb från Platsbanken.'},
+{icon:'3️⃣',h:'AI matchar',t:'Grönt = perfekt match, gult = något liknande, rött = luckan finns.'},
+{icon:'4️⃣',h:'Exportera CV',t:'PDF anpassat efter just den annonsen.'}
+],
+a:'CVmatchen analyserar annonsens krav mot din profil och hjälper dig formulera om — på sekunder.'}
+],
 ex:{type:'build',title:'Din matchningsanalys',desc:'Välj en annons och gör matchningsanalysen.',fields:[{l:'Vilket jobb?',ph:'T.ex. Lagerarbetare hos PostNord'},{l:'3 viktigaste krav',ph:'1. \n2. \n3. ',ta:true,hint:'Vad nämns först?'},{l:'Dina styrkor som matchar',ph:'T.ex. Truckkort och 2 år lager...',ta:true},{l:'Dina luckor',ph:'T.ex. Saknar WMS-erfarenhet...',ta:true},{l:'Plan för att täppa till luckorna',ph:'T.ex. Kurs via Komvux...',ta:true,hint:'Luckor är möjligheter!'}]},
 quiz:[{q:'Vad är matchning?',o:['Söka många jobb','Jämföra kompetenser med kravprofilen','Skriva CV'],c:1},{q:'Vad är en lucka?',o:['Paus i jobbsök','En kompetens du saknar','Fel i CV'],c:1},{q:'Hur hjälper CVmatchen?',o:['Söker jobb åt dig','Anpassar CV mot annons med AI','Skickar ansökan'],c:1}],
 pr:['Analysera annons — styrkor och luckor?','Hur förbättrar jag matchningen?','Vilka kompetenser behöver jag?']},
@@ -684,8 +748,40 @@ a:'Alla frågor som börjar med "berätta om", "ge ett exempel" eller "hur hante
 ex:{type:'build',title:'Bygg ditt STAR-svar',desc:'Välj en situation och bygg ett fullständigt svar.',fields:[{l:'S — Situation',ph:'T.ex. Jobbade på ICA en fredagskväll...',ta:true,hint:'Beskriv kort.'},{l:'T — Din uppgift',ph:'T.ex. Hålla flödet igång...',ta:true},{l:'A — Vad DU gjorde',ph:'T.ex. Öppnade extra kassa, kommunicerade...',ta:true,hint:'DU — inte teamet.'},{l:'R — Resultatet',ph:'T.ex. Kö minskade, chef berömde mig...',ta:true,hint:'Mätbart = starkt.'},{l:'Komplett STAR-svar',ph:'Skriv hela svaret naturligt...',ta:true}]},
 quiz:[{q:'S i STAR?',o:['Styrka','Situation','Strategi'],c:1},{q:'R i STAR?',o:['Roll','Resultat','Relation'],c:1},{q:'Vilken fråga passar STAR?',o:['"Heter du?"','"Utmaning du löst?"','"Lönen?"'],c:1}],
 pr:['STAR-svar baserat på: …','Förbättra mitt STAR-svar.','Hitta ett STAR-exempel från mitt liv.']},
-{id:'a10',icon:'🧘',title:'Kommunikation & trygghet',sub:'Hantera nervositet',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
-lessons:[{t:'Tydlig kommunikation',s:'Korta meningar, tydlig struktur, tala lugnt.',a:'Tydlighet och struktur. Anpassa språket. Undvik för långa svar.'},{t:'Hantera nervositet',s:'• Andas djupt\n• Förbered dig\n• Ta pauser',a:'Nervositet är normalt. Förberedelse är bästa motgiftet.'},{t:'Avslutning',s:'• Ställ minst en fråga\n• Tacka för mötet\n• Fråga om nästa steg',a:'Genomtänkta frågor visar engagemang.'}],
+{id:'a10',icon:'🧘',title:'Kommunikation & trygghet',sub:'Hantera nervositet',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/a10-trygghet.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🧘',h:'Vad är syftet?',t:'Lära dig kommunicera tydligt, hantera nervositet och avsluta intervjun starkt.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Tydlig kommunikation, andningstekniker, förberedelse — och hur du avslutar mötet.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha en konkret trygghetsplan inför nästa intervju.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en övning där du bygger din egen plan.'}
+],
+a:'Nervositet är normalt. Förberedelse är bästa motgiftet.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom tydlig kommunikation, pausens kraft, andning för att hantera nerver, och hur du avslutar intervjun. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Tydlig kommunikation',
+cards:[
+{icon:'✂️',h:'Korta meningar',t:'Lättare att följa — för båda.'},
+{icon:'🧱',h:'Tydlig struktur',t:'Säg ett, två, tre — eller använd STAR.'},
+{icon:'🐌',h:'Tala lugnt',t:'Lugnet smittar av sig på den som lyssnar.'},
+{icon:'🤐',h:'Pausen är din vän',t:'Du behöver inte fylla varje tystnad.'}
+],
+a:'Anpassa språket till den du pratar med. Undvik för långa svar — håll dig till poängen.'},
+{t:'Hantera nervositet',
+cards:[
+{icon:'🌬️',h:'Andas djupt',t:'Tre djupa andetag innan du svarar.'},
+{icon:'📖',h:'Förbered dig',t:'Skriv 3 styrkor och 3 STAR-historier i förväg.'},
+{icon:'🌙',h:'Kvällen innan',t:'Lägg fram kläderna, repetera pitchen, sov i tid.'}
+],
+a:'Det är okej att ta paus — och okej att vara nervös. Allt det går att hantera med förberedelse.'},
+{t:'Avslutning',
+cards:[
+{icon:'❓',h:'Ställ minst en fråga',t:'"Hur ser första halvåret ut?" eller "Vad är viktigast för att lyckas?"'},
+{icon:'🙏',h:'Tacka för mötet',t:'Visar respekt — och artighet.'},
+{icon:'➡️',h:'Fråga om nästa steg',t:'Då vet du när du kan vänta dig svar.'}
+],
+a:'Genomtänkta frågor visar engagemang — och ger dig ofta värdefull information om jobbet.'}
+],
 ex:{type:'build',title:'Din trygghetsplan',desc:'Plan för att känna dig trygg i intervjun.',fields:[{l:'3 frågor till arbetsgivaren',ph:'1. Hur ser intro ut?\n2. Vad är viktigast för att lyckas?\n3. Hur ser teamet ut?',ta:true,hint:'Visar engagemang.'},{l:'Min nervositetsplan',ph:'T.ex. 3 djupa andetag, påminn om mina styrkor...',ta:true},{l:'Kvällen innan',ph:'T.ex. Lägger fram kläder, repeterar pitch...',ta:true},{l:'Mina 3 styrkor att lyfta',ph:'1. \n2. \n3. ',ta:true}]},
 quiz:[{q:'Tydlig kommunikation?',o:['Prata länge','Korta strukturerade meningar','Aldrig pausa'],c:1},{q:'Minska nervositet?',o:['Undvika förberedelse','Djupandning och förberedelse','Prata snabbt'],c:1},{q:'Sist i intervjun?',o:['Bara gå','Frågor, tack och nästa steg?','Fråga om du fick jobbet'],c:1}],
 pr:['Formulera lugna intervjusvar.','Trygghetsplan inför imorgon.','3 bra frågor att ställa i slutet.']},
@@ -907,17 +1003,44 @@ cards:[
 a:'Var ärlig: "mina referenser är från hemlandet" är helt OK. Att ljuga om referenser är den vanligaste orsaken till indragna erbjudanden.'}
 ],ex:{type:'build',title:'Din referensplan',desc:'Förbered dina 3 bästa referenser.',fields:[{l:'Referens 1 — namn, relation, kontakt',ph:'T.ex. Maria Svensson, f.d. chef ICA, maria@... 070-XXX',hint:'Fråga om lov INNAN!'},{l:'Referens 2 — namn, relation, kontakt',ph:'T.ex. Ahmed Karim, kollega PostNord, ahmed@...'},{l:'Referens 3 — namn, relation, kontakt',ph:'T.ex. Anna Berg, handledare YH, anna@...'},{l:'Vad ska de lyfta? (2-3 styrkor)',ph:'T.ex. Pålitlighet, truckvana, samarbete...',ta:true,hint:'Skicka detta till dina referenser!'}]},quiz:[{q:'Bäst som referens?',o:['Bästa vännen','Mamma','Tidigare chef','Bekant som tycker om dig'],c:2},{q:'När förbereder du?',o:['När rekryteraren frågar','INNAN du anger dem','Behövs inte','Sista dagen'],c:1},{q:'Saknar formella? Vad gör du?',o:['Uppfinn kontakter','Neka','Volontärarbeta/praktik/fråga lärare','Ge familjens kontakt'],c:2},{q:'Efter att referens hjälpt dig?',o:['Ingenting','Tacka — oavsett utfall','Pengar','Undvik kontakt'],c:1}],pr:['Mejl för att förbereda referens inför [intervju].','Formulera att jag saknar referens från Sverige.','Referensbrev för min f.d. kollega.']},
 
-{id:'a_plan',icon:'🗓️',title:'Din 30-dagarsplan',sub:'Från övningar till riktigt jobb',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',
+{id:'a_plan',icon:'🗓️',title:'Din 30-dagarsplan',sub:'Från övningar till riktigt jobb',color:'#f87171',bc:'rgba(248,113,113,.3)',bg:'rgba(248,113,113,.07)',video:'/videos/aplan-30dagar.mp4',
 lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🗓️',h:'Vad är syftet?',t:'Få en konkret vecka-för-vecka-plan från övningar till riktigt jobb.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Verktygen du har, vecka 1–4-prioritering, vanliga misstag och hur du håller motivationen.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha en egen 30-dagarsplan med konkreta aktiviteter per vecka.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och lektioner, plus en AI-genererad personlig plan.'}
+],
+a:'Strukturerade jobbsökare hittar jobb 40% snabbare än de som söker slumpmässigt.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen sammanfattar alla verktyg du har lärt dig, ger en konkret veckoplan, och visar hur du håller motivationen uppe. Se den först, så blir lektionerna lättare att följa.'},
 {t:'Hela jobbsöket på en rad',
-s:'Du har nu verktygen:\n\n📊 Marknad → Vet var jobben finns\n📄 CV → Byggt och matchat\n✉️ Brev → Fångar intresset\n🎤 Pitch → 30 sek som säljer\n🤝 Nätverk → Når dolda jobbet\n💬 Intervju → STAR + trygghet\n📬 Uppföljning → Top-of-mind\n💰 Förhandling → Vet ditt värde\n🛡️ A-kassa → Skyddsnätet klart\n\nNu är det dags att göra det på riktigt.',
-a:'Forskning visar att strukturerade jobbsökare hittar jobb 40% snabbare än de som söker slumpmässigt. Kombinationen CV + brev + nätverk + uppföljning är kraftfullare än enbart ansökningar.'},
+cards:[
+{icon:'📊',h:'Marknad',t:'Du vet var jobben finns.'},
+{icon:'📄',h:'CV',t:'Byggt och matchat per annons.'},
+{icon:'✉️',h:'Brev',t:'Fångar intresset på fyra rader.'},
+{icon:'🎤',h:'Pitch',t:'30 sekunder som säljer dig.'},
+{icon:'🤝',h:'Nätverk',t:'Når det dolda jobbet — 40-50%.'},
+{icon:'💬',h:'Intervju',t:'STAR-metoden och trygghet.'},
+{icon:'📬',h:'Uppföljning',t:'Håller dig top-of-mind.'},
+{icon:'💰',h:'Förhandling',t:'Du vet ditt värde.'}
+],
+a:'Kombinationen CV + brev + nätverk + uppföljning är kraftfullare än enbart ansökningar.'},
 {t:'Prioritera rätt — i rätt ordning',
-s:'Vecka 1 — Grunden:\n✅ CV klart i CVmatchen\n✅ A-kassa + facket ansökt\n✅ LinkedIn uppdaterad\n\nVecka 2-3 — Kanalerna:\n✅ 3 ansökningar/vecka\n✅ 1 spontanansökan/vecka\n✅ Nätverk 2 kontakter/vecka\n\nVecka 4+ — Följa upp:\n✅ Uppföljning på alla ansökningar\n✅ Justera CV efter feedback',
-a:'De vanligaste misstagen: söka för brett, skicka samma CV till alla, inte följa upp, ge upp för tidigt. En riktad ansökan med anpassat CV + brev slår alltid 10 generiska ansökningar.'},
+cards:[
+{icon:'1️⃣',h:'Vecka 1 — Grunden',t:'CV klart i CVmatchen. A-kassa + facket ansökt. LinkedIn uppdaterad.'},
+{icon:'2️⃣',h:'Vecka 2–3 — Kanalerna',t:'3 ansökningar/v. 1 spontanansökan/v. Nätverk 2 kontakter/v.'},
+{icon:'3️⃣',h:'Vecka 4+ — Följa upp',t:'Uppföljning på alla ansökningar. Justera CV efter feedback.'}
+],
+a:'En riktad ansökan med anpassat CV + brev slår alltid 10 generiska ansökningar.'},
 {t:'Hålla motivationen uppe',
-s:'Jobbsöket är ett maraton — inte en sprint.\n\n💡 Tips:\n• Behandla jobbsöket som ett jobb (fasta tider)\n• Fira smårörelser (svar, intervjukallelse)\n• Blanda aktiviteter (söka + nätverka + lära)\n• Ta en dag ledigt i veckan\n• Prata med din handläggare regelbundet\n\nSnittid att hitta jobb: 3-6 månader.',
-a:'Motivationstapp är normalt. Studier visar att jobbsökare som har en veckorutin och stöd från nätverk/handläggare är signifikant mer framgångsrika. Varje avslag är information — inte ett personligt misslyckande.'}
+cards:[
+{icon:'🕘',h:'Fasta tider',t:'Behandla jobbsöket som ett jobb.'},
+{icon:'🎉',h:'Fira smårörelser',t:'Varje svar och intervjukallelse är ett framsteg.'},
+{icon:'🔀',h:'Blanda aktiviteter',t:'Söka + nätverka + lära nytt.'},
+{icon:'💆',h:'En dag ledigt/vecka',t:'Återhämtning är produktivt.'}
+],
+a:'Snittid att hitta jobb: 3–6 månader. Varje avslag är information — inte ett misslyckande.'}
 ],
 ex:{type:'job-plan-ai',title:'Generera din personliga 30-dagarsplan',desc:'Berätta om din situation och få en konkret vecka-för-vecka-plan anpassad till just dig.'},
 quiz:[
@@ -1079,11 +1202,42 @@ quiz:[
 ],
 pr:['Kvällsrutin för bättre sömn under jobbsökperiod.','Vad är 4-7-8-andning?','Hur påverkar dålig sömn jobbsöket?']},
 
-{id:'h3',icon:'🏃',title:'Rörelse & energi',sub:'Gratis medicin som fungerar',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h3',icon:'🏃',title:'Rörelse & energi',sub:'Gratis medicin som fungerar',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h3-rorelse.mp4',
 lessons:[
-{t:'Rörelse utan gym',s:'Du behöver inte gymkort för att röra dig.\n\n✅ Promenader — effektivast och enklast\n✅ Cykling — transport + rörelse\n✅ Trappor istället för hiss\n✅ YouTube-träning hemma (gratis)\n✅ Friluftsliv — skog & strand\n\nMålet: 150 min lätt rörelse/vecka\nOr: 75 min intensiv rörelse/vecka',a:'WHO:s rekommendation: 150-300 min måttlig intensitet/vecka. Stillasittande >8 tim/dag ökar risken för depression, diabetes och hjärtsjukdom — oavsett om du tränar. Ta rörelsepaus var 45 min.'},
-{t:'Rörelse och mental hälsa',s:'Träning frigör:\n🧠 Endorfiner — naturlig smärtlindring\n😊 Dopamin — motivation och belöning\n😴 Serotonin — lugn och välmående\n\n30 min promenad = märkbar stämningsförbättring\n\nSärskilt viktigt under jobbsök — motverkar uppgivenhet.',a:'Studier visar att regelbunden träning minskar risk för depression med 26%. Effekten kvarstår i veckor. Utomhusrörelse ger extra effekt via dagsljus (reglerar dygnsrytm) och naturkontakt (sänker kortisol).'},
-{t:'Kom igång — och håll igång',s:'Vanligaste misstaget: börja för hårt.\n\n✅ Börja med 10 min/dag\n✅ Koppla till något du redan gör (morgonkaffe → promenad)\n✅ Hitta en aktivitetskompis\n✅ Logga i kalender — bygg stolthet\n\n❌ Vänta tills du "orkar"\n❌ Allt eller inget-tänk\n❌ Skippa vid minsta hinder',a:'Beteendeforskning visar att aktivitet kopplad till befintliga rutiner (habit stacking) har 3x högre chans att bli bestående. 21 dagar är en myt — nya vanor tar i snitt 66 dagar att befästa.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🏃',h:'Vad är syftet?',t:'Komma igång med rörelse — utan att behöva gymkort, dyr utrustning eller massor av tid.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Rörelse utan gym, koppling till mental hälsa, och hur du bygger en vana som håller.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha valt en konkret aktivitet och tidpunkt att börja idag.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en övning där du gör din rörelseplan.'}
+],
+a:'Träning minskar risk för depression med 26 % — och under jobbsöket motverkar det uppgivenhet.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom rörelse utan gym, hur träning frigör må-bra-hormoner, och hur du kommer igång — utan att tappa motivationen efter en vecka. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Rörelse utan gym',
+cards:[
+{icon:'🚶',h:'Promenader',t:'Effektivast och enklast — börja här.'},
+{icon:'🚴',h:'Cykling',t:'Transport + rörelse i ett.'},
+{icon:'🪜',h:'Trappor istället för hiss',t:'Liten ändring, stor effekt över tid.'},
+{icon:'📺',h:'YouTube-träning hemma',t:'Gratis och flexibelt.'},
+{icon:'⏱️',h:'Målet',t:'150 min lätt rörelse/vecka — eller 75 min intensiv.'}
+],
+a:'Stillasittande > 8 tim/dag ökar risken för depression och hjärtsjukdom — oavsett om du tränar.'},
+{t:'Rörelse och mental hälsa',
+cards:[
+{icon:'🧠',h:'Endorfiner',t:'Naturlig smärtlindring.'},
+{icon:'😊',h:'Dopamin',t:'Motivation och belöning.'},
+{icon:'😌',h:'Serotonin',t:'Lugn och välmående.'},
+{icon:'💪',h:'30 min promenad',t:'Märkbar stämningsförbättring direkt.'}
+],
+a:'Utomhusrörelse ger extra effekt via dagsljus (reglerar dygnsrytm) och naturkontakt (sänker kortisol).'},
+{t:'Kom igång — och håll igång',
+cards:[
+{icon:'🌱',h:'Börja med 10 min/dag',t:'Vanligaste misstaget: börja för hårt.'},
+{icon:'☕',h:'Koppla till en rutin',t:'Morgonkaffe → morgonpromenad.'},
+{icon:'👥',h:'Hitta en kompis',t:'Tillsammans är roligare — och håller längre.'},
+{icon:'📅',h:'Logga i kalender',t:'Bygg stolthet — och en vana som sätter sig.'}
+],
+a:'Nya vanor tar i snitt 66 dagar att befästa — inte 21 dagar som myten säger. Var tålmodig.'}
 ],
 ex:{type:'build',title:'Din rörelseplan',desc:'En realistisk plan för mer rörelse i vardagen.',
 fields:[
@@ -1531,11 +1685,41 @@ quiz:[
 ],
 pr:['Bygg en månadsbudget för mig med: inkomst X, hyra Y.','Vad kan jag skära ner på med 500 kr/mån?','Hur bygger jag en nödfond på låg inkomst?']},
 
-{id:'e2',icon:'🏠',title:'Hyra & bostad',sub:'Dina rättigheter som hyresgäst',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e2',icon:'🏠',title:'Hyra & bostad',sub:'Dina rättigheter som hyresgäst',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e2-bostad.mp4',
 lessons:[
-{t:'Hyreskontrakt — vad gäller?',s:'När du skriver kontrakt ska du kontrollera:\n\n✅ Hyresbeloppet\n✅ Inkluderat (el, vatten, internet?)\n✅ Uppsägningstid (vanligt: 3 mån)\n✅ Deposition (max 3 månaders hyra)\n✅ Vad du ansvarar för\n\nSpara alltid kvitto på depositionsinbetalning!',a:'Hyreslagen (12 kap JB) skyddar hyresgäster i Sverige. Hyresvärden kan inte höja hyran godtyckligt — Hyresgästföreningens förhandlingsresultat gäller. Deposition ska återbetalas inom rimlig tid (normalt 1-2 mån) med specificerade avdrag.'},
-{t:'Bostadsbidrag',s:'Låg inkomst + hyra = du kan ha rätt till bostadsbidrag!\n\nKan ges till:\n• Barnfamiljer\n• Ungdomar 18-29 år\n• Ensamstående med barn\n\nSöks via: Försäkringskassan (FK)\nfk.se → Bostadsbidrag\n\nBeloppet beror på hyra, inkomst och familjesituation.',a:'Bostadsbidrag är behovsprövat och söks av hushållet. Beloppet minskar med ökad inkomst. Det är ett av de mest underutnyttjade bidragen — många som har rätt söker inte. Retroaktiv ansökan möjlig 2 månader bakåt.'},
-{t:'Problem med hyresvärden',s:'Om hyresvärden inte sköter sig:\n\n🔧 Underhåll: Anmäl skriftligt → vänta 14 dagar → kontakta Hyresnämnden\n💰 Omotiverat hög hyra: Prövning via Hyresnämnden\n🚪 Olaglig vräkning: Ring polisen + Hyresgästföreningen\n\nHyresgästföreningen Helsingborg:\n042-13 17 00',a:'Hyresnämnden (hyresnamnden.se) prövar tvister gratis. Vräkning kräver domstolsbeslut — hyresvärden kan aldrig själv vräka. Hyresgästföreningen erbjuder juridisk rådgivning till alla — även icke-medlemmar vid akuta situationer.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🏠',h:'Vad är syftet?',t:'Lära dig dina rättigheter som hyresgäst — och hur du söker bostadsbidrag.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad ett kontrakt ska innehålla, deposition, bostadsbidrag, och vad du gör om värden krånglar.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta vad du har rätt till — och var du får hjälp.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och lektioner, plus en checklista för din egen situation.'}
+],
+a:'Hyreslagen skyddar hyresgäster i Sverige. Du har lagen på din sida — använd den.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom kontraktet, deposition, bostadsbidrag, och hur du hanterar problem med hyresvärden. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Hyreskontrakt — vad gäller?',
+cards:[
+{icon:'💰',h:'Hyresbeloppet',t:'Står rätt summa? Vad ingår — el, vatten, internet?'},
+{icon:'📅',h:'Uppsägningstid',t:'Vanligt: 3 månader. Står det i kontraktet?'},
+{icon:'🛡️',h:'Deposition',t:'Max 3 månadshyror. Spara kvitto på inbetalningen.'},
+{icon:'📝',h:'Ditt ansvar',t:'Vad ska du underhålla själv?'}
+],
+a:'Deposition ska återbetalas inom 1–2 månader med specificerade avdrag. Spara alltid kvitto.'},
+{t:'Bostadsbidrag',
+cards:[
+{icon:'👪',h:'Barnfamiljer',t:'Vanligaste mottagarna — söks av hushållet.'},
+{icon:'🧑',h:'Ungdomar 18–29',t:'Egen kategori — sök även med låg inkomst.'},
+{icon:'👤',h:'Ensamstående med barn',t:'Söks separat.'},
+{icon:'🏛️',h:'Försäkringskassan',t:'fk.se → Bostadsbidrag. Retroaktivt 2 månader.'}
+],
+a:'Bostadsbidrag är ett av de mest underutnyttjade bidragen — många som har rätt söker inte.'},
+{t:'Problem med hyresvärden',
+cards:[
+{icon:'🔧',h:'Underhåll',t:'Anmäl skriftligt → vänta 14 dagar → Hyresnämnden.'},
+{icon:'💰',h:'Omotiverat hög hyra',t:'Prövning via Hyresnämnden — gratis.'},
+{icon:'🚪',h:'Olaglig vräkning',t:'Ring polis + Hyresgästföreningen direkt.'},
+{icon:'📞',h:'Hyresgästföreningen',t:'Helsingborg: 042-13 17 00 — hjälper alla.'}
+],
+a:'Vräkning kräver alltid domstolsbeslut. Hyresvärden kan ALDRIG själv vräka.'}
 ],
 ex:{type:'build',title:'Din bostadssituation',desc:'Koll på din bostad och rättigheter.',
 fields:[
@@ -1668,11 +1852,42 @@ quiz:[
 ],
 pr:['Hur startar jag ett ISK-konto?','Beräkna ränta-på-ränta för mig: X kr/mån, Y år, Z%.','Bästa sparkonton med hög ränta 2026?']},
 
-{id:'e6',icon:'📊',title:'Skatt & deklaration',sub:'Förstå vad du betalar och vad du kan få tillbaka',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e6',icon:'📊',title:'Skatt & deklaration',sub:'Förstå vad du betalar och vad du kan få tillbaka',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e6-skatt.mp4',
 lessons:[
-{t:'Hur skatten fungerar',s:'I Sverige betalar du skatt på inkomster.\n\n• Kommunalskatt: ca 30-33% (Helsingborg: 30,84%)\n• Statlig skatt: +20% över 598 500 kr/år\n• Arbetsgivaren drar skatten direkt (PAYE)\n\nDu deklarerar varje år (april) — men mycket är förifyllt!',a:'Det svenska PAYE-systemet (Pay As You Earn) innebär att skatten dras vid källan. Skatteverket förifyllt deklarationen med uppgifter från arbetsgivare och banker. De flesta behöver bara kontrollera och godkänna — tar 5 minuter via BankID.'},
-{t:'Deklarationen — steg för steg',s:'Varje år: April–maj\n\n1. Logga in på skatteverket.se med BankID\n2. Kontrollera förifyllda uppgifter\n3. Lägg till avdrag (ROT, RUT, resor)\n4. Godkänn\n5. Vänta på skatteåterbäring (juni–aug)\n\nBetala för lite = restskatt (påminnelse i september)',a:'Vanliga avdrag: tjänsteresor (om arbetsgivaren inte ersätter), dubbelt boende, hemresor, facklitteratur. ROT och RUT-avdrag ges för hushållsnära tjänster (30% av arbetskostnad). Skatteverket har gratis skatteupplysning: 0771-567 567.'},
-{t:'Skatteåterbäring — vad gör du med den?',s:'De flesta får tillbaka pengar i juni!\n\n✅ Bra användning:\n• Buffert\n• Amortera skuld\n• Spara till nödfond\n\n⚠️ Undvik:\n• Spendera allt på en gång\n• "Unna sig" utan plan\n\nÅterbäringen är dina egna pengar — inte "gratis".',a:'Ca 7 av 10 svenska hushåll får skatteåterbäring, genomsnitt ca 6 000-8 000 kr. Psykologiskt upplevs det som en gåva trots att det är förbetald skatt. Att sätta återbäringen direkt till buffert/skuld är ett av de bästa finansiella besluten ett hushåll kan ta.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'📊',h:'Vad är syftet?',t:'Förstå hur skatten fungerar — och få ut det mesta av deklarationen.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Hur skatten beräknas, deklarationen steg-för-steg, vanliga avdrag, och vad du gör med återbäringen.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna deklarera själv på 5 minuter — och inte missa avdrag.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och lektioner, plus en deklarationsplan.'}
+],
+a:'7 av 10 hushåll får tillbaka 6 000–8 000 kr — varje år. Missa inte avdragen.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom skatten i Helsingborg, PAYE-systemet, deklarationen och de viktigaste avdragen. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Hur skatten fungerar',
+cards:[
+{icon:'🏛️',h:'Kommunalskatt',t:'30,84 % i Helsingborg.'},
+{icon:'📈',h:'Statlig skatt',t:'+20 % över 598 500 kr/år.'},
+{icon:'💼',h:'PAYE-systemet',t:'Arbetsgivaren drar skatten direkt från lönen.'},
+{icon:'📅',h:'Deklarationen',t:'En gång om året — april/maj. Mycket är förifyllt.'}
+],
+a:'Skatteverket fyller i deklarationen åt dig. De flesta godkänner bara via BankID på 5 minuter.'},
+{t:'Deklarationen — steg för steg',
+cards:[
+{icon:'1️⃣',h:'Logga in',t:'skatteverket.se med BankID.'},
+{icon:'2️⃣',h:'Kontrollera',t:'Förifyllda uppgifter från arbetsgivare och bank.'},
+{icon:'3️⃣',h:'Lägg till avdrag',t:'ROT, RUT, resor, dubbelt boende.'},
+{icon:'4️⃣',h:'Godkänn',t:'Klart!'},
+{icon:'5️⃣',h:'Skatteåterbäring',t:'Juni–augusti om du betalat för mycket.'}
+],
+a:'Skatteverket har gratis skatteupplysning: 0771-567 567. Ring vid minsta osäkerhet.'},
+{t:'Skatteåterbäring — vad gör du med den?',
+cards:[
+{icon:'🛡️',h:'Bygg buffert',t:'Om du inte har en — börja här.'},
+{icon:'💳',h:'Amortera dyr skuld',t:'SMS-lån och kreditkort först.'},
+{icon:'🐷',h:'Spara till nödfond',t:'Ger trygghet vid oväntade utgifter.'},
+{icon:'⚠️',h:'Undvik',t:'Att spendera allt på en gång — det är dina egna pengar.'}
+],
+a:'Att sätta återbäringen till buffert eller skuld är ett av de bästa finansiella besluten ett hushåll kan ta.'}
 ],
 ex:{type:'build',title:'Din deklarationsplan',desc:'Förbered dig inför nästa deklaration.',
 fields:[
@@ -2051,13 +2266,82 @@ lessons:[{t:'Vad är en digital profil?',s:'Bild, text, kompetenser och kontaktu
 ex:{type:'build',title:'Bygg din profil i 5 steg',desc:'Komplett digital profil med pitch och styrkor.',fields:[{l:'Profilbild — vad behöver förbättras?',ph:'T.ex. Selfie → professionell bild neutral bakgrund.',hint:'Neutral bakgrund, tydligt ansikte.'},{l:'Kort presentation',ph:'Skriv din pitch-text...',ta:true},{l:'5 viktigaste kompetenser',ph:'1. \n2. \n3. \n4. \n5. ',ta:true,hint:'Mixa hårda och mjuka.'},{l:'Erfarenhetssammanfattning',ph:'T.ex. 3 år lager hos X, 2 år butik hos Y...',ta:true},{l:'Vilka branscher?',ph:'T.ex. Lager, Handel, Transport...',hint:'Välj 2-4.'}]},
 quiz:[{q:'Vad är en digital profil?',o:['Spelkonto','Professionell presentation online','E-post'],c:1},{q:'Varför pitch och profil ihop?',o:['Krav','Enhetligt professionellt intryck','Sparar tid'],c:1},{q:'Viktigaste delarna?',o:['Hobbies','Bild, presentation, styrkor, erfarenhet, kontakt','Vänner'],c:1}],
 pr:['Digital profil baserat på min pitch.','Förbättra min presentation.','Vad saknas i min profil: …']}
-,{id:'d4',icon:'📧',title:'E-post & professionell kommunikation',sub:'Skriv rätt från dag ett',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Din professionella e-postadress',s:'Din e-postadress är ditt digitala visitkort.\n\n❌ Undvik:\npartyking88@hotmail.com\ncoolboy_hbg@yahoo.com\n\n✅ Använd:\nfornamn.efternamn@gmail.com\nf.efternamn@gmail.com\n\nSkapa via Gmail — gratis och professionellt.',a:'Rekryterare ser din e-post på CV och ansökan. En oprofessionell adress ger dålig första intryck direkt. Gmail är standard i Sverige.'},{t:'Skriv ett professionellt mejl',s:'Struktur för jobbsökar-mejl:\n\n1. Ämnesrad: tydlig och specifik\n"Ansökan — Lagerarbetare ref 2024-456"\n\n2. Hälsning: "Hej [Namn],"\n\n3. Kärna: kort och konkret\n\n4. Avslutning: "Med vänliga hälsningar"\n\n5. Signatur: Namn + telefon',a:'Rekryterare läser mejl snabbt — max 30 sekunder. Ämnesraden avgör om det öppnas. Undvik: slang, för många utropstecken, VERSALER.'},{t:'Hantera inkorgen professionellt',s:'✅ Svara inom 24 timmar\n✅ Kontrollera stavning\n✅ Ha professionell signatur\n✅ Kolla skräppost regelbundet\n\n❌ Svara aldrig i affekt\n❌ Skriv aldrig i versaler',a:'E-postkompetens är undervärderat — rekryterare bedömer din kommunikationsförmåga i varje mejl. Sätt upp telefonnummer i signaturen.'}],
+,{id:'d4',icon:'📧',title:'E-post & professionell kommunikation',sub:'Skriv rätt från dag ett',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d4-epost.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'📧',h:'Vad är syftet?',t:'Skriva professionella e-postmeddelanden som faktiskt blir lästa — och besvarade.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'En professionell adress, strukturen för jobbsökar-mejl, ämnesraden, och inkorgshantering.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha en professionell e-postadress och en mall för dina ansökningsmejl.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en övning där du sätter upp din mejl.'}
+],
+a:'Rekryteraren bedömer din kommunikationsförmåga i varje mejl — det är ditt visitkort.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom vad som gör en e-post professionell — adressen, ämnesraden, strukturen och signaturen. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Din professionella e-postadress',
+cards:[
+{icon:'❌',h:'Undvik',t:'partyking88@hotmail.com eller coolboy_hbg@yahoo.com — säger fel saker om dig.'},
+{icon:'✅',h:'Använd',t:'fornamn.efternamn@gmail.com — eller f.efternamn@gmail.com.'},
+{icon:'🆓',h:'Skapa via Gmail',t:'Gratis, professionellt och standard i Sverige.'}
+],
+a:'En oprofessionell adress ger dåligt första intryck direkt — innan rekryteraren ens öppnat ditt CV.'},
+{t:'Skriv ett professionellt mejl',
+cards:[
+{icon:'📌',h:'1. Ämnesrad',t:'Tydlig och specifik: "Ansökan — Lagerarbetare ref 2024-456".'},
+{icon:'👋',h:'2. Hälsning',t:'"Hej [Namn],"'},
+{icon:'✏️',h:'3. Kärnan',t:'Kort och konkret — 3–5 meningar räcker.'},
+{icon:'🙏',h:'4. Avslutning',t:'"Med vänliga hälsningar"'},
+{icon:'✍️',h:'5. Signatur',t:'Namn + telefon — gärna LinkedIn.'}
+],
+a:'Rekryterare läser mejl snabbt — max 30 sekunder. Ämnesraden avgör om det ens öppnas. Undvik slang, utropstecken och VERSALER.'},
+{t:'Hantera inkorgen professionellt',
+cards:[
+{icon:'⏰',h:'Svara inom 24 timmar',t:'Visar att du tar processen seriöst.'},
+{icon:'🔠',h:'Kontrollera stavning',t:'Slarvfel ger dåligt första intryck.'},
+{icon:'✍️',h:'Professionell signatur',t:'Med telefonnummer — rekryterare ringer.'},
+{icon:'🚫',h:'Skriv aldrig i affekt',t:'Sov på det innan du skickar laddade mejl.'}
+],
+a:'E-postkompetens är undervärderat. Rekryteraren bedömer din kommunikation i varje mejl du skickar.'}
+],
 ex:{type:'build',title:'Din professionella mejl-setup',desc:'Skapa och testa din professionella kommunikation.',fields:[{l:'Din professionella e-postadress',ph:'T.ex. anna.karlsson@gmail.com',hint:'Skapa ny om din nuvarande ser oprofessionell ut'},{l:'Skriv en professionell ämnesrad',ph:'T.ex. Ansökan — Undersköterska, Region Skåne, ref 2024-123'},{l:'Din mejl-signatur',ph:'Namn, telefon, LinkedIn (valfritt)'}]},
 quiz:[{q:'Vilken e-postadress är mest professionell?',o:['partygirl99@hotmail.com','anna.karlsson@gmail.com','coolguy@yahoo.se','anonymous123@mail.com'],c:1},{q:'Hur snabbt bör du svara på rekryterares mejl?',o:['Inom en vecka','Inom 24 timmar','Spelar ingen roll','Bara om du är intresserad'],c:1},{q:'Vad är viktigast i ämnesraden?',o:['Att den är lång','Tydlig och specifik — tjänst och ref-nr','Att den är kreativ','Börja med Hej'],c:1},{q:'Vad ska en professionell signatur ha?',o:['Bara namn','Namn och telefonnummer','Favoritcitat','Namn, telefon och gärna LinkedIn'],c:3}],
 pr:['Skriv ansökningsmejl för [tjänst] till [företag].','Förbättra detta mejl: [klistra in]','Vad ska min mejl-signatur innehålla?']},
-{id:'d5',icon:'🔑',title:'BankID & svenska e-tjänster',sub:'Det digitala nyckelsystemet i Sverige',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Vad är BankID?',s:'BankID är din digitala legitimation i Sverige.\n\nDu använder det för att:\n✅ Logga in på 1177, FK Mina sidor, Skatteverket\n✅ Signera dokument digitalt\n✅ Logga in på din bank\n✅ Ansöka om CSN, A-kassa, bidrag\n\nUtfärdas av din bank — gratis.',a:'BankID finns som app (Mobilt BankID) eller kortläsare. Utan BankID är många myndighetsärenden omöjliga att göra digitalt. Du måste ha ett svenskt personnummer och vara kund i en svensk bank.'},{t:'Viktiga svenska e-tjänster',s:'Med BankID når du:\n\n🏛️ Mina sidor (FK) — sjukpenning, bidrag\n📚 CSN — studiestöd\n🏥 1177 — sjukvård\n📋 Skatteverket — deklaration\n🏢 AF — Arbetsförmedlingen\n\nAktivera din digitala brevlåda på minmeddelanden.se!',a:'Sverige är ett av världens mest digitaliserade länder. Myndigheter kommunicerar via Mina meddelanden. Aktivera din digitala brevlåda — du missar annars viktig post från myndigheter.'},{t:'Digital säkerhet med BankID',s:'⚠️ ALDRIG:\n❌ Använd BankID om någon ringer och ber dig\n❌ Signera saker du inte förstår\n\n✅ ALLTID:\n✅ Du initierar inloggningen själv\n✅ Kontrollera vad du signerar\n\nVid misstanke: Ring banken DIREKT!',a:'BankID-bedrägerier ökar kraftigt. Vanligaste metod: telefonbluff där "banken" ber dig signera. Banker ringer ALDRIG och ber dig använda BankID. Avbryt och ring din bank på officiellt nummer.'}],
+{id:'d5',icon:'🔑',title:'BankID & svenska e-tjänster',sub:'Det digitala nyckelsystemet i Sverige',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d5-bankid.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🔑',h:'Vad är syftet?',t:'Förstå BankID — och hur du använder Sveriges digitala e-tjänster säkert.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad BankID är, var du använder det, viktiga myndighetstjänster och hur du skyddar dig mot bedrägerier.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha aktiverat digital brevlåda och veta hur du undviker BankID-bedrägerier.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en säkerhetscheck.'}
+],
+a:'Utan BankID är många myndighetsärenden omöjliga att göra digitalt. Det är navet i den svenska digitala vardagen.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom vad BankID är, viktiga e-tjänster du når med det, och hur du undviker de vanligaste BankID-bedrägerierna. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Vad är BankID?',
+cards:[
+{icon:'🆔',h:'Digital legitimation',t:'Din identitet på nätet — och vid signering.'},
+{icon:'🏦',h:'Utfärdas av din bank',t:'Helt gratis — kräver svenskt personnummer.'},
+{icon:'📱',h:'Som app eller på dator',t:'Mobilt BankID är vanligast.'}
+],
+a:'Utan BankID är många myndighetsärenden omöjliga att göra digitalt.'},
+{t:'Viktiga svenska e-tjänster',
+cards:[
+{icon:'🏛️',h:'Mina sidor (FK)',t:'Sjukpenning, bidrag, ärenden.'},
+{icon:'📚',h:'CSN',t:'Studiestöd och återbetalning.'},
+{icon:'🏥',h:'1177',t:'Sjukvård och vårdärenden.'},
+{icon:'📊',h:'Skatteverket',t:'Deklaration och skattekontot.'},
+{icon:'💼',h:'Arbetsförmedlingen',t:'Aktivitetsrapport och ärenden.'},
+{icon:'📨',h:'minmeddelanden.se',t:'Digital brevlåda — aktivera den nu.'}
+],
+a:'Sverige är ett av världens mest digitaliserade länder. Aktivera digital brevlåda — annars missar du myndighetspost.'},
+{t:'Digital säkerhet med BankID',
+cards:[
+{icon:'🚫',h:'ALDRIG',t:'Använd BankID om någon RINGER och ber dig.'},
+{icon:'🔍',h:'Kontrollera',t:'Vad du signerar — varje gång.'},
+{icon:'✅',h:'Du initierar själv',t:'Inloggningen ska alltid starta från dig.'},
+{icon:'📞',h:'Vid misstanke',t:'Lägg på direkt — ring banken på officiellt nummer.'}
+],
+a:'Vanligaste BankID-bedrägeri: telefonbluff där "banken" ber dig signera. Banker ringer ALDRIG och ber dig använda BankID.'}
+],
 ex:{type:'build',title:'Din BankID-checklista',desc:'Säkerställ att du har BankID och vet hur du använder det.',fields:[{l:'Har du BankID? Vilken bank?',ph:'T.ex. Ja, Mobilt BankID via Swedbank / Nej, behöver ordna'},{l:'Vilka e-tjänster behöver du nu?',ph:'T.ex. FK Mina sidor, 1177, AF digitalt...',hint:'Logga in och testa var och en'},{l:'Har du aktiverat digital brevlåda?',ph:'T.ex. Ja via minmeddelanden.se / Nej — gör det nu',hint:'minmeddelanden.se — gratis'},{l:'Vad gör du om du kontaktas om BankID?',ph:'T.ex. Lägger på och ringer banken på officiellt nummer...',ta:true}]},
 quiz:[{q:'Vad är BankID?',o:['Ett bankkort','Digital legitimation och signering i Sverige','En bank-app','Ett kreditkort'],c:1},{q:'Vad gör du om någon ringer och ber dig använda BankID?',o:['Gör som de säger om det låter trovärdigt','Lägg på och ring din bank direkt','Signera om det verkar okej','Fråga vad de vill'],c:1},{q:'Var ansöker du om BankID?',o:['Skatteverket','Din svenska bank','Polisen','Posten'],c:1},{q:'Vad är Mina meddelanden?',o:['E-post från vänner','Digital brevlåda för myndighetspost','SMS-tjänst','En app'],c:1}],
 pr:['Vilka e-tjänster behöver jag som jobbsökare?','Förklara BankID för någon som aldrig hört talas om det.','Vad gör jag om jag inte har BankID ännu?']},
@@ -2355,18 +2639,42 @@ fields:[
 quiz:[{q:'Vad är SFI?',o:['En yrkesutbildning','En avgiftsbelagd privatskola','Gratis svenska för invandrare'],c:2},{q:'Hur många studievägar finns det?',o:['3','2','5'],c:0},{q:'Vilket är bra för att öva svenska hemma?',o:['Undvika svenska','SVT Play, Duolingo och 8sidor.se','Bara läsa böcker på arabiska'],c:1},{q:'Vad händer när du klarar SFI D?',o:['Du kan läsa vidare på Komvux','Du måste sluta studera','Du måste ta ett nytt test'],c:0}],
 pr:['Hur snabbt kan jag lära mig svenska med SFI?','Vilka appar hjälper mig lära mig svenska snabbast?','Skriv ett enkelt brev på svenska åt mig som övning.']},
 
-{id:'s4',icon:'🏡',title:'Folkhögskola',sub:'Lärande i gemenskap',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s4',icon:'🏡',title:'Folkhögskola',sub:'Lärande i gemenskap',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s4-folkhogskola.mp4',
 lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🏡',h:'Vad är syftet?',t:'Förstå om folkhögskolan passar dig — och hur den fungerar i det svenska systemet.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad folkhögskolan är, vilka kurser som finns, för vem den passar — och CSN-frågan.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna avgöra om folkhögskolan kan vara en väg framåt för dig.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en övning där du letar din skola.'}
+],
+a:'Folkhögskolan är en unik svensk skolform — fri, frivillig, ofta utan betyg, känd för sin inkluderande miljö.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom vad folkhögskolan är, vilka kurser som finns, för vem den passar och hur CSN fungerar. Se den först, så blir lektionerna lättare att följa.'},
 {t:'Vad är folkhögskola?',
-s:'Folkhögskolan är en unik skolform i Sverige.\n\nHär studerar du i grupp, ofta utan betyg.\nDu kan bo på skolan (internat) eller pendla.\n\nKurser finns inom:\n• Allmänt (komplettera betyg)\n• Kreativt (musik, konst, media)\n• Yrkesinriktade ämnen',
-a:'Folkhögskolan är en fri och frivillig skolform med lång tradition. Den bedrivs av organisationer och rörelser. Det finns ca 150 folkhögskolor i Sverige. Studieomdöme (istället för betyg) används för vidare studier.',
-yt:'https://www.youtube.com/embed/dQw4w9WgXcQ'},
+cards:[
+{icon:'👥',h:'Studier i grupp',t:'Ofta utan betyg — fokus på lärande, inte konkurrens.'},
+{icon:'🏡',h:'Internat eller pendling',t:'Du kan bo på skolan — eller åka dit.'},
+{icon:'📚',h:'Allmän kurs',t:'Komplettera grundskola eller gymnasium.'},
+{icon:'🎨',h:'Kreativt',t:'Musik, konst, foto, media, skrivande.'},
+{icon:'🛠️',h:'Yrkesinriktat',t:'T.ex. socialpedagog eller behandlingsassistent.'}
+],
+a:'Det finns ca 150 folkhögskolor i Sverige. Pedagogiken är fri och frivillig — ofta driven av en folkrörelse.'},
 {t:'För vem passar folkhögskola?',
-s:'Folkhögskolan passar bra om du:\n• Vill studera i en lugn miljö\n• Behöver komplettera betyg\n• Har haft svårt i vanlig skola\n• Vill hitta din riktning i livet\n\nDu kan börja oavsett tidigare betyg.',
-a:'Folkhögskolan är känd för sin inkluderande miljö. Den är särskilt värdefull för dem som haft svårigheter i traditionell skola, behöver struktur och gemenskap, eller söker en ny riktning.'},
-{t:'CSN och folkh\u00f6gskola',
-s:'Du kan få studiemedel från CSN när du studerar på folkhögskola.\n\nDet inkluderar:\n• Studiebidrag\n• Studielån (frivilligt)\n\nSöks via csn.se.',
-a:'CSN-stöd ges normalt från och med första månaden om utbildningen är minst 15 veckor lång och 50% studietakt. Specifika regler gäller för folkhögskolans studieomdöme kontra betyg.'}
+cards:[
+{icon:'🌿',h:'Lugn miljö',t:'Mindre stress, mer gemenskap.'},
+{icon:'📖',h:'Komplettera betyg',t:'Du kan börja oavsett tidigare betyg.'},
+{icon:'💭',h:'Haft svårt i vanlig skola',t:'Folkhögskolan har annorlunda pedagogik.'},
+{icon:'🧭',h:'Söker din riktning',t:'Folkhögskolan är ett bra ställe att hitta vägen.'}
+],
+a:'Folkhögskolan är särskilt värdefull för dem som behöver struktur och gemenskap — eller söker en ny riktning.'},
+{t:'CSN och folkhögskola',
+cards:[
+{icon:'💰',h:'Studiemedel gäller',t:'Bidrag + lån — precis som på Komvux eller universitet.'},
+{icon:'📝',h:'Studieomdöme',t:'Istället för betyg — används vid vidare studier.'},
+{icon:'🎓',h:'Ger behörighet',t:'Både till högskola och till YH-utbildning.'},
+{icon:'🌐',h:'folkhogskola.nu',t:'Här hittar du alla folkhögskolor i Sverige.'}
+],
+a:'CSN-stöd ges från första månaden om utbildningen är minst 15 veckor och 50 % studietakt.'}
 ],
 ex:{type:'build',title:'Hitta din folkhögskola',desc:'Utforska om folkhögskola passar dig.',
 fields:[
