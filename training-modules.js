@@ -1254,11 +1254,43 @@ quiz:[
 ],
 pr:['Ge mig en 30-dagars rörelseplan för nybörjare.','Gratis träningsprogram utan utrustning?','Hur kopplar jag rörelse till mitt jobbsök?']},
 
-{id:'h4',icon:'🥦',title:'Mat & energi',sub:'Ät rätt utan att det kostar skjortan',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h4',icon:'🥦',title:'Mat & energi',sub:'Ät rätt utan att det kostar skjortan',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h4-mat.mp4',
 lessons:[
-{t:'Hjärnmat för jobbsökare',s:'Din hjärna förbrukar 20% av kroppens energi.\n\nBra för fokus & energi:\n🐟 Fet fisk (omega-3) — 2 ggr/vecka\n🥚 Ägg — protein + B-vitaminer\n🫐 Bär — antioxidanter\n🥜 Nötter — snabb energi\n🌾 Fullkorn — stabilt blodsocker\n🥦 Grönsaker — allt!\n\nUndvik: socker-toppar → kraschlanda → orkar inte söka jobb.',a:'Blodsocker-variationer påverkar koncentration och humör direkt. Frukost med protein och fibrer ger stabil energi 4-5 timmar. Omega-3 har dokumenterad effekt på kognitiv funktion och minskar inflammationsmarkörer.'},
-{t:'Billig och bra mat',s:'Budget: 40-50 kr/dag per person räcker.\n\n💰 Billiga proteiner:\n• Ägg (10-12 kr/6-pack)\n• Linser & bönor (15 kr/kg torkade)\n• Kycklingfilé fryst\n• Tonfisk på burk\n\n💰 Billiga grönsaker:\n• Fryst (lika nyttigt som färsk!)\n• Kål, morötter, lök — alltid billigt\n• Rotfrukter i säsong',a:'Matlajans viktigaste trick: laga stort — ät flera dagar. Planera veckomeny på söndagen. Handla med lista. Frysvaror är nutritionsmässigt lika bra som färska (oftast frysta vid skördemognad).'},
-{t:'Enkla vanor som gör skillnad',s:'• Drick vatten — inte läsk (10-15 kr/dag sparas)\n• Ät frukost — startar ämnesomsättningen\n• Ta rörelsepaus vid lunch\n• Ät inte framför skärmen\n\n⚠️ Hoppar du över mat för att spara pengar?\nPrata med socialtjänsten eller AF — det finns stöd!',a:'Maten är direkt kopplad till koncentration och emotionell reglering. Vid ekonomisk stress är mat ofta det första som skärs ner — men det är kontraproduktivt. Matbanker finns i Helsingborg via Stadsmissionen.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🥦',h:'Vad är syftet?',t:'Lära dig äta för fokus och energi — utan att det kostar skjortan.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Hjärnmat, hur du undviker socker-toppar, billig och bra mat, samt vattnets roll.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna byta en ovana mot en bra vana redan idag.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en matplan-övning.'}
+],
+a:'Hjärnan tar 20 % av kroppens totala energi — det du äter påverkar fokus direkt.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom hjärnmat för jobbsökare, sex matgrupper som ger energi, och hur du äter bra på liten budget. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Hjärnmat för jobbsökare',
+cards:[
+{icon:'🐟',h:'Fet fisk',t:'Omega-3 — 2 gånger i veckan.'},
+{icon:'🥚',h:'Ägg',t:'Protein och B-vitaminer.'},
+{icon:'🫐',h:'Bär',t:'Antioxidanter — frysta funkar lika bra.'},
+{icon:'🥜',h:'Nötter',t:'Snabb energi och bra fetter.'},
+{icon:'🌾',h:'Fullkorn',t:'Stabilt blodsocker hela dagen.'},
+{icon:'🥦',h:'Grönsaker',t:'Allt!'}
+],
+a:'Frukost med protein och fibrer ger stabil energi 4–5 timmar. Undvik socker-toppar — du kraschar och orkar inte söka jobb.'},
+{t:'Billig och bra mat',
+cards:[
+{icon:'🫘',h:'Bönor & linser',t:'Protein för få kronor — 15 kr/kg torkade.'},
+{icon:'🥕',h:'Rotfrukter i säsong',t:'Kål, morötter, lök — alltid billigt.'},
+{icon:'❄️',h:'Frysta grönsaker',t:'Lika nyttigt som färska — ofta billigare.'},
+{icon:'🐟',h:'Fryst fisk',t:'Halva priset — full nutrition.'},
+{icon:'🍳',h:'Laga stort',t:'Ät flera dagar — sparar tid och pengar.'}
+],
+a:'Mathjälp finns i Helsingborg via Stadsmissionen och kommunens socialtjänst — be om hjälp om det behövs.'},
+{t:'Vatten och rörelsepauser',
+cards:[
+{icon:'💧',h:'1,5–2 liter vatten/dag',t:'Vid uttorkning sjunker koncentrationen direkt.'},
+{icon:'🚶',h:'Rörelsepaus vid lunch',t:'Promenad på 10 min — laddar om hjärnan.'},
+{icon:'📵',h:'Ät inte framför skärmen',t:'Mätthetskänslan kommer inte fram — du äter mer.'}
+],
+a:'Att hoppa över mat för att spara pengar är kontraproduktivt — kontakta socialtjänsten eller AF om ekonomin är pressad.'}
 ],
 ex:{type:'build',title:'Din matplan',desc:'Enkel veckoplan för bra mat på budget.',
 fields:[
@@ -1275,11 +1307,43 @@ quiz:[
 ],
 pr:['Veckomeny för 300 kr för 1 person.','Snabba nyttiga recept på 20 minuter?','Vad kan jag äta för bättre fokus och koncentration?']},
 
-{id:'h5',icon:'🏥',title:'Sjukvård i Sverige',sub:'Dina rättigheter och hur systemet funkar',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h5',icon:'🏥',title:'Sjukvård i Sverige',sub:'Dina rättigheter och hur systemet funkar',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h5-sjukvard.mp4',
 lessons:[
-{t:'Hur sjukvården är uppbyggd',s:'Sverige har en av världens bästa sjukvård — och den är nästan gratis.\n\n🏥 Steg 1: Vårdcentral (husläkare)\n🏥 Steg 2: Specialistvård (remiss)\n🏥 Steg 3: Sjukhus (akut eller remiss)\n\nRing 1177 vid frågor — dygnet runt!\nRing 112 vid akuta tillstånd.',a:'Regionerna ansvarar för sjukvård i Sverige. Helsingborg tillhör Region Skåne. Frikort: 1 150 kr max per år för öppenvård (2024). Barn under 18 är avgiftsfria. Asylsökande har rätt till vård som inte kan anstå.'},
-{t:'Kostnader och fri-kort',s:'Besöksavgift: ca 200-350 kr/besök\n\nFrikort beviljas när du betalat:\n• 1 150 kr (öppenvård) under 12 mån\n• Sedan gratis resten av perioden\n\nOrdna ditt frikort via:\n1177.se → Region Skåne → Frikort',a:'Frikortsystemet samlas automatiskt i Region Skåne. Spara kvittona! Läkemedel har eget högkostnadsskydd: max 1 300 kr/år. Tandvård: begränsat stöd för vuxna (tandvårdsstöd 600 kr/år).'},
-{t:'Vård utan personnummer',s:'Ny i Sverige? Asylsökande? Papperslös?\n\n✅ Akutvård: alltid rätt till det\n✅ Barn under 18: full sjukvård\n✅ Gravida: mödravård\n✅ Psykiatrisk vård som inte kan anstå\n\nKontakta närmaste vårdcentral.\nI Helsingborg: ring 1177',a:'EU-medborgare har rätt till sjukvård med europeiskt sjukförsäkringskort (EHIC). Papperslösa har rätt till vård som inte kan anstå via Röda Korset kliniker. Asylsökande med LMA-kort: vård via Region Skåne.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🏥',h:'Vad är syftet?',t:'Förstå hur svenska sjukvården fungerar — och dina rättigheter i den.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Tre nivåer i systemet, viktiga nummer, frikort, och vård utan personnummer.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta var du börjar, vad det kostar, och hur du får hjälp.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en kontakt-checklista.'}
+],
+a:'Sverige har en av världens bästa sjukvård — och den är nästan gratis. Du behöver veta hur du använder den.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom hur sjukvården är uppbyggd, viktiga nummer, frikort och vad du har rätt till. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Hur sjukvården är uppbyggd',
+cards:[
+{icon:'1️⃣',h:'Vårdcentralen',t:'Din husläkare — börja alltid här.'},
+{icon:'2️⃣',h:'Specialistvård',t:'Med remiss från vårdcentralen.'},
+{icon:'3️⃣',h:'Sjukhus',t:'Akut eller via remiss.'},
+{icon:'📞',h:'1177',t:'Råd och hjälp dygnet runt.'},
+{icon:'🚨',h:'112',t:'Vid akuta livshotande tillstånd.'}
+],
+a:'Regionerna ansvarar för sjukvård. Helsingborg tillhör Region Skåne.'},
+{t:'Kostnader och frikort',
+cards:[
+{icon:'💳',h:'Besöksavgift',t:'Cirka 200–350 kr per besök hos vårdcentral.'},
+{icon:'🎫',h:'Frikort: 1 150 kr/år',t:'Sedan gratis öppenvård resten av perioden.'},
+{icon:'👶',h:'Barn under 18',t:'Helt avgiftsfria.'},
+{icon:'💊',h:'Läkemedel',t:'Eget högkostnadsskydd: max 1 300 kr/år.'}
+],
+a:'Frikortet hanteras automatiskt av Region Skåne via 1177.se. Spara kvittona på besök.'},
+{t:'Vård utan personnummer',
+cards:[
+{icon:'🆘',h:'Akutvård',t:'Alltid rätt till — oavsett status.'},
+{icon:'👶',h:'Barn under 18',t:'Full sjukvård — alltid.'},
+{icon:'🤰',h:'Gravida',t:'Mödravård garanteras.'},
+{icon:'🌍',h:'EU-medborgare',t:'Rätt med europeiskt sjukförsäkringskort (EHIC).'},
+{icon:'📞',h:'Vid frågor',t:'Ring 1177 eller kontakta närmaste vårdcentral.'}
+],
+a:'Asylsökande med LMA-kort har rätt till vård via Region Skåne. Papperslösa har rätt till "vård som inte kan anstå" via Röda Korset.'}
 ],
 ex:{type:'build',title:'Din vårdkontakt',desc:'Se till att du har rätt kontakter och vet hur systemet funkar.',
 fields:[
@@ -1380,11 +1444,42 @@ quiz:[
 ],
 pr:['Hitta billig tandläkare i Helsingborg.','Hur ansöker jag om glasögonbidrag?','Vilka gratis hälsokontroller har jag rätt till?']},
 
-{id:'h10',icon:'🌱',title:'Välmående under jobbsök',sub:'Ta hand om dig MEDAN du söker jobb',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h10',icon:'🌱',title:'Välmående under jobbsök',sub:'Ta hand om dig MEDAN du söker jobb',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h10-valmaende.mp4',
 lessons:[
-{t:'Jobbsökets psykologi',s:'Jobbsök aktiverar samma hjärna som sorg:\n\n• Avvisning gör ont — bokstavligen\n• Tapet-sökning → uppgivenhet\n• Identitet kopplad till arbete → vapor\n• Ensamhet förstärker allt\n\nDet är NORMALT att ha det tufft.\nDet är INTE normalt att inte ta hand om sig.',a:'Hjärnskanningar visar att socialt avvisande aktiverar samma smärtcentra som fysisk smärta. Varje avslagsbrev triggar ett verkligt stresspåslag. Att förstå detta normaliserar reaktionen och gör det lättare att hantera.'},
-{t:'Den hållbara jobbsökar-rutinen',s:'Behandla jobbsöket som ett jobb:\n\n🕗 08:00 — Börja (klä på dig!)\n📋 08-10 — Söka och skriva ansökningar\n☕ 10-10:15 — Paus (ej skärm)\n📞 10:15-12 — Nätverk & uppföljning\n🍽️ 12-13 — Lunch (lämna hemmet!)\n📚 13-14 — Lära och kompetensutveckla\n🏃 14-15 — Rörelse\n🔒 15:00 — SLUTA för dagen',a:'Struktur är inte tvång — det är frihet. Utan rutin smetas jobbsöket ut över hela dygnet och skapar skuld. Att ha en tydlig sluttid är lika viktigt som en starttid.'},
-{t:'Du är mer än ditt jobb',s:'Jobbsöket är tillfälligt.\nDu är permanent.\n\n💡 Påminn dig om:\n• Vad du är bra på UTÖVER jobbet\n• Vad du gjort som du är stolt över\n• Vem som bryr sig om dig\n• Vad som väntar när jobbet är klart\n\n📓 Skriv 3 saker du är tacksam för — varje dag.\nForskning: kraftfullt mot depression.',a:'Gratitude journaling (tacksamhetsdagbok) sänker depressions-symtom och ökar välmående signifikant i RCT-studier. Det tar 2 min. Jobbidentitet är ett välkänt psykologiskt fenomen — extra vanligt i Sverige där arbete är starkt kulturellt kopplat till värde.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🌱',h:'Vad är syftet?',t:'Ta hand om dig medan du söker jobb — inte trots det.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Jobbsökets psykologi, en hållbar rutin, och hur du minns att du är mer än ditt jobb.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha en daglig välmående-rutin som håller över tid.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en personlig rutin-övning.'}
+],
+a:'Det är normalt att ha det tufft under jobbsök. Det är inte normalt att inte ta hand om sig.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom varför jobbsök är psykiskt påfrestande, vad som hjälper i vardagen, och hur du skyddar dig själv. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Jobbsökets psykologi',
+cards:[
+{icon:'💔',h:'Avvisning gör ont',t:'Hjärnan reagerar som på fysisk smärta — det är inte i ditt huvud.'},
+{icon:'🌀',h:'Identitet kopplad till jobb',t:'Det är vanligt i Sverige — och gör jobbsöket extra tungt.'},
+{icon:'👤',h:'Ensamhet förstärker allt',t:'Sök mänsklig kontakt — varje vecka.'},
+{icon:'✋',h:'Det är NORMALT',t:'Du är inte ensam — och det är inget fel på dig.'}
+],
+a:'Hjärnskanningar visar att socialt avvisande aktiverar samma smärtcentra som fysisk smärta — det är därför varje nej känns.'},
+{t:'Den hållbara jobbsökar-rutinen',
+cards:[
+{icon:'🕗',h:'Fast starttid',t:'Stig upp samma tid varje dag — och klä dig.'},
+{icon:'📋',h:'Förmiddag = jobbsök',t:'08–12: söka, skriva, nätverka.'},
+{icon:'🍽️',h:'Lunch — lämna hemmet',t:'En promenad eller café gör skillnad.'},
+{icon:'🎓',h:'Eftermiddag = lära',t:'13–14: ny kompetens. 14–15: rörelse.'},
+{icon:'🔒',h:'Fast sluttid',t:'15:00 — SLUTA. Lika viktigt som start.'}
+],
+a:'Struktur är frihet — utan rutin smetas jobbsöket ut över hela dygnet och skapar skuld dygnet runt.'},
+{t:'Du är mer än ditt jobb',
+cards:[
+{icon:'📓',h:'Tacksamhetsdagbok',t:'Skriv 3 saker du är tacksam för — varje dag.'},
+{icon:'💪',h:'Vad du är bra på',t:'Lista det UTÖVER jobbet — hobbyer, vänskap, omsorg.'},
+{icon:'❤️',h:'Vem bryr sig om dig',t:'Människor som ser hela dig — inte din jobbstatus.'},
+{icon:'🌅',h:'Jobbsöket är tillfälligt',t:'Du är permanent — glöm inte det.'}
+],
+a:'Gratitude journaling sänker depressions-symtom och ökar välmående i kliniska studier — det tar 2 minuter om dagen.'}
 ],
 ex:{type:'build',title:'Min välmående-rutin under jobbsöket',desc:'En hållbar plan för att ta hand om dig MEDAN du söker.',
 fields:[
@@ -1787,11 +1882,41 @@ quiz:[
 ],
 pr:['Vilka bidrag har ensamstående med 1 barn i Helsingborg rätt till?','Hur ansöker jag om skuldsanering?','Vad är riksnormen för försörjningsstöd 2026?']},
 
-{id:'e4',icon:'📱',title:'Smarta abonnemang & avtal',sub:'Sluta betala för mycket',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e4',icon:'📱',title:'Smarta abonnemang & avtal',sub:'Sluta betala för mycket',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e4-abonnemang.mp4',
 lessons:[
-{t:'Mobilavtal — sluta överbetala',s:'Genomsnittlig svensk betalar 250-450 kr/mån för mobil.\n\nBilligare alternativ:\n• Comviq, Vimla, Hallon: från 49-99 kr/mån\n• Kontantkort om du ringer lite\n• Dela mobildata med familj\n\nKolla jämförelsesidor:\n• prisjakt.nu\n• mobilabonnemang.se\n\nByta är gratis — numret följer med!',a:'Mobilbranschen är en av de med mest prisvariationer. Nätoperatörerna (Telia, Tele2, Tre, Telenor) säljer kapacitet till MVNO-operatörer (Comviq, Vimla etc.) som säljer billigare. Samma nät — lägre pris. Bindningstid bör undvikas.'},
-{t:'Streaming & prenumerationer',s:'Räkna ihop dina prenumerationer:\n\n📺 Netflix, HBO, Disney+\n🎵 Spotify, Apple Music\n📰 Tidningar\n🎮 Spelabonnemang\n\nEnkelt sätt att hitta allt:\n→ Kolla kontoutdrag från senaste 2 månader\n\nTips: Dela med familj, pausa tillfälligt,\nbyta månadsvis istället för årsvis.',a:'Den genomsnittliga hushållet har 4-5 streaming-abonnemang och betalar ca 400-700 kr/mån. Biblioteket erbjuder gratis: e-böcker (Libby), tidningar (PressReader), film (Filmarkivet). Spotify har studentrabatt (halva priset) och familjepaket.'},
-{t:'El & försäkringar — jämför!',s:'El:\n• Rörligt vs fast pris — jämför på elpriskollen.se\n• Byte kostar inget\n• Kollektivt byte via din förening\n\nHemförsäkring:\n• Obligatorisk om du hyr\n• Jämför på insplanet.se eller direktförsäkring.se\n• Kostnad: ca 150-400 kr/mån\n• Höj självrisken = lägre premie',a:'El-prisjämförelse: Energimarknadsinspektionens sajt elpriskollen.se är gratis och oberoende. Hemförsäkring täcker brand, inbrott, vattenskada och ansvar — viktig vid hyresrätt. Höj grundsjälvrisken till 5 000 kr om du sällan skadar saker.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'📱',h:'Vad är syftet?',t:'Sluta överbetala — utan att försämra din vardag.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Mobilavtal, streaming, el, försäkringar och varför bindningstid är farligt.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta exakt var du kan spara — och hur du byter.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och lektioner, plus en sorteringsövning.'}
+],
+a:'En till två timmars genomgång idag sparar tusenlappar varje år.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom mobilavtal, streaming, el, försäkringar och hur du undviker bindningstid. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Mobilavtal — sluta överbetala',
+cards:[
+{icon:'💸',h:'Snitt: 250–450 kr/mån',t:'Det är för mycket. Det går mycket billigare.'},
+{icon:'📞',h:'Comviq, Vimla, Hallon',t:'Samma nät — från 49–99 kr/mån.'},
+{icon:'👨‍👩‍👧',h:'Dela mobildata',t:'Familjeabonnemang kan halvera kostnaden.'},
+{icon:'🔄',h:'Numret följer med',t:'Att byta operatör är gratis — och tar 1 dag.'}
+],
+a:'Mobilbranschen har mest prisvariation — samma 4G/5G-nät men 5x prisskillnad. Undvik bindningstid.'},
+{t:'Streaming & prenumerationer',
+cards:[
+{icon:'📺',h:'Snitt 4–5 tjänster',t:'400–700 kr/mån — det adderar upp snabbt.'},
+{icon:'🔄',h:'Rotera istället',t:'1 tjänst i taget — säg upp resten.'},
+{icon:'📚',h:'Biblioteket är gratis',t:'Libby (e-böcker), PressReader (tidningar), Filmarkivet.'},
+{icon:'🎓',h:'Studentrabatt',t:'Spotify halva priset. Familjepaket sparar mer.'}
+],
+a:'Räkna ihop alla abonnemang via kontoutdrag — många glömmer hälften.'},
+{t:'El & försäkringar — jämför!',
+cards:[
+{icon:'⚡',h:'Rörligt elpris',t:'Oftast billigare i längden — jämför på elpriskollen.se.'},
+{icon:'🛡️',h:'Hemförsäkring obligatorisk',t:'Om du hyr — täcker brand, inbrott, vatten och ansvar.'},
+{icon:'📈',h:'Höj självrisken',t:'Lägre premie — om du sällan skadar saker.'},
+{icon:'🚫',h:'Akta bindningstid',t:'24 mån = du kan inte byta. 1 mån uppsägning är standard.'}
+],
+a:'Lojalitet straffas — inte belönas. Jämför försäkringar vartannat år.'}
 ],
 ex:{type:'sort',title:'Behov eller lyx?',desc:'Sortera dina kostnader — vad kan du minska?',
 catA:'✅ Behov (svårt att ta bort)',catB:'✂️ Kan minska eller ta bort',
@@ -1925,11 +2050,43 @@ quiz:[
 ],
 pr:['Billigaste sättet att pendla Helsingborg-Malmö?','Kan jag ta bil till Danmark med färjan?','Hur ansöker jag om färdtjänst i Helsingborg?']},
 
-{id:'e8',icon:'🔐',title:'Digital ekonomi & säkerhet',sub:'Skydda dina pengar online',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e8',icon:'🔐',title:'Digital ekonomi & säkerhet',sub:'Skydda dina pengar online',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e8-sakerhet.mp4',
 lessons:[
-{t:'Bedrägerier — se upp!',s:'Vanligaste bedrägerierna mot privatpersoner:\n\n📱 SMS-bluffar ("paket väntar — betala")\n📧 Phishing-mail (falsk bank/myndighet)\n📞 Vishing (telefonbluffar)\n💻 Falska jobbannonser (betala för utbildning)\n💰 Romansbedrägeri\n\nGrundregel: INGEN myndighet ber dig betala via presentkort!',a:'Bedrägerier kostar svenska hushåll ca 1 miljard kr/år. Skatteverket, Kronofogden och banker skickar aldrig länkar via SMS och ber dig aldrig bekräfta BankID utan att du själv initierat det. Vid minsta tvivel — lägg på och ring officiellt nummer.'},
-{t:'BankID & digital säkerhet',s:'BankID skyddar du genom:\n\n✅ Dela aldrig din säkerhetskod\n✅ Godkänn ALDRIG BankID du inte initierat\n✅ Ha separat stark lösenord per tjänst\n✅ Aktivera tvåfaktorautentisering\n✅ Uppdatera mobilen regelbundet\n\n⚠️ Om du misstänker bedrägeri:\nRing din bank OMEDELBART',a:'BankID-kapning är vanligaste attackvektorn. Bluffaren ringer, låtsas vara bank/polis, ber dig "verifiera" via BankID — men skapar faktiskt transaktion. Regel: Avvisar du spontant kontakt = alltid rätt. Inga banker ber om BankID-kod via telefon.'},
-{t:'Swish, Klarna & köp nu betala sen',s:'Swish:\n• Skicka bara till folk du känner\n• Kontrollera nummer — det kan inte ångras!\n\nKlarna / "Köp nu betala sen":\n• Är ett lån — inte gratis\n• Glömmer du → skuld → kronofogden\n• Farligt vid dålig budgetkontroll\n\n✅ Betala med kort eller direktbetalning\nif you can — undvik faktura-lösningar',a:'Klarna har 150 miljoner användare globalt men skapar också skuldsättning. "Köp nu betala sen" aktiverar överkonsumtion (studier visar 40% högre köpbelopp). Ränta vid sen betalning kan vara hög. Håll koll på dina fakturor i Klarna-appen.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🔐',h:'Vad är syftet?',t:'Skydda dina pengar online — och känna igen bluffarna innan de når dig.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vanliga bedrägerier, Postnord- och BankID-bluff, och fem snabba åtgärder för skydd.'},
+{icon:'✅',h:'När du är klar ska du...',t:'känna igen mönstren — och veta vad du gör om något händer.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en säkerhetsövning.'}
+],
+a:'Bedrägerier kostar svenska hushåll 1 miljard kr/år. Lär dig mönstren — du minskar risken kraftigt.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom de vanligaste bedrägerierna mot privatpersoner, hur Postnord- och BankID-bluffarna fungerar, och fem konkreta skyddsåtgärder. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Vanligaste bedrägerierna',
+cards:[
+{icon:'📱',h:'SMS-bluffar',t:'"Paket väntar — betala tull"'},
+{icon:'📧',h:'Phishing-mejl',t:'Falsk bank eller myndighet.'},
+{icon:'📞',h:'Vishing — telefonbluff',t:'"Banken ringer" — ber dig signera.'},
+{icon:'💼',h:'Falska jobbannonser',t:'Betala för utbildning eller utrustning.'},
+{icon:'❤️',h:'Romansbedrägeri',t:'Datingsajt → behov av pengar.'}
+],
+a:'Grundregel: ingen myndighet ber dig betala via presentkort. Aldrig.'},
+{t:'BankID-bluff & Klarna',
+cards:[
+{icon:'🚫',h:'Banker ringer ALDRIG',t:'Och ber dig signera med BankID — aldrig.'},
+{icon:'📞',h:'Lägg på direkt',t:'Ring banken på det officiella numret.'},
+{icon:'💳',h:'Köp nu betala sen',t:'Är ett lån — inte gratis. Glömmer du → skuld.'},
+{icon:'💰',h:'Klarna-fakturor',t:'40 % högre köpbelopp i snitt — håll koll.'}
+],
+a:'BankID-kapning är vanligaste attackvektorn. Avvisar du spontant kontakt är det alltid rätt.'},
+{t:'Fem snabba skyddsåtgärder',
+cards:[
+{icon:'🔐',h:'Aktivera 2FA',t:'På bank, mejl och LinkedIn — gratis.'},
+{icon:'👀',h:'Kolla kontoutdrag',t:'Varje vecka — fånga okända transaktioner direkt.'},
+{icon:'🚫',h:'Inga länkar i SMS',t:'Från okänd avsändare — klicka aldrig.'},
+{icon:'📞',h:'Vid tvekan — pausa',t:'Lägg på, ring själv på officiellt nummer.'},
+{icon:'🚨',h:'Anmäl till polisen.se',t:'Vid bedrägeri — gör det direkt.'}
+],
+a:'Brådska är bluffmakarens viktigaste vapen. Tveka — och pausa. Det kostar inget att ringa banken själv.'}
 ],
 ex:{type:'sort',title:'Säkert eller osäkert?',desc:'Sortera beteendena — vad är okej och vad är farligt?',
 catA:'✅ Säkert',catB:'🚨 Osäkert — undvik!',
@@ -1942,11 +2099,41 @@ quiz:[
 ],
 pr:['Hur skyddar jag mig mot bedrägerier?','Vad gör jag om jag blivit av med pengar via bedrägeri?','Är detta SMS på riktigt eller bluff?']},
 
-{id:'e9',icon:'🎓',title:'Ekonomi för unga vuxna',sub:'Det de inte lärde dig i skolan',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e9',icon:'🎓',title:'Ekonomi för unga vuxna',sub:'Det de inte lärde dig i skolan',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e9-unga.mp4',
 lessons:[
-{t:'Betalningsanmärkningar — undvik dem!',s:'En betalningsanmärkning innebär att du inte betalat en skuld i tid.\n\nKonsekvenser:\n❌ Svårt att hyra lägenhet\n❌ Svårt att teckna abonnemang\n❌ Sämre räntevillkor\n❌ Kvar i 3 år (privatperson)\n\nUndvik:\n✅ Betala räkningar i tid\n✅ Kontakta borgenären vid problem\n✅ Begär anstånd — bättre än miss',a:'Ca 400 000 svenskar har betalningsanmärkning. Kronofogdemyndigheten (KFM) registrerar anmärkningar. De syns i UC (kreditupplysning) och Bisnode. Att aktivt kontakta borgenären INNAN förfallodatum förhindrar i 80% av fall att det gå till KFM.'},
-{t:'Räntor & lån — förstå avtalet',s:'Viktiga begrepp:\n\n📊 Nominell ränta — procentpåslag per år\n📊 Effektiv ränta — inkl. avgifter (jämför DETTA)\n📊 Amortering — du betalar ner skulden\n📊 Räntefri period — lockerbjudande (kolla vad som händer sen)\n\nSMS-lån: 30-600% effektiv ränta!\n→ Absolut sista utväg.',a:'Konsumentkreditlagen kräver att effektiv ränta anges i all marknadsföring. SMS-lån (snabblån) har hög ränta och kort löptid — ofta kombinerat med extra avgifter. Alternativ: låna av familj, renegotiera befintliga lån, Kronofogdens budget-rådgivning.'},
-{t:'Pension — det börjar nu',s:'Varje år du jobbar i Sverige = pensionspoäng.\n\nDitt pensionssparande:\n🔵 Allmän pension — automatiskt via skatten\n🟢 Tjänstepension — via arbetsgivare (viktig!)\n🟡 Privat pension — frivillig (PPM)\n\nKolla ditt pensionssparande:\npensionsmyndigheten.se → Mina Sidor\n\nTidigt sparande = enorm skillnad!',a:'Sverige har ett av världens bästa pensionssystem men kräver förståelse. Tjänstepension är ofta 4-5% av lönen extra — välj fonder aktivt via min pension.se. Ju tidigare du börjar, desto kraftfullare är ränta-på-ränta-effekten. Jobbsökperioder påverkar pensionen — fyll på om möjligt.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎓',h:'Vad är syftet?',t:'Lära dig ekonomi-grunderna som faktiskt spelar roll — det de inte lärde dig i skolan.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Betalningsanmärkningar, räntor och lån, samt hur du börjar tänka pension redan idag.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta hur du undviker fällorna — och vad du gör om du redan står i dem.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 4 minuter för film och lektioner, plus en grund-checklista.'}
+],
+a:'400 000 svenskar har betalningsanmärkning — och 80 % kunde ha undvikits med kontakt innan förfallodatum.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom betalningsanmärkningar, räntor och pension för unga vuxna. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Betalningsanmärkningar — undvik!',
+cards:[
+{icon:'🏠',h:'Svårt att hyra',t:'Värdar gör kreditkoll — anmärkning stänger dörrar.'},
+{icon:'📱',h:'Svårt med abonnemang',t:'Mobil, el, streaming — alla kollar UC.'},
+{icon:'📈',h:'Sämre räntor',t:'Du betalar mer för alla lån.'},
+{icon:'📅',h:'Stannar i 3 år',t:'Privatperson — efter senaste skulden är betald.'}
+],
+a:'Kronofogden registrerar anmärkningar. De syns i UC och Bisnode — men 80 % förhindras med kontakt innan KFM.'},
+{t:'Räntor & lån — förstå avtalet',
+cards:[
+{icon:'📊',h:'Nominell ränta',t:'Procentpåslag per år.'},
+{icon:'📈',h:'Effektiv ränta',t:'Inkl. alla avgifter — det är DEN du jämför.'},
+{icon:'💰',h:'Amortering',t:'Du betalar ner skulden — inte bara räntan.'},
+{icon:'⚠️',h:'SMS-lån = 30–600 % ränta',t:'Absolut sista utväg. Sök hjälp först.'}
+],
+a:'Konsumentkreditlagen kräver att effektiv ränta anges. Vid behov: budget- och skuldrådgivning hos kommunen — gratis.'},
+{t:'Pension — börjar nu',
+cards:[
+{icon:'🔵',h:'Allmän pension',t:'Automatiskt via skatten — alla får.'},
+{icon:'🟢',h:'Tjänstepension',t:'Via arbetsgivare — ofta 4–5 % extra. Kolla att du har den.'},
+{icon:'🟡',h:'Privat pension',t:'Frivillig — PPM. Välj fonder aktivt på minpension.se.'},
+{icon:'⏳',h:'Tidigt = enormt',t:'Ränta-på-ränta är obarmhärtig — på rätt sätt.'}
+],
+a:'Jobbsökperioder påverkar pensionen — fyll på om möjligt. Kolla pensionsmyndigheten.se → Mina sidor.'}
 ],
 ex:{type:'build',title:'Din ekonomiska grund',desc:'Säkra att du har koll på grunderna.',
 fields:[
@@ -2383,8 +2570,43 @@ a:'Sök på kompetensord, inte bara titlar. "Truck" hittar alla jobb som nämner
 ex:{type:'build',title:'Din digitala jobbsök-setup',desc:'Sätt upp en komplett digital jobbsökning idag.',fields:[{l:'Vilket yrke söker du? Skriv din sökterm',ph:'T.ex. lagerarbetare, undersköterska, kundtjänst...'},{l:'Har du satt upp jobbagenter? Var?',ph:'T.ex. Ja på Platsbanken och LinkedIn / Nej — gör det nu',hint:'Gör det nu — tar 5 min!'},{l:'Vilka 3 jobboarder ska du använda?',ph:'T.ex. Platsbanken, LinkedIn, Blocket Jobb'},{l:'Söktaktik — hur ofta och när?',ph:'T.ex. Kolla inkorgen varje morgon, ansök direkt vid match'}]},
 quiz:[{q:'Vilken jobboard är störst och gratis i Sverige?',o:['LinkedIn','Platsbanken (AF)','Indeed','Monster'],c:1},{q:'Vad är en jobbagent?',o:['En person som söker jobb åt dig','Automatisk sökning som mailar nya jobb','En rekryterare','En app'],c:1},{q:'Hur snabbt bör du söka ett jobb du hittar?',o:['Vänta och tänk','Inom 3 dagar — många fylls snabbt','Samla och sök på fredag','Spelar ingen roll'],c:1},{q:'Vilket filter är viktigast på Platsbanken?',o:['Lön','Ort — annars drunknar du i annonser','Arbetsgivare','Publikationsdatum'],c:1}],
 pr:['Hitta 5 bästa jobben för [yrke] i Helsingborg.','Hur sätter jag upp jobbagent på Platsbanken?','Vilken sökterm ger bäst träffar för [yrke]?']},
-{id:'d7',icon:'🎥',title:'Digitala möten & videointervjuer',sub:'Se professionell ut på skärm',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Teams, Zoom och Google Meet',s:'De tre vanligaste:\n\n🔵 Microsoft Teams — vanligast i företag & myndigheter\n🟢 Zoom — vanligt vid rekrytering\n🔴 Google Meet — gratis, via Gmail\n\nAlla fungerar likadant:\n1. Klicka på länken du fått\n2. Testa mikrofon + kamera\n3. Delta\n\nLadda ner appen i förväg!',a:'Teams är standard i svenska myndigheter och större företag. Zoom dominerar i rekrytering. Du behöver inga konton för att delta — länken räcker. Men skapa konto om du ska ringa själv.'},{t:'Se professionell ut på skärm',s:'Bakgrund:\n✅ Neutral, ren vägg\n✅ Virtuell bakgrund\n❌ Rörig bakgrund\n\nBelysning:\n✅ Ljus FRAMFÖR dig\n❌ Fönster BAKOM dig\n\nKamera:\n✅ Ögonhöjd (laptop på böcker)\n❌ Nederifrån\n\nKlä överkroppen som till intervju!',a:'Belysning och bakgrund påverkar första intrycket lika mycket som klädsel. Med fönster bakom dig syns bara en siluett. En lampa framför ansiktet kostar 150-300 kr och gör stor skillnad. Testa alltid 10 min innan.'},{t:'Tekniska förberedelser',s:'Dagen innan:\n✅ Testa länken\n✅ Ladda enheten\n✅ Kontrollera internet\n\n15 min innan:\n✅ Stäng andra program\n✅ Stäng av notiser\n✅ Ha vatten nära\n✅ Ha anteckningar framme\n\n💡 Ring in 3-5 min tidigt!',a:'Tekniska problem är vanligaste orsaken till stress i digitala intervjuer. Ha alltid telefonnumret till rekryteraren redo — om tekniken fallerar ringer du in direkt. Stäng fönster och informera hushållsmedlemmar om bakgrundsljud.'}],
+{id:'d7',icon:'🎥',title:'Digitala möten & videointervjuer',sub:'Se professionell ut på skärm',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d7-moten.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎥',h:'Vad är syftet?',t:'Se professionell ut på Teams, Zoom och Google Meet — utan att stressa.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'De tre vanligaste programmen, bakgrund, ljus, kamera och teknisk förberedelse.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha en bra setup som funkar inför varje digital intervju.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en teknisk checklista.'}
+],
+a:'Tekniska problem är vanligaste orsaken till stress i digitala intervjuer. Förberedelse är skillnaden.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom de tre vanligaste mötesprogrammen, hur du ser professionell ut, och hur du förbereder tekniken. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Teams, Zoom och Google Meet',
+cards:[
+{icon:'🔵',h:'Microsoft Teams',t:'Standard i myndigheter och stora bolag.'},
+{icon:'🟢',h:'Zoom',t:'Dominerar inom rekrytering.'},
+{icon:'🔴',h:'Google Meet',t:'Gratis — via Gmail.'},
+{icon:'📥',h:'Ladda ner i förväg',t:'Du behöver inget konto för att delta — länken räcker.'}
+],
+a:'Alla tre fungerar likadant — klicka på länken, testa mikrofon och kamera, delta.'},
+{t:'Se professionell ut på skärm',
+cards:[
+{icon:'🧱',h:'Bakgrund',t:'Neutral, ren vägg — eller virtuell bakgrund.'},
+{icon:'💡',h:'Ljus FRAMFÖR dig',t:'Lampa eller fönster — aldrig fönster bakom.'},
+{icon:'👁️',h:'Kamera i ögonhöjd',t:'Laptop på böcker funkar perfekt.'},
+{icon:'👔',h:'Klä överkroppen',t:'Som till en vanlig intervju.'}
+],
+a:'En lampa framför ansiktet kostar 150–300 kr och gör enorm skillnad — testa setupen 10 min innan.'},
+{t:'Tekniska förberedelser',
+cards:[
+{icon:'🔗',h:'Testa länken',t:'Dagen innan — inte fem minuter innan.'},
+{icon:'🔋',h:'Ladda enheten',t:'Eller koppla in den under mötet.'},
+{icon:'🔕',h:'Stäng notiser',t:'Tysta telefon, mejl och chattar.'},
+{icon:'💧',h:'Ha vatten nära',t:'Munnen blir torr när du är nervös.'},
+{icon:'⏰',h:'Ring in 3–5 min tidigt',t:'Visar respekt — och du hinner lösa problem.'}
+],
+a:'Ha alltid rekryterarens telefonnummer redo — om tekniken fallerar ringer du in direkt och räddar mötet.'}
+],
 ex:{type:'build',title:'Din digitala intervju-setup',desc:'Förbered din tekniska setup för digitala möten.',fields:[{l:'Vilken enhet använder du?',ph:'T.ex. Laptop, telefon, surfplatta...'},{l:'Hur ser bakgrunden bakom dig ut?',ph:'T.ex. Neutral vägg / rörig — behöver rensas / virtuell bakgrund',hint:'Testa via kameran nu!'},{l:'Hur är belysningen framför dig?',ph:'T.ex. Fönster framför / lampa / mörkt — behöver fixas',hint:'Ljus framför = professionellt'},{l:'Din checklista — 3 saker att göra innan nästa möte',ph:'1. Testa länken\n2. Ladda enheten\n3. Stäng notiser',ta:true}]},
 quiz:[{q:'Vilket program är vanligast i svenska myndigheter?',o:['Zoom','Skype','Microsoft Teams','Google Meet'],c:2},{q:'Var ska ljuskällan vara?',o:['Bakom dig','Vid sidan','Framför dig','Under dig'],c:2},{q:'Hur tidigt bör du ansluta till digital intervju?',o:['Precis i tid','3-5 min tidigt','10 min tidigt','Spelar ingen roll'],c:1},{q:'Tekniken fallerar under intervjun — vad gör du?',o:['Hoppas det löser sig','Ring rekryteraren direkt','Avbryt och mejla','Vänta tålmodigt'],c:1}],
 pr:['Checklista för digitala intervjuer.','Hur installerar jag Teams/Zoom?','Tips för att se professionell ut på videomöte.']},
@@ -2393,8 +2615,42 @@ lessons:[{t:'Microsoft Office vs Google Workspace',s:'Microsoft Office:\n• Wor
 ex:{type:'sort',title:'Microsoft Office eller Google?',desc:'Sortera rätt!',catA:'Microsoft Office',catB:'Google Workspace (gratis)',items:[{l:'Word — ordbehandling',c:'A'},{l:'Google Docs',c:'B'},{l:'Excel',c:'A'},{l:'Google Sheets',c:'B'},{l:'Kräver licens',c:'A'},{l:'Sparas automatiskt i molnet',c:'B'},{l:'Standard på arbetsplatser',c:'A'},{l:'Fungerar direkt i webbläsaren',c:'B'}]},
 quiz:[{q:'Vilket format skickar du CV i?',o:['Word (.docx)','PDF','Excel','Bild (.jpg)'],c:1},{q:'Var kan du använda Office gratis?',o:['Kan inte','office.com och biblioteket','Bara med studentlicens','Aldrig gratis'],c:1},{q:'Vilken Excel-formel summerar A1 till A10?',o:['=ADD(A1,A10)','=SUM(A1:A10)','=TOTAL(A1-A10)','=COUNT(A1:A10)'],c:1},{q:'Googles gratis alternativ till Word?',o:['Google Word','Google Write','Google Docs','Google Text'],c:2}],
 pr:['Hur skapar jag CV i Google Docs?','Grundläggande Excel-formler jag bör kunna.','Hur exporterar jag Google Docs till PDF?']},
-{id:'d9',icon:'🔐',title:'Integritet & lösenordssäkerhet',sub:'Skydda dig själv online',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Starka lösenord',s:'❌ Svaga:\npassword123\nkatt\nförnamn+födelseår\n\n✅ Starka:\nMinst 12 tecken\nBland bokstäver, siffror, symboler\nUnikt per sajt\n\n💡 Använd en lösenordshanterare!\nBitwarden — gratis och säker\nGoogle Password Manager — inbyggt i Chrome',a:'Lösenordsåteranvändning är vanligaste orsaken till konto-intrång. 81% av dataintrång beror på svaga lösenord. En lösenordshanterare skapar och sparar unika lösenord automatiskt.'},{t:'Tvåstegsverifiering (2FA)',s:'2FA = extra säkerhetslager.\n\n1. Skriv lösenord\n2. Få en kod via SMS eller app\n3. Kontot säkert även om lösenordet är läckt\n\nAktivera på:\n✅ Gmail\n✅ LinkedIn\n✅ Bank-tjänster\n✅ AF och myndigheter\n\nGratis — tar 5 minuter!',a:'SMS-koder är bäst i praktiken. Om ditt LinkedIn-konto hackas kan rekryterare kontaktas i ditt namn. Med 2FA är det näst intill omöjligt. Google Authenticator är ännu säkrare än SMS.'},{t:'Phishing & bedrägerier',s:'Phishing = falska mejl/SMS som ser äkta ut.\n\nVarningssignaler:\n⚠️ Brådska ("Agera inom 24h!")\n⚠️ Felstavad avsändare\n⚠️ Begär lösenord eller BankID\n⚠️ Konstiga bilagor\n\nKontrollera alltid avsändarens mejladress!',a:'Vanligaste bluffar: falska Postnord-SMS, Skatteverket-mejl, Klarna-bluffar. Myndigheter ber ALDRIG om lösenord via mejl. Rapportera misstänkta mejl till CERT.se.'}],
+{id:'d9',icon:'🔐',title:'Integritet & lösenordssäkerhet',sub:'Skydda dig själv online',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d9-losenord.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🔐',h:'Vad är syftet?',t:'Skydda dig själv online — på fem minuter.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Starka lösenord, lösenordshanterare, 2FA och hur du känner igen phishing.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha 2FA aktiverat på dina viktigaste konton.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en säkerhets-checklista.'}
+],
+a:'81 % av dataintrång beror på svaga eller återanvända lösenord. Det är där du börjar.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom starka lösenord, lösenordshanterare, tvåstegsverifiering och hur du känner igen phishing. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Starka lösenord',
+cards:[
+{icon:'🚫',h:'Undvik',t:'password123, katt, förnamn + födelseår.'},
+{icon:'📏',h:'Minst 12 tecken',t:'Längre lösenord är exponentiellt svårare att knäcka.'},
+{icon:'🔣',h:'Blanda',t:'Bokstäver, siffror och symboler.'},
+{icon:'🆔',h:'Unikt per sajt',t:'Aldrig återanvänt — inte ens varianter.'}
+],
+a:'Lösenordsåteranvändning är den vanligaste orsaken till konto-intrång.'},
+{t:'Lösenordshanterare & 2FA',
+cards:[
+{icon:'🛡️',h:'Bitwarden',t:'Gratis och säker lösenordshanterare.'},
+{icon:'🔑',h:'Google Password Manager',t:'Inbyggt i Chrome — funkar bra.'},
+{icon:'🔐',h:'Tvåstegsverifiering',t:'Aktivera på Gmail, LinkedIn, bank, AF — gratis, tar 5 min.'},
+{icon:'📱',h:'SMS eller app',t:'Google Authenticator är säkrare än SMS.'}
+],
+a:'2FA gör att även ett läckt lösenord inte räcker för att komma in — det är ditt viktigaste skydd.'},
+{t:'Phishing & bedrägerier',
+cards:[
+{icon:'⏰',h:'Brådska',t:'"Agera inom 24 timmar" — varningssignal.'},
+{icon:'📛',h:'Felstavad avsändare',t:'Kolla mejladressen noga — inte bara namnet.'},
+{icon:'🔓',h:'Begär lösenord eller BankID',t:'Myndigheter ber ALDRIG om det via mejl.'},
+{icon:'📎',h:'Konstiga bilagor',t:'Öppna aldrig — radera direkt.'}
+],
+a:'Vanligaste bluffar: falska Postnord-SMS, Skatteverket-mejl, Klarna-bluffar. Rapportera misstänkta mejl till cert.se.'}
+],
 ex:{type:'build',title:'Din digitala säkerhets-checklista',desc:'Säkra dina viktigaste konton.',fields:[{l:'Har du 2FA på Gmail/e-post?',ph:'T.ex. Ja / Nej — aktiverar nu',hint:'Gör det nu — tar 5 min!'},{l:'Använder du samma lösenord på flera sajter?',ph:'T.ex. Ja / Nej / Använder Bitwarden'},{l:'Hur känner du igen phishing-mejl?',ph:'T.ex. Kontrollerar avsändarens adress, hovrar över länken...',ta:true},{l:'Vilka 3 konton är viktigast att säkra?',ph:'T.ex. Gmail, LinkedIn, AF-profilen',hint:'Sätt 2FA på alla tre!'}]},
 quiz:[{q:'Bästa sättet att hantera lösenord?',o:['Samma lösenord överallt','Lösenordshanterare med unika per sajt','Skriva upp på lapp','Använda födelsedag'],c:1},{q:'Vad är 2FA?',o:['Lösenord med 2 ord','Tvåstegsverifiering — extra säkerhetskod','Två separata konton','En typ av BankID'],c:1},{q:'Vad gör du med ett misstänkt mejl?',o:['Klickar på länken för att kolla','Svarar och frågar','Kontrollerar avsändarmejlen och raderar vid tvekan','Ignorerar'],c:2},{q:'Vilka myndigheter ber om lösenord via mejl?',o:['Skatteverket ibland','FK alltid','Inga — myndigheter ber ALDRIG om det','Bara AF'],c:2}],
 pr:['Hur sätter jag upp 2FA på Gmail?','Rekommendera gratis lösenordshanterare.','Hur känner jag igen phishing-bluffar?']},
@@ -2403,8 +2659,43 @@ lessons:[{t:'Måste-appar för jobbsökare',s:'Jobbsök:\n• Arbetsförmedlinge
 ex:{type:'build',title:'Din mobilsetup för jobbet',desc:'Gör telefonen till ett professionellt verktyg.',fields:[{l:'Vilka jobbsökar-appar har du?',ph:'T.ex. LinkedIn, AF-appen — saknar: Mitt FK',hint:'Installera de du saknar nu!'},{l:'Har du professionell röstbrevlåda?',ph:'T.ex. Ja / Nej — spelar in en nu',hint:'Testa: ring ditt eget nummer'},{l:'Var hittar du gratis Wi-Fi nära dig?',ph:'T.ex. Stadsbiblioteket, AF-kontoret, McDonald\'s centralen'},{l:'Stämmer ditt telefonnummer på LinkedIn och CV?',ph:'T.ex. Ja +46 70-XXX / Nej — uppdaterar nu',hint:'Rekryterare ringer — de måste nå dig!'}]},
 quiz:[{q:'Vilken app ger info om AF-aktiviteter?',o:['LinkedIn','Arbetsförmedlingen-appen','Skatteverket','Gmail'],c:1},{q:'Var hittar du gratis dator och Wi-Fi i Helsingborg?',o:['AF-kontoret','Stadsbiblioteket','McDonald\'s','Alla stämmer'],c:1},{q:'Varför är professionell röstbrevlåda viktigt?',o:['Det är det inte','Rekryterare lämnar meddelanden om du inte svarar','Lagstadgat','Syns på CV'],c:1},{q:'Vad ska du undvika på öppet Wi-Fi?',o:['Streama video','Bank- och känsliga inloggningar utan VPN','Använda LinkedIn','Ladda ner appar'],c:1}],
 pr:['Vilka appar behöver jag som jobbsökare i Sverige?','Hur sätter jag upp röstbrevlåda?','Var hittar jag gratis resurser för jobbsök i Helsingborg?']},
-{id:'d11',icon:'🤖',title:'AI-verktyg i jobbet',sub:'Använd AI som en superkraft',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Vad kan AI göra för dig?',s:'AI hjälper dig:\n\n📄 Förbättra CV och brev\n🔍 Förklara jobbannonser\n💬 Träna intervjusvar\n📧 Skriva professionella mejl\n🌍 Översätta dokument\n\nGratis via claude.ai eller chatgpt.com',a:'AI ersätter inte din personlighet — det förstärker din förmåga att kommunicera. Arbetsgivare värdesätter äkta svar. Granska alltid det AI producerar.'},{t:'Bra prompts = bra resultat',s:'Dålig:\n"Hjälp mig med CV"\n\nBra:\n"Jag söker lagerarbetare i Helsingborg. 3 år PostNord, truck A+B, WMS. Förbättra min profiltext — max 4 meningar."\n\nFormeln: Vem + Vad + Mål',a:'Specifika prompts med kontext ger alltid bättre svar. Berätta yrke, stad, erfarenhet och vad du vill ha hjälp med.'},{t:'AI och äkthet',s:'AI är verktyg — inte din röst.\n\n✅ Rätt:\n1. Skriv ditt utkast\n2. Be AI förbättra\n3. Justera till din stil\n\n❌ Fel:\nKopiera rakt av utan att läsa\n\nDin personlighet ska synas!',a:'AI-text är ofta överdrivet formell och saknar specifika detaljer. Granska alltid: stämmer fakta? Låter det som du? Lägg till egna exempel och siffror.'}],
+{id:'d11',icon:'🤖',title:'AI-verktyg i jobbet',sub:'Använd AI som en superkraft',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d11-ai.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🤖',h:'Vad är syftet?',t:'Använda AI som en superkraft i ditt jobbsök — utan att tappa din egen röst.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad AI kan göra, hur du skriver bra prompts, och hur du behåller äktheten.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna skriva en bra prompt med formeln Vem + Vad + Mål.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en prompt-övning.'}
+],
+a:'AI ersätter inte din personlighet — det förstärker din förmåga att kommunicera.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom vad AI kan göra, hur du skriver bra prompts, och varför din personlighet ska synas. Se den först, så blir lektionerna lättare att följa.'},
+{t:'Vad kan AI göra för dig?',
+cards:[
+{icon:'📄',h:'Förbättra CV och brev',t:'Klistra in — be om förbättringar.'},
+{icon:'🔍',h:'Förklara annonser',t:'AI hjälper dig se vad de söker.'},
+{icon:'💬',h:'Träna intervjusvar',t:'Be AI ställa vanliga frågor — öva högt.'},
+{icon:'📧',h:'Skriva professionella mejl',t:'Få ett utkast på sekunder.'},
+{icon:'🌍',h:'Översätta',t:'Mellan språk — eller från krångligt svenska till enkelt.'}
+],
+a:'Gratis verktyg: claude.ai och chatgpt.com — börja med dem.'},
+{t:'Bra prompts = bra resultat',
+cards:[
+{icon:'❌',h:'Dålig prompt',t:'"Hjälp mig med CV" — ger generiskt svar.'},
+{icon:'✅',h:'Bra prompt',t:'"Lagerarbetare i Helsingborg, 3 år PostNord, truck A+B. Förbättra min profiltext, max 4 meningar."'},
+{icon:'🧮',h:'Formeln',t:'Vem du är + Vad du kan + Vad du vill ha.'},
+{icon:'🔁',h:'Iterera',t:'Be om varianter — välj den du gillar bäst.'}
+],
+a:'Specifika prompts med kontext ger alltid bättre svar. Berätta yrke, stad, erfarenhet och önskat resultat.'},
+{t:'AI och äkthet',
+cards:[
+{icon:'1️⃣',h:'Skriv ditt utkast',t:'Få ner din egen tanke först.'},
+{icon:'2️⃣',h:'Be AI förbättra',t:'Skicka utkastet — be om feedback eller förslag.'},
+{icon:'3️⃣',h:'Justera till din stil',t:'Lägg tillbaka din röst — och kontrollera fakta.'},
+{icon:'⚠️',h:'Kopiera aldrig blint',t:'Granska — AI hittar på ibland.'}
+],
+a:'AI-text är ofta överdrivet formell och saknar specifika detaljer. Din personlighet ska alltid synas.'}
+],
 ex:{type:'build',title:'Din AI-verktygslåda',desc:'Träna på att använda AI för ditt jobbsök.',fields:[{l:'Vilket jobb söker du?',ph:'T.ex. Lagerarbetare Helsingborg, 3 år PostNord, truck A+B',hint:'Skriv detta — det är din AI-prompt!'},{l:'Skriv en prompt för din profiltext',ph:'T.ex. Förbättra min profiltext för lagerarbetare med...',ta:true,hint:'Specifik = bättre svar'},{l:'Vilka 3 AI-verktyg testar du?',ph:'T.ex. claude.ai, chatgpt.com, Google Translate',hint:'Alla gratis'}]},
 quiz:[{q:'Vad är AI bäst på?',o:['Ersätta erfarenheter','Förbättra text du skrivit','Söka jobb åt dig','Skapa falskt CV'],c:1},{q:'Vad gör en bra prompt?',o:['Kort och vag','Specifik med yrke, stad, erfarenhet och mål','Så lång som möjligt','Börjar med Hej AI'],c:1},{q:'Vad ska du alltid göra med AI-text?',o:['Skicka direkt','Läsa och justera till din stil','Ta bort AI-ord','Fråga arbetsgivaren'],c:1},{q:'Var hittar du gratis AI?',o:['Måste köpa','claude.ai och chatgpt.com','Bara via arbetsgivaren','Biblioteket'],c:1}],
 pr:['Förbättra min profiltext: [klistra in + yrke + stad]','Hjälp mig träna: Berätta om dig själv.','Förklara denna annons: [klistra in]']},
@@ -2790,18 +3081,42 @@ quiz:[
 ],
 pr:['Hur räknar jag ut mitt meritvärde?','Vad krävs för att komma in på YH-utbildning i logistik?','Hjälp mig skriva ett personligt brev för min ansökan.']},
 
-{id:'s7',icon:'🌍',title:'Validering av utbildning',sub:'Erkänn din utbildning från utlandet',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s7',icon:'🌍',title:'Validering av utbildning',sub:'Erkänn din utbildning från utlandet',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s7-validering.mp4',
 lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🌍',h:'Vad är syftet?',t:'Få din utländska utbildning erkänd i Sverige — och visa vad du kan.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad validering är, UHR-processen steg för steg, och reglerade yrken.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta exakt var du börjar — och hur lång tid det tar.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en planeringsövning.'}
+],
+a:'Tjänsten är gratis. Din utbildning är värd något — få den erkänd så öppnas dörrarna.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom vad validering är, UHR:s process steg för steg, och vad som gäller för reglerade yrken som vård och utbildning. Se den först, så blir lektionerna lättare att följa.'},
 {t:'Vad är validering?',
-s:'Validering betyder att få din utbildning från ett annat land erkänd i Sverige.\n\nDetta är viktigt för att:\n• Söka jobb\n• Söka vidare studier\n• Bevisa din kompetens',
-a:'Validering är en process för att kartlägga, bedöma och värdera kompetenser oavsett hur de förvärvats. I Sverige hanteras erkännande av utländsk utbildning av UHR (Universitets- och högskolerådet).',
-yt:'https://www.youtube.com/embed/dQw4w9WgXcQ'},
-{t:'UHR — Universitets- och h\u00f6gskolerådet',
-s:'UHR hjälper dig att:\n• Jämföra din utländska utbildning med svensk\n• Få ett officiellt utlåtande\n• Förstå vad som krävs för att komplettera\n\nGå till: uhr.se',
-a:'UHR utfärdar officiella utlåtanden om utländsk utbildning. Det kostar en avgift men är nödvändigt för legitimationsyrken (t.ex. läkare, lärare). Processen tar normalt 4-12 veckor.'},
-{t:'Reglerade och oreglerade yrken',
-s:'Reglerade yrken (t.ex. läkare, sjuksköterska, lärare) kräver godkänd legitimation.\n\nOreglerade yrken (t.ex. kock, säljare, lagerarbetare) kräver inget formellt erkännande — men det hjälper!',
-a:'Ca 200 yrken i Sverige är reglerade. Ansökan om legitimation görs till respektive tillsynsmyndighet (t.ex. Socialstyrelsen för vårdyrken). UHR bedömer den akademiska nivån.'}
+cards:[
+{icon:'📜',h:'Officiell bedömning',t:'Examen, kurser och betyg granskas.'},
+{icon:'🇸🇪',h:'Jämförs med svenskt',t:'Du får veta vad det motsvarar.'},
+{icon:'✅',h:'Du får ett utlåtande',t:'Att visa upp vid jobb och studier.'},
+{icon:'🆓',h:'Tjänsten är gratis',t:'Du betalar inget för bedömningen.'}
+],
+a:'UHR (Universitets- och högskolerådet) hanterar erkännande av utländsk utbildning i Sverige.'},
+{t:'Processen steg för steg',
+cards:[
+{icon:'1️⃣',h:'Samla dokument',t:'Examensbevis, betyg, kursplaner.'},
+{icon:'2️⃣',h:'Översätt vid behov',t:'Till svenska eller engelska.'},
+{icon:'3️⃣',h:'Ansök på uhr.se',t:'Eller hos rätt myndighet.'},
+{icon:'4️⃣',h:'Vänta 2–6 månader',t:'Vanlig handläggningstid.'},
+{icon:'5️⃣',h:'Använd utlåtandet',t:'I CV och vid jobbansökan.'}
+],
+a:'Börja samla dokument tidigt — det är den del du själv kan påverka.'},
+{t:'Reglerade yrken',
+cards:[
+{icon:'👨‍⚕️',h:'Vård',t:'Socialstyrelsen utfärdar legitimation.'},
+{icon:'👨‍🏫',h:'Lärare',t:'Skolverket prövar behörighet.'},
+{icon:'⚖️',h:'Andra reglerade yrken',t:'Jurist, ingenjör, m.fl. — egna myndigheter.'},
+{icon:'⏳',h:'Räkna med 6–12 mån',t:'Reglerade yrken tar längre — börja tidigt.'}
+],
+a:'Reglerade yrken kräver ofta kompletteringskurser eller praktik. Kolla på respektive myndighets webbplats.'}
 ],
 ex:{type:'build',title:'Din valideringsplan',desc:'Kartlägg din utländska utbildning och planera nästa steg.',
 fields:[
