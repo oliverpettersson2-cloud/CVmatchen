@@ -333,6 +333,9 @@
 
   function saveTrainingProgress() {
     safeSet(TRAINING_PROGRESS_KEY, JSON.stringify(trainingProgress));
+    // Synka UPP till Supabase så ändringar i desktop syns på mobil och andra enheter.
+    // Mobile gör samma sak via _sbSync('ovning_progress', ...) i index.html.
+    try { if (typeof sbSync === 'function') sbSync('ovning_progress', trainingProgress); } catch(_) {}
   }
 
   // ============================================================
@@ -5935,6 +5938,170 @@
   let currentTrainMod = null;
   let currentTrainStep = { type: 'lesson', idx: 0 }; // type: 'lesson' | 'ex' | 'quiz' | 'done'
 
+  // ============================================================
+  // INTERAKTIVA ÖVNINGAR — porterade från mobile för paritet
+  // Sparar progress under samma fält som mobile (br/wa/ex) på trainingProgress[modId]
+  // så data delas via Supabase-tabellen ovning_progress (saveTrainingProgress synkar).
+  // ============================================================
+  function _escAttr(s) { return String(s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function _escHtml(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  function _renderExBuild(ex, mod) {
+    const saved = (trainingProgress[mod.id] || {}).br || [];
+    let h = '';
+    (ex.fields || []).forEach((f, i) => {
+      const val = _escHtml(saved[i] || '');
+      h += '<div style="margin-bottom:16px;">';
+      h += '<div style="font-size:13px;font-weight:700;color:' + (mod.color || '#60a5fa') + ';margin-bottom:8px;display:flex;align-items:center;gap:10px;">';
+      h += '<span style="background:' + (mod.color || '#60a5fa') + ';color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0;">' + (i + 1) + '</span>';
+      h += '<span>' + _escHtml(f.l || '') + '</span></div>';
+      if (f.ta) {
+        h += '<textarea id="trBf' + i + '" placeholder="' + _escAttr(f.ph || '') + '" rows="' + (f.rows || 3) + '" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:12px;color:#fff;font-family:inherit;font-size:14px;box-sizing:border-box;resize:vertical;">' + val + '</textarea>';
+      } else {
+        h += '<input type="text" id="trBf' + i + '" placeholder="' + _escAttr(f.ph || '') + '" value="' + val + '" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:12px;color:#fff;font-family:inherit;font-size:14px;box-sizing:border-box;">';
+      }
+      if (f.hint) h += '<div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:6px;">' + _escHtml(f.hint) + '</div>';
+      h += '</div>';
+    });
+    h += '<div id="trBfb" style="margin:10px 0;font-size:13px;min-height:18px;">' + (saved.length ? '<span style="color:#3eb489">✅ Tidigare svar inläst</span>' : '') + '</div>';
+    h += '<button onclick="trainEx.checkBuild(' + (ex.fields || []).length + ')" style="background:' + (mod.color || '#60a5fa') + ';color:#fff;border:none;padding:11px 22px;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;font-size:14px;">Spara & fortsätt →</button>';
+    return h;
+  }
+
+  function _renderExSort(ex, mod) {
+    let h = '';
+    h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">';
+    h += '<div id="trSortA" style="background:rgba(62,180,137,.06);border:2px dashed rgba(62,180,137,.3);border-radius:12px;padding:14px;min-height:120px;"><div style="font-size:12px;font-weight:900;letter-spacing:1px;color:#3eb489;margin-bottom:8px;">' + _escHtml(ex.catA || 'A') + '</div></div>';
+    h += '<div id="trSortB" style="background:rgba(167,139,250,.06);border:2px dashed rgba(167,139,250,.3);border-radius:12px;padding:14px;min-height:120px;"><div style="font-size:12px;font-weight:900;letter-spacing:1px;color:#a78bfa;margin-bottom:8px;">' + _escHtml(ex.catB || 'B') + '</div></div>';
+    h += '</div>';
+    h += '<div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.55);text-align:center;margin-bottom:10px;letter-spacing:0.5px;">TRYCK PÅ ETT KORT FÖR ATT SORTERA DET</div>';
+    h += '<div id="trSortItems" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">';
+    (ex.items || []).forEach((item, i) => {
+      h += '<button data-c="' + _escAttr(item.c || 'A') + '" onclick="trainEx.sortChip(this)" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:8px 14px;color:#fff;font-family:inherit;font-size:13px;cursor:pointer;">' + _escHtml(item.l || '') + '</button>';
+    });
+    h += '</div>';
+    h += '<div id="trSfb" style="margin:10px 0;font-size:13px;min-height:18px;"></div>';
+    h += '<button onclick="trainEx.checkSort()" style="background:' + (mod.color || '#60a5fa') + ';color:#fff;border:none;padding:11px 22px;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;font-size:14px;">Kontrollera →</button>';
+    return h;
+  }
+
+  function _renderExWrite(ex, mod) {
+    const saved = (trainingProgress[mod.id] || {}).wa || '';
+    let h = '';
+    if (ex.tips) {
+      h += '<div style="background:rgba(240,192,64,0.07);border:1px solid rgba(240,192,64,0.25);border-radius:10px;padding:12px 14px;margin-bottom:14px;">';
+      h += '<div style="font-size:11px;font-weight:900;letter-spacing:1px;color:#f0c040;margin-bottom:4px;">💡 TIPS</div>';
+      h += '<div style="font-size:13px;color:rgba(255,255,255,0.85);line-height:1.55;">' + _escHtml(ex.tips) + '</div>';
+      h += '</div>';
+    }
+    h += '<textarea id="trWta" placeholder="' + _escAttr(ex.ph || 'Skriv ditt svar...') + '" style="width:100%;min-height:160px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:12px;color:#fff;font-family:inherit;font-size:14px;box-sizing:border-box;resize:vertical;">' + _escHtml(saved) + '</textarea>';
+    h += '<div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:6px;text-align:right;"><span id="trWcc">' + saved.length + ' tecken</span></div>';
+    h += '<div id="trWfb" style="margin:10px 0;font-size:13px;min-height:18px;">' + (saved ? '<span style="color:#3eb489">✅ Tidigare svar inläst</span>' : '') + '</div>';
+    h += '<button onclick="trainEx.checkWrite(' + (ex.min || 20) + ')" style="background:' + (mod.color || '#60a5fa') + ';color:#fff;border:none;padding:11px 22px;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;font-size:14px;">Spara svar →</button>';
+    return h;
+  }
+
+  function _renderExAiNote(ex, mod) {
+    // AI-typer (ai-chat, match-trainer, cv-trainer, job-plan-ai, ai-survey, komvux-ai)
+    // har komplex AI-driven UI som ännu inte porterats — visa fält som referens och hänvisa
+    // användaren till mobilvyn för full interaktivitet.
+    let h = '';
+    h += '<div style="background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.3);border-radius:10px;padding:14px;margin-bottom:14px;">';
+    h += '<div style="font-size:13px;color:#60a5fa;font-weight:700;margin-bottom:6px;">🤖 Interaktiv AI-övning</div>';
+    h += '<div style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.55;">Den här övningen har en AI-driven version i mobilappen. Du kan följa stegen här som vägledning — eller öppna sidan på din mobil för fullt interaktiv övning.</div>';
+    h += '</div>';
+    if (ex.fields && ex.fields.length) {
+      h += '<ul style="margin:0;padding-left:20px;color:rgba(255,255,255,0.75);font-size:14px;line-height:1.7;">';
+      ex.fields.forEach(f => {
+        h += '<li style="margin-bottom:8px;">' + _escHtml(f.l || '') + (f.hint ? ' <span style="color:rgba(255,255,255,0.45);font-size:12px;">— ' + _escHtml(f.hint) + '</span>' : '') + '</li>';
+      });
+      h += '</ul>';
+    }
+    return h;
+  }
+
+  // Exponera check-funktioner på window så onclick kan nå dem
+  window.trainEx = {
+    checkBuild: function(n) {
+      const fb = document.getElementById('trBfb');
+      const res = [];
+      let ok = true;
+      for (let i = 0; i < n; i++) {
+        const el = document.getElementById('trBf' + i);
+        if (!el || el.value.trim().length < 2) { ok = false; break; }
+        res.push(el.value.trim());
+      }
+      if (!ok) { if (fb) fb.innerHTML = '<span style="color:#f87171">✏️ Fyll i alla fält (minst 2 tecken).</span>'; return; }
+      if (!currentTrainMod) return;
+      const modId = currentTrainMod.id;
+      if (!trainingProgress[modId]) trainingProgress[modId] = {};
+      trainingProgress[modId].br = res;
+      trainingProgress[modId].ex = true;
+      saveTrainingProgress();
+      if (fb) fb.innerHTML = '<span style="color:#3eb489">✅ Sparat!</span>';
+      setTimeout(() => {
+        const hasQuiz = currentTrainMod.quiz && currentTrainMod.quiz.length;
+        if (typeof window.trainGoStep === 'function') window.trainGoStep(hasQuiz ? 'quiz' : 'done', 0);
+      }, 700);
+    },
+    sortChip: function(el) {
+      const c = el.dataset.c;
+      const col = c === 'A' ? '#3eb489' : '#a78bfa';
+      const target = document.getElementById(c === 'A' ? 'trSortA' : 'trSortB');
+      if (!target) return;
+      el.style.background = col + '22';
+      el.style.borderColor = col;
+      el.style.color = col;
+      el.disabled = true;
+      el.style.cursor = 'default';
+      const chip = document.createElement('span');
+      chip.style.cssText = 'display:inline-block;padding:4px 10px;background:' + col + '22;border:1px solid ' + col + ';border-radius:18px;font-size:12px;font-weight:700;color:' + col + ';margin:3px;';
+      chip.textContent = el.textContent;
+      target.appendChild(chip);
+    },
+    checkSort: function() {
+      const remaining = document.querySelectorAll('#trSortItems button:not(:disabled)');
+      const fb = document.getElementById('trSfb');
+      if (remaining.length > 0) { if (fb) fb.innerHTML = '<span style="color:#f87171">❌ Sortera alla kort först.</span>'; return; }
+      if (!currentTrainMod) return;
+      const modId = currentTrainMod.id;
+      if (!trainingProgress[modId]) trainingProgress[modId] = {};
+      trainingProgress[modId].ex = true;
+      saveTrainingProgress();
+      if (fb) fb.innerHTML = '<span style="color:#3eb489">✅ Perfekt!</span>';
+      setTimeout(() => {
+        const hasQuiz = currentTrainMod.quiz && currentTrainMod.quiz.length;
+        if (typeof window.trainGoStep === 'function') window.trainGoStep(hasQuiz ? 'quiz' : 'done', 0);
+      }, 700);
+    },
+    checkWrite: function(min) {
+      const ta = document.getElementById('trWta');
+      const fb = document.getElementById('trWfb');
+      if (!ta) return;
+      const v = ta.value.trim();
+      if (v.length < min) { if (fb) fb.innerHTML = '<span style="color:#f87171">✏️ Skriv minst ' + min + ' tecken (du har ' + v.length + ').</span>'; return; }
+      if (!currentTrainMod) return;
+      const modId = currentTrainMod.id;
+      if (!trainingProgress[modId]) trainingProgress[modId] = {};
+      trainingProgress[modId].wa = v;
+      trainingProgress[modId].ex = true;
+      saveTrainingProgress();
+      if (fb) fb.innerHTML = '<span style="color:#3eb489">✅ Sparat!</span>';
+      setTimeout(() => {
+        const hasQuiz = currentTrainMod.quiz && currentTrainMod.quiz.length;
+        if (typeof window.trainGoStep === 'function') window.trainGoStep(hasQuiz ? 'quiz' : 'done', 0);
+      }, 700);
+    }
+  };
+
+  // Live tecken-räknare för exWrite-textarea (delegerad event eftersom DOM byggs om)
+  document.addEventListener('input', function(ev) {
+    if (ev.target && ev.target.id === 'trWta') {
+      const cc = document.getElementById('trWcc');
+      if (cc) cc.textContent = ev.target.value.length + ' tecken';
+    }
+  });
+
   function renderTrainStep() {
     const mod = currentTrainMod;
     if (!mod) return;
@@ -6077,20 +6244,27 @@
       html += '<div style="font-size:11px; font-weight:900; letter-spacing:1.5px; text-transform:uppercase; color:' + (mod.color || '#60a5fa') + '; margin-bottom:10px;">✏️ ÖVNING</div>';
       html += '<div class="lesson-card">';
       if (ex.title) html += '<div class="lesson-title">' + escape(ex.title) + '</div>';
-      if (ex.desc)  html += '<div class="lesson-text">' + escape(ex.desc) + '</div>';
-      // Embedded Skåne-karta för arb-map-övning
+      if (ex.desc)  html += '<div class="lesson-text" style="margin-bottom:18px;">' + escape(ex.desc) + '</div>';
+
+      // Interaktiva renderare — synkar med mobile via trainingProgress[modId] (br/wa/ex)
+      // och saveTrainingProgress() som skickar till Supabase-tabellen ovning_progress.
       if (ex.type === 'arb-map') {
+        // Inbäddad Skåne-karta — egen specialvy
         html += '<div style="margin:18px 0 0; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.10); background:#0f1729; box-shadow:0 4px 24px rgba(0,0,0,0.3);">';
         html += '<iframe src="/arbetsmarknadskarta.html" style="width:100%; height:680px; border:0; display:block;" loading="lazy" title="Arbetsmarknadskartan Skåne"></iframe>';
         html += '</div>';
+      } else if (ex.type === 'sort' && ex.items) {
+        html += _renderExSort(ex, mod);
+      } else if (ex.type === 'write') {
+        html += _renderExWrite(ex, mod);
+      } else if (ex.type === 'build' || (ex.fields && ex.fields.length && !ex.type)) {
+        html += _renderExBuild(ex, mod);
+      } else if (ex.fields && ex.fields.length) {
+        // AI-typer (ai-chat, match-trainer, cv-trainer, job-plan-ai, ai-survey, komvux-ai):
+        // visa fält som referens + hänvisa till mobilappen för full interaktivitet
+        html += _renderExAiNote(ex, mod);
       }
-      if (ex.fields && ex.fields.length) {
-        html += '<ul style="margin:12px 0 0 0; padding-left:20px; color:rgba(255,255,255,0.75); font-size:14px; line-height:1.6;">';
-        ex.fields.forEach(f => {
-          html += '<li style="margin-bottom:6px;">' + escape(f.l || '') + (f.hint ? ' <span style="color:rgba(255,255,255,0.45); font-size:12px;">— ' + escape(f.hint) + '</span>' : '') + '</li>';
-        });
-        html += '</ul>';
-      }
+
       if (ex.links && ex.links.length) {
         html += '<div style="margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.08);">';
         html += '<div style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.55); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px;">🔗 Länkar</div>';
@@ -6104,20 +6278,24 @@
       }
       html += '</div>';
 
+      // För interaktiva typer (build/sort/write) hanterar deras egna spara-knapp navigeringen.
+      // Visa bara back-knapp + "hoppa över"-fallback för AI-typer och arb-map.
+      const isInteractive = ex.type === 'build' || ex.type === 'sort' || ex.type === 'write' || (ex.fields && ex.fields.length && !ex.type);
       html += '<div style="display:flex; gap:10px; margin-top:18px;">';
       if (lessons.length) {
         html += '<button class="ov-back" onclick="trainGoStep(\'lesson\',' + (lessons.length - 1) + ')" style="margin:0;">← Föregående</button>';
       }
       html += '<div style="flex:1;"></div>';
-      const nextLabel2 = quiz.length ? 'Gå till quiz →' : 'Klar →';
-      const nextStep2 = quiz.length ? "trainGoStep('quiz',0)" : "trainGoStep('done',0)";
-      html += '<button id="trainExNextBtn" disabled onclick="' + nextStep2 + '" style="background:' + (mod.color || '#60a5fa') + '; color:#fff; border:none; padding:10px 22px; border-radius:8px; font-weight:700; cursor:not-allowed; font-family:inherit; opacity:0.4;">⏳ ' + nextLabel2 + '</button>';
+      if (!isInteractive) {
+        const nextLabel2 = quiz.length ? 'Gå till quiz →' : 'Klar →';
+        const nextStep2 = quiz.length ? "trainGoStep('quiz',0)" : "trainGoStep('done',0)";
+        html += '<button id="trainExNextBtn" disabled onclick="' + nextStep2 + '" style="background:' + (mod.color || '#60a5fa') + '; color:#fff; border:none; padding:10px 22px; border-radius:8px; font-weight:700; cursor:not-allowed; font-family:inherit; opacity:0.4;">⏳ ' + nextLabel2 + '</button>';
+        setTimeout(function() {
+          const b = document.getElementById('trainExNextBtn');
+          if (b) { b.disabled = false; b.style.cursor = 'pointer'; b.style.opacity = '1'; b.textContent = nextLabel2; }
+        }, 2000);
+      }
       html += '</div>';
-      // Lås i 2 sek
-      setTimeout(function() {
-        const b = document.getElementById('trainExNextBtn');
-        if (b) { b.disabled = false; b.style.cursor = 'pointer'; b.style.opacity = '1'; b.textContent = nextLabel2; }
-      }, 2000);
     }
     else if (currentTrainStep.type === 'quiz' && quiz.length) {
       // Quiz i slide-mode — en fråga i taget
