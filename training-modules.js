@@ -1360,11 +1360,43 @@ quiz:[
 ],
 pr:['Hur listar jag mig på en vårdcentral i Helsingborg?','Vad täcker frikortet?','Tandvård på låg budget i Sverige?']},
 
-{id:'h6',icon:'🤝',title:'Socialt stöd & ensamhet',sub:'Du behöver inte klara allt själv',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h6',icon:'🤝',title:'Socialt stöd & ensamhet',sub:'Du behöver inte klara allt själv',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h6-stod.mp4',
 lessons:[
-{t:'Ensamhet — en folksjukdom',s:'Ensamhet är en av vår tids största hälsoutmaningar.\n\nRisker med kronisk ensamhet:\n❤️ Hjärt-kärlsjukdom (+29%)\n🧠 Demens (+50%)\n😔 Depression\n⚰️ Kortare liv\n\nJobbsök förstärker ofta ensamhet — du tappar rutiner och social kontakt.',a:'WHO har utnämnt ensamhet till en global hälsokris. Socialt stöd är en av de starkaste skyddsfaktorerna för fysisk och mental hälsa. Kvalitet > kvantitet — 1-2 nära relationer skyddar mer än 20 ytliga.'},
-{t:'Hitta gemenskap i Helsingborg',s:'Gratis och nära:\n\n🏛️ Biblioteket — öppet hus, evenemang\n⛪ Kyrkor & moskéer — öppna för alla\n🌳 Naturstödsprogram via kommunen\n🎭 Föreningsliv — idrott, kultur, språk\n🤝 Volontärnätverk (Stadsmissionen)\n🏃 Parkrun — gratis löpning lördag 9.00\n\nAF-aktiviteter ger också social kontakt!',a:'Forskning visar att volontärarbete är ett av de effektivaste sätten att bygga socialt nätverk och öka välmående. Det ger struktur, syfte och kontakter — tre saker som jobbsöket ofta tar ifrån en.'},
-{t:'Prata om hur du mår',s:'Det är okej att inte vara okej.\n\nVem kan du prata med?\n• Vänner och familj\n• Handläggare på AF\n• Kurator på vårdcentral\n• Mind Stödlinje: 90101\n• Bris (om du är ung): 116 111\n\nDu behöver inte vänta tills det är kris.\n"Jag har det lite tungt just nu" räcker.',a:'Att verbalisera sina känslor (name it to tame it) sänker aktiviteten i amygdala (hjärnans larmsystem) mätbart. Att prata om hur man mår är alltså direkt terapeutiskt — inte bara symboliskt.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🤝',h:'Vad är syftet?',t:'Förstå varför socialt stöd är så viktigt — och vart du hittar det.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Riskerna med ensamhet, gemenskap i Helsingborg, volontärarbete, och hur du börjar prata om hur du mår.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha minst en konkret kontakt eller plats att gå till denna vecka.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en checklista.'}
+],
+a:'Att be om hjälp är styrka — inte svaghet.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom riskerna med ensamhet, var du hittar gemenskap, kraften i volontärarbete, och hur du tar steget att prata om hur du mår. Se den först.'},
+{t:'Ensamhet — en folksjukdom',
+cards:[
+{icon:'❤️',h:'Hjärt-kärlsjukdom',t:'+29 % ökad risk vid kronisk ensamhet.'},
+{icon:'🧠',h:'Demens',t:'+50 % ökad risk.'},
+{icon:'😔',h:'Depression',t:'Förstärks av isolering.'},
+{icon:'🌀',h:'Jobbsöket förvärrar',t:'Du tappar rutiner och social kontakt.'}
+],
+a:'WHO klassar ensamhet som en global hälsokris. Kvalitet är viktigare än kvantitet — 1–2 nära relationer skyddar mer än 20 ytliga.'},
+{t:'Hitta gemenskap i Helsingborg',
+cards:[
+{icon:'📚',h:'Biblioteket',t:'Öppet hus och evenemang.'},
+{icon:'⛪',h:'Kyrkor & moskéer',t:'Öppna för alla.'},
+{icon:'🎭',h:'Föreningsliv',t:'Idrott, kultur, språk.'},
+{icon:'🏃',h:'Parkrun',t:'Gratis löpning lördag 9.00.'},
+{icon:'🤝',h:'Volontärnätverk',t:'Stadsmissionen och andra.'}
+],
+a:'Volontärarbete ger struktur, syfte och kontakter — tre saker jobbsöket ofta tar ifrån en.'},
+{t:'Prata om hur du mår',
+cards:[
+{icon:'👨‍👩‍👧',h:'Familj och vänner',t:'De vill veta — de testar dig inte.'},
+{icon:'💼',h:'Handläggare på AF',t:'De är där för dig.'},
+{icon:'🏥',h:'Kurator på vårdcentral',t:'Gratis — fråga om remiss.'},
+{icon:'📞',h:'Mind: 90101',t:'Stödlinje dygnet runt.'},
+{icon:'📞',h:'Bris: 116 111',t:'Om du är ung.'}
+],
+a:'Att verbalisera känslor sänker aktiviteten i hjärnans larmsystem mätbart — det är direkt terapeutiskt, inte bara symboliskt.'}
 ],
 ex:{type:'build',title:'Ditt sociala stödnät',desc:'Kartlägg och stärk ditt sociala nätverk.',
 fields:[
@@ -1381,11 +1413,41 @@ quiz:[
 ],
 pr:['Föreningar och aktiviteter för nyanlända i Helsingborg?','Hur hanterar jag ensamhet under jobbsöket?','Tips för att bygga vänskap som vuxen?']},
 
-{id:'h7',icon:'🚭',title:'Alkohol, rökning & vanor',sub:'Ärliga fakta utan pekpinnar',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h7',icon:'🚭',title:'Alkohol, rökning & vanor',sub:'Ärliga fakta utan pekpinnar',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h7-vanor.mp4',
 lessons:[
-{t:'Alkohol — risker och gränser',s:'Riskdrickning i Sverige:\n🚹 Män: mer än 14 glas/vecka\n🚺 Kvinnor: mer än 9 glas/vecka\n\nAkuta risker vid berusning:\n• Olyckor & skador\n• Dåliga beslut\n• Ökad ångest dagen efter\n\nAlkohol löser inte stress — det förstärker den på lång sikt.',a:'Alkohol är klassad som klass 1-karcinogen (cancerframkallande) av WHO. Det finns ingen "säker" mängd för cancer. Däremot finns sociala och kulturella aspekter av måttlig konsumtion. Systembolaget och 1177 har gratis rådgivning.'},
-{t:'Rökning — kostnad och alternativ',s:'En ask om dagen = ca 4 000 kr/mån\n48 000 kr per år!\n\nSluta-resurser:\n✅ Sluta-röka-linjen: 020-84 00 00 (gratis)\n✅ Nikotinläkemedel: receptfria på apotek\n✅ Receptbelagd medicin via husläkare\n✅ Appen "Smoke Free"\n\nDin kropp börjar återhämta sig inom 20 min!',a:'70% av rökare vill sluta. De flesta försök misslyckas, men varje försök ökar chansen att lyckas nästa gång. Kombinationen beteendestöd + nikotinläkemedel har 3-4x högre framgångsrate än kall kalkon.'},
-{t:'Bryta dåliga vanor — hur?',s:'Vanor följer ett mönster:\n⚡ Trigger → 🔄 Rutin → 🎁 Belöning\n\nFör att bryta:\n1. Identifiera triggern\n2. Byt rutin (håll belöningen)\n3. Bygg ny belöning\n\nExempel:\nTrigger: Stress → Rökning → Avslappning\nNy rutin: Stress → Andningsövning → Avslappning',a:'James Clear (Atomic Habits): miljödesign är kraftfullare än viljestyrka. Ta bort triggern ur miljön. Gör den nya vanor enklare än den gamla. Identitetsbaserade vanor ("Jag är en icke-rökare") håller längre än mål ("Jag ska sluta röka").'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🚭',h:'Vad är syftet?',t:'Förstå dina vanor — utan pekpinnar. Och få verktyg för att förändra dem.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Alkoholgränser, rökningens kostnad, sluta-resurser, och hur du bryter en vana.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna identifiera en vana att jobba med — och hur du kan byta rutin.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en vana-övning.'}
+],
+a:'Varje försök räknas. Att misslyckas ökar bara chansen att lyckas nästa gång.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom alkoholgränser, rökningens kostnader, sluta-resurser och vanans psykologi. Se den först.'},
+{t:'Alkohol — risker och gränser',
+cards:[
+{icon:'🚹',h:'Män',t:'Riskdrickning: mer än 14 glas/vecka.'},
+{icon:'🚺',h:'Kvinnor',t:'Riskdrickning: mer än 9 glas/vecka.'},
+{icon:'😰',h:'Akut',t:'Olyckor, dåliga beslut, ångest dagen efter.'},
+{icon:'⚠️',h:'Alkohol och stress',t:'Löser inte stress — förstärker den på lång sikt.'}
+],
+a:'Alkohol är klassad som klass 1-karcinogen av WHO. Det finns ingen "säker" mängd för cancer.'},
+{t:'Rökning — kostnad och alternativ',
+cards:[
+{icon:'💸',h:'En ask om dagen',t:'≈ 4 000 kr/månad — 48 000 kr/år.'},
+{icon:'📞',h:'Sluta-röka-linjen',t:'020-84 00 00 — gratis.'},
+{icon:'💊',h:'Nikotinläkemedel',t:'Receptfritt på apotek.'},
+{icon:'📱',h:'Appen "Smoke Free"',t:'Stödjer steg för steg.'}
+],
+a:'Kombinationen beteendestöd + nikotinläkemedel har 3–4 gånger högre framgångsrate än att sluta utan stöd.'},
+{t:'Bryta dåliga vanor',
+cards:[
+{icon:'⚡',h:'Trigger',t:'Vad sätter igång vanan?'},
+{icon:'🔄',h:'Rutin',t:'Vad du gör.'},
+{icon:'🎁',h:'Belöning',t:'Vad du får ut av det.'},
+{icon:'🔁',h:'Byt rutinen',t:'Behåll belöningen. T.ex. stress → andas djupt → samma avslappning.'}
+],
+a:'Miljödesign är kraftfullare än viljestyrka. Gör den nya vanan enklare än den gamla.'}
 ],
 ex:{type:'build',title:'Din vanekartläggning',desc:'Ärlig analys av en vana du vill förändra.',
 fields:[
@@ -1402,11 +1464,41 @@ quiz:[
 ],
 pr:['Plan för att röka mindre utan att sluta direkt.','Hur minskar jag alkohol under stressiga perioder?','Atomic Habits-metoden på svenska?']},
 
-{id:'h8',icon:'💊',title:'Läkemedel & egenvård',sub:'Rätt info om vanliga medel',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h8',icon:'💊',title:'Läkemedel & egenvård',sub:'Rätt info om vanliga medel',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h8-lakemedel.mp4',
 lessons:[
-{t:'Receptfria läkemedel — vad gäller?',s:'På apoteket utan recept:\n💊 Paracetamol (Alvedon) — smärta & feber\n💊 Ibuprofen (Ipren) — inflammation & smärta\n💊 Antihistamin — allergi & snuva\n💊 Sår- och hudprodukter\n💊 Nikotinläkemedel\n\n⚠️ Råd: Fråga alltid apotekspersonalen!\nDe är utbildade farmaceuter — gratis rådgivning.',a:'Sverige har receptfri försäljning i dagligvaruhandeln sedan 2009 men apoteket ger alltid bäst rådgivning. Paracetamol är säkert vid normala doser men FARLIGT vid överdos (levertoxiskt). Ibuprofen bör undvikas vid magsår, njurproblem och graviditet.'},
-{t:'Kroniska sjukdomar & högkostnadsskydd',s:'Har du en kronisk sjukdom?\n\n✅ Recept: Max 1 300 kr per år (sedan gratis)\n✅ Hjälpmedel: gratis via Region Skåne\n✅ Hemsjukvård om du inte kan ta dig till VC\n\nGlöm inte:\n• Ta mediciner regelbundet\n• Berätta om alla mediciner för alla läkare\n• Förnya recept i tid',a:'Läkemedelsförmånen täcker receptbelagda läkemedel med max 1 300 kr/år i patientavgift. Kroniska sjukdomar ger ofta rätt till sjukersättning via FK om arbetskapaciteten är nedsatt. Anmäl till Försäkringskassan.'},
-{t:'1177 — din digitala vårdguide',s:'1177.se ger dig:\n\n🔍 Symtom-sök — vad kan det vara?\n📞 Sjuksköterskestöd per telefon\n📅 Boka tid på vårdcentral\n💊 Läkemedelsinformation\n📋 Dina journalhandlingar\n🏥 Hitta närmaste vård\n\nAllt gratis — dygnet runt på telefon.',a:'1177 Vårdguiden är Region Skånes (och alla regioners) digitala ingång till vården. Sjuksköterskan bedömer om du behöver söka vård, vilken nivå och hur snabbt. Rätt vård i rätt tid.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'💊',h:'Vad är syftet?',t:'Förstå vanliga receptfria medel — och när du ska fråga om hjälp.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Receptfritt sortiment, säkerhet kring paracetamol, kroniska sjukdomar, och hur 1177 hjälper.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta vilka medel som finns och vart du vänder dig vid tvekan.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Apotekspersonalen är utbildade farmaceuter — använd dem. Det är gratis rådgivning.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom vanliga receptfria läkemedel, säkerhet, kroniska sjukdomar och hur 1177 hjälper dig dygnet runt. Se den först.'},
+{t:'Receptfria läkemedel',
+cards:[
+{icon:'💊',h:'Paracetamol (Alvedon)',t:'Smärta och feber.'},
+{icon:'💊',h:'Ibuprofen (Ipren)',t:'Inflammation och smärta.'},
+{icon:'💊',h:'Antihistamin',t:'Allergi och snuva.'},
+{icon:'🩹',h:'Sår- och hudprodukter',t:'Plåster, salvor, krämer.'}
+],
+a:'Paracetamol är säkert vid normala doser men FARLIGT vid överdos (levertoxiskt). Ibuprofen — undvik vid magsår, njurproblem och graviditet.'},
+{t:'Kroniska sjukdomar',
+cards:[
+{icon:'💰',h:'Högkostnadsskydd',t:'Max 1 300 kr/år för receptbelagda — sedan gratis.'},
+{icon:'🏥',h:'Hjälpmedel',t:'Gratis via Region Skåne vid behov.'},
+{icon:'🏠',h:'Hemsjukvård',t:'Om du inte kan ta dig till vårdcentralen.'},
+{icon:'📋',h:'Berätta alltid',t:'Om alla mediciner för varje läkare.'}
+],
+a:'Kroniska sjukdomar kan ge rätt till sjukersättning via FK om arbetskapaciteten är nedsatt — anmäl till Försäkringskassan.'},
+{t:'1177 — din digitala vårdguide',
+cards:[
+{icon:'🔍',h:'Symtom-sök',t:'Vad kan det vara?'},
+{icon:'📞',h:'Sjuksköterskestöd',t:'Per telefon — dygnet runt.'},
+{icon:'📅',h:'Boka tid',t:'På vårdcentralen direkt.'},
+{icon:'💊',h:'Läkemedelsinfo',t:'Och dina egna journaler.'}
+],
+a:'Vid tvekan — ring 1177 innan du tar ett läkemedel. Rätt vård i rätt tid — och gratis.'}
 ],
 ex:{type:'build',title:'Din hälsöversikt',desc:'Koll på dina mediciner och vårdbehov.',
 fields:[
@@ -1423,11 +1515,42 @@ quiz:[
 ],
 pr:['Vad gör 1177 och hur använder jag det bäst?','Vad är skillnaden Alvedon och Ipren?','Hur ansöker jag om sjukersättning via FK?']},
 
-{id:'h9',icon:'🦷',title:'Tandvård & kroppen',sub:'Glöm inte resten av kroppen',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h9',icon:'🦷',title:'Tandvård & kroppen',sub:'Glöm inte resten av kroppen',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h9-tandvard.mp4',
 lessons:[
-{t:'Tandvård — dyrt men viktigt',s:'Sverige har inget generellt tandvårdsstöd för vuxna.\n\nMen du har:\n✅ Tandvårdsstöd: 600 kr/år (bidrag)\n✅ Referenstaxan — reglerar max-priser\n✅ Jämför priser på 1177.se\n✅ Folktandvården — ofta billigast\n\nBarn upp till 23 år: gratis tandvård!\nSjuka/funktionsnedsatta: extra stöd finns.',a:'Munhälsa påverkar hela kroppen — dåliga tänder kopplas till hjärtsjukdom och diabetes. Förebyggande vård (putsning + fluorid 2 ggr/år) är alltid billigare än lagning. Folktandvårdens referenstaxa finns på 1177.se.'},
-{t:'Syn & hörsel',s:'Glasögon:\n• Synundersökning: ca 200-400 kr\n• Glasögon: 500-3000 kr\n• Socialbidrag kan täcka glasögon\n\nHörsel:\n• Hörseltest gratis via hörcentralen\n• Hörapparat subventioneras kraftigt (100 kr)\n• Remiss via vårdcentral eller 1177\n\nFörsumma inte syn och hörsel — det påverkar livskvalitet och arbetsförmåga!',a:'Synproblem är en vanlig orsak till huvudvärk och koncentrationssvårigheter. Region Skåne subventionerar hörapparater kraftigt — patienten betalar ca 100 kr. Synhjälpmedel kan sökas via Synrehabiliteringen om nedsättningen är allvarlig.'},
-{t:'Förebyggande hälsa',s:'Gratis hälsokontroller i Sverige:\n\n🩺 Hälsokontroll: via din VC\n🫀 BVC & MVC: barn och gravida\n🎗️ Mammografi: 40-74 år (kallas automatiskt)\n🔬 Cervixprov: 23-64 år (kallas automatiskt)\n🫁 KOL-screening: rökare 40+\n\nTa emot kallelserna — de räddar liv.',a:'Sverige har ett av världens mest effektiva screeningprogram. Bröstcancer hittad via mammografi har 95% 5-årsöverlevnad. Cervixcancer kan helt förebyggas via HPV-vaccin (gratis upp till 26 år via vaccination) och regelbundna cellprov.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🦷',h:'Vad är syftet?',t:'Lära dig vad som finns för tandvård, syn, hörsel och förebyggande hälsa.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Tandvårdsstöd, gratis tandvård för unga, syn- och hörselvård, samt screeningprogram.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta vad du har rätt till och hur du tar emot kallelser.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Sverige har ett av världens mest effektiva screeningprogram — ta emot kallelserna.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom tandvård, syn och hörsel, samt de gratis screeningprogrammen som räddar liv. Se den först.'},
+{t:'Tandvård — dyrt men viktigt',
+cards:[
+{icon:'💰',h:'Tandvårdsstöd',t:'600 kr/år i bidrag.'},
+{icon:'📊',h:'Referenstaxan',t:'Reglerar max-priser — jämför på 1177.se.'},
+{icon:'🏥',h:'Folktandvården',t:'Ofta billigast.'},
+{icon:'🎓',h:'Gratis upp till 23 år',t:'För barn och unga.'},
+{icon:'❤️',h:'Munhälsa = hela kroppen',t:'Kopplas till hjärtsjukdom och diabetes.'}
+],
+a:'Förebyggande vård (putsning + fluorid 2 ggr/år) är alltid billigare än lagning.'},
+{t:'Syn & hörsel',
+cards:[
+{icon:'👁️',h:'Synundersökning',t:'200–400 kr.'},
+{icon:'👓',h:'Glasögon',t:'500–3 000 kr. Socialbidrag kan täcka.'},
+{icon:'👂',h:'Hörseltest',t:'Gratis via hörcentralen.'},
+{icon:'🦻',h:'Hörapparat',t:'Subventioneras kraftigt — ≈ 100 kr.'}
+],
+a:'Synproblem är vanlig orsak till huvudvärk och koncentrationssvårigheter. Försumma inte syn och hörsel — det påverkar arbetsförmåga.'},
+{t:'Förebyggande hälsa',
+cards:[
+{icon:'🎗️',h:'Mammografi',t:'40–74 år — du kallas automatiskt.'},
+{icon:'🔬',h:'Cellprov',t:'23–64 år — du kallas automatiskt.'},
+{icon:'🫁',h:'KOL-screening',t:'Rökare 40+.'},
+{icon:'💉',h:'HPV-vaccin',t:'Gratis upp till 26 år.'}
+],
+a:'Bröstcancer hittad via mammografi har 95 % 5-årsöverlevnad. Cervixcancer kan helt förebyggas — ta emot kallelserna.'}
 ],
 ex:{type:'build',title:'Din kropp-checklista',desc:'Säkra att du tar hand om hela dig.',
 fields:[
@@ -2029,11 +2152,44 @@ quiz:[
 ],
 pr:['Förklara den svenska skattedeklarationen för mig.','Vilka avdrag kan jag göra som jobbsökare?','Hur ändrar jag min skattejämkning?']},
 
-{id:'e7',icon:'🚌',title:'Transport & kollektivtrafik',sub:'Ta dig dit du behöver — billigt',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e7',icon:'🚌',title:'Transport & kollektivtrafik',sub:'Ta dig dit du behöver — billigt',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e7-transport.mp4',
 lessons:[
-{t:'Skånetrafikens kort & rabatter',s:'Skånetrafiken har flera biljettalternativ:\n\n🎫 Periodbiljett: billigast om du reser dagligen\n📱 Digital biljett i app: 10% billigare\n👶 Barn under 7: gratis\n📚 Ungdomsrabatt: upp till 20 år\n🧓 65+: rabatterat\n\nHjälpmedelsresor: om du har funktionsnedsättning',a:'Skånetrafikens månadskort kostar ca 940-1 100 kr beroende på zon. Jämfört med bil (ca 4 000-6 000 kr/mån inkl. försäkring, drivmedel, parkering) är kollektivt dramatiskt billigare. Cykel som komplement till buss/tåg minskar kostnaden ytterligare.'},
-{t:'Gratis och billig transport',s:'Alternativ till dyr transport:\n\n🚲 Cykel: gratis (köp begagnad för 500 kr)\n🚶 Promenera om möjligt (+ hälsa)\n🤝 Samåkning: skjuts.se, BlaBlaCar\n🚗 Hyrbil vid enstaka behov (Sunfleet)\n📱 Elsparkcyklar: Tier, Voi (per resa)\n\nHelsingborg → Köpenhamn: Öresundsbron med tåg',a:'Pendelbåten Helsingborg-Helsingör kostar ca 60 kr tur/retur och tar 20 min. Öresundstågkortet ger rabatt för regelbundna pendlare. Samåkning via Skjuts.se är nästan gratis och minskar miljöpåverkan.'},
-{t:'Bil — äga, leasa eller avstå?',s:'Genomsnittlig bil i Sverige kostar:\n💰 Ca 4 000-8 000 kr/mån totalt:\n• Lån/leasing\n• Försäkring (1 500-3 000 kr)\n• Bensin/el\n• Service & reparationer\n• Parkering\n\nÄr bilen NÖDVÄNDIG eller bara bekväm?\n→ Kan du klara utan? Prova en månad!',a:'Bil är ofta den dyraste löpande kostnaden efter hyra. Leasing ger förutsägbara kostnader men ingen äganderätt. Om bilen krävs för jobbet: kolla om arbetsgivaren betalar milersättning. Elbilar har lägre driftkostnad men högre inköpspris.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🚌',h:'Vad är syftet?',t:'Ta dig dit du behöver — billigt. Och förstå vad transport faktiskt kostar.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Skånetrafikens biljetter, alternativ till bil, och kostnaden för en egen bil.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna jämföra dina transportkostnader och välja smart.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Bil är ofta den dyraste löpande kostnaden efter hyra.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom Skånetrafikens biljetter, cykel, samåkning och vad en egen bil egentligen kostar. Se den först.'},
+{t:'Skånetrafiken — kort och rabatter',
+cards:[
+{icon:'🎫',h:'Periodbiljett',t:'Billigast om du reser dagligen.'},
+{icon:'📱',h:'Digital biljett i app',t:'10 % billigare än papper.'},
+{icon:'👶',h:'Barn under 7',t:'Gratis.'},
+{icon:'🎓',h:'Ungdomsrabatt',t:'Upp till 20 år.'},
+{icon:'🧓',h:'65+',t:'Rabatterat.'}
+],
+a:'Skånetrafikens månadskort: 940–1 100 kr beroende på zon. Jämfört med bil (4 000–6 000 kr/mån) — dramatiskt billigare.'},
+{t:'Gratis och billiga alternativ',
+cards:[
+{icon:'🚲',h:'Cykel',t:'Begagnad: 500 kr. Hälsobonus.'},
+{icon:'🚶',h:'Promenera om möjligt',t:'Gratis och stärkande.'},
+{icon:'🤝',h:'Samåkning',t:'Skjuts.se, BlaBlaCar.'},
+{icon:'🚗',h:'Hyrbil enstaka behov',t:'Sunfleet och liknande.'},
+{icon:'🛴',h:'Elsparkcyklar',t:'Tier, Voi — per resa.'}
+],
+a:'Pendelbåten Helsingborg–Helsingör kostar ca 60 kr tur/retur och tar 20 min.'},
+{t:'Bil — äga, leasa eller avstå?',
+cards:[
+{icon:'💸',h:'Lån/leasing',t:'Månadskostnad — låst i lång tid.'},
+{icon:'🛡️',h:'Försäkring',t:'1 500–3 000 kr/mån.'},
+{icon:'⛽',h:'Drivmedel',t:'Bensin eller el.'},
+{icon:'🔧',h:'Service & reparationer',t:'Räknas in i totalen.'},
+{icon:'🅿️',h:'Parkering',t:'Ofta glömd — men dyr.'}
+],
+a:'Är bilen NÖDVÄNDIG eller bara bekväm? Prova en månad utan — och räkna vad du sparar.'}
 ],
 ex:{type:'build',title:'Din resplan',desc:'Optimera din transport och spara pengar.',
 fields:[
@@ -2407,8 +2563,40 @@ pr:['Bygg min ekonomiska trappa baserat på min situation.','Hur sätter jag upp
 ];
 
 var DIGITAL=[
-{id:'d1',icon:'🌐',title:'Digital närvaro',sub:'Ditt Google-fotavtryck',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Vad är digital närvaro?',s:'Digital närvaro är allt som finns om dig på internet.\n\nBilder, texter, profiler och kommentarer.',a:'Ditt samlade digitala fotavtryck: sociala medier, sökresultat, gamla konton. Arbetsgivare använder detta.'},{t:'Vad ser arbetsgivare?',s:'De söker ditt namn och ser bilder, profiler och gamla inlägg.',a:'Rekryterare gör en snabb bakgrundskoll. Professionalism, språkbruk, bilder.'},{t:'Städa ditt fotavtryck',s:'Ta bort gamla bilder, stäng gamla konton, ändra profilbilder.',a:'Uppdatera LinkedIn, skapa professionella profiler och radera olämpligt innehåll.'}],
+{id:'d1',icon:'🌐',title:'Digital närvaro',sub:'Ditt Google-fotavtryck',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d1-narvaro.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🌐',h:'Vad är syftet?',t:'Förstå ditt Google-fotavtryck — och hur du formar det.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad digital närvaro är, vad arbetsgivare ser, och hur du städar.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha gjort en analys av ditt fotavtryck och en plan för förbättring.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en analys.'}
+],
+a:'70 % av rekryterare i Sverige googlar kandidater. Ditt namn på Google ska leda till LinkedIn.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom vad digital närvaro är, vad arbetsgivare faktiskt ser, och hur du städar ditt fotavtryck. Se den först.'},
+{t:'Vad är digital närvaro?',
+cards:[
+{icon:'🪞',h:'Allt om dig online',t:'Bilder, texter, profiler och kommentarer.'},
+{icon:'🕰️',h:'Digitalt fotavtryck lever länge',t:'Det du gjorde för 10 år sedan kan fortfarande synas.'},
+{icon:'🔎',h:'Testa själv',t:'Googla ditt namn — just nu.'}
+],
+a:'Du kan inte ta bort Google-träffar — men du kan kontrollera vad de hittar.'},
+{t:'Vad ser arbetsgivare?',
+cards:[
+{icon:'❌',h:'Skadar dig',t:'Fest-bilder, stötande kommentarer, klagomål på ex-arbetsgivare.'},
+{icon:'✅',h:'Hjälper dig',t:'Professionell LinkedIn, branschrelaterade inlägg, rekommendationer.'},
+{icon:'📊',h:'57 % har påverkats',t:'Av innehåll de hittat — i negativ riktning.'}
+],
+a:'LinkedIn är det enda sociala mediet som alltid hjälper.'},
+{t:'Städa ditt fotavtryck',
+cards:[
+{icon:'1️⃣',h:'Privatisera',t:'Instagram och Facebook — sätt till privat.'},
+{icon:'2️⃣',h:'Ta bort',t:'Gamla stötande bilder och inlägg.'},
+{icon:'3️⃣',h:'Uppdatera',t:'LinkedIn med professionellt foto och pitch.'},
+{icon:'4️⃣',h:'Begär borttagning',t:'Via Googles formulär (GDPR) vid behov.'}
+],
+a:'Ditt mål: när någon googlar ditt namn ska LinkedIn vara första träffen.'}
+],
 ex:{type:'build',title:'Analysera ditt fotavtryck',desc:'Snabb analys + förbättringsplan.',fields:[{l:'Googla ditt namn — vad hittar du?',ph:'T.ex. Instagram, gammal blogg...',ta:true,hint:'Sök på ditt namn nu.'},{l:'Vad bör tas bort?',ph:'T.ex. Gamla partybilder...',ta:true},{l:'Vad bör läggas till?',ph:'T.ex. Uppdatera LinkedIn-bild...',ta:true},{l:'Ditt nästa steg',ph:'T.ex. Byt profilbild idag.',hint:'Gör det nu!'}]},
 quiz:[{q:'Vad är digital närvaro?',o:['Att ha dator','Allt om dig på internet','En e-postadress'],c:1},{q:'Varför googlar arbetsgivare?',o:['Nyfikenhet','Professionell bakgrundskoll','Lag'],c:1},{q:'Vad ta bort?',o:['Yrkeshistorik','Stötande bilder och kommentarer','Profilbild'],c:1}],
 pr:['Sammanfatta mitt fotavtryck: …','5 förbättringar för min närvaro.','Vad tittar arbetsgivare på?']},
@@ -2448,8 +2636,41 @@ a:'Rubrik: yrkesroll + styrkor + bransch. Om mig: 3-5 meningar med pitch, erfare
 ex:{type:'build',title:'Bygg din LinkedIn-profil',desc:'Skriv delarna — kopiera sedan direkt till LinkedIn.',fields:[{l:'Rubrik',ph:'T.ex. Lagerarbetare med truck-erfarenhet',hint:'Max 120 tecken.'},{l:'Om mig — pitch',ph:'T.ex. Engagerad med 4 år i logistik.',ta:true},{l:'Om mig — styrkor',ph:'T.ex. Struktur, effektivitet och teamarbete.',ta:true},{l:'Om mig — mål',ph:'T.ex. Söker utmaning i Helsingborg.',ta:true}]},
 quiz:[{q:'Varför är LinkedIn viktigt?',o:['Nöjessida','Rekryterare söker där','Obligatoriskt'],c:1},{q:'Vad ska rubriken ha?',o:['Favoritfilm','Yrkesroll + styrkor + bransch','Alla utbildningar'],c:1},{q:'Vad ska Om mig ha?',o:['Familjebakgrund','Pitch, erfarenhet och mål','Lista med jobb'],c:1}],
 pr:['LinkedIn-rubrik baserat på min erfarenhet.','Om mig i 3 meningar.','Förbättra min profil: …']},
-{id:'d3',icon:'👤',title:'Bygg digital profil',sub:'Professionellt online',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Vad är en digital profil?',s:'Bild, text, kompetenser och kontaktuppgifter på ett ställe.',a:'Samlar din yrkesidentitet — vem du är, vad du kan och vad du söker, snabbt och professionellt.'},{t:'5 steg',s:'1. Profilbild\n2. Kort presentation\n3. Styrkor\n4. Erfarenhet\n5. Kontakt',a:'Varje del fyller en funktion. Bilden skapar förtroende, presentationen berättar vem du är.'},{t:'Koppla din pitch',s:'Din pitch är grunden för din digitala presentation.',a:'Konsekvent pitch i CV, LinkedIn och profil skapar ett starkt varumärke.'}],
+{id:'d3',icon:'👤',title:'Bygg digital profil',sub:'Professionellt online',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d3-profil.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'👤',h:'Vad är syftet?',t:'Bygga en stark digital profil — professionellt och på 30 minuter.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'5-stegsmetoden, profilbild, presentation, kompetenser och pitchen.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha en komplett profil med alla 5 delar ifyllda.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en bygg-övning.'}
+],
+a:'En komplett profil syns mer i sökresultaten.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom 5-stegsmetoden för en stark digital profil, från profilbild till pitch. Se den först.'},
+{t:'Vad är en digital profil?',
+cards:[
+{icon:'🪪',h:'Din yrkesidentitet',t:'Samlad på ett ställe — vem du är, vad du kan, vad du söker.'},
+{icon:'⚡',h:'Snabbt och professionellt',t:'Rekryteraren hittar dig direkt.'}
+],
+a:'Konsekvent pitch i CV, LinkedIn och profil skapar ett starkt varumärke.'},
+{t:'5 steg till en stark profil',
+cards:[
+{icon:'📸',h:'1. Profilbild',t:'Skapar förtroende.'},
+{icon:'✏️',h:'2. Kort presentation',t:'Vem du är på 3–5 meningar.'},
+{icon:'💪',h:'3. Styrkor',t:'5 viktigaste — mixa hårda och mjuka.'},
+{icon:'💼',h:'4. Erfarenhet',t:'Var du varit och vad du gjort.'},
+{icon:'📞',h:'5. Kontakt',t:'Hur du nås — uppdaterat nummer och e-post.'}
+],
+a:'Varje del fyller en funktion. Bilden skapar förtroende, presentationen berättar vem du är.'},
+{t:'Profilbild och pitch',
+cards:[
+{icon:'🪟',h:'Neutral bakgrund',t:'Vit vägg eller suddig miljö.'},
+{icon:'😊',h:'Tydligt ansikte',t:'Vänlig min — du behöver inte le.'},
+{icon:'💡',h:'Bra ljus',t:'Naturligt fönsterljus fungerar perfekt.'},
+{icon:'🎤',h:'Använd din pitch',t:'Vem du är + vad du kan + vad du söker.'}
+],
+a:'Samma pitch i CV, LinkedIn och digital profil = ett starkt varumärke som rekryterare känner igen.'}
+],
 ex:{type:'build',title:'Bygg din profil i 5 steg',desc:'Komplett digital profil med pitch och styrkor.',fields:[{l:'Profilbild — vad behöver förbättras?',ph:'T.ex. Selfie → professionell bild neutral bakgrund.',hint:'Neutral bakgrund, tydligt ansikte.'},{l:'Kort presentation',ph:'Skriv din pitch-text...',ta:true},{l:'5 viktigaste kompetenser',ph:'1. \n2. \n3. \n4. \n5. ',ta:true,hint:'Mixa hårda och mjuka.'},{l:'Erfarenhetssammanfattning',ph:'T.ex. 3 år lager hos X, 2 år butik hos Y...',ta:true},{l:'Vilka branscher?',ph:'T.ex. Lager, Handel, Transport...',hint:'Välj 2-4.'}]},
 quiz:[{q:'Vad är en digital profil?',o:['Spelkonto','Professionell presentation online','E-post'],c:1},{q:'Varför pitch och profil ihop?',o:['Krav','Enhetligt professionellt intryck','Sparar tid'],c:1},{q:'Viktigaste delarna?',o:['Hobbies','Bild, presentation, styrkor, erfarenhet, kontakt','Vänner'],c:1}],
 pr:['Digital profil baserat på min pitch.','Förbättra min presentation.','Vad saknas i min profil: …']}
@@ -2610,8 +2831,42 @@ a:'Ha alltid rekryterarens telefonnummer redo — om tekniken fallerar ringer du
 ex:{type:'build',title:'Din digitala intervju-setup',desc:'Förbered din tekniska setup för digitala möten.',fields:[{l:'Vilken enhet använder du?',ph:'T.ex. Laptop, telefon, surfplatta...'},{l:'Hur ser bakgrunden bakom dig ut?',ph:'T.ex. Neutral vägg / rörig — behöver rensas / virtuell bakgrund',hint:'Testa via kameran nu!'},{l:'Hur är belysningen framför dig?',ph:'T.ex. Fönster framför / lampa / mörkt — behöver fixas',hint:'Ljus framför = professionellt'},{l:'Din checklista — 3 saker att göra innan nästa möte',ph:'1. Testa länken\n2. Ladda enheten\n3. Stäng notiser',ta:true}]},
 quiz:[{q:'Vilket program är vanligast i svenska myndigheter?',o:['Zoom','Skype','Microsoft Teams','Google Meet'],c:2},{q:'Var ska ljuskällan vara?',o:['Bakom dig','Vid sidan','Framför dig','Under dig'],c:2},{q:'Hur tidigt bör du ansluta till digital intervju?',o:['Precis i tid','3-5 min tidigt','10 min tidigt','Spelar ingen roll'],c:1},{q:'Tekniken fallerar under intervjun — vad gör du?',o:['Hoppas det löser sig','Ring rekryteraren direkt','Avbryt och mejla','Vänta tålmodigt'],c:1}],
 pr:['Checklista för digitala intervjuer.','Hur installerar jag Teams/Zoom?','Tips för att se professionell ut på videomöte.']},
-{id:'d8',icon:'💻',title:'Office & produktivitetsverktyg',sub:'Word, Excel och Google — gratis alternativ',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Microsoft Office vs Google Workspace',s:'Microsoft Office:\n• Word, Excel, PowerPoint\n• Standard på arbetsplatser\n• Office Online gratis på office.com\n• Microsoft 365 — gratis via biblioteket!\n\nGoogle Workspace:\n• Docs, Sheets, Slides\n• 100% gratis med Gmail\n• Sparas automatiskt i molnet',a:'Kompatibilitet: Google Docs exporterar till .docx utan problem. Office Online är identiskt med skrivbordsversionen för de flesta uppgifter. Biblioteket i Helsingborg ger gratis tillgång till datorer och Office.'},{t:'Word för CV och personligt brev',s:'Grunderna:\n\n📏 Marginaler: 2,5 cm\n🔤 Teckensnitt: Arial eller Calibri, storlek 11-12\n📄 Spara som PDF innan du skickar!\n\nGratis CV-mallar:\n• canva.com\n• Microsoft mallbibliotek\n• CVmatchen-appen',a:'PDF är standard att skicka CV i — det ser likadant ut på alla enheter. Word-filer kan se annorlunda ut beroende på mottagarens version. Filnamnet: CV_Förnamn_Efternamn.pdf'},{t:'Excel och enkla kalkylark',s:'Du behöver kalkylark för:\n📊 Budgetera ekonomin\n📋 Spåra jobbansökningar\n📅 Planera veckan\n\nGrunder:\n• Celler, rader, kolumner\n• =SUM(A1:A10) för summering\n• Filtrera och sortera\n\n💡 YouTube: "Excel nybörjare" — allt på 20 min!',a:'Excel-grundkunskaper nämns i ca 30% av kontorsjobb. Google Sheets fungerar identiskt och är gratis. GCFGlobal.org erbjuder gratis interaktiva Excel-kurser.'}],
+{id:'d8',icon:'💻',title:'Office & produktivitetsverktyg',sub:'Word, Excel och Google — gratis alternativ',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d8-office.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'💻',h:'Vad är syftet?',t:'Lära dig de gratis verktygen du faktiskt behöver — Word, Excel och Google.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Microsoft Office vs Google Workspace, Word för CV, Excel-grunder, och var du gör allt gratis.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna välja rätt verktyg och spara CV som PDF.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en sorteringsövning.'}
+],
+a:'Verktygen är gratis — använd dem. Biblioteket ger fri tillgång till Office.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom Microsoft Office vs Google, Word för CV, PDF-export, och Excel-grunder. Se den först.'},
+{t:'Microsoft Office vs Google',
+cards:[
+{icon:'🪟',h:'Word, Excel, PowerPoint',t:'Standard på arbetsplatser. Gratis på office.com.'},
+{icon:'🌐',h:'Google Docs, Sheets, Slides',t:'100 % gratis med Gmail. Sparas i molnet.'},
+{icon:'📚',h:'Biblioteket',t:'Gratis tillgång till Office i Helsingborg.'},
+{icon:'🔄',h:'Kompatibilitet',t:'Google Docs exporterar till .docx utan problem.'}
+],
+a:'Office Online är identiskt med skrivbordsversionen för de flesta uppgifter.'},
+{t:'Word för CV och brev',
+cards:[
+{icon:'📏',h:'Marginaler 2,5 cm',t:'Standard.'},
+{icon:'🔤',h:'Arial eller Calibri',t:'Storlek 11–12.'},
+{icon:'📄',h:'Spara som PDF',t:'Ser likadan ut på alla enheter.'},
+{icon:'🎨',h:'Gratis CV-mallar',t:'canva.com, Microsoft mallbibliotek, CVmatchen.'}
+],
+a:'Filnamn på CV: CV_Förnamn_Efternamn.pdf. PDF är standard att skicka i.'},
+{t:'Excel — grunderna',
+cards:[
+{icon:'💰',h:'Budgetera',t:'Ekonomin — hyra, mat, sparande.'},
+{icon:'📋',h:'Spåra ansökningar',t:'Vilka jobb du sökt och status.'},
+{icon:'➕',h:'=SUM(A1:A10)',t:'Summerar A1 till A10 — formel-grund.'},
+{icon:'🎬',h:'YouTube',t:'"Excel nybörjare" — allt på 20 min.'}
+],
+a:'Excel-grundkunskaper nämns i ca 30 % av kontorsjobb. Google Sheets fungerar identiskt och är gratis.'}
+],
 ex:{type:'sort',title:'Microsoft Office eller Google?',desc:'Sortera rätt!',catA:'Microsoft Office',catB:'Google Workspace (gratis)',items:[{l:'Word — ordbehandling',c:'A'},{l:'Google Docs',c:'B'},{l:'Excel',c:'A'},{l:'Google Sheets',c:'B'},{l:'Kräver licens',c:'A'},{l:'Sparas automatiskt i molnet',c:'B'},{l:'Standard på arbetsplatser',c:'A'},{l:'Fungerar direkt i webbläsaren',c:'B'}]},
 quiz:[{q:'Vilket format skickar du CV i?',o:['Word (.docx)','PDF','Excel','Bild (.jpg)'],c:1},{q:'Var kan du använda Office gratis?',o:['Kan inte','office.com och biblioteket','Bara med studentlicens','Aldrig gratis'],c:1},{q:'Vilken Excel-formel summerar A1 till A10?',o:['=ADD(A1,A10)','=SUM(A1:A10)','=TOTAL(A1-A10)','=COUNT(A1:A10)'],c:1},{q:'Googles gratis alternativ till Word?',o:['Google Word','Google Write','Google Docs','Google Text'],c:2}],
 pr:['Hur skapar jag CV i Google Docs?','Grundläggande Excel-formler jag bör kunna.','Hur exporterar jag Google Docs till PDF?']},
@@ -2654,8 +2909,41 @@ a:'Vanligaste bluffar: falska Postnord-SMS, Skatteverket-mejl, Klarna-bluffar. R
 ex:{type:'build',title:'Din digitala säkerhets-checklista',desc:'Säkra dina viktigaste konton.',fields:[{l:'Har du 2FA på Gmail/e-post?',ph:'T.ex. Ja / Nej — aktiverar nu',hint:'Gör det nu — tar 5 min!'},{l:'Använder du samma lösenord på flera sajter?',ph:'T.ex. Ja / Nej / Använder Bitwarden'},{l:'Hur känner du igen phishing-mejl?',ph:'T.ex. Kontrollerar avsändarens adress, hovrar över länken...',ta:true},{l:'Vilka 3 konton är viktigast att säkra?',ph:'T.ex. Gmail, LinkedIn, AF-profilen',hint:'Sätt 2FA på alla tre!'}]},
 quiz:[{q:'Bästa sättet att hantera lösenord?',o:['Samma lösenord överallt','Lösenordshanterare med unika per sajt','Skriva upp på lapp','Använda födelsedag'],c:1},{q:'Vad är 2FA?',o:['Lösenord med 2 ord','Tvåstegsverifiering — extra säkerhetskod','Två separata konton','En typ av BankID'],c:1},{q:'Vad gör du med ett misstänkt mejl?',o:['Klickar på länken för att kolla','Svarar och frågar','Kontrollerar avsändarmejlen och raderar vid tvekan','Ignorerar'],c:2},{q:'Vilka myndigheter ber om lösenord via mejl?',o:['Skatteverket ibland','FK alltid','Inga — myndigheter ber ALDRIG om det','Bara AF'],c:2}],
 pr:['Hur sätter jag upp 2FA på Gmail?','Rekommendera gratis lösenordshanterare.','Hur känner jag igen phishing-bluffar?']},
-{id:'d10',icon:'📱',title:'Smartphone & appar för jobbet',sub:'Ditt mobilkontor i fickan',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Måste-appar för jobbsökare',s:'Jobbsök:\n• Arbetsförmedlingen-appen\n• LinkedIn\n• Indeed\n\nMyndigheter:\n• Mitt FK (Försäkringskassan)\n• 1177\n• Skatteverket\n\nKommunikation:\n• Gmail\n• Teams eller Zoom\n\nEkonomi:\n• Din banks app\n• Swish',a:'Alla myndigheters appar är gratis. AF-appen låter dig svara på aktiviteter direkt. FK-appen visar utbetalningar och ärenden realtid. Installera dem proaktivt — inte i en kris.'},{t:'Håll mobilen jobbredo',s:'Professionell röstbrevlåda:\n"Hej, du har nått [Namn]. Lämna ett meddelande."\n\nNotiser på:\n✅ E-post: direkt\n✅ LinkedIn: viktiga meddelanden\n✅ AF-appen: aktiviteter\n\n💡 Kontrollera att ditt telefonnummer stämmer på CV!',a:'Röstbrevlåda är underskattat — rekryterare lämnar meddelanden om du inte svarar. En professionell hälsning signalerar seriösitet. Svara alltid inom 2 timmar om möjligt.'},{t:'Gratis Wi-Fi och dataspara smart',s:'Gratis Wi-Fi:\n📚 Biblioteket Helsingborg — bäst!\n🏢 Arbetsförmedlingen\n☕ McDonald\'s, Espresso House\n\n⚠️ Undvik bankärenden på öppet Wi-Fi!\n\n💡 Biblioteket = gratis dator, Wi-Fi och skrivare för CV!',a:'Biblioteket i Helsingborg är ett av de bästa resurserna för jobbsökare utan dator hemma. Öppet vardagar — gratis utskrift av CV. Undvik bank och BankID på öppna Wi-Fi-nät.'}],
+{id:'d10',icon:'📱',title:'Smartphone & appar för jobbet',sub:'Ditt mobilkontor i fickan',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d10-smartphone.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'📱',h:'Vad är syftet?',t:'Göra mobilen till ett professionellt jobbsökar-verktyg.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Måste-appar, professionell röstbrevlåda, notiser, och gratis Wi-Fi.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha rätt appar installerade och en professionell setup.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en mobil-setup.'}
+],
+a:'Installera apparna proaktivt — inte i en kris.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom måste-appar, röstbrevlåda, notiser och gratis Wi-Fi i Helsingborg. Se den först.'},
+{t:'Måste-appar för jobbsökare',
+cards:[
+{icon:'💼',h:'Jobbsök',t:'Arbetsförmedlingen, LinkedIn, Indeed.'},
+{icon:'🏛️',h:'Myndigheter',t:'Mitt FK, 1177, Skatteverket.'},
+{icon:'📧',h:'Kommunikation',t:'Gmail, Teams eller Zoom.'},
+{icon:'💰',h:'Ekonomi',t:'Din banks app och Swish.'}
+],
+a:'AF-appen låter dig svara på aktiviteter direkt. Alla myndighets-appar är gratis.'},
+{t:'Håll mobilen jobbredo',
+cards:[
+{icon:'🎙️',h:'Professionell röstbrevlåda',t:'"Hej, du har nått [Namn]. Lämna ett meddelande."'},
+{icon:'🔔',h:'Notiser på',t:'E-post: direkt. LinkedIn: viktiga meddelanden. AF: aktiviteter.'},
+{icon:'📞',h:'Stämmer telefonnumret?',t:'På CV och LinkedIn — rekryterare ringer.'}
+],
+a:'Röstbrevlåda är underskattat. Svara alltid inom 2 timmar om möjligt.'},
+{t:'Gratis Wi-Fi och säkerhet',
+cards:[
+{icon:'📚',h:'Stadsbiblioteket',t:'Dator + Wi-Fi + skrivare för CV — gratis.'},
+{icon:'🏢',h:'Arbetsförmedlingen',t:'Wi-Fi och support.'},
+{icon:'☕',h:'Caféer',t:"McDonald's, Espresso House."},
+{icon:'🚫',h:'Aldrig BankID',t:'På öppet Wi-Fi utan VPN.'}
+],
+a:'Biblioteket i Helsingborg är en av de bästa resurserna för jobbsökare. Öppet vardagar.'}
+],
 ex:{type:'build',title:'Din mobilsetup för jobbet',desc:'Gör telefonen till ett professionellt verktyg.',fields:[{l:'Vilka jobbsökar-appar har du?',ph:'T.ex. LinkedIn, AF-appen — saknar: Mitt FK',hint:'Installera de du saknar nu!'},{l:'Har du professionell röstbrevlåda?',ph:'T.ex. Ja / Nej — spelar in en nu',hint:'Testa: ring ditt eget nummer'},{l:'Var hittar du gratis Wi-Fi nära dig?',ph:'T.ex. Stadsbiblioteket, AF-kontoret, McDonald\'s centralen'},{l:'Stämmer ditt telefonnummer på LinkedIn och CV?',ph:'T.ex. Ja +46 70-XXX / Nej — uppdaterar nu',hint:'Rekryterare ringer — de måste nå dig!'}]},
 quiz:[{q:'Vilken app ger info om AF-aktiviteter?',o:['LinkedIn','Arbetsförmedlingen-appen','Skatteverket','Gmail'],c:1},{q:'Var hittar du gratis dator och Wi-Fi i Helsingborg?',o:['AF-kontoret','Stadsbiblioteket','McDonald\'s','Alla stämmer'],c:1},{q:'Varför är professionell röstbrevlåda viktigt?',o:['Det är det inte','Rekryterare lämnar meddelanden om du inte svarar','Lagstadgat','Syns på CV'],c:1},{q:'Vad ska du undvika på öppet Wi-Fi?',o:['Streama video','Bank- och känsliga inloggningar utan VPN','Använda LinkedIn','Ladda ner appar'],c:1}],
 pr:['Vilka appar behöver jag som jobbsökare i Sverige?','Hur sätter jag upp röstbrevlåda?','Var hittar jag gratis resurser för jobbsök i Helsingborg?']},
@@ -3133,18 +3421,41 @@ quiz:[
 ],
 pr:['Hur erkänner jag min läkarexamen från Syrien i Sverige?','Vilka yrken är reglerade i Sverige?','Hjälp mig skriva till UHR om min utbildning.']},
 
-{id:'s8',icon:'💻',title:'Distans & online-kurser',sub:'Studera var du vill och när du vill',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s8',icon:'💻',title:'Distans & online-kurser',sub:'Studera var du vill och när du vill',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s8-distans.mp4',
 lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'💻',h:'Vad är syftet?',t:'Förstå distansutbildning — och om den passar dig.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad distans är, för vem den passar, plattformarna, och tips för att lyckas.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna bedöma om distans är rätt väg för dig.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Distansutbildning har likvärdig kvalitet med campusutbildning — samma examen.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom vad distansutbildning är, friheten den ger, plattformarna och tips för att lyckas. Se den först.'},
 {t:'Vad är distansutbildning?',
-s:'Distansutbildning betyder att du studerar på nätet — inte i ett klassrum.\n\nFördelar:\n• Du väljer var du studerar\n• Du väljer när du studerar\n• Passar dig med familj eller jobb',
-a:'Distansutbildning har exploderat i popularitet. Kvaliteten är nu likvärdig med campusutbildning. De flesta svenska lärosäten erbjuder distansvarianter. Viktiga plattformar: Studium, Canvas, Ping Pong.',
-yt:'https://www.youtube.com/embed/dQw4w9WgXcQ'},
-{t:'Gratis resurser online',
-s:'Det finns massor av gratis kurser:\n\n🔵 Coursera — internationella kurser\n🟢 edX — MIT, Harvard osv\n🟡 Khan Academy — matematik, naturvetenskap\n🔴 YouTube — nästan allt!\n🇸🇪 UR.se — svenska kurser\n\nMånga ger certifikat!',
-a:'MOOC (Massive Open Online Courses) har demokratiserat utbildning globalt. LinkedIn Learning, Udemy och Coursera erbjuder branschrelevanta certifikat som arbetsgivare värdesätter. Google Career Certificates är ett framväxande alternativ.'},
-{t:'Tips f\u00f6r att lyckas med distans',
-s:'Distans kräver mer disciplin!\n\nTips:\n✅ Sätt tider för studier — behandla det som ett jobb\n✅ Skapa en studieplan\n✅ Ta pauser\n✅ Hitta en studiekompis\n✅ Stäng av telefonen',
-a:'Forskning visar att framgångsfaktorer för distansstudenter är: tydlig struktur, regelbundna studietider, social interaktion med kurskamrater och tydliga delmål. Prokrastinering är den vanligaste orsaken till avhopp.'}
+cards:[
+{icon:'🌐',h:'Studier på nätet',t:'Inte i klassrum — du loggar in.'},
+{icon:'📍',h:'Du väljer var',t:'Hemma, café eller bibliotek.'},
+{icon:'⏰',h:'Du väljer när',t:'Schemat är flexibelt i de flesta fall.'},
+{icon:'👨‍👩‍👧',h:'Passar familj eller jobb',t:'Du anpassar studierna till livet.'}
+],
+a:'Plattformar du möter: Studium, Canvas, Ping Pong. De flesta svenska lärosäten erbjuder distansvarianter.'},
+{t:'För vem passar distans?',
+cards:[
+{icon:'👨‍👩‍👧',h:'Föräldrar',t:'Studera när barnen sover.'},
+{icon:'💼',h:'Deltidsarbetare',t:'Plugga vid sidan av jobbet.'},
+{icon:'🌾',h:'Bor på liten ort',t:'Långt från campus.'},
+{icon:'🆓',h:'Vill ha flexibilitet',t:'Anpassa till resor eller annat.'}
+],
+a:'CSN och studiemedel fungerar likadant för distansutbildningar — bidrag och lån finns att söka.'},
+{t:'Tips för att lyckas',
+cards:[
+{icon:'🕐',h:'Fasta studietider',t:'Annars rinner det ut.'},
+{icon:'👥',h:'Hitta studiekompisar',t:'På nätet — du behöver kontakt.'},
+{icon:'💬',h:'Lärarens kontorstid',t:'Vanligen lika öppen som på campus — använd den.'},
+{icon:'🏠',h:'En egen studieplats',t:'Hjälper hjärnan att fokusera.'}
+],
+a:'Sök på antagning.se för utbildningar på distans — filtrera "distansutbildning" och välj din kurs.'}
 ],
 ex:{type:'build',title:'Din online-studieplan',desc:'Planera hur du lär dig nytt på distans.',
 fields:[
