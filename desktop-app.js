@@ -104,7 +104,7 @@
   // AKTIVA MODULER — lägg till/ta bort modul-ID:n här för att styra
   // vilka som visas aktiva vs "Under arbete". ÄNDRA BARA HÄR!
   // ════════════════════════════════════════════════════════════════
-  const ACTIVE_MODS = ['m1','m2','m3','ai_gen','a0','a_match','a_cv','a3','a4','a8','a_brev','d2','d6','e1','e3','e5','h1','h2','s0','s1','s2','s3','s5','s6','s18'];
+  const ACTIVE_MODS = ['m1','m2','m3','ai_gen','a0','a1','a2','a3','a4','a5','a6','a7','a8','a9','a10','a_akassa','a_brev','a_cv','a_denmark','a_lon','a_match','a_natverk','a_plan','a_ref','a_uppf','d1','d2','d3','d4','d5','d6','d7','d8','d9','d10','d11','e1','e2','e3','e4','e5','e6','e7','e8','e9','h1','h2','h3','h4','h5','h6','h7','h8','h9','h10','s0','s1','s2','s3','s4','s5','s6','s7','s8','s18'];
 
   // Bakåtkompatibilitet: TRAINING_MODULES = alla moduler i en array
   const TRAINING_MODULES = [].concat(INTRO, ARBETE, STUDIER, HALSA, EKONOMI, DIGITAL);
