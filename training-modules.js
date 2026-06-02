@@ -3472,18 +3472,39 @@ quiz:[
 ],
 pr:['Vilka gratis kurser rekommenderar du för [ämne]?','Skapa en 3-månaders studieplan för att lära mig Python.','Vad ger bäst chans till jobb — certifikat från Coursera eller Komvux?']},
 
-{id:'s9',icon:'🏭',title:'Praktik & APL',sub:'Lär dig på jobbet',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s9',icon:'🏭',title:'Praktik & APL',sub:'Lär dig på jobbet',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s9-praktik.mp4',
 lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🏭',h:'Vad är syftet?',t:'Förstå hur praktik och APL leder till jobb — och hur du gör praktiken till en språngbräda.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Praktiktyper, vad du lär dig, kontaktnätet och konkreta tips för att lyckas.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta hur du tar dig fram till en praktikplats och får ut mest av den.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en planeringsövning.'}
+],
+a:'Över hälften av YH-studerande får sitt första jobb där de gjorde LIA — praktiken är en lång intervju.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom praktik och APL/LIA, vad du lär dig, kontaktnätet och hur du får ut mest av tiden. Se den först.'},
 {t:'Vad är praktik och APL?',
-s:'Praktik = du jobbar på ett riktigt företag för att lära dig.\n\nAPL = Arbetsplatsförlagt Lärande.\nDet är praktik som ingår i en utbildning.\n\nDu lär dig:\n• Hur det fungerar på riktiga jobb\n• Kontakter i branschen\n• Vad du verkligen gillar',
-a:'APL är en obligatorisk del av många YH- och gymnasieutbildningar (kallas LIA i YH-sammanhang). Praktikperioder varierar från veckor till månader. De är ett utmärkt sätt att visa sin kompetens och ofta leder till anställning.',
-yt:'https://www.youtube.com/embed/dQw4w9WgXcQ'},
-{t:'Hitta praktikplats',
-s:'Sätt att hitta praktik:\n\n1. Fråga ditt nätverk\n2. Ring företag direkt\n3. LinkedIn — "praktik" eller "LIA"\n4. Platsbanken\n5. Via din skola/utbildare\n\nVara proaktiv — vänta inte!',
-a:'Nätverket är den effektivaste kanalen. Spontanansökningar fungerar bra eftersom få söker LIA via traditionella kanaler. Ett välformulerat brev som visar din motivation har stor chans att lyckas.'},
-{t:'Maximera din praktik',
-s:'Under praktiken:\n\n✅ Kom i tid — alltid\n✅ Ställ frågor\n✅ Ta initiativ\n✅ Bygg relationer\n✅ Be om feedback\n✅ Be om referens i slutet',
-a:'Praktiken är en förlängd jobbintervju. Studier visar att 40-60% av LIA-studenter erbjuds anställning av praktikföretaget. Att skriva dagbok eller portfolio under praktiken stärker din profil.'}
+cards:[
+{icon:'👨‍🏭',h:'Praktik',t:'Du jobbar på ett riktigt företag för att lära dig.'},
+{icon:'🎓',h:'APL',t:'Arbetsplatsförlagt Lärande — praktik som del av utbildning.'},
+{icon:'🛠️',h:'LIA',t:'Samma sak — kallas LIA på yrkeshögskolan.'}
+],
+a:'APL är obligatorisk del av många YH- och gymnasieutbildningar. Perioder varierar från veckor till månader.'},
+{t:'Tre typer av praktik',
+cards:[
+{icon:'📚',h:'Som del av utbildning',t:'Obligatorisk i YH och många gymnasieprogram.'},
+{icon:'💼',h:'Via Arbetsförmedlingen',t:'Arbetspraktik — får ersättning under tiden.'},
+{icon:'🤝',h:'Frivillig praktik',t:'Du ordnar själv för att prova ett yrke.'}
+],
+a:'Frivillig praktik är ett underutnyttjat sätt att testa ett yrke innan du satsar på utbildning.'},
+{t:'Få ut mest av praktiken',
+cards:[
+{icon:'❓',h:'Fråga mycket',t:'Visa intresse — det märks och leder till mer ansvar.'},
+{icon:'✋',h:'Ta initiativ',t:'Erbjud dig att hjälpa till med extra uppgifter.'},
+{icon:'🤝',h:'Bygg relationer',t:'Lunch med olika kollegor varje dag.'},
+{icon:'📝',h:'Be om feedback',t:'Sista veckan — be om referens till CV.'}
+],
+a:'Praktiken är ditt försprång. Visa upp dig så att de minns dig — och vill ringa dig.'}
 ],
 ex:{type:'build',title:'Din praktikansökan',desc:'Förbered dig för att hitta en praktikplats.',
 fields:[
@@ -3500,18 +3521,39 @@ quiz:[
 ],
 pr:['Skriv ett spontanbrev för praktikansökan inom logistik.','Hur nätverkar jag för att hitta LIA-plats?','Vad ska jag säga när jag ringer ett företag för praktik?']},
 
-{id:'s10',icon:'🗺️',title:'Din studieväg',sub:'Planera din utbildning smart',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s10',icon:'🗺️',title:'Din studieväg',sub:'Planera din utbildning smart',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s10-studievag.mp4',
 lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🗺️',h:'Vad är syftet?',t:'Planera din studieväg så att du sparar tid, pengar och energi.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'De tre frågorna, de vanliga vägarna, ekonomin, och hur du får hjälp att välja.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha skrivit ner ditt mål och din väg.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en planeringsövning.'}
+],
+a:'Karriärplanering ökar sannolikheten att nå målet 3–4 gånger.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom de tre frågorna du måste svara på, de vanliga utbildningsvägarna, och hur SYV hjälper dig välja. Se den först.'},
 {t:'Varför planera sin studieväg?',
-s:'En plan hjälper dig att:\n• Välja rätt utbildning\n• Spara tid och pengar\n• Nå ditt mål snabbare\n• Undvika att börja om från början\n\nIngen plan = slumpen bestämmer.',
-a:'Karriärplanering kombinerat med utbildningsplanering ökar sannolikheten att nå sitt mål med 3-4x. Tydliga mål, kartlagd bakgrund och konkret handlingsplan är grundelementen.',
-yt:'https://www.youtube.com/embed/dQw4w9WgXcQ'},
-{t:'Kartl\u00e4gg din startpunkt',
-s:'Ställ dig dessa frågor:\n\n1. Vilken utbildning har jag?\n2. Vad saknar jag?\n3. Vad vill jag jobba med?\n4. Hur lång tid har jag?\n5. Hur ser min ekonomi ut?',
-a:'En kompetenskartläggning är grunden för all utbildningsplanering. Validering, CVmatchen och Arbetsförmedlingens verktyg kan hjälpa dig identifiera gap mellan din nuläge och önskad position.'},
-{t:'Skapa din plan',
-s:'Din studieväg kan se ut så:\n\nSteg 1: SFI (om nödvändigt)\nSteg 2: Komvux — komplettera betyg\nSteg 3: YH-utbildning 1-2 år\nSteg 4: Jobb + vidareutbildning\n\nAlla steg behövs inte — hoppa in där du passar!',
-a:'Studievägen ska vara realistisk och anpassad till din livssituation. CSN, bostadsbidrag och kommunala stöd kan finansiera hela resan. Kontakta Studie- och yrkesvägledare (SYV) på din kommun — det är gratis!'}
+cards:[
+{icon:'🎯',h:'Rätt utbildning',t:'Du väljer från början — inte efter att ha provat fel.'},
+{icon:'💰',h:'Spara tid och pengar',t:'Slipp ompröva och börja om.'},
+{icon:'🚀',h:'Når målet snabbare',t:'Du går rakt mot ditt yrke.'},
+{icon:'🔄',h:'Slipp börja om',t:'En plan håller dig på rätt spår.'}
+],
+a:'Ingen plan = slumpen bestämmer. Och slumpen är sällan generös.'},
+{t:'Tre frågor att svara på',
+cards:[
+{icon:'🎯',h:'Vad vill jag jobba med?',t:'Yrke eller bransch — börja här.'},
+{icon:'🛣️',h:'Vilken väg dit?',t:'YH, universitet, AMU, lärling — vilken passar?'},
+{icon:'⏳',h:'Hur lång tid har jag?',t:'6 mån, 2 år, 5 år? Tiden formar valet.'}
+],
+a:'Tydliga mål, kartlagd bakgrund och konkret handlingsplan är grundelementen.'},
+{t:'Du behöver inte planera ensam',
+cards:[
+{icon:'👨‍🏫',h:'SYV — gratis vägledning',t:'Studie- och yrkesvägledare på Komvux och AF.'},
+{icon:'📞',h:'studera.nu',t:'Chatt och telefon — gratis vägledning.'},
+{icon:'🤖',h:'AI-SYV i CVmatchen',t:'Dygnet runt — för enkla frågor.'}
+],
+a:'AI-SYV kompletterar — men ersätter inte — en riktig SYV vid stora beslut.'}
 ],
 ex:{type:'build',title:'Bygg din personliga studieväg',desc:'Skapa en konkret plan från idag till ditt drömjobb.',
 fields:[
@@ -3527,18 +3569,40 @@ quiz:[
 {q:'Vad är en kompetenskartläggning?',o:['Ett betyg','Analys av vad du kan och vad du saknar','En ansökan'],c:1}
 ],
 pr:['Skapa en 3-årig studieplan för att bli [yrke].','Vilken utbildningsväg är snabbast till undersköterska?','Vad erbjuder Arbetsförmedlingen för utbildningsstöd?']},
-{id:'s11',icon:'HP',title:'Hogskoleprovet',sub:'Forbattra chanserna till hogskola',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s11',icon:'HP',title:'Hogskoleprovet',sub:'Forbattra chanserna till hogskola',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s11-hp.mp4',
 lessons:[
-{t:'Vad ar Hogskoleprovet?',
-s:'Hogskoleprovet (HP) ar ett prov du kan gora for att forbattra dina chanser till universitetet.\n\n- Kostar 450 kr\n- Ges 2 ganger/ar (var + host)\n- Gor hur manga ganger du vill\n- Basta resultatet raknas alltid\n\nAnmal dig pa: studera.nu',
-a:'HP ar ett nationellt urvalsprov (UHR). Provbetyg 0.00-2.00. Ca 30 procent av platser ga via HP-urval. Parallellt med betygsurval.',
-yt:'https://www.youtube.com/embed/dQw4w9WgXcQ'},
-{t:'Vad testas?',
-s:'VERBAL (sprak):\n- ORD: ordfOrstaelse\n- LAS: lasforstaelse\n- SVT: svensk text\n- ELF: engelsk text\n\nKVANTITATIV (matte+logik):\n- KVA: jamforelser\n- XYZ: problemlosning\n- DTK: diagram/tabeller\n- NOG: logik\n\nMax: 2.00 poang',
-a:'Mater allman studieformaga. Verbal och kvantitativ vager lika. Traning kan forbattra resultatet med 0.2-0.4 poang i snitt.'},
-{t:'Forberedelse',
-s:'Gratis:\n- hp.studera.nu (officiell ovningssida)\n- Gamla prov online\n- YouTube: sok HP-tips\n- Biblioteket har bocker\n\nBetalt:\n- Kurser, Hermods, appar\n\nBorja minst 3 manader i forvag!',
-a:'Effektivaste: gamla prov under tidspress, analysera felsvar, ova svaga delar. Tidsstrategi avgOrande - hoppa svara fragor och aterkom.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'✏️',h:'Vad är syftet?',t:'Förstå Högskoleprovet som din extra chans till universitetet.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad provet är, kostnaden, provdagarna, vad poängen betyder och hur du förbereder dig.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna avgöra om HP är rätt för dig — och hur du anmäler dig.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en planeringsövning.'}
+],
+a:'30 % av platserna på universitetet går via HP-urval — parallellt med betygsurvalet.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom Högskoleprovet — vad det är, vad det kostar, när du gör det och hur du förbereder dig. Se den först.'},
+{t:'Vad är Högskoleprovet?',
+cards:[
+{icon:'📝',h:'Nationellt prov',t:'För antagning till universitet och högskola.'},
+{icon:'🆓',h:'Oavsett betyg',t:'Du kan göra det oavsett vilka betyg du har.'},
+{icon:'💰',h:'Kostar 450 kr',t:'Per provtillfälle.'},
+{icon:'🔁',h:'Bästa resultatet räknas',t:'Gör hur många gånger du vill.'}
+],
+a:'Provbetyg på skala 0,00–2,00. Anmäl på studera.nu.'},
+{t:'När och var',
+cards:[
+{icon:'🌸',h:'Vår',t:'Mars eller april — anmäl senast i februari.'},
+{icon:'🍂',h:'Höst',t:'Oktober — anmäl senast i september.'},
+{icon:'🌐',h:'studera.nu',t:'För anmälan och gamla prov.'}
+],
+a:'Du kan göra provet på orter över hela Sverige — ofta även i Helsingborg.'},
+{t:'Förbered dig rätt',
+cards:[
+{icon:'📅',h:'Räkna 3 månader',t:'Tid för ordentlig förberedelse.'},
+{icon:'📝',h:'Gamla prov varje vecka',t:'Träna ett prov i veckan.'},
+{icon:'📚',h:'Två delar',t:'Verbal (svenska, läsförståelse) och kvantitativ (matte).'},
+{icon:'💡',h:'Gratis material',t:'studera.nu, högskoleprovet.nu — gratis appar.'}
+],
+a:'Räcker inte betygen? HP är din andra chans — och den är värt försöket.'}
 ],
 ex:{type:'build',title:'Din HP-plan',desc:'Planera forberedelsen for Hogskoleprovet.',
 fields:[
@@ -3557,17 +3621,42 @@ quiz:[
 {q:'Max-poang pa HP?',o:['1.00','2.00','5.00'],c:1}
 ],
 pr:['Ge mig ett 3-manadersschema for HP.','Forklara NOG pa enkel svenska med exempel.','Vilket HP-betyg kravs for [utbildning]?']},
-{id:'s12',icon:'🏗️',title:'Arbetsmarknadsutbildning',sub:'Gratis utbildning via AF — direkt till jobb',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s12',icon:'🏗️',title:'Arbetsmarknadsutbildning',sub:'Gratis utbildning via AF — direkt till jobb',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s12-amu.mp4',
 lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🏗️',h:'Vad är syftet?',t:'Förstå AMU — gratis utbildning via AF som leder direkt till jobb.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad AMU är, fördelarna, vanliga yrken, och hur du ansöker.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta om AMU är rätt för dig och hur du tar nästa steg.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en plan.'}
+],
+a:'AMU är upphandlade utbildningar som AF köper av privata utbildningsföretag — styrs av arbetsmarknadens behov.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom AMU, fördelarna med kort utbildning som leder direkt till jobb, och hur du ansöker. Se den först.'},
 {t:'Vad är AMU?',
-s:'AMU = Arbetsmarknadsutbildning.\n\nDet är en gratis utbildning som du söker via Arbetsförmedlingen.\n\nViktigt:\n✅ Helt gratis\n✅ Du behåller din ersättning under utbildningen\n✅ Leder direkt till jobb inom branschen\n✅ Kortare än YH — ofta 4-24 veckor',
-a:'AMU är upphandlade utbildningar som AF köper av privata utbildningsföretag. De styrs av arbetsmarknadens behov. Du måste vara inskriven på AF och ha en handläggare som bedömer att utbildningen är rätt för dig. Ersättning: aktivitetsstöd, etableringsersättning eller utvecklingsersättning utgår.'},
-{t:'Vad kan du utbilda dig till?',
-s:'Vanliga AMU-utbildningar:\n\n🚛 Truck A+B (3-6 veckor)\n🏥 Undersköterska/vårdbiträde\n🏗️ Bygg & anläggning\n💻 IT-support & nätverk\n🔒 Väktare & säkerhet\n🍳 Kök & livsmedelshygien\n🚗 Yrkestrafik/taxi\n\nTillgång beror på var du bor och vad AF bedömer.',
-a:'Utbudet varierar per region och period. AF upphandlar utbildningar baserat på lokalt arbetsmarknadsbehov. Vissa utbildningar har krav på förkunskaper (t.ex. B-körkort för truck). Fråga din handläggare om vad som är tillgängligt i ditt område just nu.'},
-{t:'Hur söker du AMU?',
-s:'1. Prata med din handläggare på AF\n2. Be om en AMU-utbildning inom ditt mål-yrke\n3. Handläggaren bedömer och godkänner\n4. Du anvisas till utbildningen\n\n→ Du kan inte söka direkt själv — det går via AF.\n\nLänk: arbetsformedlingen.se',
-a:'AMU är ett myndighetsbeslut, inte en vanlig ansökan. Handläggaren avgör om du är aktuell baserat på din situation, arbetsmarknadens behov och tillgängliga platser. Var proaktiv — fråga specifikt om AMU och nämn vilket yrke du siktar mot.'}
+cards:[
+{icon:'🆓',h:'Helt gratis',t:'Du betalar inget — staten finansierar.'},
+{icon:'🏛️',h:'Via Arbetsförmedlingen',t:'Söks tillsammans med din handläggare.'},
+{icon:'🎯',h:'Riktat mot bristyrken',t:'Direkt mot där jobben finns.'},
+{icon:'⚡',h:'Kort utbildning',t:'Oftast 4–24 veckor.'}
+],
+a:'Du behåller din ersättning under utbildningen — aktivitetsstöd, etableringsersättning eller utvecklingsersättning.'},
+{t:'Vanliga AMU-yrken',
+cards:[
+{icon:'🚛',h:'Lastbils- och bussförare',t:'Stor brist i hela Sverige.'},
+{icon:'🏗️',h:'Bygg och anläggning',t:'Snickare, plåtslagare.'},
+{icon:'🍳',h:'Restaurang och kök',t:'Kock, servitör.'},
+{icon:'🏥',h:'Vård och omsorg',t:'Vårdbiträde, undersköterska-intro.'},
+{icon:'🔒',h:'Säkerhet',t:'Väktarutbildning.'}
+],
+a:'AMU-yrken styrs av regionens behov — vilka utbildningar som finns varierar.'},
+{t:'Så ansöker du',
+cards:[
+{icon:'1️⃣',h:'Boka möte',t:'Med din handläggare på AF.'},
+{icon:'2️⃣',h:'Bedöm tillsammans',t:'Är AMU rätt — eller annat stöd?'},
+{icon:'3️⃣',h:'Sök utbildningen',t:'Via arbetsformedlingen.se.'},
+{icon:'4️⃣',h:'Ersättning fortsätter',t:'Du behåller den under utbildningen.'}
+],
+a:'Du måste vara inskriven på AF och bedömas behöva utbildningen för att kvalificera.'}
 ],
 ex:{type:'build',title:'Förbered din AMU-ansökan',desc:'Planera vad du ska säga till din handläggare.',
 fields:[
@@ -3585,17 +3674,40 @@ quiz:[
 ],
 pr:['Hjälp mig argumentera för AMU inom truck hos min handläggare.','Vilka AMU-utbildningar finns inom vård i Skåne?','Hur förbereder jag mig inför mötet med AF om AMU?']},
 
-{id:'s13',icon:'🎓',title:'Universitet & Högskola',sub:'Kandidat, master och akademisk frihet',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s13',icon:'🎓',title:'Universitet & Högskola',sub:'Kandidat, master och akademisk frihet',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s13-uni.mp4',
 lessons:[
-{t:'Vad är ett universitet?',
-s:'Ett universitet är den högsta utbildningsnivån i Sverige.\n\nDu väljer själv:\n• Vilka kurser du läser\n• I vilken ordning\n• Hur snabbt du studerar\n\nDetta kallas "fri rörlighet" — du sätter ihop din egen utbildning.',
-a:'Universitet och högskolor är statliga lärosäten. Skillnaden: universitet har rätt att utfärda doktorsexamen, högskolor vanligtvis inte. Fri rörlighet innebär att du kan byta program, pausa, återuppta och kombinera kurser från olika lärosäten.'},
-{t:'Kandidat, magister och master',
-s:'📘 Kandidatexamen = 3 år (180 hp)\nGrundnivå. Ditt första universitetsbevis.\n\n📗 Magisterexamen = 1 år på kandidat (60 hp)\nFördjupning i ett ämne.\n\n📙 Masterexamen = 2 år på kandidat (120 hp)\nDjupare forskning och analys.\n\n🔬 Doktorsexamen = 4-5 år forskning',
-a:'HP = högskolepoäng. Heltidsstudier = 60 hp/år. Examenskrav: kandidat kräver minst 90 hp i huvudämnet, masterexamen kräver 60 hp fördjupningskurser. Många arbetsgivare kräver kandidat som lägsta nivå för kvalificerade tjänster.'},
-{t:'Campus vs distans',
-s:'🏫 Campus:\n• Du är på plats på universitetet\n• Föreläsningar & gruparbeten\n• Kräver att du bor nära\n\n💻 Distans:\n• Studerar hemifrån\n• Flexibelt, passar familjeliv\n• Kräver disciplin\n\nMånga program erbjuder BÅDE.',
-a:'Hybridprogram kombinerar campus-träffar (1-3 ggr/termin) med distansstudier. Söks via antagning.se precis som campus. CSN gäller för båda. Distansprogram har ofta något lägre antagningspoäng.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎓',h:'Vad är syftet?',t:'Förstå universitet och högskola — och hur du tar dig dit.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Skillnaden uni/högskola, utbildningsnivåerna, ansökan via antagning.se och hur du lyckas.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta var du börjar — och vart det kan leda.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Båda räknas lika på arbetsmarknaden. Fri rörlighet betyder att du själv väljer hur du sätter ihop utbildningen.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom skillnaden uni och högskola, utbildningsnivåerna, ansökan via antagning.se och tips för att lyckas. Se den först.'},
+{t:'Skillnaden uni & högskola',
+cards:[
+{icon:'🎓',h:'Universitet',t:'Får utfärda doktorsexamen.'},
+{icon:'🏫',h:'Högskola',t:'Vanligtvis inte doktorsexamen.'},
+{icon:'✅',h:'På arbetsmarknaden',t:'Båda räknas lika.'},
+{icon:'🆓',h:'Fri rörlighet',t:'Du kan byta program, pausa, återuppta.'}
+],
+a:'Universitet och högskolor är statliga lärosäten. Skillnaden är formell — på CV:t är båda starka.'},
+{t:'Tre utbildningsnivåer',
+cards:[
+{icon:'1️⃣',h:'Kandidat',t:'3 år, 180 hp. Grundnivå.'},
+{icon:'2️⃣',h:'Magister/Master',t:'1–2 år extra. Avancerad nivå.'},
+{icon:'3️⃣',h:'Doktor',t:'4 år extra. Forskarutbildning.'}
+],
+a:'Kandidat ger jobbtillgång i de flesta branscher. Master kan ge specialisering och högre lön.'},
+{t:'Ansökan och pengar',
+cards:[
+{icon:'🌐',h:'antagning.se',t:'Sök upp till 20 utbildningar — gratis.'},
+{icon:'📅',h:'Vår: 15 oktober',t:'Sista ansökan för vårterminen.'},
+{icon:'📅',h:'Höst: 15 april',t:'Sista ansökan för höstterminen.'},
+{icon:'💰',h:'CSN ~12 000 kr/mån',t:'Bidrag + lån. 240 veckor totalt.'}
+],
+a:'Antagning sker via betyg eller högskoleprov. Du tävlar i den grupp där du står starkast.'}
 ],
 ex:{type:'build',title:'Utforska din universitetsväg',desc:'Hitta ett program som matchar dina mål.',
 fields:[
@@ -3614,17 +3726,39 @@ quiz:[
 ],
 pr:['Vilket program passar mig om jag vill bli socionom?','Förklara skillnaden kandidat och master enkelt.','Vilka behörighetskrav finns för ekonomprogrammet?']},
 
-{id:'s14',icon:'🏫',title:'Gymnasiekomplettering',sub:'Det är aldrig för sent att läsa klart',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s14',icon:'🏫',title:'Gymnasiekomplettering',sub:'Det är aldrig för sent att läsa klart',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s14-gymkomp.mp4',
 lessons:[
-{t:'Varför gymnasiekomplettering?',
-s:'Utan gymnasieexamen stängs många dörrar:\n\n❌ Kan inte söka YH\n❌ Kan inte söka universitetet\n❌ Sämre chans på många jobb\n\n✅ Men det är ALDRIG för sent!\nDu kan läsa klart gymnasiet som vuxen — i din takt.',
-a:'Ca 15-20% av den vuxna befolkningen saknar fullständig gymnasieexamen. Som vuxen kan du läsa via Komvux gymnasial nivå. Det räknas exakt likadant som ett vanligt gymnasiebetyg vid ansökan till YH och uni.'},
-{t:'GY-vux via Komvux',
-s:'GY-vux = gymnasieutbildning för vuxna.\n\nDu kan:\n• Läsa enstaka kurser du saknar\n• Läsa ett helt program om du vill\n• Kombinera gamla betyg med nya\n• Förbättra ett dåligt betyg\n\nDet är gratis och du kan börja nästa termin.',
-a:'Komvux gymnasial nivå ger behörighet precis som vanlig gymnasieutbildning. Viktigt: dina gamla betyg från ungdomen kombineras med nya betyg — du behöver inte läsa om allt. En meritpoängsberäkning görs på de bästa betygen.'},
-{t:'Vad behöver du för YH och uni?',
-s:'För YH:\n• Gymnasieexamen (oftast)\n• Specifika kurser varierar per program\n\nFör universitetet (grundbehörighet):\n• Svenska 2 eller 3\n• Engelska 5 eller 6\n• Matte 1a/1b\n\nMer info: antagning.se/behörighet',
-a:'Grundbehörighet till högskola: Sv3/SVA3, En6, Ma1 + 9 av 12 specifika poäng. Specialbehörighet varierar per program. Socionom kräver t.ex. SH1b. Ingenjör kräver Fy1, Ke1, Ma3c. Kolla alltid exakt behörighet på antagning.se för just ditt program.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🏫',h:'Vad är syftet?',t:'Förstå hur du läser klart gymnasiet som vuxen — och varför det är värt det.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Varför du behöver examen, vägarna via Komvux och folkhögskola, CSN och självtakt.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta var du börjar — och hur du finansierar studierna.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'15–20 % av vuxna i Sverige saknar fullständig gymnasieexamen — du är inte ensam.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom varför du behöver gymnasieexamen, vägarna att läsa klart, och hur CSN gäller även för vuxenutbildning. Se den först.'},
+{t:'Varför komplettera?',
+cards:[
+{icon:'🎓',h:'Behörighet till YH och uni',t:'Krävs för i princip all eftergymnasial utbildning.'},
+{icon:'💼',h:'Bättre chans på jobb',t:'Många jobb kräver gymnasieexamen.'},
+{icon:'📈',h:'Höj enskilda betyg',t:'Bättre antagningspoäng till uni.'}
+],
+a:'Som vuxen kan du läsa via Komvux — det räknas exakt likadant som ett vanligt gymnasiebetyg.'},
+{t:'Tre vägar att läsa klart',
+cards:[
+{icon:'🏫',h:'Komvux',t:'I egen takt — gratis och flexibelt.'},
+{icon:'🏡',h:'Folkhögskola',t:'Studieomdöme istället för betyg.'},
+{icon:'✏️',h:'Högskoleprovet',t:'Komplement vid sämre betyg.'}
+],
+a:'Du kan kombinera Komvux och högskoleprovet för att maximera dina chanser.'},
+{t:'I din egen takt',
+cards:[
+{icon:'💼',h:'Vid sidan av jobb',t:'Deltid fungerar utmärkt.'},
+{icon:'👶',h:'Anpassa till familjen',t:'Du behöver inte vara på campus heltid.'},
+{icon:'🌐',h:'Mycket distans',t:'Du väljer var du studerar.'},
+{icon:'💰',h:'CSN gäller',t:'Bidrag + lån, precis som på vanligt gymnasium.'}
+],
+a:'Aldrig för sent att börja — eller börja om. Ring kommunens vuxenutbildning idag.'}
 ],
 ex:{type:'build',title:'Din gymnasieplan',desc:'Ta reda på vad du saknar och hur du kompletterar.',
 fields:[
@@ -3641,17 +3775,43 @@ quiz:[
 ],
 pr:['Vilka kurser behöver jag för att söka socionomprogrammet?','Hur räknar jag ut om jag har grundbehörighet?','Hjälp mig planera att läsa klart gymnasiet på 1 år.']},
 
-{id:'s15',icon:'⚡',title:'Korta certifieringskurser',sub:'1–8 veckor och direkt anställningsbar',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s15',icon:'⚡',title:'Korta certifieringskurser',sub:'1–8 veckor och direkt anställningsbar',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s15-certifikat.mp4',
 lessons:[
-{t:'Vad är kortare certifieringskurser?',
-s:'Det finns massor av korta kurser som:\n• Tar 1-8 veckor\n• Ger ett certifikat eller körkort\n• Direkt ökar din chans till jobb\n\nExempel:\n🚛 Truckkort A+B\n🔒 Väktarutbildning\n🏥 Vård- och omsorgsintroduktion\n❤️ HLR-certifikat\n🍳 Livsmedelshygien\n🔧 Heta arbeten',
-a:'Korta certifieringskurser är inte del av det offentliga skolsystemet. De erbjuds av privata aktörer, branschorganisationer och ibland AF. Många arbetsgivare kräver dessa som minimikrav. De kan kombineras med andra utbildningar.'},
-{t:'Truckkort — ett exempel',
-s:'Truckkort A+B är ett av de vanligaste:\n\n• A = motviktstruck\n• B = skjutstativtruck\n\n⏱️ Ca 3-6 veckor\n💰 Kostar ca 8 000-15 000 kr (privat)\n🆓 Gratis via AMU (om AF anvisar)\n\nMed truckkort ökar din lön direkt.',
-a:'Truckkort utfärdas av ATEX-godkända utbildare. Giltighetstid: 5 år (kräver förnyelse). Kursen innehåller teori, praktik och körprov. Söks via privata aktörer (t.ex. Lager och Terminal Akademin) eller via AF som AMU.'},
-{t:'Var hittar du dessa kurser?',
-s:'🔵 Via Arbetsförmedlingen (AF)\n→ Fråga om AMU — kan vara gratis!\n\n🟢 Kommunen / Komvux\n→ Vissa kommuner erbjuder kortare yrkes-kurser\n\n🔴 Privata aktörer\n→ Dyrt men snabbt\n\n🟡 Branschorganisationer\n→ T.ex. Bevakningsbranschen för väktare\n→ Sveriges Åkeriföretag för yrkestrafik',
-a:'Väktarutbildning: söks via Bevakningsbranschen (bevakningsbranschen.se), kräver godkänt av polisen. HLR: Svenska Hjärt-Lungräddningsrådet (hlr.nu). Heta arbeten: Svetskommissionen. Livsmedelshygien: Livsmedelsverket godkända aktörer.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'⚡',h:'Vad är syftet?',t:'Lära dig den snabbaste vägen till jobb — korta certifieringskurser.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad en certifieringskurs är, vanliga exempel, kostnader och var du hittar dem.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta vilka kurser som passar dig — och hur du finansierar dem.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Korta certifieringar kombineras ofta med varandra — t.ex. truckkort + lagerintro = jobb.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom korta certifieringskurser — vad de är, vanliga exempel som truckkort och väktarutbildning, och var du hittar dem. Se den först.'},
+{t:'Vad är en certifieringskurs?',
+cards:[
+{icon:'⏱️',h:'1–8 veckor',t:'Kort och intensivt.'},
+{icon:'📜',h:'Certifikat eller körkort',t:'Som du kan visa upp för arbetsgivaren.'},
+{icon:'💼',h:'Direkt anställningsbar',t:'Många arbetsgivare kräver dessa som minimi.'},
+{icon:'🔄',h:'Kombineras med annat',t:'T.ex. truckkort + lagerintro.'}
+],
+a:'Korta certifieringar är inte del av det offentliga skolsystemet — privata aktörer och branschorganisationer erbjuder dem.'},
+{t:'Vanliga certifieringar',
+cards:[
+{icon:'🚛',h:'Truckkort A+B',t:'3–5 dagar, 4 000–7 000 kr.'},
+{icon:'🔒',h:'Väktarutbildning',t:'~220 timmar (6 veckor). AF kan finansiera.'},
+{icon:'🏥',h:'Vård- och omsorgsintro',t:'Ofta 3–6 veckor.'},
+{icon:'❤️',h:'HLR-certifikat',t:'1 dag — ofta gratis via Röda Korset.'},
+{icon:'🍳',h:'Livsmedelshygien',t:'1 dag — krävs i restaurang.'},
+{icon:'🔧',h:'Heta arbeten',t:'1 dag — för svetsning och lödning.'}
+],
+a:'AF kan finansiera många av dessa om du är inskriven — fråga din handläggare.'},
+{t:'Var hittar du kurserna?',
+cards:[
+{icon:'🏛️',h:'Arbetsförmedlingen',t:'Kan finansiera vid behov.'},
+{icon:'🏢',h:'Privata utbildningsföretag',t:'Många erbjuder kurserna.'},
+{icon:'🛠️',h:'Branschorganisationer',t:'Inom bygg, vård, säkerhet m.fl.'},
+{icon:'🔍',h:'Sök på Google',t:'"[certifikat] + Helsingborg"'}
+],
+a:'Snabbaste vägen till jobb — kombinera certifieringar och din chans skjuter i höjden.'}
 ],
 ex:{type:'sort',title:'Var söker du kursen?',desc:'Sortera kurserna till rätt kanal.',catA:'Via AF / Gratis',catB:'Privat aktör / Bransch',
 items:[{l:'Truckkort via AMU',c:'A'},{l:'Väktarutbildning',c:'B'},{l:'HLR-certifikat',c:'B'},{l:'Truck via AF-anvisning',c:'A'},{l:'Heta arbeten',c:'B'},{l:'Livsmedelshygien via Komvux',c:'A'}]},
@@ -3664,17 +3824,41 @@ quiz:[
 ],
 pr:['Vilka certifieringskurser ökar chansen till lagerjobb?','Hur söker jag AMU för truckkort i Helsingborg?','Vad kostar en väktarutbildning och hur lång är den?']},
 
-{id:'s16',icon:'🔨',title:'Lärlingsprogram & YA',sub:'Jobba och utbilda dig samtidigt',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s16',icon:'🔨',title:'Lärlingsprogram & YA',sub:'Jobba och utbilda dig samtidigt',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s16-larling.mp4',
 lessons:[
-{t:'Vad är lärlingsprogram?',
-s:'Lärling = du lär dig yrket på ett riktigt jobb.\n\nArbetsgivaren:\n• Lär dig yrket i praktiken\n• Betalar din utbildning\n• Betalar dig lön\n\nDu:\n• Jobbar och studerar parallellt\n• Får branschkompetens direkt\n• Har ett avtal som skyddar dig',
-a:'Lärlingsprogrammet är en del av gymnasiala yrkesutbildningar men kan också ske som vuxen. Stor på bygg, el, VVS, industri och hantverk. Mer vanligt i Europa men växande i Sverige.'},
-{t:'YA — Yrkesintroduktionsavtal',
-s:'YA är speciellt för dig som:\n• Är under 25 år\n• Saknar erfarenhet inom branschen\n\nSå fungerar det:\n1. Du anställs av ett företag\n2. Företaget får lönestöd av AF\n3. Du får utbildning + handledning\n4. Avtalet gäller 6-24 månader\n\nFinns inom: bygg, el, handel, transport, vård',
-a:'YA-avtal är kollektivavtalade och hanteras av branschorganisationer. Lönestödet gör det billigare för arbetsgivaren att ta in oerfarna. Arbetsgivaren förbinder sig att ge handledning och kompetenshöjning. Bra ingång för unga utan erfarenhet.'},
-{t:'Hur hittar du en lärlingstjänst?',
-s:'1. Platsbanken — sök "lärling" eller "trainee"\n2. LinkedIn — "lärling" + bransch\n3. Direkt till företag — fråga om YA\n4. Via AF — fråga om lönestödstjänster\n5. Branschorganisationer\n   → Byggnads, Elektrikerna, Handels\n\nVara proaktiv — de flesta annonseras inte!',
-a:'Spontanansökan fungerar bra för YA-tjänster. Skriv till HR-avdelningen och nämn YA-avtal och AF:s lönestöd — många arbetsgivare vet inte att de kan få stödet. LinkedIn är effektivt för att hitta kontakter inom branschen.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🔨',h:'Vad är syftet?',t:'Förstå lärlingsvägen och YA — där du jobbar och utbildar dig samtidigt.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Hur lärling fungerar, vilka branscher, vad YA är, och hur du hittar plats.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta om lärlingsvägen passar dig — och hur du tar nästa steg.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Lärlingsvägen är stor i Europa och växande i Sverige — perfekt för dig som vill direkt till jobb.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom lärlingsprogram, YA-avtalet, vanliga branscher, och hur du hittar en lärlingsplats. Se den först.'},
+{t:'Vad är lärling?',
+cards:[
+{icon:'👨‍🏫',h:'Arbetsgivaren lär ut',t:'I praktiken — hos en handledare.'},
+{icon:'📚',h:'Och betalar utbildningen',t:'Du behöver inte ta studielån.'},
+{icon:'💰',h:'Du får lön',t:'70–85 % av normallön i början.'},
+{icon:'🎓',h:'Diplom eller certifikat',t:'I slutet av perioden.'}
+],
+a:'Lärlingsprogrammet är en del av gymnasiala yrkesutbildningar men kan också ske som vuxen.'},
+{t:'Vanliga branscher',
+cards:[
+{icon:'🏗️',h:'Bygg',t:'Snickare, plattsättare, murare.'},
+{icon:'⚡',h:'El',t:'Elektriker, installatör.'},
+{icon:'🔧',h:'VVS',t:'Rörmokare, kylmontör.'},
+{icon:'🏭',h:'Industri & hantverk',t:'Svetsare, tekniker.'}
+],
+a:'Bygg, el, VVS och industri har stor brist på personal — lärling leder ofta direkt till anställning.'},
+{t:'YA & hitta plats',
+cards:[
+{icon:'🤝',h:'YA-avtalet',t:'För dig under 25 eller långtidsarbetslös. 75 % lön + 25 % utbildning.'},
+{icon:'🏛️',h:'AF känner till mottagare',t:'Fråga din handläggare.'},
+{icon:'🏢',h:'Spontanansökan',t:'Kontakta företag direkt — det fungerar bra.'},
+{icon:'🛠️',h:'Branschföreningar',t:'Byggnads, Elektrikerna, IF Metall.'}
+],
+a:'Tjäna pengar medan du lär dig ett yrke — smart väg in för dig som vill direkt till jobb.'}
 ],
 ex:{type:'build',title:'Din lärlingsstrategi',desc:'Planera hur du hittar ett lärlingsprogram eller YA.',
 fields:[
@@ -3691,17 +3875,40 @@ quiz:[
 ],
 pr:['Skriv ett brev för att söka YA-anställning inom bygg.','Vilka branscher har flest YA-avtal i Skåne?','Hur presenterar jag YA-fördelar för en arbetsgivare?']},
 
-{id:'s17',icon:'🌍',title:'Etableringsinsatser via AF',sub:'För dig med etableringsplan',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',
+{id:'s17',icon:'🌍',title:'Etableringsinsatser via AF',sub:'För dig med etableringsplan',color:'#60a5fa',bc:'rgba(96,165,250,.3)',bg:'rgba(96,165,250,.07)',video:'/videos/s17-etablering.mp4',
 lessons:[
-{t:'Vad är etableringsplanen?',
-s:'Om du är nyanländ i Sverige kan du ha rätt till en etableringsplan.\n\nPlanen innehåller:\n• SFI (svenska)\n• Samhällsorientering\n• Aktiviteter mot jobb eller studier\n\nDu får etableringsersättning istället för försörjningsstöd.\n\nPlanen gäller max 24 månader.',
-a:'Etableringsplanen handläggs av Arbetsförmedlingen. Rätt till plan: skyddsbehövande, kvotflyktingar och deras anhöriga i åldern 20-64. Etableringsersättning: ca 308 kr/dag heltid. Aktivitetsnivån påverkar ersättningens storlek.'},
-{t:'Insatser du kan få',
-s:'Under etableringstiden kan du:\n\n📚 Läsa SFI på heltid\n🏗️ Praktisera på ett riktigt företag\n📋 Göra yrkesvalidering\n🎓 Söka AMU-utbildning\n💼 Delta i matchningsinsatser\n\nAllt samtidigt som du får ersättning.',
-a:'Viktiga insatser: Snabbspåret (validering + komplettering för akademiker), yrkesintroduktion, kommunens bosättningsstöd, BAS-utbildning (yrkesvägledning). Samordning sker ofta mellan AF, kommunen och CSN.'},
-{t:'Snabbspåret',
-s:'Om du har yrkesutbildning från ditt hemland:\n\n→ Snabbspåret kan hjälpa dig att validera och komplettera direkt i ditt yrke\n\nFinns inom:\n• Vård & omsorg\n• Bygg\n• IT\n• Lärare\n• Ingenjör\n• Kock\n\nKontakta AF direkt och fråga om snabbspåret!',
-a:'Snabbspåret är en samverkan mellan AF, branschorganisationer och utbildningsanordnare. Tidslinje: 1-2 år inklusive validering, komplettering och handledning på arbetsplats. Resulterar ofta i legitimation eller anställning direkt.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🌍',h:'Vad är syftet?',t:'Förstå etableringsplanen — och hur du använder den som språngbräda.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vem som har rätt, vad planen innehåller, vilka insatser du kan få, och ersättningen.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta vad du har rätt till — och vart du vänder dig.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Etableringsplanen handläggs av Arbetsförmedlingen och gäller max 24 månader.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom etableringsplanen, vem som har rätt till den, vilka insatser den innehåller, och ersättningen. Se den först.'},
+{t:'Vem har rätt till planen?',
+cards:[
+{icon:'🌍',h:'Skyddsbehövande',t:'Eller kvotflykting.'},
+{icon:'👨‍👩‍👧',h:'Eller anhörig',t:'Till någon med skyddsbehov.'},
+{icon:'🎂',h:'20–64 år',t:'Åldersgränsen.'}
+],
+a:'Etableringsplanen är en rättighet — be om den om du tillhör målgruppen.'},
+{t:'Vad planen innehåller',
+cards:[
+{icon:'💬',h:'SFI',t:'Svenska för invandrare.'},
+{icon:'🇸🇪',h:'Samhällsorientering',t:'Så fungerar Sverige.'},
+{icon:'💼',h:'Aktiviteter mot jobb',t:'Eller mot studier — du väljer riktning.'},
+{icon:'📚',h:'Validering',t:'Av tidigare utbildning från hemlandet.'}
+],
+a:'Tre huvuddelar — språket, samhället och vägen till självförsörjning.'},
+{t:'Insatser & ersättning',
+cards:[
+{icon:'🏗️',h:'AMU',t:'Arbetsmarknadsutbildning — gratis.'},
+{icon:'🤝',h:'Praktik',t:'På en arbetsplats — visa vad du kan.'},
+{icon:'💬',h:'Yrkessvenska',t:'Språk för just ditt yrke.'},
+{icon:'💰',h:'~308 kr/dag',t:'Etableringsersättning heltid. Tillägg vid familj.'}
+],
+a:'Aktivitetsnivån påverkar ersättningens storlek — så håll igång och använd planen fullt ut.'}
 ],
 ex:{type:'build',title:'Kolla din etableringssituation',desc:'Ta reda på vad du har rätt till.',
 fields:[
@@ -3767,14 +3974,40 @@ quiz:[
 {q:'Har SYV tystnadsplikt?',o:['Nej','Ja','Bara för känsliga ärenden'],c:1}
 ],
 pr:['Hjälp mig formulera frågor till mitt SYV-möte.','Vilken utbildningsväg är snabbast till [yrke]?','Sammanfatta min situation och rekommendera nästa steg.']},,
-{id:'s20',icon:'🤖',title:'Din AI-SYV',sub:'Chatta med en AI-vägledare',color:'#38bdf8',bc:'rgba(56,189,248,.3)',bg:'rgba(56,189,248,.07)',
+{id:'s20',icon:'🤖',title:'Din AI-SYV',sub:'Chatta med en AI-vägledare',color:'#38bdf8',bc:'rgba(56,189,248,.3)',bg:'rgba(56,189,248,.07)',video:'/videos/s20-aisyv.mp4',
 lessons:[
-{t:'Vad är AI-SYV?',
-s:'AI-SYV är din personliga studiestöd-robot — tillgänglig dygnet runt, helt gratis.\n\nDu kan fråga om:\n💬 Vilka utbildningar som passar dig\n💬 Vad olika utbildningar leder till för jobb\n💬 Löner och arbetsmarknad\n💬 Behörighet och antagningspoäng\n💬 Utbildningar i Familjen Helsingborg\n💬 Hur du kombinerar CSN med jobb\n\nAI-SYV kompletterar — men ersätter inte — en riktig SYV.',
-a:'AI-SYV är byggd på Claude (Anthropic) och har specialiserad kunskap om det svenska utbildningssystemet med fokus på Helsingborg och Skåne. Den ger snabb grundinfo men för komplexa beslut är ett möte med en riktig SYV alltid värt det.'},
-{t:'Konsten att ställa bra frågor',
-s:'Ju mer du berättar, desto bättre svar.\n\n❌ Dålig fråga:\n"Vad ska jag studera?"\n\n✅ Bra fråga:\n"Jag har arbetat som chaufför i 5 år, har SFI C-klart och vill byta till vård. Vilka utbildningar passar mig i Helsingborg?"\n\n❌ Dålig fråga:\n"Är YH bra?"\n\n✅ Bra fråga:\n"Vilka YH-utbildningar finns inom IT i Helsingborg och vad leder de till för startlön?"',
-a:'Specifika frågor med kontext (bakgrund, ort, mål, tidsperspektiv, ekonomi) ger alltid mer relevanta svar. Berätta vad du redan vet — AI-SYV bygger vidare på det och undviker att upprepa saker.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🤖',h:'Vad är syftet?',t:'Få ut maximalt av AI-SYV — din studievägledare-robot.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad AI-SYV är, vad du kan fråga, formeln för bra prompts, och var gränsen går.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna ställa frågor som ger användbara svar.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'AI-SYV kompletterar — men ersätter inte — en riktig SYV vid stora beslut.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom AI-SYV, vad du kan fråga, formeln för bra prompts, och när du ska söka en riktig SYV. Se den först.'},
+{t:'Vad kan du fråga om?',
+cards:[
+{icon:'🎓',h:'Utbildningar',t:'Som passar din situation.'},
+{icon:'💼',h:'Yrken',t:'Vart utbildningen leder — och vilka jobb finns.'},
+{icon:'💰',h:'Löner & marknad',t:'Vad tjänar man? Var finns jobben?'},
+{icon:'📊',h:'Antagningspoäng',t:'Och behörighet — hur kommer jag in?'}
+],
+a:'AI-SYV är byggd på Claude och har specialiserad kunskap om det svenska utbildningssystemet med fokus på Helsingborg och Skåne.'},
+{t:'Formeln för bra prompts',
+cards:[
+{icon:'👤',h:'Vem du är',t:'Ålder, bakgrund, utbildning hittills.'},
+{icon:'📍',h:'Situationen',t:'Var du är, vad du har gjort.'},
+{icon:'🎯',h:'Målet',t:'Vad du vill uppnå.'},
+{icon:'💡',h:'Specifikt slår vagt',t:'Ju mer kontext, desto bättre svar.'}
+],
+a:'Exempel: "25 år, gymnasie, vill jobba inom logistik i Helsingborg — vilken väg?"'},
+{t:'När du behöver mer',
+cards:[
+{icon:'🚪',h:'Komplexa beslut',t:'Boka en riktig SYV — det är också gratis.'},
+{icon:'💼',h:'Karriärbyte',t:'En människa ser dimensioner AI missar.'},
+{icon:'❤️',h:'Personliga utmaningar',t:'Tala med någon som lyssnar i rummet.'}
+],
+a:'Studievägledning — när du vill, var du vill. Men en riktig SYV är fortfarande oslagbar för stora beslut.'}
 ],
 ex:{type:'ai-chat',title:'Chatta med AI-SYV'},
 quiz:[
