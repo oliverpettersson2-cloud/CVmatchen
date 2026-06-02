@@ -1619,14 +1619,42 @@ quiz:[
 ],
 pr:['Bygg min personliga välmående-rutin under jobbsöket.','Hur hanterar jag avslagsbrev psykologiskt?','Tacksamhetsdagbok — hur gör jag det?']},
 
-{id:'h11',icon:'🏥',title:'1177 & digital vård',sub:'Rätt vård på rätt ställe',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h11',icon:'🏥',title:'1177 & digital vård',sub:'Rätt vård på rätt ställe',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h11-1177.mp4',
 lessons:[
-{t:'Vad är 1177?',s:'1177 är Sveriges nationella vårdguide.\n\n📞 Ring 1177 — sjuksköterska svarar dygnet runt\n💻 1177.se — boka tid, läsa om symtom, se recept\n📱 Appen 1177 — se journalanteckningar & prover\n\nDet är alltid gratis att ringa 1177.',
-a:'1177 hjälper dig avgöra om du behöver söka vård, och var. Ca 40% av de som ringer behöver inte söka vård alls — de får råd per telefon. Appen kräver BankID-inloggning.'},
-{t:'Vårdens nivåer — var söker du?',s:'1. 🏠 Egenvård — vila, Alvedon, näsdroppar\n2. 📞 Ring 1177 — osäker? Fråga sjuksköterska\n3. 🏥 Vårdcentral — de flesta sjukdomar\n4. 🚑 Akutmottagning — livshotande\n5. 📞 112 — nödläge\n\nFel nivå = lång väntetid och sämre vård.',
-a:'Ca 30% av akutbesöken i Sverige är onödiga och kunde hanterats på vårdcentral eller av 1177. Akuten är för livshotande tillstånd. Närakut (om det finns lokalt) är för akuta men icke-livshotande besvär.'},
-{t:'Digital vård — Kry, Min Doktor, Doktor24',s:'Digitala vårdtjänster:\n✅ Tillgängliga 7 dagar/vecka\n✅ Vanligtvis ingen väntetid\n✅ Kostar samma patientavgift\n✅ Bra för: förkylning, urinvägsinfektion, recept\n\n❌ Passar inte: allvarliga symtom, undersökning krävs',
-a:'Kry, Min Doktor, Doktor24 och Helsa ingår i Region Skånes vårdval. Du betalar samma patientavgift (ca 200-350 kr) som på en fysisk vårdcentral. Recept skickas direkt till valfritt apotek.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🏥',h:'Vad är syftet?',t:'Förstå hela vårdsystemet — så du söker på rätt nivå.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad 1177 är, vårdens fem nivåer, appen och hur du bokar digitalt.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta var du söker — och slipper onödiga köer.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'40 % av de som ringer 1177 behöver inte söka vård alls — de får råd per telefon.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom 1177, vårdens nivåer, appen och hur du bokar tider digitalt. Se den först.'},
+{t:'Vad är 1177?',
+cards:[
+{icon:'🇸🇪',h:'Nationell vårdguide',t:'Sjuksköterskor svarar dygnet runt.'},
+{icon:'📞',h:'Ring 1177',t:'Alltid gratis att ringa.'},
+{icon:'🌐',h:'1177.se',t:'Boka tid, läs om symtom, se recept.'},
+{icon:'📱',h:'Appen 1177',t:'Journalanteckningar och provsvar — med BankID.'}
+],
+a:'Du behöver inte söka vård för allt — 1177 hjälper dig avgöra om och vart.'},
+{t:'Vårdens fem nivåer',
+cards:[
+{icon:'🏠',h:'1. Egenvård',t:'Vila, Alvedon, näsdroppar.'},
+{icon:'📞',h:'2. Ring 1177',t:'Osäker? Fråga sjuksköterska.'},
+{icon:'🏥',h:'3. Vårdcentral',t:'De flesta sjukdomar.'},
+{icon:'🚑',h:'4. Akutmottagning',t:'Livshotande tillstånd.'},
+{icon:'🆘',h:'5. Ring 112',t:'Nödläge — livsfara.'}
+],
+a:'Fel nivå = lång väntetid och sämre vård. Rätt nivå = snabbare vård för alla.'},
+{t:'Boka digitalt — spara timmar',
+cards:[
+{icon:'🔐',h:'Logga in med BankID',t:'Krävs för bokning.'},
+{icon:'📅',h:'Vårdcentralen',t:'Boka via 1177.se eller appen.'},
+{icon:'🦷',h:'Folktandvården',t:'Också digitalt på 1177.'},
+{icon:'🔄',h:'Boka om eller avboka',t:'När som helst, var som helst.'}
+],
+a:'Spara 1177 i mobilen — du behöver det förr eller senare.'}
 ],
 ex:{type:'build',title:'Din vårdplan',desc:'Vet hur du söker rätt vård vid rätt tillfälle.',
 fields:[
@@ -1691,14 +1719,40 @@ quiz:[
 ],
 pr:['Hur bokar jag hälsokontroll i Helsingborg?','Vad ingår i STI-testning?','Hur hittar jag en fysioterapeut via 1177?']},
 
-{id:'h14',icon:'🆘',title:'Kris & psykisk ohälsa',sub:'Veta när och var du söker hjälp',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h14',icon:'🆘',title:'Kris & psykisk ohälsa',sub:'Veta när och var du söker hjälp',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h14-kris.mp4',
 lessons:[
-{t:'Skillnad ångest, depression och kris',s:'Ångest = oro och rädsla — framtidsfokus\nDepression = nedstämdhet, hopplöshet — nutidsfokus\nKris = reaktion på ett svårt livsevent\n\nAlla tre är vanliga och behandlingsbara.\n\nEtt vanligt år i Sverige:\n• 25-30% upplever ångest\n• 10-15% drabbas av depression',
-a:'Psykisk ohälsa är en av de vanligaste folksjukdomarna. Stigmat minskar men är fortfarande en barriär. Tidigt stöd är dramatiskt mer effektivt än sen behandling.'},
-{t:'Var söker du hjälp?',s:'Akut kris just nu:\n📞 112 — livshotande\n📞 116 123 — Mind självmordslinjen (dygnet runt)\n📞 1177 — råd om psykisk hälsa\n\nVanlig psykisk ohälsa:\n🏥 Din vårdcentral — remiss till psykolog\n💻 Stödlinjen.se — chatt & telefon\n🧠 BUP (under 18) / Psykiatri (vuxen)',
-a:'Mind självmordslinjen (116 123) är gratis och anonym. Stödlinjen.se erbjuder kostnadsfri chatt. Vårdcentralen kan remittera till psykolog (psykologprogrammet, begränsat antal sessioner). Privat psykolog kostar ca 900-1 500 kr/session.'},
-{t:'Hur stödjer du någon annan?',s:'Om någon nära dig mår dåligt:\n\n✅ Fråga direkt: "Hur mår du egentligen?"\n✅ Lyssna — utan att fixa\n✅ Normalisera att söka hjälp\n✅ Följ med till vårdcentralen om de vill\n✅ Håll kontakten efteråt\n\n❌ Säg inte: "Det är inte så farligt" eller "Tänk positivt"',
-a:'Att fråga direkt om självmordstankar minskar NOT risken — det öppnar en dörr. Att lyssna utan att ge råd är ofta mer hjälpsamt än att lösa problemet. Närstående till psykisk sjuka har rätt till eget stöd via socialtjänsten.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🆘',h:'Vad är syftet?',t:'Veta när och var du söker hjälp vid kris eller psykisk ohälsa.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Skillnaden ångest/depression/kris, akuta nummer, vanlig vård och stigmat.'},
+{icon:'✅',h:'När du är klar ska du...',t:'känna till nummer och vägar — och våga använda dem.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Tidigt stöd är dramatiskt mer effektivt än sen behandling. Att be om hjälp är klokt, inte svaghet.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom skillnaden mellan ångest, depression och kris, akuta nummer, och var du söker hjälp. Se den först.'},
+{t:'Det är vanligare än du tror',
+cards:[
+{icon:'😟',h:'25–30 % upplever ångest',t:'Varje år — du är inte ensam.'},
+{icon:'😔',h:'10–15 % får depression',t:'Också vanligt — och behandlingsbart.'},
+{icon:'💔',h:'Kris drabbar alla',t:'Vid svåra livshändelser — sorg, separation, jobb-förlust.'}
+],
+a:'Psykisk ohälsa är en av de vanligaste folksjukdomarna. Stigmat minskar men är fortfarande en barriär.'},
+{t:'Akut kris — ring direkt',
+cards:[
+{icon:'🆘',h:'112',t:'Livshotande tillstånd.'},
+{icon:'📞',h:'Mind: 116 123',t:'Självmordslinjen — dygnet runt.'},
+{icon:'📞',h:'1177',t:'Råd om psykisk hälsa.'},
+{icon:'📞',h:'Bris: 116 111',t:'Om du är under 18.'}
+],
+a:'Ring även om du tvekar — sjuksköterskor och stödlinjeoperatörer är där just för det här.'},
+{t:'Vanlig psykisk ohälsa',
+cards:[
+{icon:'🏥',h:'Vårdcentral',t:'Börja där. Remiss till psykolog eller psykiater vid behov.'},
+{icon:'💻',h:'stodlinjen.se',t:'Chatt och telefon — när du inte vill prata i rummet.'},
+{icon:'🧠',h:'BUP / Psykiatri',t:'BUP för under 18, psykiatri för vuxna.'},
+{icon:'💪',h:'Tidigt stöd',t:'Fungerar dramatiskt bättre än sen behandling.'}
+],
+a:'Att söka hjälp är styrka. Människor som söker stöd tidigt mår betydligt bättre på sikt.'}
 ],
 ex:{type:'build',title:'Din krishjälpsplan',desc:'Veta exakt vad du gör om du eller någon nära mår dåligt.',
 fields:[
@@ -2327,14 +2381,41 @@ quiz:[
 ],
 pr:['Gör en 90-dagars ekonomiplan för mig med: inkomst X, skulder Y.','Hur ansöker jag om kommunal budget-rådgivning i Helsingborg?','Vägen från försörjningsstöd till ekonomisk stabilitet?']},
 
-{id:'e11',icon:'🏦',title:'Lån & krediter',sub:'Förstå kostnaden innan du skriver på',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e11',icon:'🏦',title:'Lån & krediter',sub:'Förstå kostnaden innan du skriver på',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e11-lan.mp4',
 lessons:[
-{t:'Ränta — vad kostar ett lån egentligen?',s:'Ränta = priset för att låna pengar.\n\nEffektiv ränta = den verkliga kostnaden.\n\nExempel — 10 000 kr snabblån:\n📅 12 månader\n💰 24% effektiv ränta = betalar tillbaka 12 400 kr\n\nKreditkort 20% ränta på 5 000 kr i 6 mån = ca 500 kr extra.',
-a:'Effektiv ränta inkluderar avgifter och är det enda jämförbara måttet. Snabblån har ofta 200-500% effektiv ränta. Konsumentverket kräver att effektiv ränta redovisas tydligt. Jämför alltid effektiv ränta — inte nominell.'},
-{t:'Typer av lån',s:'Bolån: låg ränta (2-4%) — kräver kontantinsats 15%\nBlancolån: 5-15% — utan säkerhet\nKreditkort: 15-25% — rörlig skuld\nSnabblån: 100-500%+ — undvik!\nCSN: ca 1% — förmånligast\n\n🔑 Regel: Lån med lägst ränta ALLTID BÄST.',
-a:'Blancolån kräver kreditprövning. Utan fast inkomst är det svårt att beviljas. Skuldsaldo på kreditkort är en av de dyraste skuldformerna. Bolån kräver 15% kontantinsats samt en buffert för driftskostnader.'},
-{t:'Undvik skuldfällan',s:'Skuldfällan:\n1. Tar snabblån för att klara månaden\n2. Betalar ej i tid → inkasso\n3. Betalningsanmärkning → svårt låna\n4. Tar nytt lån för att betala gamla\n\nBryt mönstret:\n✅ Ring din bank om du inte kan betala\n✅ Skuldrådgivning via kommunen (gratis)\n✅ Kronofogden har en budget-tjänst',
-a:'Kommunerna erbjuder gratis budget- och skuldrådgivning. Konsumentkredit­ombudsmannen (KKO) hanterar klagomål. Kronofogden erbjuder Skuldsanering för den som är skuldsatt bortom förmåga att betala.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🏦',h:'Vad är syftet?',t:'Förstå vad ett lån faktiskt kostar — innan du skriver under.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Effektiv ränta, olika lånetyper, snabblånsfällan, och varför CSN är bäst.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna jämföra lån — på effektiv ränta, inte månadskostnad.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Grundregeln: lån med lägst effektiv ränta — alltid bäst.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom ränta, effektiv ränta, olika lånetyper, snabblån och varför CSN är förmånligast. Se den först.'},
+{t:'Vad är ränta?',
+cards:[
+{icon:'💰',h:'Priset för att låna',t:'Avgiften långivaren tar för att låna ut.'},
+{icon:'⏳',h:'Räknas per år',t:'I procent av lånet.'},
+{icon:'📈',h:'Ränta på ränta',t:'Skulden växer om du inte betalar tillbaka.'}
+],
+a:'Effektiv ränta inkluderar avgifter och är det enda jämförbara måttet — inte nominell.'},
+{t:'Räntan varierar — välj rätt typ',
+cards:[
+{icon:'🏠',h:'Bolån: 2–4 %',t:'Kräver kontantinsats på 15 %.'},
+{icon:'🏦',h:'Blancolån: 5–15 %',t:'Utan säkerhet.'},
+{icon:'💳',h:'Kreditkort: 15–25 %',t:'Rörlig skuld.'},
+{icon:'📚',h:'CSN: ~1 %',t:'Förmånligast — lång återbetalningstid.'},
+{icon:'🚨',h:'SMS-lån: 100–500 %',t:'Sista utvägen — sök hjälp först.'}
+],
+a:'Konsumentkreditlagen kräver att effektiv ränta anges i all marknadsföring. Snabblån har ofta orimligt hög effektiv ränta.'},
+{t:'Innan du skriver på',
+cards:[
+{icon:'🔍',h:'Läs det finstilta',t:'Vad är effektiv ränta? Vilka avgifter?'},
+{icon:'⏰',h:'Räntefri period?',t:'Kolla vad som händer när den tar slut.'},
+{icon:'🛡️',h:'Säkerhet och löptid',t:'Längre löptid = lägre månad, mer total ränta.'},
+{icon:'📞',h:'Vid problem',t:'Ring borgenären INNAN missad betalning.'}
+],
+a:'Vid behov: budget- och skuldrådgivning hos kommunen är gratis. Hallå konsument: 0771-525 525.'}
 ],
 ex:{type:'build',title:'Din lånsituation',desc:'Koll på dina lån och vad de kostar.',
 fields:[
@@ -2351,14 +2432,41 @@ quiz:[
 ],
 pr:['Hur räknar jag ut vad mitt lån kostar totalt?','Vilka lån bör jag betala av först?','Hur bokar jag skuldrådgivning i Helsingborg?']},
 
-{id:'e12',icon:'⚖️',title:'Skulder & Kronofogden',sub:'Om du hamnar i skuldfällan',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e12',icon:'⚖️',title:'Skulder & Kronofogden',sub:'Om du hamnar i skuldfällan',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e12-skulder.mp4',
 lessons:[
-{t:'Vad händer om du inte betalar?',s:'Processen:\n1. Påminnelse (15-60 kr avgift)\n2. Inkasso (250-750 kr avgift)\n3. Kronofogden ansöker om betalningsföreläggande\n4. Utmätning — lön, tillgångar\n5. Betalningsanmärkning 3 år\n\nVarje steg kostar mer och skadar mer.',
-a:'Kronofogdemyndighetens databas är offentlig. Betalningsanmärkning gör det svårt att hyra bostad, teckna abonnemang och ibland få anställning. Det kan ta 3 år att bli skuldfri efter sanering.'},
-{t:'Skuldsanering — sista utvägen',s:'Skuldsanering = juridisk process för att få skulder borttagna.\n\nKriterier:\n• Skuldsatt bortom alla möjligheter\n• Prövas av Kronofogden\n• Tar 3-5 år\n• Sparar bara ett existensminimum\n\nAnsöks via kronofogden.se — kostnadsfritt.',
-a:'Skuldsanering beviljas inte alla — det kräver att du är skuldsatt utan realistisk möjlighet att betala. Under sanerings­perioden lever du på existensminimum (ca 5 500-6 500 kr/mån). Efter avslutad sanering är du skuldfri.'},
-{t:'Förebygg — budget och dialog',s:'De flesta skuldsituationer kan förebyggas:\n\n✅ Budget som håller koll\n✅ Ring fordringsägaren TIDIGT\n✅ Kommunal skuldrådgivning\n✅ Dela upp skuld i avbetalningsplan\n\nDe flesta fordringsägare föredrar avbetalning över inkasso.',
-a:'Tidigt kontakt med fordringsägare kan stoppa inkassoprocessen. Kommunens budget- och skuldrådgivare kan förhandla med fordringsägare på dina vägnar. Det är gratis och konfidentiellt.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'⚖️',h:'Vad är syftet?',t:'Förstå skuldprocessen — och hur du tar dig ur skuldfällan.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Stegen från påminnelse till Kronofogden, betalningsanmärkningar, skuldsanering och var du får hjälp.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta vad du gör om du inte kan betala — innan det går till Kronofogden.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Tystnad är värsta felet — 80 % av fall löses med kontakt INNAN det går till Kronofogden.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom skuldprocessen, betalningsanmärkningens konsekvenser, skuldsanering och var du får gratis hjälp. Se den först.'},
+{t:'Vad händer om du inte betalar?',
+cards:[
+{icon:'📩',h:'1. Påminnelse',t:'15–60 kr avgift.'},
+{icon:'📨',h:'2. Inkasso',t:'250–750 kr avgift.'},
+{icon:'⚖️',h:'3. Kronofogden',t:'Betalningsföreläggande.'},
+{icon:'💸',h:'4. Utmätning',t:'Lön och tillgångar — direkt avdrag.'},
+{icon:'🚫',h:'5. Anmärkning 3 år',t:'Stänger många dörrar.'}
+],
+a:'Kronofogdemyndighetens databas är offentlig. Betalningsanmärkning gör det svårt att hyra bostad och teckna abonnemang.'},
+{t:'Betalningsanmärkning — konsekvenser',
+cards:[
+{icon:'🏠',h:'Svårt att hyra',t:'Värdar gör kreditkoll.'},
+{icon:'📱',h:'Svårt med abonnemang',t:'Mobil, el, streaming — alla kollar UC.'},
+{icon:'📉',h:'Sämre räntor',t:'På allt — lån, kort, försäkringar.'}
+],
+a:'Anmärkningen stannar i 3 år efter att senaste skulden är betald.'},
+{t:'Var du får gratis hjälp',
+cards:[
+{icon:'🏛️',h:'Budget- & skuldrådgivning',t:'Helsingborgs kommun — gratis möte.'},
+{icon:'📞',h:'Hallå konsument',t:'0771-525 525 — gratis vägledning.'},
+{icon:'⚖️',h:'Skuldsanering',t:'Söks på kronofogden.se. Tar 3–5 år, du blir skuldfri efter.'},
+{icon:'🌐',h:'kronofogden.se',t:'Information och ansökningar.'}
+],
+a:'Skuldsanering är sista utvägen — men det går att bli skuldfri och börja om. Tveka inte att söka hjälp.'}
 ],
 ex:{type:'build',title:'Hantera skuldsituationen',desc:'Konkret plan om du har skulder.',
 fields:[
@@ -2987,8 +3095,42 @@ a:'AI-text är ofta överdrivet formell och saknar specifika detaljer. Din perso
 ex:{type:'build',title:'Din AI-verktygslåda',desc:'Träna på att använda AI för ditt jobbsök.',fields:[{l:'Vilket jobb söker du?',ph:'T.ex. Lagerarbetare Helsingborg, 3 år PostNord, truck A+B',hint:'Skriv detta — det är din AI-prompt!'},{l:'Skriv en prompt för din profiltext',ph:'T.ex. Förbättra min profiltext för lagerarbetare med...',ta:true,hint:'Specifik = bättre svar'},{l:'Vilka 3 AI-verktyg testar du?',ph:'T.ex. claude.ai, chatgpt.com, Google Translate',hint:'Alla gratis'}]},
 quiz:[{q:'Vad är AI bäst på?',o:['Ersätta erfarenheter','Förbättra text du skrivit','Söka jobb åt dig','Skapa falskt CV'],c:1},{q:'Vad gör en bra prompt?',o:['Kort och vag','Specifik med yrke, stad, erfarenhet och mål','Så lång som möjligt','Börjar med Hej AI'],c:1},{q:'Vad ska du alltid göra med AI-text?',o:['Skicka direkt','Läsa och justera till din stil','Ta bort AI-ord','Fråga arbetsgivaren'],c:1},{q:'Var hittar du gratis AI?',o:['Måste köpa','claude.ai och chatgpt.com','Bara via arbetsgivaren','Biblioteket'],c:1}],
 pr:['Förbättra min profiltext: [klistra in + yrke + stad]','Hjälp mig träna: Berätta om dig själv.','Förklara denna annons: [klistra in]']},
-{id:'d12',icon:'📸',title:'Sociala medier & arbetsgivarbilden',sub:'Vad ser de när de googlar dig?',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Arbetsgivare googlar dig — alltid',s:'70% av rekryterare i Sverige googlar kandidater.\n\nDe ser:\n📸 Instagram (om publikt)\n🔵 Facebook\n🐦 X/Twitter\n📹 TikTok\n\nDu kan inte ta bort Google-träffar — men du kan kontrollera vad de hittar.',a:'Digitalt fotavtryck lever länge. Bilder du lade upp för 10 år sedan kan synas. Googla ditt namn nu — det är samma bild rekryteraren ser.'},{t:'Vad skadar och hjälper?',s:'Skadar:\n❌ Fest-bilder\n❌ Stötande kommentarer\n❌ Klagomål på ex-arbetsgivare\n\nHjälper:\n✅ Professionell LinkedIn\n✅ Branschrelaterade inlägg\n✅ Rekommendationer',a:'57% av rekryterare har hittat innehåll som påverkat beslutet negativt. LinkedIn är det enda sociala mediet som alltid hjälper.'},{t:'Hantera din profil proaktivt',s:'Gör nu:\n1. Googla ditt namn\n2. Privatisera Instagram och Facebook\n3. Ta bort gamla stötande bilder\n4. Uppdatera LinkedIn\n5. Lägg upp professionellt foto\n\n💡 Ditt namn på Google ska leda till LinkedIn!',a:'Du kan begära borttagning av Google-resultat via deras formulär (GDPR). LinkedIn är det enda sociala mediet rekryterare aktivt söker på.'}],
+{id:'d12',icon:'📸',title:'Sociala medier & arbetsgivarbilden',sub:'Vad ser de när de googlar dig?',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d12-sociala.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'📸',h:'Vad är syftet?',t:'Förstå vad arbetsgivare ser när de googlar dig — och hur du styr det.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad rekryterare ser, vad som skadar respektive hjälper, och hur du städar fotavtrycket.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha en konkret plan för att städa och förbättra din digitala närvaro.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'70 % av rekryterare i Sverige googlar kandidater. Ditt namn på Google ska leda till LinkedIn.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom vad rekryterare ser, vad som skadar respektive hjälper, och hur du städar fotavtrycket i fem steg. Se den först.'},
+{t:'Du googlas — alltid',
+cards:[
+{icon:'🔎',h:'70 % googlar dig',t:'Av svenska rekryterare — innan intervjun.'},
+{icon:'📉',h:'57 % har påverkats negativt',t:'Av innehåll de hittat i sökningar.'},
+{icon:'🕰️',h:'Fotavtrycket lever länge',t:'Bilder från för 10 år sedan kan fortfarande synas.'}
+],
+a:'Du kan inte ta bort Google-träffar — men du kan styra vad som hittas.'},
+{t:'Skadar vs hjälper',
+cards:[
+{icon:'❌',h:'Skadar',t:'Fest-bilder, stötande kommentarer, klagomål på ex-arbetsgivare.'},
+{icon:'❌',h:'Också skadar',t:'Politiska eller religiösa inlägg som upprör.'},
+{icon:'✅',h:'Hjälper',t:'Professionell LinkedIn, branschrelaterade inlägg, rekommendationer.'},
+{icon:'⭐',h:'Tydligt fokus',t:'På din yrkesidentitet — inte allt om allt.'}
+],
+a:'LinkedIn är det enda sociala mediet som ALLTID hjälper, oavsett bransch och nivå.'},
+{t:'Städa fotavtrycket — fem steg',
+cards:[
+{icon:'1',h:'Googla ditt namn',t:'Se vad som finns just nu.'},
+{icon:'2',h:'Privatisera Insta & Facebook',t:'Stäng publik åtkomst.'},
+{icon:'3',h:'Ta bort gamla bilder',t:'Stötande, festinriktade, eller oprofessionella.'},
+{icon:'4',h:'Uppdatera LinkedIn',t:'Med din pitch, styrkor, erfarenhet.'},
+{icon:'5',h:'Professionellt foto',t:'Neutral bakgrund, vänlig min.'}
+],
+a:'Du kan begära borttagning av Google-resultat via deras GDPR-formulär — men prioritera styrning av nya träffar.'}
+],
 ex:{type:'build',title:'Din digitala ryktesanalys',desc:'Kontrollera vad arbetsgivare ser.',fields:[{l:'Googla ditt namn — vad hittar du?',ph:'T.ex. LinkedIn, gammal blogg...',ta:true,hint:'Gör det nu!'},{l:'Vad behöver privatas eller tas bort?',ph:'T.ex. Instagram: göra privat / Facebook: ta bort gamla bilder',ta:true},{l:'Vad lägger du till?',ph:'T.ex. Uppdatera LinkedIn-bild, dela ett branschinlägg'},{l:'Ditt mål: Vad ska Google visa?',ph:'T.ex. LinkedIn som första träff'}]},
 quiz:[{q:'Hur många rekryterare googlar?',o:['10%','30%','70%','5%'],c:2},{q:'Vad hjälper mest digitalt?',o:['Många Instagram-följare','Professionell LinkedIn','Aktiv Twitter','Stor Facebook-vänkrets'],c:1},{q:'Vad gör du med stötande gamla bilder?',o:['Låta vara','Ta bort dem nu','Hoppas ingen ser','Lägga upp fler nya'],c:1},{q:'Ditt namn på Google ska leda till?',o:['Ingenting','LinkedIn-profilen som första träff','Facebook','TikTok'],c:1}],
 pr:['Städa min digitala profil steg för steg.','Vad delar jag på LinkedIn för [bransch]?','Hur privatiserar jag Instagram?']},
