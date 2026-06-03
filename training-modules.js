@@ -1671,14 +1671,43 @@ quiz:[
 ],
 pr:['Vilken vård behöver jag för symtom X?','Hur bokar jag tid på vårdcentral i Helsingborg?','Vad gäller för utländska medborgare och sjukvård i Sverige?']},
 
-{id:'h12',icon:'🛡️',title:'Försäkringskassan & sjukpenning',sub:'Ekonomin när du inte kan jobba',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h12',icon:'🛡️',title:'Försäkringskassan & sjukpenning',sub:'Ekonomin när du inte kan jobba',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h12-fk.mp4',
 lessons:[
-{t:'Vad gör Försäkringskassan?',s:'Försäkringskassan (FK) betalar ut:\n\n🤒 Sjukpenning — om du inte kan jobba\n👶 Föräldrapenning — barnledighet\n💊 Aktivitetsersättning — ung med funktionsnedsättning\n🦯 Handikappersättning\n🏠 Bostadsbidrag\n\nAllt söks via forsakringskassan.se',
-a:'Försäkringskassan hanterar över 40 förmåner och stöd. Sjukpenning kräver ett läkarintyg från dag 8 (arbetsgivaren betalar dag 1-7). För egenföretagare gäller andra regler.'},
-{t:'Sjukskrivning steg för steg',s:'Dag 1: Sjukanmäl dig till arbetsgivaren\nDag 1-7: Arbetsgivaren betalar (sjuklön 80%)\nDag 8: Läkarintyg krävs\nDag 8+: Ansök om sjukpenning hos FK\n\n⚠️ Karensdag = dag 1 dras 20% av dagslön',
-a:'Sjukpenning är ca 80% av lönen upp till ett tak (ca 43 900 kr/mån 2026). Utan kollektivavtal kan du förlora mycket. Facket kan hjälpa vid tvist. FK:s beslut kan överklagas.'},
-{t:'Föräldrapenning & VAB',s:'Föräldrapenning:\n✅ 480 dagar per barn\n✅ Ca 80% av lönen\n✅ Båda föräldrar har rätt\n\nVAB (Vård av barn):\n✅ Om barnet är sjukt\n✅ Anmäl till FK samma dag\n✅ Ca 80% av lönen',
-a:'Föräldrapenning är en av världens mest generösa — 480 dagar. 90 dagar är "pappamånader" och kan ej överlåtas. Anmäl på Mina sidor på forsakringskassan.se eller appen.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🛡️',h:'Vad är syftet?',t:'Förstå Försäkringskassans roll — och vad du har rätt till när du blir sjuk.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'FK:s alla förmåner, sjuklön dag 1–7, sjukpenning från dag 8, och belopp.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta vad du gör när du blir sjuk — och var du ansöker.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Lär känna FK INNAN du behöver det — det sparar tid och stress vid sjukdom.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom FK:s förmåner, sjukskrivning steg för steg, och alla viktiga ersättningar. Se den först.'},
+{t:'Vad gör Försäkringskassan?',
+cards:[
+{icon:'🤒',h:'Sjukpenning',t:'Om du inte kan jobba.'},
+{icon:'👶',h:'Föräldrapenning',t:'Vid barnledighet — 480 dagar per barn.'},
+{icon:'🦯',h:'Funktionsnedsättning',t:'Aktivitetsersättning, handikappersättning.'},
+{icon:'🏠',h:'Bostadsbidrag',t:'Behovsprövat — för flera grupper.'},
+{icon:'🤰',h:'Graviditetspenning',t:'Vid tungt arbete under graviditet.'}
+],
+a:'FK hanterar över 40 olika förmåner. Du ansöker via forsakringskassan.se med BankID.'},
+{t:'Sjukskrivning steg för steg',
+cards:[
+{icon:'📞',h:'Dag 1: Sjukanmäl',t:'Till chefen — direkt på morgonen.'},
+{icon:'💰',h:'Dag 1–7: Sjuklön',t:'Arbetsgivaren betalar 80 % av lönen.'},
+{icon:'⚠️',h:'Karensavdrag',t:'20 % av en dagslön första dagen.'},
+{icon:'📋',h:'Dag 8: Läkarintyg',t:'Krävs för sjukpenning från dag 8.'},
+{icon:'🌐',h:'Dag 8+: Ansök hos FK',t:'forsakringskassan.se — logga in med BankID.'}
+],
+a:'Sjukpenning betalas ut från dag 15 till arbetsgivaren — sen direkt till dig om du är sjuk längre.'},
+{t:'Belopp och annat',
+cards:[
+{icon:'💰',h:'80 % av SGI',t:'Sjukpenninggrundande inkomst — det din lön ger.'},
+{icon:'🧒',h:'VAB',t:'Vård av sjukt barn — fram till barnet är 12.'},
+{icon:'🔄',h:'Rehab vid längre sjukdom',t:'Rehabiliteringsersättning hjälper dig tillbaka.'},
+{icon:'🆘',h:'Sjukersättning',t:'Vid permanent nedsatt arbetsförmåga.'}
+],
+a:'Maxbelopp 2026: ungefär 1 116 kr/dag i sjukpenning. SGI baseras på dina senaste års inkomster.'}
 ],
 ex:{type:'build',title:'Din FK-plan',desc:'Koll på rättigheter om du inte kan jobba.',
 fields:[
@@ -1769,14 +1798,42 @@ quiz:[
 ],
 pr:['Hur söker jag psykologhjälp i Helsingborg?','Vad gäller om jag behöver psykiatrin akut?','Hur pratar jag med någon som mår dåligt?']},
 
-{id:'h15',icon:'💊',title:'Beroende & riskbruk',sub:'Tidiga signaler och var du får hjälp',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h15',icon:'💊',title:'Beroende & riskbruk',sub:'Tidiga signaler och var du får hjälp',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h15-beroende.mp4',
 lessons:[
-{t:'Vad är ett riskbruk?',s:'Riskbruk = en konsumtionsnivå som ökar risken för hälsoskador — utan att vara ett beroende.\n\nAlkohol riskbruk:\n🚹 Män: >14 standardglas/vecka ELLER >4/tillfälle\n🚺 Kvinnor: >9 standardglas/vecka ELLER >3/tillfälle\n\nEtt standardglas = 33cl öl, 15cl vin, 4cl sprit',
-a:'Ca 800 000 svenskar har ett riskbruk av alkohol. Riskbruk är inte beroende — men ökar risken för lever-, hjärt- och cancersjukdomar, samt psykisk ohälsa och olyckor.'},
-{t:'Andra beroenden',s:'Beroende kan gälla:\n🎰 Spelberoende — vanligare än tros\n📱 Skärmberoende (underhållning, social media)\n☕ Koffein (mildare — men påverkar sömn)\n💊 Receptbelagda läkemedel\n🚬 Nikotin\n\nGemensamt: svårt att sluta trots vilja och negativa konsekvenser.',
-a:'Spelberoende drabbar ca 2% av befolkningen, fler bland unga. Stödlinjen för spel: 020-81 91 00. Alla beroenden är behandlingsbara — tidig hjälp ger bäst resultat.'},
-{t:'Var får du hjälp?',s:'Gratis hjälp i Sverige:\n🏥 Beroendecentrum — kostnadsfritt\n📞 Alkohollinjen: 020-84 44 48\n📞 Sluta-röka-linjen: 020-84 00 00\n📞 Spelberoende: 020-81 91 00\n💻 Stödlinjen.se\n\nAnonym och kostnadsfri hjälp finns alltid.',
-a:'Beroendevård är en del av hälso- och sjukvården i Region Skåne. Remiss via vårdcentral eller direkt kontakt med Beroendecentrum. AA och NA (självhjälpsgrupper) finns i de flesta städer.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'💊',h:'Vad är syftet?',t:'Känna igen riskbruk och beroende — tidigt — och veta var du får hjälp.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Skillnaden riskbruk/beroende, alkoholgränser, andra beroenden, signaler och stödlinjer.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta var gränsen går — och vart du eller någon nära kan ringa.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Att be om hjälp är styrka. Hjälp finns — och den är gratis och konfidentiell.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom skillnaden mellan riskbruk och beroende, alkoholgränser, andra beroenden och var du får hjälp. Se den först.'},
+{t:'Riskbruk är inte beroende',
+cards:[
+{icon:'📊',h:'Riskbruk',t:'Konsumtion som ökar risken — utan att vara beroende.'},
+{icon:'🎯',h:'Du kan sluta',t:'Men du gör det inte — det är skillnaden.'},
+{icon:'⚠️',h:'Första steget',t:'Ofta första steget mot beroende.'}
+],
+a:'Cirka 800 000 svenskar har riskbruk av alkohol. Det ökar risken för lever-, hjärt- och cancersjukdomar.'},
+{t:'Alkohol & andra beroenden',
+cards:[
+{icon:'🚹',h:'Män: 14 glas/vecka',t:'Eller mer än 4 vid ett tillfälle = riskbruk.'},
+{icon:'🚺',h:'Kvinnor: 9 glas/vecka',t:'Eller mer än 3 vid ett tillfälle = riskbruk.'},
+{icon:'🎰',h:'Spelberoende',t:'Vanligare än man tror.'},
+{icon:'📱',h:'Skärmberoende',t:'Sociala medier, spel, underhållning.'},
+{icon:'💊',h:'Läkemedel & nikotin',t:'Också vanliga beroenden.'}
+],
+a:'Ett standardglas = 33 cl öl, 15 cl vin, eller 4 cl sprit. Beroenden gemensamt: svårt att sluta trots vilja.'},
+{t:'Var du får hjälp',
+cards:[
+{icon:'🏥',h:'Vårdcentralen',t:'Börja här — du får remiss eller hänvisning.'},
+{icon:'📞',h:'Alkohollinjen',t:'020-84 44 48 — gratis, anonymt.'},
+{icon:'📞',h:'Stödlinjen för spelare',t:'020-81 91 00.'},
+{icon:'🏛️',h:'Kommunens beroendemottagning',t:'Specialiserad hjälp i Helsingborg.'},
+{icon:'👥',h:'AA / NA',t:'Anonyma Alkoholister och Narkomaner — gratis möten.'}
+],
+a:'Varje försök räknas. Backslag är normalt på vägen — och stöd från en grupp gör enormt stor skillnad.'}
 ],
 ex:{type:'build',title:'Min hälsovana-analys',desc:'Ärlig reflektion över egna vanor.',
 fields:[
@@ -2360,11 +2417,41 @@ quiz:[
 ],
 pr:['Förklara hur den svenska pensionen fungerar.','Hur kontrollerar jag om jag har betalningsanmärkningar?','Vad händer om jag inte kan betala mina räkningar?']},
 
-{id:'e10',icon:'🌟',title:'Din ekonomiska framtidsplan',sub:'Från idag till ekonomisk stabilitet',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e10',icon:'🌟',title:'Din ekonomiska framtidsplan',sub:'Från idag till ekonomisk stabilitet',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e10-framtid.mp4',
 lessons:[
-{t:'Ekonomisk återhämtning — det tar tid',s:'Ekonomisk stabilitet byggs steg för steg:\n\nFas 1: Täck grundbehov\n→ Mat, hyra, el, telefon\n\nFas 2: Stoppa blödningen\n→ Inga nya skulder, betala i tid\n\nFas 3: Buffert\n→ 1 000 kr → 10 000 kr\n\nFas 4: Frihet\n→ Spara, investera, välja',a:'Finansiell psykologi: pengar ger oss säkerhet, frihet och val — inte lycka i sig. Ekonomisk stress är en av de starkaste stressfaktorerna och påverkar hälsa och relationer. Att ha en plan — oavsett hur liten — sänker stressnivåerna mätbart.'},
-{t:'Gratis ekonomistöd i Helsingborg',s:'Du behöver inte klara det själv!\n\n🏛️ Kommunal budget-rådgivare: gratis\n📞 Kronofogdens budget-rådgivning: gratis\n💻 Konsumentverket Hallå Konsument: 0771-42 33 00\n🏦 FK:s ekonomirådgivning\n📱 Zmarta, Compricer — jämförelsesajter\n\nAll rådgivning är konfidentiell.',a:'Budget- och skuldrådgivning är lagreglerat i Sverige — alla kommuner måste erbjuda det gratis. Helsingborgs stad: ring kommunens kontaktcenter 042-10 50 00. Kronofogdens budgetrådgivning är gratis och utan krav på att du ska göra skuldsanering.'},
-{t:'Från bistånd till självförsörjning',s:'Vägen till ekonomisk självständighet:\n\n1. Stabil inkomst (jobb, studier, A-kassa)\n2. Budget som går ihop\n3. Skulder under kontroll\n4. Buffert 10 000 kr\n5. Spara regelbundet\n6. Förstå din pension\n\nVarje steg räknas.\nDu är redan på väg — du lär dig!',a:'Rörlighet på arbetsmarknaden och i ekonomin hänger ihop. Utbildning ökar inkomst med i snitt 15-20% per utbildningsnivå. Att ta sig från försörjningsstöd till arbete är en av de viktigaste livsförändringarna — och möjliggör allt annat.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🌟',h:'Vad är syftet?',t:'Bygga din ekonomiska framtidsplan — fyra faser från grundbehov till frihet.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'De fyra faserna, gratis hjälp i kommunen, och vägen från bistånd till självförsörjning.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta vilken fas du är i — och vad nästa steg är.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Att ha en plan — oavsett hur liten — sänker stressnivåerna mätbart.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom de fyra ekonomiska faserna, gratis kommunal rådgivning, och vägen mot självförsörjning. Se den först.'},
+{t:'De fyra faserna',
+cards:[
+{icon:'1️⃣',h:'Fas 1 — Grunden',t:'Täck grundbehoven: mat, hyra, el, telefon.'},
+{icon:'2️⃣',h:'Fas 2 — Stoppa blödningen',t:'Inga nya skulder. Betala räkningar i tid.'},
+{icon:'3️⃣',h:'Fas 3 — Bufferten',t:'1 000 kr → 10 000 kr. Trygghet börjar här.'},
+{icon:'4️⃣',h:'Fas 4 — Friheten',t:'Spara, investera, välja istället för tvingas.'}
+],
+a:'Finansiell psykologi: pengar ger säkerhet, frihet och val — inte lycka i sig. Stress kring ekonomi är en av de starkaste stressfaktorerna.'},
+{t:'Gratis hjälp i Helsingborg',
+cards:[
+{icon:'🏛️',h:'Kommunal rådgivare',t:'Budget- och skuldrådgivning — gratis i alla kommuner.'},
+{icon:'📞',h:'Kronofogden',t:'Egen budgetrådgivning — utan krav på skuldsanering.'},
+{icon:'📞',h:'Hallå konsument',t:'0771-525 525 — gratis vägledning från Konsumentverket.'},
+{icon:'🤐',h:'Konfidentiellt',t:'All rådgivning är skyddad — du står inte ensam.'}
+],
+a:'Helsingborgs stad: ring kommunens kontaktcenter på 042-10 50 00 för att boka tid.'},
+{t:'Från bistånd till självförsörjning',
+cards:[
+{icon:'💼',h:'Stabil inkomst',t:'Jobb, studier eller A-kassa.'},
+{icon:'📋',h:'Budget som går ihop',t:'Du vet vad som händer med varje krona.'},
+{icon:'🛡️',h:'Skulder under kontroll',t:'Avbetalningsplan eller skuldsanering.'},
+{icon:'🐷',h:'Buffert 10 000 kr',t:'Bryt skuldcykeln — sedan börja spara.'}
+],
+a:'Utbildning ökar inkomst med i snitt 15–20 % per nivå. Vägen från bistånd till arbete är en av de viktigaste livsförändringarna.'}
 ],
 ex:{type:'build',title:'Din ekonomiska 90-dagarsplan',desc:'Konkret plan för ekonomisk stabilitet — steg för steg.',
 fields:[
@@ -2483,14 +2570,41 @@ quiz:[
 ],
 pr:['Hur ansöker jag om skuldsanering?','Hur pratar jag med en inkassobyrå?','Vad är existensminimum vid skuldsanering?']},
 
-{id:'e13',icon:'🏠',title:'Försäkringar',sub:'Rätt skydd — inte för mycket, inte för lite',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e13',icon:'🏠',title:'Försäkringar',sub:'Rätt skydd — inte för mycket, inte för lite',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e13-forsakring.mp4',
 lessons:[
-{t:'Hemförsäkring — ett måste',s:'Hemförsäkring skyddar:\n\n🏠 Ditt hem vid brand, inbrott, vattenläcka\n💼 Dina saker (stöld, skada)\n🦺 Ansvarsskydd (om du råkar skada någon)\n⚖️ Rättsskydd (juridisk hjälp)\n\nKostnad: ca 100-250 kr/mån\nBOR DU UTAN = stor ekonomisk risk!',
-a:'Hemförsäkringen är den viktigaste privatförsäkringen. Vid brand kan en enda incident kosta hundratusentals kronor. Rättsskyddet täcker vanligtvis 80% av advokatkostnader upp till ca 150 000 kr.'},
-{t:'Olycksfalls & livförsäkring',s:'Olycksfallsförsäkring:\n• Skyddar vid olyckor utanför jobbet\n• Ca 50-150 kr/mån\n\nLivförsäkring:\n• Engångssumma till familjen om du dör\n• Viktigt med barn/skulder\n• Ca 100-300 kr/mån\n\nVia facket — ofta billigare!',
-a:'Kollektivavtalet ger ofta Tjänstegrupplivförsäkring (TGL) automatiskt som anställd. Kolla med facket om du omfattas. Olycksfallsförsäkring via arbetsgivaren gäller bara arbetstid.'},
-{t:'Jämför & spara',s:'Tjäna pengar på försäkringar:\n\n✅ Samla hos ett bolag — rabatt\n✅ Jämför på insplanet.com eller compricer.se\n✅ Ring och begär lojalitetsrabatt\n✅ Höj självrisken → lägre premie\n✅ Betala årsvis → billigare\n\nGenomsnittlig besparing vid jämförelse: 500-2 000 kr/år',
-a:'Insplanet och Compricer jämför priser från många bolag. Lojalitetsrabatter ges sällan automatiskt — du måste begära dem. En hög självrisken (ex 5 000 kr istället för 1 500 kr) kan sänka premien 15-25%.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🏠',h:'Vad är syftet?',t:'Förstå vilka försäkringar du behöver — och vilka du klarar dig utan.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Hemförsäkring, olycksfall, livförsäkring, fackförsäkringar och hur du jämför.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha gått igenom dina försäkringar och veta vad du saknar.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Hemförsäkring är ett måste. Resten anpassar du efter livssituation.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom hemförsäkringen, olycksfalls- och livförsäkring, fackförsäkringar och hur du jämför smart. Se den först.'},
+{t:'Hemförsäkring — det viktigaste',
+cards:[
+{icon:'💰',h:'100–250 kr/månad',t:'En av de billigaste viktiga försäkringarna.'},
+{icon:'🔥',h:'Brand, inbrott, vatten',t:'De vanligaste skadehändelserna.'},
+{icon:'💼',h:'Dina saker',t:'Stöld och skada — ersättning för värdet.'},
+{icon:'🦺',h:'Ansvarsskydd',t:'Om du råkar skada någon annan.'},
+{icon:'⚖️',h:'Rättsskydd',t:'Juridisk hjälp — upp till 150 000 kr.'}
+],
+a:'En enda incident kan kosta 100 000-tals kronor. Bor du utan hemförsäkring = stor ekonomisk risk.'},
+{t:'Olycksfalls- och livförsäkring',
+cards:[
+{icon:'🚴',h:'Olycksfall: 50–150 kr/mån',t:'Skyddar vid olyckor utanför jobbet.'},
+{icon:'👨‍👩‍👧',h:'Liv: 100–300 kr/mån',t:'Engångssumma till familjen om du dör.'},
+{icon:'🤝',h:'Via facket — ofta billigare',t:'Kollektiva försäkringar ingår ofta i medlemskapet.'}
+],
+a:'Livförsäkring är särskilt viktigt om du har barn eller bostadslån. Olycksfall = för dig och hela hushållet.'},
+{t:'Jämför och spara',
+cards:[
+{icon:'🔍',h:'Jämför vartannat år',t:'Lojalitet straffas — inte belönas.'},
+{icon:'🌐',h:'insplanet.se',t:'Gratis jämförelse av försäkringar.'},
+{icon:'📈',h:'Höj självrisken',t:'Lägre premie — om du sällan skadar saker.'},
+{icon:'🚫',h:'Säg nej till dubbletter',t:'Hemförsäkringens tillägg överlappar ofta andra.'}
+],
+a:'Höj grundsjälvrisken till 5 000 kr om du sällan skadar saker — premien sänks betydligt över tid.'}
 ],
 ex:{type:'build',title:'Din försäkringsöversikt',desc:'Koll på vad du har och vad du behöver.',
 fields:[
@@ -3134,8 +3248,43 @@ a:'Du kan begära borttagning av Google-resultat via deras GDPR-formulär — me
 ex:{type:'build',title:'Din digitala ryktesanalys',desc:'Kontrollera vad arbetsgivare ser.',fields:[{l:'Googla ditt namn — vad hittar du?',ph:'T.ex. LinkedIn, gammal blogg...',ta:true,hint:'Gör det nu!'},{l:'Vad behöver privatas eller tas bort?',ph:'T.ex. Instagram: göra privat / Facebook: ta bort gamla bilder',ta:true},{l:'Vad lägger du till?',ph:'T.ex. Uppdatera LinkedIn-bild, dela ett branschinlägg'},{l:'Ditt mål: Vad ska Google visa?',ph:'T.ex. LinkedIn som första träff'}]},
 quiz:[{q:'Hur många rekryterare googlar?',o:['10%','30%','70%','5%'],c:2},{q:'Vad hjälper mest digitalt?',o:['Många Instagram-följare','Professionell LinkedIn','Aktiv Twitter','Stor Facebook-vänkrets'],c:1},{q:'Vad gör du med stötande gamla bilder?',o:['Låta vara','Ta bort dem nu','Hoppas ingen ser','Lägga upp fler nya'],c:1},{q:'Ditt namn på Google ska leda till?',o:['Ingenting','LinkedIn-profilen som första träff','Facebook','TikTok'],c:1}],
 pr:['Städa min digitala profil steg för steg.','Vad delar jag på LinkedIn för [bransch]?','Hur privatiserar jag Instagram?']},
-{id:'d13',icon:'🌐',title:'Digitalt CV & portfolio',sub:'Synas online utöver LinkedIn',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Varför ett digitalt CV?',s:'Fördelar:\n✅ Alltid tillgängligt — dela en länk\n✅ Kan ha video och projekt\n✅ Visar digital kompetens\n✅ Sticker ut bland papper-CV\n\nEnklast:\n• LinkedIn (du har redan!)\n• Canva.com — gratis mallar\n• Google Sites — gratis hemsida',a:'Digitalt CV är standard i IT och kreativa yrken. Inom lager och vård är det ovanligt men positivt. En QR-kod på papper-CV som leder till LinkedIn är ett enkelt mellansteg.'},{t:'Bygg CV med Canva',s:'canva.com — gratis:\n1. Skapa konto med Gmail\n2. Sök CV i mallar\n3. Välj professionell mall\n4. Fyll i uppgifter\n5. Ladda ner som PDF\n\n✅ Neutral färg\n✅ Max 1 sida\n✅ Tydliga rubriker',a:'Canva är enklast för proffssiga CV utan grafikkompetens. Exportera alltid som PDF. Undvik: för färgglada templates och konstiga typsnitt.'},{t:'QR-kod till LinkedIn',s:'Lägg QR-kod på papper-CV:\n1. Gå till qr-code-generator.com\n2. Klistra in din LinkedIn-URL\n3. Ladda ner QR-koden\n4. Lägg längst ner på CV\n\nRekryteraren skannar → direkt till din LinkedIn.\nGratis, tar 5 minuter!',a:'QR-koder på CV ökar i Sverige. Alternativ: skriv LinkedIn-URL tydligt under kontaktuppgifterna — lika effektivt.'}],
+{id:'d13',icon:'🌐',title:'Digitalt CV & portfolio',sub:'Synas online utöver LinkedIn',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d13-digitalcv.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🌐',h:'Vad är syftet?',t:'Bygga ett digitalt CV som sticker ut — utöver LinkedIn.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Varför digitalt CV, gratis verktyg, Canva steg för steg, QR-kod till LinkedIn och portfolio.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha skapat ett digitalt CV — i Canva eller annat verktyg.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner, plus en bygg-övning.'}
+],
+a:'En QR-kod på papper-CV som leder till LinkedIn är ett enkelt mellansteg från analogt till digitalt.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom varför digitalt CV, gratis verktyg, Canva steg för steg och QR-kod till LinkedIn. Se den först.'},
+{t:'Varför digitalt CV?',
+cards:[
+{icon:'🔗',h:'Alltid tillgängligt',t:'Dela en länk — du har CV:t med dig.'},
+{icon:'🎬',h:'Video & projekt',t:'Visar mer än ett papper-CV kan.'},
+{icon:'💡',h:'Visar digital kompetens',t:'Du har redan kommit en bit på vägen.'},
+{icon:'⭐',h:'Sticker ut',t:'Bland alla papper-CV i högen.'}
+],
+a:'Digitalt CV är standard i IT och kreativa yrken. Inom lager och vård är det ovanligt men positivt.'},
+{t:'Canva på 5 minuter',
+cards:[
+{icon:'1',h:'Skapa konto',t:'Med Gmail — helt gratis.'},
+{icon:'2',h:'Sök "CV" i mallbiblioteket',t:'Hundratals professionella mallar.'},
+{icon:'3',h:'Välj neutral mall',t:'Marinblå, mörkgrön eller grå färg.'},
+{icon:'4',h:'Fyll i uppgifter',t:'Använd din pitch och styrkor.'},
+{icon:'5',h:'Ladda ner som PDF',t:'Filnamn: CV_Förnamn_Efternamn.pdf.'}
+],
+a:'Undvik färgglada templates och konstiga typsnitt. Tydlighet slår design varje gång.'},
+{t:'QR-kod & portfolio',
+cards:[
+{icon:'🌐',h:'qr-code-generator.com',t:'Klistra in din LinkedIn-URL — ladda ner.'},
+{icon:'📄',h:'Lägg på CV:t',t:'Längst ner — rekryteraren skannar direkt.'},
+{icon:'🎨',h:'Portfolio för kreativa',t:'Designers, fotografer — visa arbetsprover på en hemsida.'},
+{icon:'💻',h:'Utvecklare → GitHub',t:'Eller egen hemsida — koden talar för sig själv.'}
+],
+a:'QR-koder på CV ökar i Sverige. Alternativ: skriv LinkedIn-URL tydligt under kontaktuppgifterna.'}
+],
 ex:{type:'build',title:'Bygg ditt digitala CV',desc:'Skapa ett professionellt digitalt CV.',fields:[{l:'Har du Canva-konto?',ph:'T.ex. Ja / Nej — skapar ett nu med Gmail',hint:'Gratis med Gmail'},{l:'Vilken CV-mall väljer du?',ph:'T.ex. Minimalistisk marinblå med tydliga rubriker',hint:'Neutral och professionell'},{l:'Är din LinkedIn-URL anpassad?',ph:'T.ex. linkedin.com/in/anna-karlsson',hint:'Ändra: Inställningar > Offentlig profil'},{l:'Vad lägger du till som sticker ut?',ph:'T.ex. QR-kod till LinkedIn'}]},
 quiz:[{q:'Vad är fördelen med digitalt CV?',o:['Snyggare','Alltid tillgängligt och visar digital kompetens','Arbetsgivare kräver det','Snabbare'],c:1},{q:'Enklaste verktyget för CV?',o:['Adobe InDesign','Publisher','Canva.com — gratis','Photoshop'],c:2},{q:'Vilket format skickar du CV i?',o:['Word','PDF','Excel','Bild'],c:1},{q:'Vad gör QR-koden på CV?',o:['Ser tekniskt ut','Länkar till LinkedIn direkt vid skanning','Obligatorisk trend','Tar för mycket plats'],c:1}],
 pr:['Granska mitt CV: [klistra in] — ge 5 förslag.','Canva-mall för [yrke]?','Hur skriver jag LinkedIn-URL på CV?']},
