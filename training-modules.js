@@ -1724,14 +1724,41 @@ quiz:[
 ],
 pr:['Hur ansöker jag om sjukpenning?','Vad gäller föräldrapenning om jag inte haft jobb?','Hur överklagar jag ett FK-beslut?']},
 
-{id:'h13',icon:'🧬',title:'Kropp & fysisk hälsa',sub:'Förstå din kropp — ta hand om den',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h13',icon:'🧬',title:'Kropp & fysisk hälsa',sub:'Förstå din kropp — ta hand om den',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h13-kropp.mp4',
 lessons:[
-{t:'Förebyggande hälsa — screening & kontroller',s:'Gratis hälsokontroller du har rätt till:\n\n🔬 Cellprov (cervix) — var 3-7 år\n🫀 Blodtrycks­kontroll — vart 5:e år\n🩸 Blodsocker (diabetes) — vid riskfaktorer\n🏥 Mammografi — från 40 år\n\nBokas via din vårdcentral eller 1177.',
-a:'Screening räddar liv — framför allt för cancer och hjärt-kärlsjukdom. Boka proaktivt även om du mår bra. Kostnadsfritt inom ramen för patientavgiften.'},
-{t:'Värk, smärta & muskuloskelettala besvär',s:'Vanligaste orsaker till sjukskrivning:\n🦴 Ryggvärk\n🦷 Nackspänningar\n🦵 Knäproblem\n\nHjälper:\n✅ Rörelse (inte vila)\n✅ Ergonomi — rätt stol & skärm\n✅ Fysioterapeut — remiss via vårdcentral\n✅ Värme eller kyla\n\n❌ Sängliggande förvärrar ryggvärk',
-a:'Ca 30% av alla sjukskrivningar beror på muskel- och ledbesvär. Fysioterapeut kan bokas direkt utan läkarremiss på de flesta vårdcentraler. Naprapater och kiropraktorer kostar ca 400-700 kr.'},
-{t:'Könsspecifik hälsa & sexuell hälsa',s:'Kostnadsfritt i Sverige:\n✅ STI-testning (klamydia, HIV etc)\n✅ Preventivmedelsrådgivning\n✅ Gynekologisk hälsokontroll\n✅ Prostatakontroll\n\nSöks via:\n• Ungdomsmottagning (upp till 25 år)\n• Din vårdcentral\n• 1177.se → Hitta vård',
-a:'STI-testning är gratis och konfidentiell. Klamydia är den vanligaste STI i Sverige. Ungdomsmottagningar är kostnadsfria upp till 25 år och erbjuder preventivmedel, samtal och tester.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🧬',h:'Vad är syftet?',t:'Förstå din kropp — och ta hand om den proaktivt, inte reaktivt.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Screening, vanlig värk, rörelse, signaler att söka vård, hälsorutiner.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta vilka kontroller du har rätt till och när du söker vård.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Förebyggande vård är alltid billigare och bättre än lagning.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom screening, värk och smärta, rörelse som medicin, och hälsorutiner. Se den först.'},
+{t:'Förebyggande screening',
+cards:[
+{icon:'🔬',h:'Cellprov',t:'Var 3–7 år — kallas automatiskt.'},
+{icon:'🫀',h:'Blodtryck',t:'Vart 5:e år eller vid riskfaktorer.'},
+{icon:'🩸',h:'Blodsocker',t:'Vid riskfaktorer för diabetes.'},
+{icon:'🎗️',h:'Mammografi',t:'Från 40 år — kallas automatiskt.'}
+],
+a:'Screening räddar liv — framför allt för cancer och hjärt-kärlsjukdom. Kostnadsfritt inom patientavgiften.'},
+{t:'Värk & rörelse',
+cards:[
+{icon:'🦴',h:'Ryggvärk',t:'Rörelse hjälper — vila förvärrar.'},
+{icon:'🦷',h:'Nackspänningar',t:'Ergonomi: rätt stol och skärm.'},
+{icon:'🚶',h:'30 min rörelse/dag',t:'Promenad räcker.'},
+{icon:'💪',h:'Styrketräning 2x/v',t:'Hindrar muskelförlust efter 30.'}
+],
+a:'Sängliggande förvärrar ryggvärk — håll dig aktiv. Fysioterapeut via vårdcentralen vid ihållande problem.'},
+{t:'Hälsorutiner',
+cards:[
+{icon:'💧',h:'1,5–2 liter vatten/dag',t:'Påverkar fokus och energi direkt.'},
+{icon:'🥗',h:'Tallriksmodellen',t:'1/2 grönt, 1/4 protein, 1/4 kolhydrat.'},
+{icon:'😴',h:'7–9 timmar sömn',t:'Grunden för all återhämtning.'},
+{icon:'⏳',h:'Smärta > 3 veckor',t:'Sök vård — inte sittut.'}
+],
+a:'Din kropp är ditt enda hus — vårda det. Boka årlig hälsokontroll på vårdcentralen.'}
 ],
 ex:{type:'build',title:'Din hälsokontrollplan',desc:'Planera förebyggande hälsokontroller.',
 fields:[
@@ -1874,14 +1901,42 @@ quiz:[
 ],
 pr:['Var anmäler jag till MVC i Helsingborg?','Vad ingår i BVC-programmet?','Hur ansöker jag om barnbidrag?']},
 
-{id:'h17',icon:'♿',title:'Funktionsnedsättning & stöd',sub:'Rättigheter och hjälpmedel',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h17',icon:'♿',title:'Funktionsnedsättning & stöd',sub:'Rättigheter och hjälpmedel',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h17-funktion.mp4',
 lessons:[
-{t:'LSS — Lagen om stöd och service',s:'LSS ger rätt till insatser för personer med varaktiga funktionsnedsättningar:\n\n✅ Personlig assistans\n✅ Ledsagarservice\n✅ Daglig verksamhet\n✅ Boende med stöd\n✅ Kontaktperson\n\nAnsöks via kommunens socialförvaltning — kostnadsfritt.',
-a:'LSS gäller personer med autism, intellektuell funktionsnedsättning, förvärvad hjärnskada och andra stora funktionsnedsättningar. Bedömning sker av kommunen. Insatserna är kostnadsfria för den enskilde.'},
-{t:'Hjälpmedel & rehabilitering',s:'Region Skåne erbjuder hjälpmedel:\n🦽 Rullstol & rullator\n👂 Hörapparat\n👁️ Synhjälpmedel\n🖥️ Tekniska hjälpmedel\n\nFysioterapi & arbetsterapi:\nVia remiss från vårdcentral, kostnadsfritt eller låg kostnad.',
-a:'Hjälpmedel förskrivs av arbetsterapeut eller fysioterapeut. Kostnaden varierar — vissa är gratis, andra kostar en egenavgift. Arbetsterapeuten kan också hjälpa med bostadsanpassning.'},
-{t:'Arbete med funktionsnedsättning',s:'Stöd vid arbete:\n✅ Lönebidrag (AF betalar del av lön)\n✅ SIUS-konsulent (stöd på arbetsplatsen)\n✅ Anpassad utrustning\n✅ Trygghetsanställning\n\nAF har specialister för arbetslivsinriktad rehabilitering.',
-a:'Lönebidrag ger arbetsgivare ekonomiskt stöd för att anställa person med nedsatt arbetsförmåga. Trygghetsanställning är en subventionerad anställningsform för de som har svårt att etablera sig. SIUS = Supported Employment.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'♿',h:'Vad är syftet?',t:'Förstå dina rättigheter — och vart du vänder dig för stöd.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'LSS, hjälpmedel, ekonomiskt stöd, arbete med stöd, och hur du ansöker.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta exakt var du ansöker — och vad du har rätt till.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Allt stöd är kostnadsfritt för den enskilde — det är inskrivet i lag.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom LSS, hjälpmedel, ekonomiskt stöd och arbete med stöd för personer med funktionsnedsättning. Se den först.'},
+{t:'LSS — Lagen om stöd och service',
+cards:[
+{icon:'⚖️',h:'Rättighetslag',t:'Du har RÄTT till insatser — om du tillhör målgruppen.'},
+{icon:'🤝',h:'Personlig assistans',t:'Stöd i vardagen — anpassat efter behov.'},
+{icon:'🏠',h:'Boende med stöd',t:'För dig som behöver det.'},
+{icon:'💼',h:'Daglig verksamhet',t:'Meningsfull sysselsättning med stöd.'},
+{icon:'👥',h:'Kontaktperson',t:'Någon att göra saker med — gratis.'}
+],
+a:'LSS gäller personer med autism, intellektuell funktionsnedsättning, förvärvad hjärnskada och liknande.'},
+{t:'Hjälpmedel & rehab',
+cards:[
+{icon:'🦽',h:'Rörelsehjälpmedel',t:'Rullstol, rullator — via Region Skåne.'},
+{icon:'👂',h:'Hörapparat',t:'Subventioneras kraftigt — ca 100 kr.'},
+{icon:'👁️',h:'Synhjälpmedel',t:'Via Synrehabiliteringen.'},
+{icon:'🖥️',h:'Tekniska hjälpmedel',t:'För kommunikation och vardag.'}
+],
+a:'Fysioterapi och arbetsterapi via remiss från vårdcentral — kostnadsfritt eller låg kostnad.'},
+{t:'Ekonomi & arbete med stöd',
+cards:[
+{icon:'💰',h:'Aktivitetsersättning',t:'För unga med nedsatt arbetsförmåga (FK).'},
+{icon:'💼',h:'Handikappersättning',t:'För extra kostnader (FK).'},
+{icon:'🏗️',h:'Lönestöd via AF',t:'Arbetsgivaren får bidrag — du får riktigt jobb.'},
+{icon:'🏛️',h:'Samhall',t:'Statligt företag för meningsfullt arbete.'}
+],
+a:'Sök via kommunens socialförvaltning (LSS) eller Försäkringskassan (ersättningar). Allt är kostnadsfritt — det är dina rättigheter.'}
 ],
 ex:{type:'build',title:'Mitt stödbehov',desc:'Kartlägg vilket stöd du har rätt till.',
 fields:[
@@ -2621,14 +2676,41 @@ quiz:[
 ],
 pr:['Vilka försäkringar behöver en ensamstående person?','Hur jämför jag hemförsäkringar?','Vad täcker rättsskyddet i hemförsäkringen?']},
 
-{id:'e14',icon:'👴',title:'Pension & tjänstepension',sub:'Framtiden börjar nu',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e14',icon:'👴',title:'Pension & tjänstepension',sub:'Framtiden börjar nu',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e14-pension.mp4',
 lessons:[
-{t:'Hur fungerar pension i Sverige?',s:'Svensk pension = tre delar:\n\n1. Allmän pension (staten) — 18,5% av lönen avsätts\n2. Tjänstepension (arbetsgivaren) — 4,5% extra\n3. Privat sparande (frivilligt)\n\nKolla din pension på minpension.se — gratis!',
-a:'Allmän pension beräknas på livsinkomst — varje år och krona räknas. Utan inkomst (t.ex. vid långtidsarbetslöshet) minskar den framtida pensionen. SGI (sjukpenninggrundande inkomst) påverkas av inkomst.'},
-{t:'Tjänstepension — arbetsgivarens del',s:'Om du har kollektivavtal:\n\n✅ Arbetsgivaren betalar 4,5-30% av lönen\n✅ Placeras i fonder\n✅ Du väljer fonder via valcentral\n\nUtan kollektivavtal:\n❌ Ingen garanti på tjänstepension\n\nKolla på minpension.se vad du har!',
-a:'Tjänstepension är värdefull — för en normallöntagare kan den utgöra 25-35% av totalpensioen. Fondval spelar roll: historiskt ger aktietunga fonder bäst avkastning på lång sikt. Glöm inte att logga in och välja fonder!'},
-{t:'Pension och jobbsök — vad händer?',s:'Under perioder utan arbete:\n\n⚠️ Allmän pension tjänas inte in (ingen lön)\n⚠️ Tjänstepension pausas\n✅ A-kassa ger viss pensionsgrundande inkomst\n✅ Föräldrapenning ger pensionsrätt\n✅ Studiemedel ger viss pensionsrätt\n\nDärför är snabbt tillbaka i arbete viktigt!',
-a:'Varje år utan inkomst kostar ca 1 500-2 500 kr/mån i framtida pension beroende på din ålder och lönenivå. Premiepension (PPM) fortsätter växa med fondavkastning även utan inbetalning. Logga in på minpension.se för fullständig bild.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'👴',h:'Vad är syftet?',t:'Förstå hur pensionen byggs — och hur du påverkar din egen.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'De tre pensionsdelarna, tjänstepension, privat sparande och vad som påverkar.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna logga in på minpension.se och förstå dina siffror.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Allmän pension beräknas på livsinkomst — varje år och krona räknas.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom pensionens tre delar, tjänstepensionens kollektivavtals-betydelse och minpension.se. Se den först.'},
+{t:'Pensionens tre delar',
+cards:[
+{icon:'🏛️',h:'1. Allmän pension',t:'Staten avsätter 18,5 % av lönen varje månad.'},
+{icon:'💼',h:'2. Tjänstepension',t:'Arbetsgivaren betalar 4,5–30 % extra (med kollektivavtal).'},
+{icon:'🐷',h:'3. Privat sparande',t:'Frivilligt — ISK eller indexfonder.'}
+],
+a:'Allmän pension byggs på livsinkomst. Utan inkomst (långtidsarbetslöshet) minskar den framtida pensionen.'},
+{t:'Tjänstepension — kollektivavtal avgör',
+cards:[
+{icon:'✅',h:'Med kollektivavtal',t:'4,5–30 % extra — i fonder.'},
+{icon:'🎯',h:'Du väljer fonder',t:'Via valcentralen — ofta gratis.'},
+{icon:'❌',h:'Utan kollektivavtal',t:'Ingen garanti — du kan förlora mycket.'},
+{icon:'❓',h:'Fråga arbetsgivaren',t:'Ingår tjänstepension? — viktigt vid jobbyte.'}
+],
+a:'Tjänstepensionen kan utgöra 25–35 % av din totala pension. Den är värd att fråga om.'},
+{t:'Vad påverkar och var du kollar',
+cards:[
+{icon:'💼',h:'Jobb i Sverige',t:'Varje månad bygger pension.'},
+{icon:'🎓',h:'Studier på CSN',t:'Räknas — men mindre än lönejobb.'},
+{icon:'🚫',h:'Långtidsarbetslöshet',t:'Minskar din framtida pension.'},
+{icon:'🤰',h:'Föräldraledighet',t:'Räknas — du missar inget.'},
+{icon:'🌐',h:'minpension.se',t:'Logga in med BankID — se hela din pension.'}
+],
+a:'Börja tidigt — ränta på ränta gör enorm skillnad över årtionden.'}
 ],
 ex:{type:'build',title:'Din pensionsöversikt',desc:'Koll på din framtida ekonomi.',
 fields:[
@@ -2645,14 +2727,41 @@ quiz:[
 ],
 pr:['Hur ökar jag min pension?','Vad innebär det att jag saknar tjänstepension?','Förklara PPM och premiepension enkelt.']},
 
-{id:'e15',icon:'🏧',title:'Bankkonto & BankID',sub:'Det digitala basverktyget i Sverige',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e15',icon:'🏧',title:'Bankkonto & BankID',sub:'Det digitala basverktyget i Sverige',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e15-bankid.mp4',
 lessons:[
-{t:'Bankkonto i Sverige — hur öppnar du?',s:'Du behöver ett bankkonto för att:\n• Få lön utbetald\n• Betala hyra\n• Söka bidrag\n• Ha BankID\n\nVad krävs:\n✅ ID-handling (pass, SIS-kort)\n✅ Personnummer\n✅ Personligen eller digitalt\n\nSverige har en s.k. kontorätt — alla har rätt till konto!',
-a:'Kontorätten är inskriven i lag. Om en bank nekar konto kan du klaga till Finansinspektionen. Digitalbanker (Revolut, Wise) fungerar för internationella transfers men erkänns inte alltid av myndigheter.'},
-{t:'BankID — Sveriges digitala legitimation',s:'BankID används för att:\n✅ Logga in på myndigheter (FK, AF, Skatteverket)\n✅ Signera avtal digitalt\n✅ Identifiera dig på 1177, bankerna\n✅ Deklarera\n✅ Söka bidrag\n\nFår du inte BankID = svårt att delta digitalt i Sverige.',
-a:'BankID finns i mobil- och kortläsarversion. Mobilt BankID kräver ett aktivt bankförhållande. Utan personnummer är det svårare men inte omöjligt — kontakta din bank. BankID är gratis att använda.'},
-{t:'Swish, Autogiro & betalningar',s:'Swish:\n📱 Snabba betalningar → kräver BankID + mobilnummer\n✅ Gratis att ta emot, ibland kostnad att skicka\n\nAutogiro:\n🔄 Automatisk månadsbetalning\n✅ Inga sena avgifter\n✅ Bra för hyra, abonnemang\n\nFaktura:\n📄 30 dagars betaltid standard',
-a:'Sverige är ett av världens mest kontantfria samhällen — ca 90% av transaktioner är digitala. Utan Swish och BankID är vardagen svårare. Butiker har rätt att neka kontanter men det är ovanligt.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🏧',h:'Vad är syftet?',t:'Få ett bankkonto och BankID — så du kan delta digitalt i Sverige.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Varför du behöver konto, hur du öppnar, kontorätten, BankID och säkerhet.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta exakt vad du behöver göra för att få konto + BankID.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Sveriges kontorätt: alla har rätt till bankkonto — det är inskrivet i lag.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom bankkonto, kontorätten, BankID och säkerhetsregler. Se den först.'},
+{t:'Varför behöver du bankkonto?',
+cards:[
+{icon:'💰',h:'Få lön',t:'Arbetsgivaren betalar in på konto.'},
+{icon:'🏠',h:'Betala hyra',t:'Autogiro och överföringar.'},
+{icon:'📋',h:'Söka bidrag',t:'FK och AF kräver konto.'},
+{icon:'🔑',h:'Få BankID',t:'Kräver bankkonto först.'}
+],
+a:'Utan bankkonto är det nästan omöjligt att leva ett vanligt liv i Sverige.'},
+{t:'Öppna konto + kontorätten',
+cards:[
+{icon:'🪪',h:'ID-handling',t:'Pass eller SIS-godkänt ID-kort.'},
+{icon:'🔢',h:'Personnummer',t:'Eller samordningsnummer.'},
+{icon:'⚖️',h:'Kontorätt i lag',t:'Banken får inte neka utan giltig grund.'},
+{icon:'📋',h:'Nekas du?',t:'Klaga till Finansinspektionen.'}
+],
+a:'Kontorätten är inskriven i lag. Digitalbanker (Revolut, Wise) erkänns inte alltid av myndigheter.'},
+{t:'BankID & säkerhet',
+cards:[
+{icon:'🏛️',h:'Myndigheter',t:'FK, AF, Skatteverket — alla kräver BankID.'},
+{icon:'✍️',h:'Signera digitalt',t:'Avtal och ansökningar.'},
+{icon:'🚫',h:'Dela aldrig koder',t:'Inte med någon. Aldrig.'},
+{icon:'📞',h:'Banker ringer ALDRIG',t:'Och ber dig signera — det är alltid bluff.'}
+],
+a:'Bankkonto + BankID = nyckeln till Sverige digitalt. Vid misstanke — lägg på och ring banken på officiellt nummer.'}
 ],
 ex:{type:'build',title:'Din digitala bankplan',desc:'Se till att ha alla digitala verktyg på plats.',
 fields:[
@@ -3288,8 +3397,45 @@ a:'QR-koder på CV ökar i Sverige. Alternativ: skriv LinkedIn-URL tydligt under
 ex:{type:'build',title:'Bygg ditt digitala CV',desc:'Skapa ett professionellt digitalt CV.',fields:[{l:'Har du Canva-konto?',ph:'T.ex. Ja / Nej — skapar ett nu med Gmail',hint:'Gratis med Gmail'},{l:'Vilken CV-mall väljer du?',ph:'T.ex. Minimalistisk marinblå med tydliga rubriker',hint:'Neutral och professionell'},{l:'Är din LinkedIn-URL anpassad?',ph:'T.ex. linkedin.com/in/anna-karlsson',hint:'Ändra: Inställningar > Offentlig profil'},{l:'Vad lägger du till som sticker ut?',ph:'T.ex. QR-kod till LinkedIn'}]},
 quiz:[{q:'Vad är fördelen med digitalt CV?',o:['Snyggare','Alltid tillgängligt och visar digital kompetens','Arbetsgivare kräver det','Snabbare'],c:1},{q:'Enklaste verktyget för CV?',o:['Adobe InDesign','Publisher','Canva.com — gratis','Photoshop'],c:2},{q:'Vilket format skickar du CV i?',o:['Word','PDF','Excel','Bild'],c:1},{q:'Vad gör QR-koden på CV?',o:['Ser tekniskt ut','Länkar till LinkedIn direkt vid skanning','Obligatorisk trend','Tar för mycket plats'],c:1}],
 pr:['Granska mitt CV: [klistra in] — ge 5 förslag.','Canva-mall för [yrke]?','Hur skriver jag LinkedIn-URL på CV?']},
-{id:'d14',icon:'📚',title:'Onlinekurser & kompetensutveckling',sub:'Lär dig nytt — gratis och på distans',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Gratis plattformar med certifikat',s:'Bästa gratis:\n\n🟢 Google Career Certificates — jobbrelevanta\n🔵 Coursera — välj "audit" för gratis\n🟡 LinkedIn Learning — 1 mån gratis\n🔴 YouTube — allt finns här\n🇸🇪 UR.se — svenska kurser\n🌐 GCFGlobal.org — Office och matte',a:'Google Career Certificates är designade för att leda direkt till anställning. Google samarbetar med tusentals arbetsgivare. Kurser: IT-support, Dataanalys, Projektledning. Slutförs på 3-6 månader deltid.'},{t:'Vad ska du lära dig?',s:'Mest efterfrågat 2024:\n\n💻 IT-support\n📊 Excel & dataanalys\n🔐 Cybersäkerhet\n📱 Sociala medier\n🤖 AI-verktyg\n\nTips: Kolla 5 jobbannonser du vill ha → Vad nämns mest?',a:'Branschen avgör vad du bör lära dig. Lager: WMS, SAP. Vård: journalsystem. IT: Python, SQL. Identifiera luckan och fyll den med en kurs.'},{t:'Planera lärandet',s:'30 min/dag = 3,5 tim/vecka.\n1 certifikat per månad är möjligt!\n\n✅ Anteckna och testa direkt\n✅ Lägg certifikat på LinkedIn\n\n💡 Kvällarna är bäst!\n\nKombinera kurs + praktik + CV = maxeffekt!',a:'30-minuters sessioner med aktivt testande är effektivare än 3-timmarsmaraton. Sätt ett mål: Klart certifikat till [datum].'}],
+{id:'d14',icon:'📚',title:'Onlinekurser & kompetensutveckling',sub:'Lär dig nytt — gratis och på distans',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d14-onlinekurser.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'📚',h:'Vad är syftet?',t:'Bygga kompetens gratis — på distans, i din takt.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Bästa gratis-plattformarna, Google Certificates, hur du hittar vad du ska lära dig, och CV-strategin.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha en konkret studieplan och ett första certifikat på gång.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'30 minuter om dagen = 3,5 timmar i veckan. Ett certifikat per månad är realistiskt.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom gratis-plattformarna, Google Certificates, vad du ska lära dig och hur du sticker ut på LinkedIn. Se den först.'},
+{t:'Gratis plattformar',
+cards:[
+{icon:'🟢',h:'Google Career Certificates',t:'Direkt mot jobb.'},
+{icon:'🔵',h:'Coursera',t:'Välj "audit" för gratis.'},
+{icon:'🟡',h:'LinkedIn Learning',t:'1 månad gratis.'},
+{icon:'🔴',h:'YouTube',t:'Allt finns om du letar.'},
+{icon:'🇸🇪',h:'UR.se',t:'Svenska kurser, gratis.'},
+{icon:'📊',h:'GCFGlobal.org',t:'Office och matte — interaktivt.'}
+],
+a:'Google Career Certificates: IT-support, Dataanalys, Projektledning. 3–6 månader deltid, leder direkt till jobb.'},
+{t:'Vad ska du lära dig?',
+cards:[
+{icon:'💻',h:'IT-support',t:'Bristyrke — bra ingång.'},
+{icon:'📊',h:'Excel & dataanalys',t:'Nämns i 30 % av kontorsjobb.'},
+{icon:'🔐',h:'Cybersäkerhet',t:'Stor brist — bra lön.'},
+{icon:'🤖',h:'AI-verktyg',t:'Alla yrken påverkas.'},
+{icon:'🎯',h:'Kolla 5 jobbannonser',t:'Vad nämns mest? Lär dig det.'}
+],
+a:'Branschen avgör. Lager: WMS, SAP. Vård: journalsystem. IT: Python, SQL. Fyll luckan.'},
+{t:'Studiestrategi',
+cards:[
+{icon:'⏰',h:'30 min/dag',t:'3,5 timmar/vecka = bra studietakt.'},
+{icon:'📝',h:'Anteckna OCH testa',t:'Då fastnar det — annars rinner det ut.'},
+{icon:'📅',h:'1 certifikat/månad',t:'Realistiskt — sätt deadline.'},
+{icon:'📜',h:'Lägg på LinkedIn',t:'Licenser och certifikat — syns i sök.'}
+],
+a:'Kombinera kurs + praktik + CV = maxeffekt på arbetsmarknaden.'}
+],
 ex:{type:'build',title:'Din kompetensplan',desc:'Identifiera luckan och planera kursen.',fields:[{l:'Vilken kompetens saknar du?',ph:'T.ex. Excel, SAP, IT-support...',hint:'Kolla 5 jobbannonser!'},{l:'Vilken kurs börjar du med?',ph:'T.ex. Google IT-support via Coursera'},{l:'Hur många timmar/vecka?',ph:'T.ex. 30 min varje kväll = 3,5 tim/vecka',hint:'30 min/dag räcker!'},{l:'Ditt deadline',ph:'T.ex. Klart 1 juni — lägger på LinkedIn direkt',hint:'Sätt datum nu!'}]},
 quiz:[{q:'Vilket certifikat är mest arbetsmarknadsnära?',o:['Harvard Online','Google Career Certificates','Khan Academy','YouTube-kurs'],c:1},{q:'Hur lång studiesession?',o:['3 timmar','30 minuter med aktivt lärande','Hela dagen','Spelar ingen roll'],c:1},{q:'Var lägger du certifikatet?',o:['I en mapp','LinkedIn — Licenser och certifikat','Skriver ut','Berättar i intervjun'],c:1},{q:'Hur hittar du vilken kompetens du saknar?',o:['Gissar','Kollar 5 jobbannonser du vill ha','Frågar vänner','Tar billigaste kursen'],c:1}],
 pr:['Rekommendera kurs för [yrke].','Studieplan för IT-support 3 månader?','Hur lägger jag till certifikat på LinkedIn?']},
