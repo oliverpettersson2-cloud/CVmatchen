@@ -1877,14 +1877,42 @@ quiz:[
 ],
 pr:['Var finns Beroendecentrum i Helsingborg?','Hur hjälper jag en närstående med alkoholproblem?','Tips för att minska skärmtid?']},
 
-{id:'h16',icon:'🤰',title:'Graviditet, förlossning & barnhälsa',sub:'Vård för hela familjen',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h16',icon:'🤰',title:'Graviditet, förlossning & barnhälsa',sub:'Vård för hela familjen',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h16-graviditet.mp4',
 lessons:[
-{t:'Mödravård & förlossning i Sverige',s:'Mödravård (MVC) är gratis och inkluderar:\n✅ Regelbundna kontroller\n✅ Ultraljud\n✅ Förlossningsförberedande kurs\n✅ Stöd från barnmorska\n\nBokas via din vårdcentral eller 1177.\nFörlossning är kostnadsfri.',
-a:'Sverige har en av världens lägsta mödradödligheter. Barnmorskemottagningar finns i alla kommuner. Förlossningsvård ingår i det allmänna hälso- och sjukvårdssystemet utan kostnad för patienten.'},
-{t:'Barnavårdscentral (BVC)',s:'BVC erbjuder GRATIS till alla barn 0-6 år:\n✅ Regelbundna hälsokontroller\n✅ Vaccinationsprogram\n✅ Stöd vid amning\n✅ Barnhälsokontroller\n✅ Föräldrastöd\n\nRegistrera ditt barn hos din lokala BVC via 1177.',
-a:'BVC-programmet innehåller ca 20 besök under de första 6 åren. Vaccinationsprogrammet är gratis och rekommenderat. BVC-sköterskan är ofta den bästa kontaktpersonen för frågor om barnets hälsa och utveckling.'},
-{t:'Föräldrapenning & föräldrasupport',s:'Som ny förälder har du rätt till:\n\n📋 Föräldrapenning (FK) — 480 dagar/barn\n🏠 Bostadsbidrag kan öka med barn\n👨‍👩‍👧 Barnbidrag — 1 250 kr/mån/barn\n🎓 Öppen förskola — gratis aktiviteter\n\nAllt samordnas via FK och kommunen.',
-a:'Barnbidrag betalas ut automatiskt från FK månaden efter födseln. Flerbarnstillägg tillkommer från barn nr 2. Öppen förskola är en kostnadsfri verksamhet som erbjuder aktiviteter för föräldrar och barn 0-5 år.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🤰',h:'Vad är syftet?',t:'Förstå mödravård, förlossning och barnhälsa — allt är gratis.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'MVC, BVC, vaccinationer, föräldrapenning och var du får stöd.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta var du registrerar dig — och vad du har rätt till.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Sverige har en av världens lägsta mödradödligheter — och världens bästa barnhälsovård.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom mödravård, BVC, vaccinationer och föräldrapenning. Se den först.'},
+{t:'Mödravård (MVC)',
+cards:[
+{icon:'🩺',h:'Regelbundna kontroller',t:'Hos barnmorska och läkare.'},
+{icon:'🤰',h:'Ultraljud',t:'Två gånger under graviditeten.'},
+{icon:'📚',h:'Förlossningsförberedande kurs',t:'Du och partnern går tillsammans.'},
+{icon:'🆓',h:'Allt gratis',t:'Och förlossningen är kostnadsfri.'}
+],
+a:'Boka MVC-besök via 1177 eller din vårdcentral. Barnmorskemottagningar finns i alla kommuner.'},
+{t:'Barnavårdscentral (BVC)',
+cards:[
+{icon:'🆓',h:'Gratis 0–6 år',t:'Allt för alla barn.'},
+{icon:'📊',h:'Regelbundna kontroller',t:'Tillväxt, utveckling, hörsel, syn.'},
+{icon:'💉',h:'Vaccinationsprogrammet',t:'Skyddar mot 12 sjukdomar — gratis.'},
+{icon:'🤱',h:'Amningsstöd',t:'BVC-sköterskan hjälper.'},
+{icon:'💬',h:'Föräldragrupper',t:'Träffa andra föräldrar — gemenskap.'}
+],
+a:'Registrera ditt barn hos lokal BVC via 1177. Sjuksköterskan är din kontakt under hela småbarnstiden.'},
+{t:'Föräldrapenning',
+cards:[
+{icon:'📅',h:'480 dagar per barn',t:'Att dela mellan föräldrarna.'},
+{icon:'💰',h:'Ca 80 % av lönen',t:'Upp till maxnivå — söks via FK.'},
+{icon:'⏳',h:'Fram till barnet är 12',t:'Du behöver inte ta allt direkt.'},
+{icon:'📞',h:'1177 vid frågor',t:'Råd om barnhälsa dygnet runt.'}
+],
+a:'Anmäl föräldrapenning till FK senast 14 dagar i förväg. Du och partnern delar dagarna fritt mellan er.'}
 ],
 ex:{type:'build',title:'Familjens hälsoplan',desc:'Koll på vård och stöd för din familj.',
 fields:[
@@ -2778,14 +2806,41 @@ quiz:[
 ],
 pr:['Hur öppnar jag bankkonto utan personnummer?','Vilken bank är bäst för nyanlända i Sverige?','Hur aktiverar jag BankID?']},
 
-{id:'e16',icon:'🛍️',title:'Konsumenträtt & reklamation',sub:'Dina rättigheter som köpare',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e16',icon:'🛍️',title:'Konsumenträtt & reklamation',sub:'Dina rättigheter som köpare',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e16-konsument.mp4',
 lessons:[
-{t:'Konsumentköplagen — dina rättigheter',s:'När du köper en vara har du rätt till:\n\n✅ 3 års reklamationsrätt på fel\n✅ Reparation, omsyte eller prisavdrag\n✅ Pengarna tillbaka om felet inte åtgärdas\n\n⚠️ Garanti = säljarens eget löfte (kan vara kortare)\n✅ Reklamationsrätt > garanti alltid',
-a:'Konsumentköplagen gäller köp från en näringsidkare (butik, nätbutik). Privatköp (Blocket etc) har svagare skydd. Felet måste finnas vid köptillfället. Bevisbördan är köparens efter 6 månader.'},
-{t:'Ångerrätt & öppet köp',s:'Ångerrätt (14 dagar) gäller:\n✅ Köp på nätet\n✅ Telefonköp\n✅ Hemförsäljning\n\n❌ Gäller EJ i butik (bara om butiken erbjuder)\n❌ Personliga varor (underkläder, hygien)\n\nÖppet köp = butikens eget erbjudande.',
-a:'Ångerrätten är EU-lagstiftning (14 dagar utan att ange skäl). Du betalar returfrakten om inte annat avtalats. Kontakta säljaren skriftligt inom 14 dagar — spara all kommunikation.'},
-{t:'Om du inte är nöjd — steg för steg',s:'1. Kontakta säljaren — begär reklamation\n2. Spara kvitto/orderbekräftelse\n3. Dokumentera felet med foto\n4. Eskalera till Allmänna reklamationsnämnden (ARN)\n5. Konsumentverket — ytterligare stöd\n\nARN är gratis och tar 3-6 månader.',
-a:'ARN (Allmänna reklamationsnämnden) löser tvister kostnadsfritt. De flesta företag följer ARN:s beslut. Konsumentguiden på konsumentverket.se ger gratis rådgivning via chatt och telefon.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🛍️',h:'Vad är syftet?',t:'Förstå dina rättigheter som köpare — och hur du reklamerar.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Konsumentköplagen, reklamationsrätt, ångerrätt och var du får gratis hjälp.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna reklamera ett köp utan att tveka.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Du har rätten på din sida. Reklamera — det är gratis och kostar inget att försöka.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom konsumentköplagen, reklamationsrätt, ångerrätt och var du får hjälp. Se den först.'},
+{t:'Konsumentköplagen — dina rättigheter',
+cards:[
+{icon:'⏱️',h:'3 års reklamationsrätt',t:'På fel i konsumentköp.'},
+{icon:'🔧',h:'Reparation eller omleverans',t:'Kostnadsfritt vid fel.'},
+{icon:'💰',h:'Pengarna tillbaka',t:'Om felet inte åtgärdas.'},
+{icon:'⚖️',h:'Reklamation > garanti',t:'Lagstadgad rättighet är starkare.'}
+],
+a:'Konsumentköplagen gäller köp från en näringsidkare. Privatköp (Blocket etc.) har svagare skydd.'},
+{t:'Ångerrätt — 14 dagar',
+cards:[
+{icon:'🌐',h:'Nätköp',t:'14 dagar — gäller alltid.'},
+{icon:'📞',h:'Telefonköp',t:'14 dagar.'},
+{icon:'🚪',h:'Hemförsäljning',t:'14 dagar.'},
+{icon:'🏪',h:'Butik = öppet köp',t:'Gäller bara om butiken erbjuder.'}
+],
+a:'Undantag: personliga varor (underkläder, hygien), färskvaror, och försegling bruten på film/spel.'},
+{t:'Reklamera & få hjälp',
+cards:[
+{icon:'📧',h:'Anmäl skriftligt',t:'Mejla säljaren — räcker som anmälan.'},
+{icon:'📷',h:'Dokumentera felet',t:'Foton + behåll kvittot.'},
+{icon:'⚖️',h:'ARN vid tvist',t:'Allmänna reklamationsnämnden — gratis prövning.'},
+{icon:'📞',h:'Hallå konsument',t:'0771-525 525 — gratis vägledning.'}
+],
+a:'Konsumentvägledningen i din kommun är också gratis. Du står inte ensam.'}
 ],
 ex:{type:'build',title:'Din konsumenträtt i praktiken',desc:'Vet hur du reklamerar och tar tillvara dina rättigheter.',
 fields:[
@@ -2826,14 +2881,40 @@ quiz:[
 ],
 pr:['Hur sänker jag min elräkning i en hyresrätt?','Vilket elavtal är bäst just nu?','Hur söker jag bostadsbidrag för mina boendekostnader?']},
 
-{id:'e18',icon:'📊',title:'Spara & investera smart',sub:'Från buffert till fonder',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e18',icon:'📊',title:'Spara & investera smart',sub:'Från buffert till fonder',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e18-spara.mp4',
 lessons:[
-{t:'ISK — Investeringssparkonto',s:'ISK är Sveriges smidigaste sparform:\n\n✅ Ingen skatt på vinst när du säljer\n✅ Låg schablonskatt (ca 0,88%/år)\n✅ Kan äga aktier, fonder, ETF:er\n✅ Öppnas kostnadsfritt hos Avanza/Nordnet/banken\n\nBäst för: långsiktigt sparande 3+ år',
-a:'ISK beskkattas med schablonskatt baserat på kontovärdet, oavsett om du säljer eller inte. Vid positiv avkastning är ISK skattemässigt överlägset vanligt konto. Avanza Zero är en gratis indexfond utan avgift.'},
-{t:'Fonder — för nybörjaren',s:'Typer av fonder:\n📈 Indexfond — följer börsen, låg avgift\n📊 Aktiefond — aktiv förvaltning, högre avgift\n🛡️ Räntefond — lägre risk, lägre avkastning\n🌍 Blandfond — mix\n\nRegel: Välj indexfond med lägst avgift (TER <0,5%).',
-a:'Historisk avkastning: Globalindex ca 10%/år (nominellt) över 30 år. Aktiva fonder slår sällan index efter avgifter. Avanza Global och Länsförsäkringar Global Indexnära är populära zero-avgiftsfonder.'},
-{t:'Spara trots liten plånbok',s:'Börja litet — det spelar roll!\n\n💰 100 kr/mån i 30 år @ 7% = ca 113 000 kr\n💰 500 kr/mån i 30 år @ 7% = ca 567 000 kr\n\nAutomatiskt sparande:\n✅ Autogiro direkt vid lönedagen\n✅ Runt-upp-sparande (Klarna, Doktor Savings)\n\nTid i marknaden > tajming av marknaden.',
-a:'Ränta-på-ränta-effekten är kraftfull. Den som börjar spara 100 kr/mån vid 25 har mer vid 65 än den som börjar spara 500 kr/mån vid 45. Automatisering tar bort beslutsfattning och ökar följsamheten.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'📊',h:'Vad är syftet?',t:'Förstå hur du sparar och investerar smart — utan att bli expert.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Bufferten först, ISK, fonder, indexfonder och ränta på ränta.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna sätta upp en månadssparande på en gång.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Tiden är din viktigaste tillgång. Börja smått — börja idag.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom bufferten, ISK, indexfonder och ränta på ränta. Se den först.'},
+{t:'Bufferten först',
+cards:[
+{icon:'1️⃣',h:'Buffert 10 000 kr',t:'På sparkonto — trygghet först.'},
+{icon:'2️⃣',h:'Bort med dyra skulder',t:'SMS-lån, kreditkort — högre ränta än vad du tjänar på sparande.'},
+{icon:'3️⃣',h:'Sedan investera',t:'Pengar du inte behöver på 3+ år.'}
+],
+a:'Att amortera dyra skulder är en garanterad "avkastning" lika med räntan du sparar in.'},
+{t:'ISK & fonder',
+cards:[
+{icon:'🏦',h:'ISK — schablonbeskattat',t:'Ingen skatt på vinst när du säljer.'},
+{icon:'💰',h:'Schablonskatt ~0,88%/år',t:'Av kontovärdet — låg.'},
+{icon:'📈',h:'Indexfond — låg avgift',t:'TER under 0,5 % — välj så.'},
+{icon:'🚫',h:'Undvik aktiv förvaltning',t:'Aktivt förvaltade fonder slår sällan index.'}
+],
+a:'Avanza Zero är gratis indexfond utan avgift. Öppna ISK gratis hos Avanza eller Nordnet.'},
+{t:'Ränta på ränta — och strategin',
+cards:[
+{icon:'⏳',h:'500/mån i 30 år',t:'Med 7 % avkastning = ~610 000 kr.'},
+{icon:'🔁',h:'Månadsspara automatiskt',t:'På lönedagen — du märker det inte.'},
+{icon:'🌍',h:'Bred indexfond',t:'Global eller Sverigeindex.'},
+{icon:'🧘',h:'Glöm bort kontot',t:'Kolla 1 gång/år — annars stress för inget.'}
+],
+a:'Jaga inte trender — Bitcoin, meme-aktier, "hot tips". Tråkigt slår spännande över tid.'}
 ],
 ex:{type:'build',title:'Din sparplan',desc:'Kom igång med smart sparande.',
 fields:[
@@ -3439,13 +3520,81 @@ a:'Kombinera kurs + praktik + CV = maxeffekt på arbetsmarknaden.'}
 ex:{type:'build',title:'Din kompetensplan',desc:'Identifiera luckan och planera kursen.',fields:[{l:'Vilken kompetens saknar du?',ph:'T.ex. Excel, SAP, IT-support...',hint:'Kolla 5 jobbannonser!'},{l:'Vilken kurs börjar du med?',ph:'T.ex. Google IT-support via Coursera'},{l:'Hur många timmar/vecka?',ph:'T.ex. 30 min varje kväll = 3,5 tim/vecka',hint:'30 min/dag räcker!'},{l:'Ditt deadline',ph:'T.ex. Klart 1 juni — lägger på LinkedIn direkt',hint:'Sätt datum nu!'}]},
 quiz:[{q:'Vilket certifikat är mest arbetsmarknadsnära?',o:['Harvard Online','Google Career Certificates','Khan Academy','YouTube-kurs'],c:1},{q:'Hur lång studiesession?',o:['3 timmar','30 minuter med aktivt lärande','Hela dagen','Spelar ingen roll'],c:1},{q:'Var lägger du certifikatet?',o:['I en mapp','LinkedIn — Licenser och certifikat','Skriver ut','Berättar i intervjun'],c:1},{q:'Hur hittar du vilken kompetens du saknar?',o:['Gissar','Kollar 5 jobbannonser du vill ha','Frågar vänner','Tar billigaste kursen'],c:1}],
 pr:['Rekommendera kurs för [yrke].','Studieplan för IT-support 3 månader?','Hur lägger jag till certifikat på LinkedIn?']},
-{id:'d15',icon:'✍️',title:'Digitala kontrakt & e-signering',sub:'Förstå och signera digitalt',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Vad är ett digitalt kontrakt?',s:'Digitala kontrakt är juridiskt bindande i Sverige.\n\nDu signerar med:\n✅ BankID — vanligast\n✅ Scrive eller DocuSign\n\nAnställningskontrakt innehåller:\n• Arbetstid och lön\n• Prövotid (6 mån vanligt)\n• Uppsägningstid\n• Arbetsuppgifter',a:'Anställningsavtal ska vara skriftliga — be alltid om ett. Muntliga avtal gäller men är svåra att bevisa. BankID-signering är lika juridiskt bindande som penna på papper.'},{t:'Läs INNAN du signerar',s:'Kontrollera:\n\n💰 Lön: stämmer det vi kom överens om?\n⏰ Arbetstid: heltid/deltid?\n📅 Prövotid: hur lång?\n📢 Uppsägning: hur många månader?\n🏖️ Semester: 25 dagar = lag\n\nFråga om allt du inte förstår!',a:'Prövotid: arbetsgivaren kan avsluta utan skäl. 6 månader är standard. Sverige har ingen minimilön — kollektivavtal styr. Kolla ob-tillägg, övertid och friskvård.'},{t:'BankID-signering i praktiken',s:'1. Du får länk via e-post\n2. Öppnar dokumentet\n3. Läser noggrant\n4. Klickar Signera\n5. BankID öppnas\n6. Du godkänner i appen\n7. Kopia till din e-post\n\nSpara alltid en kopia!',a:'Signerat = bindande. Du kan inte ångra utan att bryta avtalet. Om något verkar fel — fråga innan du signerar. Du har rätt att be om betänketid.'}],
+{id:'d15',icon:'✍️',title:'Digitala kontrakt & e-signering',sub:'Förstå och signera digitalt',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d15-kontrakt.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'✍️',h:'Vad är syftet?',t:'Lära dig läsa och signera digitala kontrakt — säkert.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Vad ett digitalt kontrakt är, anställningskontraktets delar, vad du läser innan, och BankID-signering.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna signera ett kontrakt utan att tveka — eller stoppa om något är fel.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Signerat = bindande. Läs två gånger — signera en gång.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom digitala kontrakt, anställningskontraktets delar, vad du läser innan signering, och BankID-signering. Se den först.'},
+{t:'Vad är ett digitalt kontrakt?',
+cards:[
+{icon:'⚖️',h:'Lika bindande',t:'Som penna på papper.'},
+{icon:'🔐',h:'BankID är vanligast',t:'Du signerar med din identitet.'},
+{icon:'📜',h:'Scrive & DocuSign',t:'Plattformar som hanterar processen.'}
+],
+a:'Anställningsavtal ska vara skriftliga — be alltid om ett. Muntliga avtal gäller men är svåra att bevisa.'},
+{t:'Anställningskontrakt — kontrollera',
+cards:[
+{icon:'💰',h:'Lön',t:'Stämmer det ni kom överens om?'},
+{icon:'⏰',h:'Arbetstid',t:'Heltid eller deltid — timmar/vecka.'},
+{icon:'🕐',h:'Prövotid',t:'6 månader är vanligt — och max.'},
+{icon:'📅',h:'Uppsägningstid',t:'Minst 1 månad från vardera sidan.'},
+{icon:'🏖️',h:'Semester 25 dagar',t:'Lagstadgat minimum.'}
+],
+a:'Prövotid: arbetsgivaren kan avsluta utan skäl. Sverige har ingen minimilön — kollektivavtal styr lönerna.'},
+{t:'Signera och spara',
+cards:[
+{icon:'📧',h:'Du får länk via mejl',t:'Öppna dokumentet i webbläsaren.'},
+{icon:'📖',h:'Läs noggrant',t:'Be om betänketid om du behöver.'},
+{icon:'🔐',h:'BankID i appen',t:'Godkänn med din PIN-kod.'},
+{icon:'📥',h:'Spara kopia',t:'Den kommer till din mejl — spara den.'}
+],
+a:'Du har rätt att be om betänketid. Fråga om allt du inte förstår — en seriös arbetsgivare välkomnar frågor.'}
+],
 ex:{type:'build',title:'Din kontraktschecklista',desc:'Granska anställningskontrakt steg för steg.',fields:[{l:'Lön och arbetstid i kontraktet?',ph:'T.ex. 28 500 kr/mån, heltid 40 tim/vecka',hint:'Stämmer det ni kom överens om?'},{l:'Hur lång är prövotiden?',ph:'T.ex. 6 månader — standard',hint:'6 månader är standard'},{l:'Uppsägningstid?',ph:'T.ex. 1 månad från vardera sidan',hint:'Minst 1 månad = lag'},{l:'Vad frågar du om?',ph:'T.ex. Ob-tillägg? Friskvård? Övertid?',ta:true,hint:'Din rätt att fråga!'}]},
 quiz:[{q:'Är digitala kontrakt bindande?',o:['Nej','Ja — BankID-signering gäller i lag','Bara stora summor','Beror på arbetsgivaren'],c:1},{q:'Vad gör du INNAN signering?',o:['Signerar snabbt','Läser noggrant och frågar om allt','Skannar','Frågar vänner'],c:1},{q:'Normal prövotid i Sverige?',o:['3 månader','6 månader','1 år','12 månader'],c:1},{q:'Vad om du inte förstår ett villkor?',o:['Signerar ändå','Frågar arbetsgivaren — du har rätt till betänketid','Googlar','Struntar i det'],c:1}],
 pr:['Förklara detta villkor: [klistra in]','Vad kollar jag i anställningskontrakt?','Är denna prövotid rimlig?']},
-{id:'d16',icon:'💸',title:'Digitala betalningar & fällorna',sub:'Swish, Klarna och köp nu betala sen',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Swish — Sveriges betalningsapp',s:'Swish är standard i Sverige.\n\nAnvänds för:\n✅ Betala privatpersoner\n✅ Marknader och småbutiker\n\n⚠️ Bedrägerier:\n❌ Swisha aldrig för att bekräfta konto\n❌ Acceptera inte betalning du inte begärt\n\nSwish = omedelbart och oåterkalleligt!',a:'Swish-bedrägerier ökar kraftigt. Vanligaste: okänd person "felswistar" och ber om tillbaka. Pengarna de skickade är stulna. Kontakta bank omedelbart vid misstanke.'},{t:'Klarna och köp nu betala sen',s:'Klarna:\n✅ Smidigt att dela betalning\n⚠️ Men:\n❌ Ränta vid utebliven betalning\n❌ Påverkar kreditvärdighet\n❌ Lätt att köpa mer än du har råd\n\nRegeln: Har du inte råd nu? Ha inte råd sen heller!\n\nAnvänd bara Klarna om du kan betala direkt.',a:'Kronofogden tar emot fler ansökningar kopplat till BNPL. Om du missat betalning — kontakta Klarna direkt innan inkasso.'},{t:'Trygg näthandel',s:'✅ Köp hos kända sajter\n✅ Kontrollera https://\n✅ Läs Trustpilot-omdömen\n✅ Betala med kort (ångersrätt)\n✅ Spara kvitton\n\n❌ Obekanta sajter\n❌ För bra för att vara sant\n❌ Betala med presentkort',a:'Konsumentköplagen: 14 dagars ångerrätt vid distansköp. Kortbetalning ger chargeback-möjlighet vid bedrägerier. PayPal ger liknande skydd.'}],
+{id:'d16',icon:'💸',title:'Digitala betalningar & fällorna',sub:'Swish, Klarna och köp nu betala sen',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d16-betala.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'💸',h:'Vad är syftet?',t:'Förstå Swish, Klarna och hur du betalar tryggt online.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Swish, swish-bedrägeri, Klarna och köp nu betala sen, samt trygg näthandel.'},
+{icon:'✅',h:'När du är klar ska du...',t:'känna igen vanliga bluffar — och pausa innan du betalar.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Brådska är bluffmakarens viktigaste vapen. Pausa — det räddar dig från misstag.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom Swish, vanliga bedrägerier, Klarna och köp nu betala sen, samt trygg näthandel. Se den först.'},
+{t:'Swish — och bluffen',
+cards:[
+{icon:'⚡',h:'Omedelbart',t:'Pengarna är där direkt.'},
+{icon:'🚫',h:'Oåterkalleligt',t:'Du kan inte ångra — kolla nummer två gånger.'},
+{icon:'⚠️',h:'Swish-bluff',t:'Okänd "felswishar" och ber om tillbaka — pengarna är stulna.'},
+{icon:'📞',h:'Vid bluff',t:'Ring banken omedelbart — anmäl till polisen.se.'}
+],
+a:'Skicka aldrig tillbaka till okänd person utan att verifiera. Banken kan hjälpa stoppa pengar.'},
+{t:'Klarna & köp nu betala sen',
+cards:[
+{icon:'💳',h:'Är ett lån',t:'Inte gratis — det är skuld.'},
+{icon:'⏰',h:'Glömmer du = ränta',t:'Och påminnelseavgifter snabbt.'},
+{icon:'📉',h:'Påverkar kreditvärdighet',t:'Missar går till inkasso → Kronofogden.'},
+{icon:'✅',h:'Grundregeln',t:'Har du inte råd nu — ha inte råd sen heller.'}
+],
+a:'Använd Klarna bara om du kan betala direkt ändå. Vid missad betalning — kontakta Klarna innan inkasso.'},
+{t:'Trygg näthandel',
+cards:[
+{icon:'🔒',h:'Https-låset',t:'Kontrollera i adressfältet.'},
+{icon:'⭐',h:'Trustpilot-omdömen',t:'Läs INNAN du köper.'},
+{icon:'💳',h:'Betala med kort',t:'14 dagars ångerrätt — och chargeback vid bluff.'},
+{icon:'🚫',h:'Aldrig presentkort',t:'Till okänd säljare — kan inte spåras.'}
+],
+a:'PayPal ger liknande skydd som kortbetalning. Spara alla kvitton i en mejlmapp.'}
+],
 ex:{type:'sort',title:'Säkert eller riskabelt?',desc:'Sortera situationerna rätt.',catA:'Säkert',catB:'Riskabelt',items:[{l:'Swisha ett belopp ni kommit överens om',c:'A'},{l:'Acceptera swish från okänd som säger sig felswistat',c:'B'},{l:'Klarna om du kan betala direkt ändå',c:'A'},{l:'Klarna för att ha råd med något du inte har råd med',c:'B'},{l:'Handla på välkänd sajt med https://',c:'A'},{l:'Betala med presentkort till okänd säljare',c:'B'},{l:'Läsa Trustpilot innan köp',c:'A'},{l:'Klicka "du har vunnit ett pris"-länk',c:'B'}]},
 quiz:[{q:'Vad är unikt med Swish-betalningar?',o:['Kan ångras 24h','Omedelbart och oåterkalleligt','Tar 3 dagar','Säkrare än kort'],c:1},{q:'Klarnas största risk?',o:['Dyrt','Lätt köpa mer än du har råd + ränta vid miss','Dålig app','Bara iPhone'],c:1},{q:'Ångerrätt vid nätköp?',o:['3 dagar','14 dagar','30 dagar','7 dagar'],c:1},{q:'Swish-bedrägeri — vad gör du?',o:['Swishar tillbaka','Kontaktar banken omedelbart','Ignorerar','Polisanmäler nästa dag'],c:1}],
 pr:['Skydda mig mot Swish-bedrägerier.','Missad Klarna-betalning — vad händer?','Konsumenträttigheter vid näthandel i Sverige?']},
