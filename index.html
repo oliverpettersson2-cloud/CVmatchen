@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="sv"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <!-- CVmatchen version: TRAINING-HUB-v9 (2026-04-19, Microsoft OAuth backend) -->
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
 
   <!-- Skicka desktop-användare till desktop-vyn -->
   <script>
@@ -14,7 +11,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>CVmatchen — AI-driven jobbmatchning</title>
-  
+
   <!-- Intervjuträning-modul (lazy-initieras av Träning-hubben) -->
   <link rel="stylesheet" href="intervju.css">
   <script src="intervju.js" defer></script>
@@ -22,9 +19,9 @@
   <link rel="apple-touch-icon" href="/icon-192.png">
   <link rel="apple-touch-icon" sizes="512x512" href="/icon-512.png">
 
-  <!-- PDF Generation Libraries -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- PDF Generation Libraries (defer — används endast vid klick på Export) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 
   <!-- Träningsmoduler (delad data med desktop) — MÅSTE laddas synkront FÖRE inline-script -->
   <script src="training-modules.js"></script>
