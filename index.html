@@ -32,6 +32,14 @@
     .skip-link{position:absolute;left:-9999px;top:0;z-index:9999;background:#1a73e8;color:#fff;padding:10px 16px;border-radius:0 0 6px 0;}
     .skip-link:focus{left:0;}
     :focus-visible{outline:3px solid #1a73e8;outline-offset:2px;}
+    /* Visuellt gömt men kvar för skärmläsare (aria-live etc) */
+    .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+    /* WCAG 2.3.3 — respektera användarens preferens för minskad rörelse */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    }
+    /* Safe-area-stöd för iPhone-hak och home-indicator */
+    #mobileTabBar { padding-bottom: env(safe-area-inset-bottom, 0); }
 
     :root {
       --bg: #f5f2eb;
@@ -2533,6 +2541,10 @@
 </head>
 <body>
   <a href="#huvudinnehall" class="skip-link">Hoppa till innehåll</a>
+
+  <!-- Aria-live-region för dynamiska annonseringar (AI-svar, matchresultat) -->
+  <div id="aiLiveRegion" class="sr-only" aria-live="polite" aria-atomic="false"></div>
+  <div id="statusLiveRegion" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
 
   <!-- ===== SPLASH SCREEN ===== -->
   <div id="splashScreen" class="splash-hidden">
@@ -6894,7 +6906,19 @@ ${styleTexts}
       }
     }
 
+    // Annonsera till skärmläsare via aria-live-region
+    function _announce(msg, urgent) {
+      const id = urgent ? 'statusLiveRegion' : 'aiLiveRegion';
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = '';
+      setTimeout(() => { el.textContent = String(msg || ''); }, 50);
+    }
+    window._announce = _announce;
+
     function showToast(msg, type = 'success') {
+      // Annonsera även till skärmläsare (toast är visuell-only annars)
+      _announce(msg, type === 'error');
       // Ta bort eventuella gamla toasts
       document.querySelectorAll('.toast').forEach(t => t.remove());
       const toast = document.createElement('div');
@@ -8138,37 +8162,37 @@ ${styleTexts}
   <!-- Tab bar längst ner -->
   <div id="mobProgressBar" style="width: 100%;"></div>
 
-  <!-- Huvud-navbar (5 knappar) -->
-  <div id="mobileTabBar">
+  <!-- Huvud-navbar (6 knappar) -->
+  <div id="mobileTabBar" role="tablist" aria-label="Huvudnavigation">
     <!-- 1. Hej -->
-    <button class="mob-tab mob-tab--active" id="tabBtn-hej" onclick="mobSwitchTab(&#39;hej&#39;)">
-      <span class="mob-tab__icon">👋</span>
+    <button class="mob-tab mob-tab--active" id="tabBtn-hej" role="tab" aria-selected="true" aria-label="Hej, flik 1 av 6" onclick="mobSwitchTab(&#39;hej&#39;)">
+      <span class="mob-tab__icon" aria-hidden="true">👋</span>
       <span>Hej</span>
     </button>
     <!-- 2. CV (öppnar undermeny) -->
-    <button class="mob-tab" id="tabBtn-cv-menu" onclick="mobOpenCV()">
-      <span class="mob-tab__icon">📄</span>
+    <button class="mob-tab" id="tabBtn-cv-menu" role="tab" aria-selected="false" aria-label="CV, flik 2 av 6" onclick="mobOpenCV()">
+      <span class="mob-tab__icon" aria-hidden="true">📄</span>
       <span>CV</span>
     </button>
     <!-- 3. Matcha arbete -->
-    <button class="mob-tab" id="tabBtn-matcha" onclick="mobSwitchTab(&#39;matcha&#39;)">
-      <span class="mob-tab__icon">🎯</span>
+    <button class="mob-tab" id="tabBtn-matcha" role="tab" aria-selected="false" aria-label="Matcha jobb, flik 3 av 6" onclick="mobSwitchTab(&#39;matcha&#39;)">
+      <span class="mob-tab__icon" aria-hidden="true">🎯</span>
       <span>Matcha</span>
     </button>
     <!-- 4. AI-Vägledare -->
-    <button class="mob-tab mob-tab--ai" id="tabBtn-aisyv" onclick="mobSwitchTab(&#39;aisyv&#39;)" style="position:relative;">
-      <span class="mob-tab__icon" style="font-size:22px;line-height:1;">🎓</span>
+    <button class="mob-tab mob-tab--ai" id="tabBtn-aisyv" role="tab" aria-selected="false" aria-label="Utbilda dig, flik 4 av 6" onclick="mobSwitchTab(&#39;aisyv&#39;)" style="position:relative;">
+      <span class="mob-tab__icon" aria-hidden="true" style="font-size:22px;line-height:1;">🎓</span>
       <!-- edu-tab-badge removed, badge is now inside the card -->
       <span style="font-size:8px;font-weight:900;letter-spacing:0.3px;">Utbilda dig</span>
     </button>
     <!-- 5. Träning -->
-    <button class="mob-tab" id="tabBtn-ovningar" onclick="mobSwitchTab(&#39;ovningar&#39;)">
-      <span class="mob-tab__icon">🏋️</span>
+    <button class="mob-tab" id="tabBtn-ovningar" role="tab" aria-selected="false" aria-label="Träning, flik 5 av 6" onclick="mobSwitchTab(&#39;ovningar&#39;)">
+      <span class="mob-tab__icon" aria-hidden="true">🏋️</span>
       <span style="font-size:8px;font-weight:900;letter-spacing:0.3px;">Träning</span>
     </button>
     <!-- 6. Profil -->
-    <button class="mob-tab mob-tab--done" id="tabBtn-export" onclick="mobSwitchTab(&#39;export&#39;)">
-      <span class="mob-tab__icon">👤</span>
+    <button class="mob-tab mob-tab--done" id="tabBtn-export" role="tab" aria-selected="false" aria-label="Profil, flik 6 av 6" onclick="mobSwitchTab(&#39;export&#39;)">
+      <span class="mob-tab__icon" aria-hidden="true">👤</span>
       <span>Profil</span>
     </button>
   </div>
@@ -11480,9 +11504,9 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
     const mc = document.getElementById('mobileContent');
     if (mc) mc.style.top = '92px';
     // Markera CV-knappen aktiv i bottenbar
-    document.querySelectorAll('#mobileTabBar .mob-tab').forEach(b => b.classList.remove('mob-tab--active'));
+    document.querySelectorAll('#mobileTabBar .mob-tab').forEach(b => { b.classList.remove('mob-tab--active'); b.setAttribute('aria-selected', 'false'); });
     const cvBtn = document.getElementById('tabBtn-cv-menu');
-    if (cvBtn) cvBtn.classList.add('mob-tab--active');
+    if (cvBtn) { cvBtn.classList.add('mob-tab--active'); cvBtn.setAttribute('aria-selected', 'true'); }
   }
 
   function mobExitCVMode() {
@@ -11562,12 +11586,12 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
 
     // Dölj alla paneler
     document.querySelectorAll('.mob-panel').forEach(p => p.classList.remove('mob-panel--active'));
-    document.querySelectorAll('#mobileTabBar .mob-tab').forEach(b => b.classList.remove('mob-tab--active'));
+    document.querySelectorAll('#mobileTabBar .mob-tab').forEach(b => { b.classList.remove('mob-tab--active'); b.setAttribute('aria-selected', 'false'); });
 
     const panel = document.getElementById('mobPanel-' + tab);
     if (panel) panel.classList.add('mob-panel--active');
     const btn = document.getElementById('tabBtn-' + tab);
-    if (btn) btn.classList.add('mob-tab--active');
+    if (btn) { btn.classList.add('mob-tab--active'); btn.setAttribute('aria-selected', 'true'); }
 
     if (tab === 'export') {
       mobBuildTemplateGrid();
