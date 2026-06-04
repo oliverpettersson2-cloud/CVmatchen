@@ -179,6 +179,32 @@ export default async function handler(req, res) {
     }
   }
 
+  // Verifierar att accessToken tillhör userId. Returnerar { ok: true, user }
+  // eller skickar HTTP-fel och returnerar { ok: false }. Skydd mot att en
+  // inloggad användare skickar någon annans userId i request-body.
+  async function requireUser(res, accessToken, userId) {
+    if (!accessToken || !userId) {
+      res.status(400).json({ error: 'accessToken och userId krävs' });
+      return { ok: false };
+    }
+    const userRes = await makeRequest(`${SUPABASE_URL}/auth/v1/user`, { method: 'GET', headers: authHeaders(accessToken) });
+    if (userRes.status >= 400 || !userRes.data || !userRes.data.id) {
+      res.status(401).json({ error: 'Ogiltig access_token' });
+      return { ok: false };
+    }
+    if (userRes.data.id !== userId) {
+      res.status(403).json({ error: 'user_id matchar inte access_token' });
+      return { ok: false };
+    }
+    return { ok: true, user: userRes.data };
+  }
+
+  // Validerar att en sträng ser ut som ett Supabase-UUID. Skydd mot
+  // PostgREST-injektion via okontrollerade query-värden.
+  function isUuid(s) {
+    return typeof s === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
+  }
+
   try {
 
     if (action === 'send_otp') {
@@ -199,11 +225,15 @@ export default async function handler(req, res) {
     }
 
     if (action === 'save_cv') {
+      if (!isUuid(userId)) return res.status(400).json({ error: 'invalid userId' });
+      const auth = await requireUser(res, accessToken, userId); if (!auth.ok) return;
       await makeRequest(`${SUPABASE_URL}/rest/v1/cvs`, { method: 'POST', headers: { ...authHeaders(accessToken), 'Prefer': 'resolution=merge-duplicates' } }, { user_id: userId, data: cvData, updated_at: new Date().toISOString() });
       return res.status(200).json({ success: true });
     }
 
     if (action === 'load_cv') {
+      if (!isUuid(userId)) return res.status(400).json({ error: 'invalid userId' });
+      const auth = await requireUser(res, accessToken, userId); if (!auth.ok) return;
       const result = await makeRequest(`${SUPABASE_URL}/rest/v1/cvs?user_id=eq.${userId}&select=data&limit=1`, { method: 'GET', headers: authHeaders(accessToken) });
       const rows = Array.isArray(result.data) ? result.data : [];
       return res.status(200).json({ cv: rows[0]?.data || null });
@@ -212,17 +242,23 @@ export default async function handler(req, res) {
     if (action === 'save_table') {
       const ALLOWED = ['saved_cvs', 'matched_cvs', 'saved_edu', 'job_diary'];
       if (!ALLOWED.includes(table)) return res.status(400).json({ error: 'Invalid table: ' + table });
+      if (!isUuid(userId)) return res.status(400).json({ error: 'invalid userId' });
+      const auth = await requireUser(res, accessToken, userId); if (!auth.ok) return;
       await makeRequest(`${SUPABASE_URL}/rest/v1/${table}?user_id=eq.${userId}`, { method: 'DELETE', headers: authHeaders(accessToken) });
       await makeRequest(`${SUPABASE_URL}/rest/v1/${table}`, { method: 'POST', headers: { ...authHeaders(accessToken), 'Prefer': 'return=minimal' } }, { user_id: userId, data: data, saved_at: new Date().toISOString() });
       return res.status(200).json({ success: true });
     }
 
     if (action === 'save_progress') {
+      if (!isUuid(userId)) return res.status(400).json({ error: 'invalid userId' });
+      const auth = await requireUser(res, accessToken, userId); if (!auth.ok) return;
       await makeRequest(`${SUPABASE_URL}/rest/v1/ovning_progress`, { method: 'POST', headers: { ...authHeaders(accessToken), 'Prefer': 'resolution=merge-duplicates' } }, { user_id: userId, progress: data, updated_at: new Date().toISOString() });
       return res.status(200).json({ success: true });
     }
 
     if (action === 'load_all') {
+      if (!isUuid(userId)) return res.status(400).json({ error: 'invalid userId' });
+      const auth = await requireUser(res, accessToken, userId); if (!auth.ok) return;
       const [cvRes, savedRes, matchedRes, progressRes, eduRes, diaryRes] = await Promise.all([
         makeRequest(`${SUPABASE_URL}/rest/v1/cvs?user_id=eq.${userId}&select=data&limit=1`, { method: 'GET', headers: authHeaders(accessToken) }),
         makeRequest(`${SUPABASE_URL}/rest/v1/saved_cvs?user_id=eq.${userId}&select=data&limit=1`, { method: 'GET', headers: authHeaders(accessToken) }),
@@ -282,8 +318,10 @@ export default async function handler(req, res) {
     }
 
     if (action === 'check_onboarding') {
+      if (!isUuid(userId)) return res.status(400).json({ error: 'invalid userId' });
+      const auth = await requireUser(res, accessToken, userId); if (!auth.ok) return;
       const result = await makeRequest(
-        `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${userId}&select=name&limit=1`,
+        `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${encodeURIComponent(userId)}&select=name&limit=1`,
         { method: 'GET', headers: serviceHeaders() }
       );
       const rows = Array.isArray(result.data) ? result.data : [];
@@ -292,6 +330,8 @@ export default async function handler(req, res) {
     }
 
     if (action === 'ensure_participant') {
+      if (!isUuid(userId)) return res.status(400).json({ error: 'invalid userId' });
+      const auth = await requireUser(res, accessToken, userId); if (!auth.ok) return;
       // FIX: Bara kolumner som faktiskt finns i user_assignments (ingen email/updated_at)
       await makeRequest(
         `${SUPABASE_URL}/rest/v1/user_assignments`,
@@ -308,13 +348,10 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true });
     }
 
-    if (action === 'admin_login') {
-      const result = await makeRequest(`${SUPABASE_URL}/rest/v1/admins?email=eq.${encodeURIComponent(adminEmail || email)}&select=*,kommuner(name),enheter(name)&limit=1`, { method: 'GET', headers: serviceHeaders() });
-      const rows = Array.isArray(result.data) ? result.data : [];
-      if (!rows.length) return res.status(404).json({ error: 'Ej inbjuden till CVmatchen' });
-      await makeRequest(`${SUPABASE_URL}/rest/v1/admins?id=eq.${rows[0].id}`, { method: 'PATCH', headers: serviceHeaders() }, { last_login: new Date().toISOString() });
-      return res.status(200).json({ admin: rows[0] });
-    }
+    // admin_login: borttagen — endpoint var pre-auth och returnerade hela
+    // admin-raden för godtycklig e-post (läckte vilka e-poster som är
+    // handläggare + kommun/enhet/roll). Inga klienter använder den.
+    // Riktig admin-auth sker via Microsoft OAuth i api/v1/auth/*.
 
     if (action === 'admin_list_users') {
       const { admin } = await requireAdmin(res, accessToken, action, {

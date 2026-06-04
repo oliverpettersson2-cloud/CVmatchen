@@ -49,15 +49,19 @@ module.exports = async (req, res) => {
     });
 
     const page = await browser.newPage();
+    await page.setJavaScriptEnabled(false);
 
     await page.setRequestInterception(true);
     page.on('request', (req) => {
       const type = req.resourceType();
-      if (['image', 'media', 'websocket'].includes(type)) {
-        req.abort();
-      } else {
-        req.continue();
+      const url = req.url();
+      if (!/^(data:|about:)/.test(url)) {
+        return req.abort();
       }
+      if (['image', 'media', 'websocket', 'xhr', 'fetch', 'eventsource', 'manifest', 'other'].includes(type)) {
+        return req.abort();
+      }
+      req.continue();
     });
 
     await page.setContent(html, { waitUntil: 'domcontentloaded', timeout: 25000 });
