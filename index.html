@@ -9,7 +9,7 @@
     }
   </script>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>CVmatchen — AI-driven jobbmatchning</title>
 
   <!-- Intervjuträning-modul (lazy-initieras av Träning-hubben) -->
@@ -4478,6 +4478,8 @@
       'cvData', 'cvmovn4', 'cvmatchen_ovning_progress',
       'pathfinder_saved_cvs', 'pathfinder_matched_cvs',
       'pathfinder_job_diary',
+      'pathfinder_selected_cv', 'pathfinder_selected_ads',
+      'pathfinder_mob_unlocked',
       'pf_saved_edu', 'pf_diary',
       'cvmatchen_edu_saved'
     ];
@@ -5241,16 +5243,23 @@
     function renderLanguages() {
       const grid = document.getElementById('languagesGrid');
       if (!grid) return;
-      
-      grid.innerHTML = cvData.languages.map(lang => `
-        <div style="display: inline-block; background: #f0ede6; border-radius: 6px; padding: 6px 12px; margin: 4px; font-size: 12px; font-weight: 600; color: var(--deep); cursor: pointer; transition: all 0.2s;" 
-          onmouseover="this.style.background='#e8e5de'" 
-          onmouseout="this.style.background='#f0ede6'"
-          onclick="removeLanguage('${lang.name}')">
-          ${lang.name} - ${lang.level}
-          <span style="opacity: 0.6; cursor: pointer; margin-left: 6px;">×</span>
-        </div>
-      `).join('');
+
+      // Bygg DOM via textContent för att förhindra XSS via språknamn.
+      grid.innerHTML = '';
+      cvData.languages.forEach(lang => {
+        const div = document.createElement('div');
+        div.style.cssText = 'display:inline-block;background:#f0ede6;border-radius:6px;padding:6px 12px;margin:4px;font-size:12px;font-weight:600;color:var(--deep);cursor:pointer;transition:all 0.2s;';
+        div.dataset.langName = lang.name;
+        div.textContent = lang.name + ' - ' + lang.level + ' ';
+        const x = document.createElement('span');
+        x.style.cssText = 'opacity:0.6;cursor:pointer;margin-left:6px;';
+        x.textContent = '×';
+        div.appendChild(x);
+        div.addEventListener('mouseover', () => { div.style.background = '#e8e5de'; });
+        div.addEventListener('mouseout', () => { div.style.background = '#f0ede6'; });
+        div.addEventListener('click', () => { if (typeof removeLanguage === 'function') removeLanguage(lang.name); });
+        grid.appendChild(div);
+      });
       
       if (cvData.languages.length === 0) {
         grid.innerHTML = '<div style="color: rgba(255, 255, 255, 0.72); font-size: 12px; padding: 12px; text-align: center;">Inga språk tillagda ännu</div>';
@@ -12488,10 +12497,10 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
   const MOB_ALWAYS_OPEN = new Set(['info','export']);
   const MOB_UNLOCK_KEY = 'pathfinder_mob_unlocked';
 
-  // Ladda upplåsningsstatus från localStorage
+  // Ladda upplåsningsstatus från localStorage (user-scoped)
   function mobLoadUnlocked() {
     try {
-      const saved = localStorage.getItem(MOB_UNLOCK_KEY);
+      const saved = (typeof _scopedGet === 'function') ? _scopedGet(MOB_UNLOCK_KEY) : localStorage.getItem(MOB_UNLOCK_KEY);
       if (saved) {
         const arr = JSON.parse(saved);
         arr.forEach(t => mobUnlocked.add(t));
@@ -12503,7 +12512,8 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
 
   function mobSaveUnlocked() {
     try {
-      localStorage.setItem(MOB_UNLOCK_KEY, JSON.stringify([...mobUnlocked]));
+      if (typeof _scopedSet === 'function') _scopedSet(MOB_UNLOCK_KEY, JSON.stringify([...mobUnlocked]));
+      else localStorage.setItem(MOB_UNLOCK_KEY, JSON.stringify([...mobUnlocked]));
     } catch(e) {}
   }
 
@@ -12589,7 +12599,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
   let _matchaSelectedAds = [];
 
   function _saveSelectedAds() {
-    try { localStorage.setItem('pathfinder_selected_ads', JSON.stringify(_matchaSelectedAds)); } catch(e) {}
+    try { _scopedSet('pathfinder_selected_ads', JSON.stringify(_matchaSelectedAds)); } catch(e) {}
   }
 
  // array med upp till 3 valda annonser
@@ -13516,7 +13526,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
           // Hämta CV-titel för auto-sök
           try {
             const savedCVs = JSON.parse(_scopedGet('pathfinder_saved_cvs') || '[]');
-            const selId = localStorage.getItem('pathfinder_selected_cv');
+            const selId = _scopedGet('pathfinder_selected_cv');
             const cv = selId ? savedCVs.find(c => c.id === selId) : savedCVs[0];
             s.value = (cv && cv.title) ? cv.title : (cvData && cvData.title) ? cvData.title : 'jobb';
           } catch(e) { s.value = 'jobb'; }
@@ -14820,7 +14830,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
         cvb.onclick = function() {
           try {
             var savedCVs = JSON.parse(_scopedGet('pathfinder_saved_cvs') || '[]');
-            var selId = localStorage.getItem('pathfinder_selected_cv');
+            var selId = _scopedGet('pathfinder_selected_cv');
             var cv = selId ? savedCVs.find(function(c){ return c.id === selId; }) : savedCVs[0];
 
             // Prioritera: pågående jobb > senaste jobb > CV-titel
@@ -15094,7 +15104,10 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
     try {
       var keys = ['cvData', 'PATHFINDER_CV', 'cvmatchen_cv'];
       var cvData = null;
-      for (var k of keys) { var r = localStorage.getItem(k); if (r) { cvData = JSON.parse(r); break; } }
+      for (var k of keys) {
+        var r = (typeof _scopedGet === 'function') ? _scopedGet(k) : localStorage.getItem(k);
+        if (r) { cvData = JSON.parse(r); break; }
+      }
       if (!cvData) return '';
       var parts = [];
       if (cvData.name) parts.push('Namn: ' + cvData.name);
