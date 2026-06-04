@@ -1981,14 +1981,42 @@ quiz:[
 ],
 pr:['Vad har jag rätt till med diagnosen [X]?','Hur ansöker jag om LSS-insatser?','Hur söker jag lönebidrag via AF?']},
 
-{id:'h18',icon:'🏃',title:'Friskvård & förmåner',sub:'Rörelse som kostar lite men ger mycket',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h18',icon:'🏃',title:'Friskvård & förmåner',sub:'Rörelse som kostar lite men ger mycket',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h18-friskvard.mp4',
 lessons:[
-{t:'Friskvårdsbidrag — vad är det?',s:'Friskvårdsbidraget är en skattefri förmån från arbetsgivaren.\n\nVanligtvis:\n💰 500-5 000 kr/år\n✅ Gym, simhall, yoga, massage\n✅ Skogsmulle, dans, kampsport\n\nFör arbetslösa:\n• Ingen arbetsgivare = inget bidrag\n• Men kommunen kan ha billiga aktiviteter!',
-a:'Friskvårdsbidragets maxbelopp är reglerat av Skatteverket. Arbetsgivaren bestämmer nivån. Vid anställning — fråga alltid om friskvårdsbidragets storlek. Det kan vara värt 1 000-5 000 kr/år.'},
-{t:'Gratis & billiga sätt att röra sig',s:'Utan bidrag:\n🌲 Friluftsliv — helt gratis\n🚴 Cykel — transport + träning\n💪 Kroppsvikt-träning hemma\n🏊 Kommunens simhallar — billigare än gym\n📺 YouTube-träning — gratis\n🤝 Spontanidrott i parker\n\nHelsingborg: Padelbanor, utegym, Stadsbiblioteket = gratis!',
-a:'WHO rekommenderar 150 min måttlig aktivitet per vecka. En promenad 30 min 5 dagar/vecka uppfyller detta. Outdoorträning och hemmaträning är jämförbara med gymträning för de flesta hälsomål.'},
-{t:'Rörelse och jobbsök',s:'Jobbsök utan rörelse = svårare.\n\n🧠 30 min promenad ökar fokus 2-3 timmar\n😴 Rörelse förbättrar sömn\n😊 Endorfiner motverkar jobbsökets stress\n⚡ Energinivån ökar\n\nTips: Lägg in promenaden i schemat — inte som "om jag hinner".',
-a:'Fysisk aktivitet är ett av de mest evidensbaserade sätten att hantera stress och depression. Att sätta en bestämd tid (ex: 9-9:30 varje dag) ökar följsamheten dramatiskt. Grupp-aktiviteter ger dessutom social kontakt.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🏃',h:'Vad är syftet?',t:'Använda friskvårdsbidraget — och hitta gratis rörelse.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Friskvårdsbidrag, vad du kan använda det till, jobbsökare och gratis alternativ.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta vad du har rätt till — och hur du börjar.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Vid jobbyte — fråga alltid om friskvårdsbidragets storlek. Det kan vara värt 1 000–5 000 kr/år.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom friskvårdsbidrag, vad det kan användas till, och gratis alternativ för arbetslösa. Se den först.'},
+{t:'Friskvårdsbidrag',
+cards:[
+{icon:'💰',h:'500–5 000 kr/år',t:'Skattefri förmån från arbetsgivaren.'},
+{icon:'🏋️',h:'Gym & PT',t:'Vanligaste användningen.'},
+{icon:'🧘',h:'Yoga & pilates',t:'Studios och digitala plattformar.'},
+{icon:'💆',h:'Friskvårdsmassage',t:'Räknas också.'},
+{icon:'🥋',h:'Kampsport',t:'Brottning, MMA, judo.'}
+],
+a:'Maxbeloppet är reglerat av Skatteverket. Arbetsgivaren bestämmer nivån inom ramen.'},
+{t:'Är du arbetslös?',
+cards:[
+{icon:'🏛️',h:'Kommunens alternativ',t:'Helsingborg har många billiga aktiviteter.'},
+{icon:'🏊',h:'Subventionerade simhallar',t:'Pensionärs- och arbetslöshetsrabatt.'},
+{icon:'🎟️',h:'Föreningsliv',t:'Idrott och kultur — ofta gratis eller billigt.'}
+],
+a:'Fråga din handläggare om kommunens utbud — de känner till lokala stöd.'},
+{t:'Helt gratis rörelse',
+cards:[
+{icon:'🚶',h:'Promenader',t:'Effektivast och enklast.'},
+{icon:'🚴',h:'Cykling',t:'Transport + motion.'},
+{icon:'🏃',h:'Parkrun',t:'Gratis 5 km — lördag kl 9.'},
+{icon:'📺',h:'YouTube-träning',t:'Hundratals timmar gratis.'},
+{icon:'🌲',h:'Naturen',t:'Skog och strand — gratis i Helsingborg.'}
+],
+a:'Naturkontakt sänker stresshormonet kortisol mätbart. Promenad i skogen ger fysisk + mental hälsa.'}
 ],
 ex:{type:'build',title:'Din rörelseplan',desc:'Konkret och realistisk rörelserutin.',
 fields:[
@@ -2005,14 +2033,41 @@ quiz:[
 ],
 pr:['Vad finns det för gratis aktiviteter i Helsingborg?','Bygg ett träningsprogram för 15 min hemma.','Hur motiverar jag mig att röra mer under jobbsök?']},
 
-{id:'h19',icon:'🌍',title:'Hälsa för nyanlända',sub:'Vård och rättigheter i Sverige',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h19',icon:'🌍',title:'Hälsa för nyanlända',sub:'Vård och rättigheter i Sverige',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h19-nyanland.mp4',
 lessons:[
-{t:'Rätten till vård i Sverige',s:'I Sverige har du rätt till sjukvård oavsett bakgrund.\n\n✅ Asylsökande: akut vård + vård som inte kan vänta\n✅ EU-medborgare: sjukvård med EU-kort\n✅ Permanent uppehållstillstånd: full sjukvård\n✅ Papperslösa: akut vård och vård för barn\n\nVård söks via vårdcentralen eller 1177.',
-a:'Asylsökande vuxna har rätt till omedelbart nödvändig vård, mödravård, abort och preventivmedel. Barn har rätt till samma vård som folkbokförda barn. Region Skåne följer nationella riktlinjer.'},
-{t:'Tolkhjälp & kulturell kompetens',s:'Du har rätt att begära tolk vid vårddbesök — gratis!\n\n📞 Ring vårdcentralen i förväg och begär tolk\n📱 Telefontolk om ingen finns på plats\n💻 Digitala tolkars — via skärm\n\nDu behöver ALDRIG ta med familjen som tolk vid medicinska samtal.',
-a:'Tolkhjälp är en lagstadgad rättighet i svensk sjukvård. Att använda familjemedlemmar som tolkar är olämpligt — det äventyrar sekretesskyddet och kan leda till felaktig information.'},
-{t:'Hälsoundersökning för nyanlända',s:'Nyanlända erbjuds en kostnadsfri hälsoundersökning:\n\n✅ Allmän hälsostatus\n✅ Smittskyddsprover (tuberkulos, hepatit)\n✅ Vaccinationskontroll\n✅ Psykisk hälsa (traumascreen)\n✅ Tandvårdsremiss\n\nBokas via din kommun eller 1177.',
-a:'Hälsoundersökning för nyanlända är frivillig men starkt rekommenderad. Den ger en samlad bild och kan fånga upp hälsoproblem som behöver behandlas. Speciellt viktig för dem som kommit från länder med bristfällig sjukvård.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🌍',h:'Vad är syftet?',t:'Förstå rätten till vård i Sverige — oavsett bakgrund.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Rättigheter för asylsökande, EU-medborgare, papperslösa, och hur 1177 hjälper.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta var du söker vård — och vad det kostar.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Vården finns för dig. Sök hjälp utan att vara rädd — det är dina rättigheter.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom rättigheterna till vård i Sverige för olika statusgrupper. Se den först.'},
+{t:'Asylsökande',
+cards:[
+{icon:'🆘',h:'Omedelbart nödvändig vård',t:'Alltid — oavsett tid på dygnet.'},
+{icon:'🤰',h:'Mödravård & förlossning',t:'Inklusive efterkontroller.'},
+{icon:'💊',h:'Abort & preventivmedel',t:'Ingår i grundrätten.'},
+{icon:'👶',h:'Barn',t:'Samma vård som folkbokförda barn.'}
+],
+a:'Som vuxen asylsökande har du rätt till vård som inte kan anstå. Region Skåne följer nationella riktlinjer.'},
+{t:'EU-medborgare & papperslösa',
+cards:[
+{icon:'🇪🇺',h:'EU-medborgare',t:'Med EHIC-kort — samma vård som svenskar.'},
+{icon:'📞',h:'1177 på flera språk',t:'Tolkservice finns.'},
+{icon:'🩺',h:'Papperslösa: akut + barn',t:'Akut vård och vård för barn — alltid.'},
+{icon:'🤝',h:'Röda Korset',t:'Klinker erbjuder också vård.'}
+],
+a:'EHIC är europeiskt sjukförsäkringskort — ansök i ditt hemland innan du reser.'},
+{t:'Vanligaste frågorna',
+cards:[
+{icon:'💉',h:'Vaccinationer',t:'Gratis komplettering vid behov.'},
+{icon:'🦷',h:'Tandvård för asyl',t:'Akut är gratis. Övrigt subventionerat.'},
+{icon:'🧠',h:'Psykisk hälsa',t:'Många behöver stöd efter migration — söks via VC.'},
+{icon:'🤰',h:'Mödravård',t:'Börjar med första besöket på MVC via 1177.'}
+],
+a:'Sverige har lagstadgad rätt till vård — kontakta vårdcentralen utan tvekan.'}
 ],
 ex:{type:'build',title:'Min hälsostatus i Sverige',desc:'Kartlägg din sjukvårdssituation.',
 fields:[
@@ -2029,14 +2084,39 @@ quiz:[
 ],
 pr:['Vad har jag rätt till i sjukvården med [uppehållsstatus]?','Hur begär jag tolk vid mitt läkarbesök?','Var genomgår jag hälsoundersökning för nyanlända i Helsingborg?']},
 
-{id:'h20',icon:'🧭',title:'Din hälsokompass',sub:'Sammanfattning & personlig hälsoplan',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',
+{id:'h20',icon:'🧭',title:'Din hälsokompass',sub:'Sammanfattning & personlig hälsoplan',color:'#fb923c',bc:'rgba(251,146,60,.3)',bg:'rgba(251,146,60,.07)',video:'/videos/h20-kompass.mp4',
 lessons:[
-{t:'Hälsa är mer än att inte vara sjuk',s:'WHO:s definition:\n"Hälsa är ett tillstånd av fullständigt fysiskt, psykiskt och socialt välbefinnande."\n\nDina 4 pelare:\n🏃 Rörelse\n🧠 Mental hälsa\n🥗 Mat & sömn\n🤝 Socialt\n\nSvagaste pelaren påverkar alla andra.',
-a:'Forskning visar att de fyra pelarna (rörelse, kost, sömn, socialt) är mer prediktiva för hälsa och livslängd än genetik. Beteendeförändringar tar i snitt 66 dagar att bli vanor.'},
-{t:'Hälsa under ekonomisk stress',s:'Jobbsök, ekonomisk stress och ohälsa hänger ihop.\n\n💡 Prioritera:\n✅ Sömn — kostar inget\n✅ Promenader — kostar inget\n✅ Socialt stöd — kostar inget\n✅ Röka/dricka MINDRE — sparar pengar\n✅ Natur — kostar inget\n\nMindre pengarna du spenderar — desto mer du vilar.',
-a:'Ekonomisk stress aktiverar samma stressrespons som fysisk fara. Kronisk ekonomisk stress ökar risken för hjärt-kärlsjukdom, depression och sömnstörningar. Gratis hälsoinsatser har starkt evidensbaserat stöd.'},
-{t:'Nästa steg — dina prioriteringar',s:'Välj en sak från varje pelare:\n\n🏃 Rörelse: 20 min promenad/dag\n🧠 Mental: Ring en vän i veckan\n🥗 Mat: Laga mat hemma 5 dagar/vecka\n💤 Sömn: Sova & vakna samma tid\n🤝 Socialt: Ett socialt event/vecka\n\nSmå steg konsekvent > stora steg sporadiskt.',
-a:'Beteendevetenskap: Att välja ett konkret beteende (tid, plats, vad) ökar genomförandet med 300%. "Jag ska röra mer" = svagt. "Jag promenerar 20 min kl 9 varje vardag i Stadsparken" = starkt.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🧭',h:'Vad är syftet?',t:'Skapa din egen hälsoplan — utifrån fyra pelare.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'WHO:s definition, de fyra pelarna, och hur du identifierar din svagaste.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta vilken pelare du ska stärka först.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Beteendeförändringar tar i snitt 66 dagar att bli vanor.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom WHO:s hälsodefinition och de fyra pelarna — så du kan göra din egen plan. Se den först.'},
+{t:'WHO:s hälsodefinition',
+cards:[
+{icon:'🌍',h:'WHO:s definition',t:'Hälsa = fullständigt fysiskt, psykiskt och socialt välbefinnande.'},
+{icon:'💡',h:'Mer än frånvaro av sjukdom',t:'Det är ett aktivt tillstånd — något du bygger.'}
+],
+a:'Hälsa är ett aktivt tillstånd — något du bygger varje dag, inte bara något du har.'},
+{t:'Dina fyra pelare',
+cards:[
+{icon:'🏃',h:'Rörelse',t:'30 min/dag räcker.'},
+{icon:'🧠',h:'Mental hälsa',t:'Sömn, stresshantering, mening.'},
+{icon:'🥗',h:'Mat & sömn',t:'Grunderna i kroppen.'},
+{icon:'🤝',h:'Socialt',t:'Människor som ser dig — kvalitet > kvantitet.'}
+],
+a:'Forskning visar att de fyra pelarna är mer prediktiva för hälsa och livslängd än genetik.'},
+{t:'Svagaste pelaren styr',
+cards:[
+{icon:'🔍',h:'Identifiera den',t:'Vilken pelare är svagast just nu?'},
+{icon:'🎯',h:'Stärk den först',t:'Det ger störst hävstång — på alla andra pelare.'},
+{icon:'⏳',h:'66 dagar till vana',t:'Inte 21 — som myten säger. Var tålmodig.'},
+{icon:'🚀',h:'Börja idag',t:'Du är värd det.'}
+],
+a:'Beteendeforskning visar att att stärka svagaste pelaren ger snabbare resultat än att finputsa det som redan funkar.'}
 ],
 ex:{type:'ai-chat',title:'Din personliga hälsoplan'},
 quiz:[
@@ -2857,14 +2937,41 @@ quiz:[
 ],
 pr:['Hur skriver jag ett reklamationsbrev?','Vad gör jag om butiken nekar reklamation?','Hur anmäler jag ett företag till ARN?']},
 
-{id:'e17',icon:'⚡',title:'El, energi & hushållskostnader',sub:'Sänk räkningarna med enkla åtgärder',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e17',icon:'⚡',title:'El, energi & hushållskostnader',sub:'Sänk räkningarna med enkla åtgärder',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e17-el.mp4',
 lessons:[
-{t:'Förstå din elräkning',s:'Elräkning = tre delar:\n\n⚡ Elförbrukning (kWh) — ca 50-60% av kostnaden\n🔌 Nätavgift — fast avgift för kablar\n💰 Skatt — ca 30% av totalen\n\nGenomsnitt ensamhushåll: 2 000-4 500 kWh/år\nKostnad: ca 8 000-14 000 kr/år',
-a:'Priset per kWh varierar kraftigt med elhandelsavtal. Timpris (spot) är billigast lågtrafik men dyrare högtrafik. Fast pris ger förutsägbarhet. Jämför på elpriskollen.se (Energimarknadsinspektionen).'},
-{t:'Sänk din elanvändning',s:'Enkla åtgärder:\n🌡️ Sänk temperaturen 1 grad = 5% lägre elräkning\n💡 LED-lampor — 80% lägre än glödlampor\n🚿 Kortare duschar\n❄️ Full disk- och tvättmaskin\n🔌 Stäng av standby\n\nPotential: spara 1 000-3 000 kr/år',
-a:'Uppvärmning är ofta 50-60% av hushållets energianvändning. Varje grad lägre inomhustemperatur minskar energianvändningen ca 5%. Standby-apparater kan kosta 500-1 000 kr/år om de aldrig stängs av.'},
-{t:'Bostadsbidrag för energi & stöd',s:'Energistöd vid höga elkostnader:\n• Bostadsbidrag (FK) täcker del av hyran\n• Kommunen kan ge ekonomiskt bistånd för höga räkningar\n\nJämför elpriser:\n🌐 elpriskollen.se — gratis\n🌐 compricer.se\n\nByt elleverantör — spara 1 000-4 000 kr/år!',
-a:'Elpriskollen.se drivs av Energimarknadsinspektionen och är den mest opartiska jämförelsetjänsten. Att byta elleverantör tar ca 15 min och kostar ingenting. Bindningstid varierar — kolla det noga.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'⚡',h:'Vad är syftet?',t:'Sänk räkningarna — utan att frysa.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Hur elräkningen läses, jämförelse, snabba besparingar och uppvärmning.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna byta elavtal och göra konkreta besparingar.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Snabba åtgärder kan sänka elkostnaden med 20–30 % över ett år.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom elräkningen, jämförelse, snabba besparingar och uppvärmning. Se den först.'},
+{t:'Förstå din elräkning',
+cards:[
+{icon:'⚡',h:'Elförbrukning (kWh)',t:'50–60 % av kostnaden.'},
+{icon:'🔌',h:'Nätavgift',t:'Fast avgift för kablar.'},
+{icon:'💰',h:'Skatt',t:'Ca 30 % av totalen.'},
+{icon:'📊',h:'Snitt ensamhushåll',t:'2 000–4 500 kWh/år = 8–14 tkr.'}
+],
+a:'Priset per kWh varierar kraftigt med elhandelsavtal. Jämför på elpriskollen.se.'},
+{t:'Jämför & spara',
+cards:[
+{icon:'🌐',h:'elpriskollen.se',t:'Energimarknadsinspektionens egen — gratis.'},
+{icon:'🌡️',h:'-1°C',t:'Sänker kostnaden 5 %.'},
+{icon:'💡',h:'LED-lampor',t:'80 % mindre el än glödlampor.'},
+{icon:'🚿',h:'Snabb dusch',t:'Sparar både el och vatten.'}
+],
+a:'Rörligt elpris (spot) är oftast billigast i längden — du tjänar på timpris om du kör tvätt på natten.'},
+{t:'Uppvärmning & vatten',
+cards:[
+{icon:'🔥',h:'Värme = 50–70 %',t:'Av hushållets energianvändning.'},
+{icon:'🪟',h:'Tätningar lönar sig',t:'Vid fönster och dörrar.'},
+{icon:'💨',h:'Vädra snabbt',t:'Effektivt — inte länge.'},
+{icon:'🍽️',h:'Diskmaskin full',t:'Sparar mer än handdisk.'}
+],
+a:'Byt elavtal idag — du sparar tusenlappar varje år utan att ändra livsstil.'}
 ],
 ex:{type:'build',title:'Din energibesparing',desc:'Konkreta åtgärder för lägre räkningar.',
 fields:[
@@ -2931,14 +3038,42 @@ quiz:[
 ],
 pr:['Hur öppnar jag ett ISK-konto?','Vilken indexfond ska jag välja?','Hur sparar jag smart med 200 kr/mån?']},
 
-{id:'e19',icon:'👨‍👩‍👧',title:'Ekonomi & familj',sub:'Separation, barn och gemensam ekonomi',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e19',icon:'👨‍👩‍👧',title:'Ekonomi & familj',sub:'Separation, barn och gemensam ekonomi',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e19-familj.mp4',
 lessons:[
-{t:'Gemensam ekonomi i par',s:'Tips vid gemensam ekonomi:\n\n✅ Gemensamt hushållskonto + egna konton\n✅ Öppen dialog om utgifter\n✅ Skriftliga avtal vid samboende\n\nSambolagen: Om ni separerar delar ni lägenheten och bohag 50/50 — men inte sparkonton!\n\n⚠️ Utan äktenskapsförord delar ni allt vid äktenskapsskillnad.',
-a:'Sambolagen gäller automatiskt vid samboende — men skyddar inte separat sparande. Ett samboavtal kan undanta egendom. Äktenskapsförord skrivs hos notarius publicus. Ca 40-50% av svenska äktenskap slutar i skilsmässa.'},
-{t:'Underhållsbidrag & barnbidrag',s:'Vid separation med barn:\n\n📋 Underhållsbidrag: den som inte bor med barnet betalar\n• Fastställs av FK\n• Ca 1 500-2 500 kr/mån/barn (schablonbelopp)\n\n👶 Barnbidrag: 1 250 kr/mån/barn\n• Delas lika vid växelvis boende\n• FK betalar ut automatiskt',
-a:'Underhållsbidraget beräknas baserat på barnets behov och föräldrarnas ekonomi. Om den betalningsskyldige inte betalar kan FK betala ut underhållsstöd istället och kräva föräldern. FK hanterar alla ansökningar.'},
-{t:'Ensamstående ekonomi',s:'Som ensamstående har du rätt till:\n\n✅ Bostadsbidrag (högre vid barn)\n✅ Barnbidrag 1 250 kr/mån\n✅ Underhållsstöd (om ex ej betalar)\n✅ Flerbarnstillägg (från barn nr 2)\n✅ Försörjningsstöd vid behov\n\nKolla alla rättigheter på FK:s räkneverktyg.',
-a:'Ensamstående föräldrar har rätt till flerbarnstillägg (400-2 400 kr/mån) från barn nr 2. Bostadsbidragets takbelopp är högre vid barn. Försörjningsstöd är kommunens sista skyddsnät.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'👨‍👩‍👧',h:'Vad är syftet?',t:'Förstå ekonomin i par, familj — och vid separation.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Gemensam ekonomi, sambolagen, äktenskap, barn-bidrag och separation.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta vad du har rätt till — och vad du bör skriva på papper.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Prata om pengar tidigt — det räddar relationen.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom gemensam ekonomi, sambolagen, barn-bidrag och separation. Se den först.'},
+{t:'Gemensam ekonomi & lagen',
+cards:[
+{icon:'💳',h:'Hushållskonto + egna',t:'Gemensamma utgifter + frihet.'},
+{icon:'🏠',h:'Sambolagen 50/50',t:'Lägenhet och bohag delas — men inte sparkonton.'},
+{icon:'💍',h:'Äktenskap = allt delas',t:'Utan äktenskapsförord vid skilsmässa.'},
+{icon:'📜',h:'Äktenskapsförord',t:'Skrivs hos notarius publicus.'}
+],
+a:'40–50 % av äktenskap slutar i skilsmässa — planera juridiskt vid större tillgångar.'},
+{t:'Barn — kostnader och bidrag',
+cards:[
+{icon:'👶',h:'Föräldrapenning',t:'480 dagar per barn via FK.'},
+{icon:'💰',h:'Barnbidrag 1 250 kr/mån',t:'Automatiskt per barn.'},
+{icon:'📚',h:'Förskola maxtaxa',t:'Ca 1 700 kr/månad.'},
+{icon:'🏠',h:'Bostadsbidrag',t:'För barnfamiljer — sök via FK.'},
+{icon:'👤',h:'Underhållsstöd',t:'Om den andra föräldern inte betalar.'}
+],
+a:'Flerbarnstillägg utbetalas automatiskt från och med andra barnet.'},
+{t:'Vid separation',
+cards:[
+{icon:'📋',h:'Skatteverket',t:'Anmäl adressändring och civilstatus.'},
+{icon:'👶',h:'Familjerätten',t:'Hjälper gratis med vårdnad och boende.'},
+{icon:'💰',h:'Skriftligt avtal',t:'Om underhåll och bodelning — guld värt.'},
+{icon:'⚖️',h:'Familjerådgivning',t:'Kommunen erbjuder — också gratis.'}
+],
+a:'Prata om pengar tidigt — det räddar relationen. Skriftliga avtal är skyddet om det går snett.'}
 ],
 ex:{type:'build',title:'Familjens ekonomiska plan',desc:'Koll på rättigheter och avtal.',
 fields:[
@@ -2955,14 +3090,42 @@ quiz:[
 ],
 pr:['Hur beräknas underhållsbidraget?','Vilka bidrag har jag rätt till som ensamstående förälder?','Ska vi skriva ett samboavtal?']},
 
-{id:'e20',icon:'🎯',title:'Din finansiella frihet',sub:'Sätt upp mål och bygg ekonomin steg för steg',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',
+{id:'e20',icon:'🎯',title:'Din finansiella frihet',sub:'Sätt upp mål och bygg ekonomin steg för steg',color:'#a78bfa',bc:'rgba(167,139,250,.3)',bg:'rgba(167,139,250,.07)',video:'/videos/e20-frihet.mp4',
 lessons:[
-{t:'Ekonomisk stabilitet — en trappa',s:'Bygg ekonomin i rätt ordning:\n\n🔴 Steg 1: Täck grundbehov (hyra, mat, el)\n🟠 Steg 2: Betala skulder med hög ränta\n🟡 Steg 3: Buffert — 3 månaders kostnader\n🟢 Steg 4: Pensionssparande\n🔵 Steg 5: Frivilligt investeringssparande\n\nHoppa aldrig över ett steg!',
-a:'Att börja investera innan skulder är betalda ger sällan positiv avkastning — skuldräntan är oftast högre. Bufferten är skyddet som hindrar dig från att ta lån vid oväntade händelser.'},
-{t:'Ekonomiska mål — SMARTA',s:'❌ "Jag vill spara mer"\n✅ "Jag ska spara 500 kr/mån från 1 juni i ISK på Avanza, automatiskt"\n\nDina mål:\n🎯 Kortfristigt: 0-12 mån (buffert)\n🎯 Medelfristigt: 1-5 år (bil, bostad)\n🎯 Långfristigt: 5+ år (pension, frihet)\n\nEtt mål per kategori — fokus är allt.',
-a:'SMARTA finansiella mål ökar uppnåandegraden med 40-50% jämfört med vaga mål. Automatisering är nyckeln — det som sker utan beslut sker alltid. Sätt autogiro direkt vid lönedagen.'},
-{t:'Din ekonomiska resa framåt',s:'Grattis — du har gått igenom hela Ekonomin!\n\nDu vet nu:\n✅ Budgetera och spåra kostnader\n✅ Förstå skulder och räntor\n✅ Skydda dig med försäkringar\n✅ Pension och tjänstepension\n✅ Konsumenträtt och reklamation\n✅ Spara och investera smart\n\nNästa steg: Gör det på riktigt!',
-a:'Ekonomisk kunskap är en av de viktigaste färdigheterna — men den hjälper bara om du agerar. Ta ett steg per dag, inte allt på en gång. Kommunens budget- och skuldrådgivare, FK och Konsumentverket är alltid tillgängliga och gratis.'}
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🎯',h:'Vad är syftet?',t:'Bygg din ekonomi i rätt ordning — fem steg till frihet.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'De fem stegen — från grundbehov till investeringar.'},
+{icon:'✅',h:'När du är klar ska du...',t:'veta vilket steg du är på — och vad nästa är.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Hoppa aldrig över ett steg — det är där folk fastnar.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom de fem stegen till finansiell frihet — i rätt ordning. Se den först.'},
+{t:'De fem stegen',
+cards:[
+{icon:'🔴',h:'1. Grundbehov',t:'Hyra, mat, el — först.'},
+{icon:'🟠',h:'2. Dyra skulder',t:'SMS-lån och kreditkort — högst ränta först.'},
+{icon:'🟡',h:'3. Buffert',t:'3 månaders kostnader på sparkonto.'},
+{icon:'🟢',h:'4. Pension',t:'Tjänstepension + ISK.'},
+{icon:'🔵',h:'5. Investera',t:'Långsiktigt för riktiga drömmar.'}
+],
+a:'Att börja investera innan skulder är betalda ger sällan positiv avkastning — skuldräntan är oftast högre.'},
+{t:'Var fastnar folk?',
+cards:[
+{icon:'⚠️',h:'Hoppa över steg 2',t:'Att investera med dyra skulder = du förlorar.'},
+{icon:'⚠️',h:'Skippa bufferten',t:'En oväntad utgift blir ny skuld.'},
+{icon:'⚠️',h:'Glömma pension',t:'Tidig start = enorm skillnad pga ränta på ränta.'},
+{icon:'✅',h:'Tålamod betalar',t:'5–10 år av disciplin = livslång frihet.'}
+],
+a:'Bufferten är skyddet som hindrar dig från att ta lån vid oväntade händelser.'},
+{t:'Vad frihet betyder',
+cards:[
+{icon:'🎯',h:'Att kunna välja',t:'Jobb, bostad, livspartner — utan tvång.'},
+{icon:'😌',h:'Mindre stress',t:'Ekonomisk stress är en av starkaste stressfaktorerna.'},
+{icon:'🌅',h:'Trygghet',t:'Vid sjukdom, arbetslöshet och kriser.'},
+{icon:'🚀',h:'Frihet att drömma',t:'Och att förverkliga.'}
+],
+a:'Finansiell frihet är inte att bli rik — det är att kunna välja. Bygg den steg för steg.'}
 ],
 ex:{type:'ai-chat',title:'Chatta om din ekonomi'},
 quiz:[
@@ -3598,23 +3761,160 @@ a:'PayPal ger liknande skydd som kortbetalning. Spara alla kvitton i en mejlmapp
 ex:{type:'sort',title:'Säkert eller riskabelt?',desc:'Sortera situationerna rätt.',catA:'Säkert',catB:'Riskabelt',items:[{l:'Swisha ett belopp ni kommit överens om',c:'A'},{l:'Acceptera swish från okänd som säger sig felswistat',c:'B'},{l:'Klarna om du kan betala direkt ändå',c:'A'},{l:'Klarna för att ha råd med något du inte har råd med',c:'B'},{l:'Handla på välkänd sajt med https://',c:'A'},{l:'Betala med presentkort till okänd säljare',c:'B'},{l:'Läsa Trustpilot innan köp',c:'A'},{l:'Klicka "du har vunnit ett pris"-länk',c:'B'}]},
 quiz:[{q:'Vad är unikt med Swish-betalningar?',o:['Kan ångras 24h','Omedelbart och oåterkalleligt','Tar 3 dagar','Säkrare än kort'],c:1},{q:'Klarnas största risk?',o:['Dyrt','Lätt köpa mer än du har råd + ränta vid miss','Dålig app','Bara iPhone'],c:1},{q:'Ångerrätt vid nätköp?',o:['3 dagar','14 dagar','30 dagar','7 dagar'],c:1},{q:'Swish-bedrägeri — vad gör du?',o:['Swishar tillbaka','Kontaktar banken omedelbart','Ignorerar','Polisanmäler nästa dag'],c:1}],
 pr:['Skydda mig mot Swish-bedrägerier.','Missad Klarna-betalning — vad händer?','Konsumenträttigheter vid näthandel i Sverige?']},
-{id:'d17',icon:'🏛️',title:'Myndigheternas digitala tjänster',sub:'Allt du kan göra hemifrån',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Arbetsförmedlingen digitalt',s:'På af.se och AF-appen:\n\n✅ Se din aktivitetsplan\n✅ Rapportera jobbsök\n✅ Boka möten\n✅ Se handläggarens meddelanden\n\nLogga in med BankID.\nUppdatera regelbundet — handläggaren ser allt!',a:'AF:s digitala system heter Mina sidor. Aktivitetsrapportering krävs för ersättning. Appen fungerar bra på mobil — sätt på notiser.'},{t:'Försäkringskassan digitalt',s:'På fk.se och Mitt FK-appen:\n\n✅ Sjukanmälan dag 1\n✅ Se utbetalningar\n✅ Ansök om bidrag\n✅ Ladda upp intyg\n✅ Chatta med handläggare\n\n⚠️ Sjukanmälan SAMMA dag — annars riskerar du ersättning!',a:'FK hanterar ca 50 förmåner. De flesta ansökningar görs digitalt. Sjukanmälan dag 1 är krav.'},{t:'Skatteverket & deklaration',s:'skatteverket.se:\n\n✅ Deklarera — deadline 2 maj\n✅ Se skattsedel\n✅ Ändra skattejämkning\n✅ Ansök om ID-kort\n\nDeklaration med BankID:\n→ Öppna appen\n→ Godkänn\n→ Klart på 30 sekunder!',a:'Deklarationen är ifylld automatiskt för anställda. Kontrollera att alla inkomster stämmer. Deklarerar du inte = skattetillägg.'}],
+{id:'d17',icon:'🏛️',title:'Myndigheternas digitala tjänster',sub:'Allt du kan göra hemifrån',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d17-myndigheter.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🏛️',h:'Vad är syftet?',t:'Använda myndigheternas digitala tjänster — med BankID.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'AF, FK, Skatteverket, CSN och 1177 — vad du kan göra digitalt.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kunna sköta alla myndighetsärenden hemifrån.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Allt kräver BankID. Skaffa det via din bank — det är gratis och tar 10 minuter.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom Arbetsförmedlingen, Försäkringskassan, Skatteverket, CSN och 1177 — digitalt. Se den först.'},
+{t:'AF & FK digitalt',
+cards:[
+{icon:'💼',h:'AF Mina sidor',t:'Aktivitetsplan, jobbrapporter, meddelanden.'},
+{icon:'⚠️',h:'Aktivitetsrapport',t:'Krav för ersättning — varje månad.'},
+{icon:'🤒',h:'Mitt FK-appen',t:'Sjukanmälan dag 1, ansökningar, utbetalningar.'},
+{icon:'📎',h:'Ladda upp intyg',t:'Direkt i appen — slipper post.'}
+],
+a:'Sjukanmälan SAMMA dag är krav för ersättning. Notiser i AF-appen håller dig informerad.'},
+{t:'Skatteverket & CSN',
+cards:[
+{icon:'📊',h:'Deklarera senast 2 maj',t:'Med BankID — klart på 30 sek.'},
+{icon:'🪪',h:'ID-kort',t:'Ansök via skatteverket.se.'},
+{icon:'📚',h:'CSN — studiemedel',t:'Ansök på csn.se per termin.'},
+{icon:'💰',h:'Återbetalning',t:'Se status på csn.se.'}
+],
+a:'Deklarationen är ifylld automatiskt för anställda — kontrollera bara och godkänn.'},
+{t:'1177 & BankID',
+cards:[
+{icon:'📅',h:'Boka tid på 1177.se',t:'Vårdcentral, BVC, MVC.'},
+{icon:'📋',h:'Läs din journal',t:'Allt finns digitalt.'},
+{icon:'💊',h:'Förnya recept',t:'Klart utan att besöka.'},
+{icon:'🔐',h:'BankID är nyckeln',t:'Skaffa det via din bank — gratis, 10 min.'}
+],
+a:'Aktivera digital brevlåda på minmeddelanden.se — då missar du inte myndighetspost.'}
+],
 ex:{type:'build',title:'Din myndighetsdigitala checklista',desc:'Kolla att du är inloggad rätt.',fields:[{l:'Inloggad på AF Mina sidor?',ph:'T.ex. Ja / Nej — loggar in nu',hint:'af.se → BankID'},{l:'Har du Mitt FK-appen?',ph:'T.ex. Ja / Nej — laddar ner nu',hint:'Gratis i App Store och Google Play'},{l:'Vet du hur du rapporterar jobbsök?',ph:'T.ex. Ja, via Mina sidor / Nej — frågar handläggaren'},{l:'Deklarationens deadline?',ph:'T.ex. 2 maj varje år',hint:'2 maj — missa inte!'}]},
 quiz:[{q:'Vad gör du på AF Mina sidor?',o:['Söker jobb där','Rapporterar aktiviteter och jobbsök regelbundet','Bara tittar','Betalar avgift'],c:1},{q:'Sjukanmälan till FK — när?',o:['Nästa dag','Samma dag du är sjuk','Inom 3 dagar','Spelar ingen roll'],c:1},{q:'Deklarationsdeadline?',o:['1 april','2 maj','30 juni','31 december'],c:1},{q:'Vad behöver du för att logga in på myndighetssajter?',o:['Personnummer','BankID','E-post','Lösenord'],c:1}],
 pr:['Hur rapporterar jag jobbsök på AF?','Vad ansöker jag om på FK om jag förlorar jobbet?','Hur ändrar jag skattejämkning?']},
-{id:'d18',icon:'💬',title:'Digital kommunikation i arbetslivet',sub:'Slack, Teams och arbetslivets spelregler',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Verktyg du möter på jobbet',s:'Vanligaste:\n\n🔵 Microsoft Teams — möten, chatt, filer\n🟢 Slack — tech och startups\n📧 E-post — formella ärenden\n📱 WhatsApp — många mindre arbetsplatser\n\nDe flesta arbetsplatser har ett huvudverktyg — fråga i onboardingen!',a:'Teams har 300+ miljoner aktiva användare. Slack dominerar i tech. Grundprincipen är densamma: snabb chatt, möten och fildelning på ett ställe. Kan du Teams lär du dig Slack på en dag.'},{t:'Ton och etik i digital kommunikation',s:'✅ Svara inom 2-4 timmar\n✅ Skriv kortfattat och tydligt\n✅ Rätt kanal: chatt vs e-post\n\n❌ Skriv inte i affekt\n❌ VERSALER = skrika\n❌ Dela inte känslig info okrypterat',a:'Digital kommunikation missförstås lättare — emojis och ton är avgörande. En "bra." med punkt kan uppfattas som sarkasm. När tveksam: ring istället.'},{t:'Dela filer professionellt',s:'✅ Använd OneDrive/SharePoint\n✅ Google Drive\n✅ Dropbox\n\n❌ Skicka ALDRIG:\n• Lösenord i chatt\n• Personnummer okrypterat\n• Stora bilagor\n\nDela länk > Bilaga alltid!',a:'GDPR gäller på jobbet. Skicka aldrig personnummer eller hälsoinfo i okrypterade kanaler. IT-avdelningen bestämmer vilka verktyg som är godkända.'}],
+{id:'d18',icon:'💬',title:'Digital kommunikation i arbetslivet',sub:'Slack, Teams och arbetslivets spelregler',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d18-arbetschat.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'💬',h:'Vad är syftet?',t:'Bemästra digital kommunikation i arbetslivet — Teams, Slack och e-post.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Verktygen, tonen, svarstid, vad man undviker och GDPR.'},
+{icon:'✅',h:'När du är klar ska du...',t:'kommunicera professionellt — utan missförstånd.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Tydligt, vänligt och i rätt kanal. Fråga i onboardingen — vilket verktyg använder ni mest?'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom Teams, Slack, ton, svarstid och GDPR på jobbet. Se den först.'},
+{t:'Verktyg & ton',
+cards:[
+{icon:'🔵',h:'Microsoft Teams',t:'Standard — möten, chatt, filer.'},
+{icon:'🟢',h:'Slack',t:'Tech och startups.'},
+{icon:'📧',h:'E-post',t:'Formella ärenden, externa kontakter.'},
+{icon:'📝',h:'Skriv tydligt',t:'Inte VERSALER — det läses som att skrika.'}
+],
+a:'En "bra." med punkt kan låta sarkastiskt — skriv hellre "bra!" eller "superbra".'},
+{t:'Svarstid & vad du undviker',
+cards:[
+{icon:'⏰',h:'Chatt: 2–4 arbetstim',t:'Inom arbetsdagen.'},
+{icon:'📧',h:'E-post: 24 timmar',t:'Senast nästa arbetsdag.'},
+{icon:'😡',h:'Inte i affekt',t:'Sov på det — skicka inte direkt.'},
+{icon:'🔒',h:'Inte privata diskussioner',t:'I jobbkanaler.'}
+],
+a:'Vid känslig info — ring istället. Digital kommunikation missförstås lättare än man tror.'},
+{t:'Filer & GDPR',
+cards:[
+{icon:'☁️',h:'Länk > bilaga',t:'OneDrive, SharePoint, Google Drive.'},
+{icon:'🚫',h:'Aldrig lösenord i chatt',t:'Använd lösenordshanterare.'},
+{icon:'🚫',h:'Aldrig personnummer okrypterat',t:'Bryter mot GDPR.'},
+{icon:'🚫',h:'Hälsoinformation extra skyddat',t:'Kräver särskild process.'}
+],
+a:'IT-avdelningen bestämmer vilka verktyg som är godkända. Fråga dem vid tveksamheter.'}
+],
 ex:{type:'build',title:'Din kommunikationsprofil på jobbet',desc:'Förbered dig för digital kommunikation.',fields:[{l:'Vilka verktyg används i din bransch?',ph:'T.ex. Vård: TakeCare / IT: Slack / Lager: Teams',hint:'Googla [bransch] kommunikationsverktyg'},{l:'Hur svarar du inom rimlig tid?',ph:'T.ex. Kolla Teams morgon och eftermiddag'},{l:'Vad undviker du i jobbrelaterade chattar?',ph:'T.ex. Privata diskussioner, känslig info',ta:true},{l:'Hur delar du en stor fil?',ph:'T.ex. Laddar upp till OneDrive och delar länk',hint:'Länk > Bilaga alltid'}]},
 quiz:[{q:'Standard i svenska myndigheter?',o:['Slack','Microsoft Teams','WhatsApp','E-post'],c:1},{q:'Vad betyder VERSALER i chatt?',o:['Viktigt meddelande','Att skrika/vara arg','Man är deaf','Inget'],c:1},{q:'Bäst sätt att dela stor fil?',o:['E-postbilaga','Länk via OneDrive/Drive','USB-minne','Skriva ut'],c:1},{q:'Hur snabbt svarar du på jobbchatt?',o:['Direkt alltid','Inom 2-4 arbetstimmar','Nästa dag','Bara om viktigt'],c:1}],
 pr:['Hur lär jag mig Slack snabbt?','Skillnad Teams och Slack?','Dela filer säkert på jobbet?']},
-{id:'d19',icon:'🛡️',title:'Digital hälsa & skärmbalans',sub:'Ta hand om dig i det digitala livet',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Skärmtid och produktivitet',s:'Snitt i Sverige: 6-8 timmar/dag.\n\nHantera det:\n✅ Pomodoro: 25 min fokus + 5 min paus\n✅ Telefonfri tid på kvällar och måltider\n✅ Stäng notiser under jobbsöket\n\nKolla din skärmtid:\n📱 iPhone: Skärm & Användningstid\n📱 Android: Digitalt välmående',a:'Mer än 4 tim social media/dag korrelerar med ökad ångest. Notiser fragmenterar koncentrationen — 23 minuter för att återfå fokus efter avbrott. Stäng notiser under jobbsöket.'},{t:'Negativa digitala miljöer',s:'Tecken:\n⚠️ Mår sämre efter scrolling\n⚠️ Jämför dig med andra\n⚠️ Sömnproblem pga skärm\n\nVad du gör:\n✅ Avfölj negativa konton\n✅ Använd tysta-funktionen\n✅ Rapportera trakasserier\n✅ Ta digitala pauser',a:'Nätmobbning anmäls till polisen om det är brottsligt. Plattformar har rapporteringsfunktioner. Kontakta Friends (friends.se) eller Brottsoffermyndigheten för stöd.'},{t:'Ergonomi och ögonhälsa',s:'20-20-20-regeln:\nVarje 20 min → titta 6 m bort i 20 sekunder\n\nSittställning:\n• Skärm i ögonhöjd\n• Rygg stödd\n• Fötter i golvet\n\n🌙 Natteläge efter kl 20!',a:'Digitalt ögonstress drabbar 65% av skärmanvändare. 20-20-20-regeln rekommenderas av ögonläkare. Skärmljus sent stör melatonin och sömnkvalitet.'}],
+{id:'d19',icon:'🛡️',title:'Digital hälsa & skärmbalans',sub:'Ta hand om dig i det digitala livet',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d19-skarm.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🛡️',h:'Vad är syftet?',t:'Hantera skärmtid och digital hälsa — utan att sluta använda telefonen.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Pomodoro, notiser, ergonomi, 20-20-20-regeln och digitala miljöer.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha en konkret skärm-rutin.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Skärmen är ett verktyg — inte ditt liv. Sätt en skärmtidsgräns idag.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen går igenom Pomodoro, notiser, ergonomi och 20-20-20-regeln. Se den först.'},
+{t:'Skärmtid & fokus',
+cards:[
+{icon:'📱',h:'6–8 tim/dag i Sverige',t:'Mycket — kolla din i Inställningar.'},
+{icon:'🎯',h:'Pomodoro 25/5',t:'25 min fokus + 5 min paus = produktivt.'},
+{icon:'🔕',h:'Stäng notiser',t:'23 min att återfå fokus efter avbrott.'},
+{icon:'📵',h:'Telefonfri tid',t:'På kvällar och måltider.'}
+],
+a:'Mer än 4 tim social media/dag korrelerar med ökad ångest. Stäng notiser under jobbsöket.'},
+{t:'Negativa digitala miljöer',
+cards:[
+{icon:'😞',h:'Mår sämre efter scrolling',t:'Pausa och reflektera.'},
+{icon:'↔️',h:'Jämför dig med andra',t:'Avfölj utan dåligt samvete.'},
+{icon:'💤',h:'Sömnproblem av skärm',t:'Lägg undan mobilen 1 tim innan.'},
+{icon:'🚨',h:'Trakasserier',t:'Rapportera + Friends.se för stöd.'}
+],
+a:'Plattformar har rapporteringsfunktioner. Vid brottslig nätmobbning — polisanmäl.'},
+{t:'Ergonomi & ögonhälsa',
+cards:[
+{icon:'👁️',h:'Skärm i ögonhöjd',t:'Stäng av nacken.'},
+{icon:'💺',h:'Rygg stödd',t:'Fötter i golvet.'},
+{icon:'⏱️',h:'20-20-20-regeln',t:'Var 20 min: titta 6 m bort i 20 sek.'},
+{icon:'🌙',h:'Natteläge efter kl 20',t:'Mindre blått ljus = bättre sömn.'}
+],
+a:'Digitalt ögonstress drabbar 65 % av skärmanvändare. Skärmljus sent stör melatonin och sömnkvalitet.'}
+],
 ex:{type:'build',title:'Din digitala hälsoplan',desc:'Ta kontroll över din skärmanvändning.',fields:[{l:'Din genomsnittliga skärmtid?',ph:'T.ex. 7 timmar — kolla i inställningarna',hint:'Inställningar > Skärm & Användningstid'},{l:'Vilket konto ger negativa känslor?',ph:'T.ex. Vissa Instagram-konton — avföljer nu',hint:'Avfölj utan dåligt samvete'},{l:'Telefon-rutin under jobbsöket?',ph:'T.ex. Stänger notiser, telefon upp-och-ned på bordet'},{l:'Din digitala paus-rutin?',ph:'T.ex. Inga skärmar efter kl 21'}]},
 quiz:[{q:'Hur länge för att återfå fokus efter notis?',o:['1 minut','5 minuter','23 minuter','Omedelbart'],c:2},{q:'20-20-20-regeln?',o:['20 min träning','Varje 20 min: titta 6m bort i 20 sek','20 sek skärm','20 min paus'],c:1},{q:'Vad gör natteläge?',o:['Gör mörkare','Minskar blått ljus som stör sömnhormonet','Stänger notiser','Sparar batteri'],c:1},{q:'Nätmobbning — vad gör du?',o:['Svarar tillbaka','Rapporterar till plattform och vid brott till polisen','Ignorerar','Tar paus'],c:1}],
 pr:['Minska skärmtid effektivt.','Rapportera nätmobbning på Instagram.','Ergonomi-tips för jobbsöket hemifrån?']},
-{id:'d20',icon:'🚀',title:'Din digitala karriärplan',sub:'Sammanfattning och nästa steg',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',
-lessons:[{t:'Vad du nu kan digitalt',s:'Du har gått igenom hela Digitalt!\n\nDu kan:\n✅ Bygga digital profil och LinkedIn\n✅ Söka jobb på alla plattformar\n✅ Kommunicera professionellt digitalt\n✅ Använda Office, AI och verktyg\n✅ Skydda dig online och hantera BankID\n✅ Förstå digitala avtal och betalningar\n\nDu är digitalt redo!',a:'Digital kompetens är en av de mest efterfrågade egenskaperna 2024-2030. Det är inte längre en bonus utan ett krav. Du har nu verktygen.'},{t:'Håll dig uppdaterad',s:'Tekniken förändras:\n\n📰 Följ: Di Digital, Computer Sweden\n🎓 En ny kurs per kvartal\n🔗 LinkedIn varje vecka\n🤖 Testa nya AI-verktyg\n\nMålet: Alltid bekväm med verktygen i din bransch.',a:'Branscher digitaliseras i olika takt — lager och vård är på väg in i digital transformation nu. Att ligga steget före märks på CV och i intervjun.'},{t:'Bygg ditt digitala varumärke',s:'1. LinkedIn: aktiv 2-3 ggr/vecka\n2. Dela branschrelevant innehåll\n3. Kommentera andras inlägg\n4. Lägg upp certifikat\n5. Be om rekommendationer\n\n→ Rekryterare hittar dig — inte tvärtom!\n\n"Ditt rykte online = ditt CV 24/7"',a:'40% av LinkedIn-rekryteringar sker utan att kandidaten sökt jobbet — de hittades. Personal branding online är inte bara för influencers.'}],
+{id:'d20',icon:'🚀',title:'Din digitala karriärplan',sub:'Sammanfattning och nästa steg',color:'#34d399',bc:'rgba(52,211,153,.3)',bg:'rgba(52,211,153,.07)',video:'/videos/d20-karriar.mp4',
+lessons:[
+{t:'Översikt',intro:'overview',
+cards:[
+{icon:'🚀',h:'Vad är syftet?',t:'Sätta ihop allt digitalt till en karriärplan — som leder framåt.'},
+{icon:'📚',h:'Vad innehåller modulen?',t:'Sammanfattning av allt du lärt dig, hur du håller dig uppdaterad och bygger varumärke.'},
+{icon:'✅',h:'När du är klar ska du...',t:'ha en konkret rutin — och veta att du är digitalt redo.'},
+{icon:'⏱️',h:'Hur lång tid tar det?',t:'Cirka 3 minuter för film och lektioner.'}
+],
+a:'Digital kompetens är en av de mest efterfrågade egenskaperna 2026–2030. Du har nu verktygen.'},
+{t:'Introduktionsfilm',intro:'video',vdesc:'Filmen sammanfattar hela Digital-spåret och visar hur du håller dig uppdaterad. Se den först.'},
+{t:'Vad du nu kan digitalt',
+cards:[
+{icon:'💼',h:'LinkedIn och CV',t:'Bygg och anpassa professionellt.'},
+{icon:'🔍',h:'Söka jobb',t:'På alla plattformar — Platsbanken till LinkedIn.'},
+{icon:'💬',h:'Professionell kommunikation',t:'Teams, Slack, e-post — rätt ton.'},
+{icon:'🛠️',h:'Office, AI och BankID',t:'Alla verktyg du möter på jobbet.'},
+{icon:'🛡️',h:'Säkerhet och avtal',t:'Skyddar dig — och förstår vad du signerar.'}
+],
+a:'Du är digitalt redo. Det är inte längre en bonus — det är ett krav. Och du har det.'},
+{t:'Håll dig uppdaterad',
+cards:[
+{icon:'📰',h:'Följ branschnyheter',t:'Di Digital, Computer Sweden.'},
+{icon:'🎓',h:'En kurs per kvartal',t:'Håller dig framme.'},
+{icon:'🤖',h:'Testa nya AI-verktyg',t:'Var ledande, inte sista.'},
+{icon:'🔗',h:'LinkedIn varje vecka',t:'Aktiv — inte passiv.'}
+],
+a:'Branscher digitaliseras i olika takt. Ligg steget före — det märks på CV och i intervjun.'},
+{t:'Bygg ditt varumärke',
+cards:[
+{icon:'⭐',h:'Ditt rykte = CV 24/7',t:'Online-närvaron jobbar för dig.'},
+{icon:'🔗',h:'Aktiv LinkedIn 2-3x/v',t:'Dela, kommentera, posta.'},
+{icon:'📜',h:'Lägg upp certifikat',t:'Skapar trovärdighet — och syns i sök.'},
+{icon:'🚀',h:'Rekryterare hittar dig',t:'40 % av rekryteringar — utan att kandidaten sökt.'}
+],
+a:'Personal branding online är inte bara för influencers — det är för alla som vill bli hittade.'}
+],
 ex:{type:'ai-chat',title:'Chatta med AI-SYV om dina digitala nästa steg'},
 quiz:[{q:'Vilka digitala kompetenser saknar du för drömjobbet?',o:['Vet inte','Googla + fråga rekryterare + kolla annonserna','Kolla LinkedIn','Alla alternativ'],c:1},{q:'Hur bygger du digitalt rykte?',o:['Posta privata saker','Aktiv LinkedIn med branschinnehåll och certifikat','Bara ha ett konto','Köpa följare'],c:1},{q:'Hur håller du dig uppdaterad?',o:['Behöver inte','En kurs per kvartal + följa branschnyheter','Lita på arbetsgivaren','Vänta på utbildning'],c:1},{q:'Digitalt redo jobbsökare?',o:['Kan bara sociala medier','Söker jobb, kommunicerar professionellt och använder arbetslivsverktyg','Bara IT-folk','Har iPhone'],c:2}],
 pr:['Vilka digitala kompetenser saknar jag för [yrke]?','Bygg min digitala karriärplan för [bransch].','Hur syns jag bättre digitalt för rekryterare inom [bransch]?']}
