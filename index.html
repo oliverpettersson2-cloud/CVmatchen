@@ -8861,9 +8861,18 @@ ${styleTexts}
 // ═══════════════════════════════
 // PROGRESS
 // ═══════════════════════════════
-var KEY='cvmovn4';
-function gp(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}}
-function sp(p){try{localStorage.setItem(KEY,JSON.stringify(p))}catch(e){} if(typeof _sbSync==='function')_sbSync('ovning_progress',p);}
+var KEY='cvmatchen_ovning_progress';
+// Engångsmigration från legacy-nyckeln 'cvmovn4' (mobil) så användare
+// inte tappar progress vid bytet till desktop-kompatibel nyckel.
+try {
+  var _legacy = localStorage.getItem('cvmovn4');
+  if (_legacy && !localStorage.getItem(KEY) && typeof _scopedGet === 'function' && !_scopedGet(KEY)) {
+    if (typeof _scopedSet === 'function') _scopedSet(KEY, _legacy);
+    localStorage.removeItem('cvmovn4');
+  }
+} catch(e) {}
+function gp(){try{return JSON.parse((typeof _scopedGet==='function'?_scopedGet(KEY):localStorage.getItem(KEY))||'{}')}catch(e){return{}}}
+function sp(p){try{if(typeof _scopedSet==='function')_scopedSet(KEY,JSON.stringify(p));else localStorage.setItem(KEY,JSON.stringify(p));}catch(e){} if(typeof _sbSync==='function')_sbSync('ovning_progress',p);}
 
 // ═══════════════════════════════
 // DATA — laddas från training-modules.js (delas med desktop)
