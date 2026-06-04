@@ -4478,8 +4478,9 @@
     // Lösning: alla användardata-nycklar suffixas med user-id.
     // ═══════════════════════════════════════════════════════════════
     var USER_KEYS = [
-      'cvData', 'cvmovn4',
+      'cvData', 'cvmovn4', 'cvmatchen_ovning_progress',
       'pathfinder_saved_cvs', 'pathfinder_matched_cvs',
+      'pathfinder_job_diary',
       'pf_saved_edu', 'pf_diary',
       'cvmatchen_edu_saved'
     ];
@@ -7644,7 +7645,7 @@ ${styleTexts}
 
         // Jobbdagbok
         if (Array.isArray(result.jobDiary)) {
-          try { localStorage.setItem('pathfinder_job_diary', JSON.stringify(result.jobDiary)); } catch(e) {}
+          try { _scopedSet('pathfinder_job_diary', JSON.stringify(result.jobDiary)); } catch(e) {}
         }
 
         // Toast undertryckt — splashskärmen fyller den rollen vid start
@@ -7890,13 +7891,15 @@ ${styleTexts}
 
       try {
         // Rensa localStorage-data
-        localStorage.removeItem('SAVED_CVS_KEY');
-        localStorage.removeItem('MATCHED_CVS_KEY');
+        _scopedRemove('pathfinder_saved_cvs');
+        _scopedRemove('pathfinder_matched_cvs');
+        _scopedRemove('pathfinder_job_diary');
         localStorage.removeItem('_matchaSelectedAds');
         _scopedRemove('pf_saved_edu');
         _scopedRemove('pf_diary');
         localStorage.removeItem('pf_ai_cache');
         _scopedRemove('cvmovn4');
+        _scopedRemove('cvmatchen_ovning_progress');
 
         // Försök radera via Supabase
         const token = window.authAccessToken;
@@ -12333,7 +12336,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
     if (!list[idx]) return;
     list[idx].applied = true;
     list[idx].appliedAt = Date.now();
-    try { localStorage.setItem(JOB_DIARY_KEY, JSON.stringify(list)); } catch(e) {}
+    try { _scopedSet(JOB_DIARY_KEY, JSON.stringify(list)); } catch(e) {}
     mobRenderSavedCVs();
     showToast('✅ Markerat som sökt!', 'success');
   }
@@ -14217,7 +14220,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
     function getMatched() { try{ return JSON.parse(_scopedGet('pathfinder_matched_cvs')||'[]'); } catch(e){ return []; } }
     function getDiary()   {
       const TTL = 45*24*3600*1000;
-      try{ return JSON.parse(localStorage.getItem('pathfinder_job_diary')||'[]').filter(e=>Date.now()-e.savedAt<TTL); }
+      try{ return JSON.parse(_scopedGet('pathfinder_job_diary')||'[]').filter(e=>Date.now()-e.savedAt<TTL); }
       catch(e){ return []; }
     }
     function getEdu() {
@@ -14301,47 +14304,47 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
 
     window._matchMarkSokt = function(matchedId) {
       try {
-        const raw = localStorage.getItem('pathfinder_job_diary');
+        const raw = _scopedGet('pathfinder_job_diary');
         if (raw) {
           const list = JSON.parse(raw);
           const idx = list.findIndex(function(e){ return e.matchedCVId === matchedId; });
           if (idx >= 0) { list[idx].applied = true; list[idx].status = 'sokt'; }
           else { list.unshift({ savedAt: Date.now(), jobTitle: matchedId, company: '', jobUrl: '', matchedCVId: matchedId, applied: true, status: 'sokt' }); }
-          localStorage.setItem('pathfinder_job_diary', JSON.stringify(list));
+          _scopedSet('pathfinder_job_diary', JSON.stringify(list));
         }
       } catch(e){}
       // Remove from matched list directly without going through mobDeleteMatchedCV (which calls mobRenderSavedCVs/renderGrid)
       try {
         const MKEY = 'pathfinder_matched_cvs';
-        const ml = JSON.parse(localStorage.getItem(MKEY)||'[]').filter(function(c){ return c.id !== matchedId; });
-        localStorage.setItem(MKEY, JSON.stringify(ml));
+        const ml = JSON.parse(_scopedGet(MKEY)||'[]').filter(function(c){ return c.id !== matchedId; });
+        _scopedSet(MKEY, JSON.stringify(ml));
       } catch(e){}
       _forceOpen('matched');
     };
 
     window._matchMarkInte = function(matchedId) {
       try {
-        const raw = localStorage.getItem('pathfinder_job_diary');
+        const raw = _scopedGet('pathfinder_job_diary');
         if (raw) {
           const list = JSON.parse(raw).filter(function(e){ return e.matchedCVId !== matchedId; });
-          localStorage.setItem('pathfinder_job_diary', JSON.stringify(list));
+          _scopedSet('pathfinder_job_diary', JSON.stringify(list));
         }
       } catch(e){}
       try {
         const MKEY = 'pathfinder_matched_cvs';
-        const ml = JSON.parse(localStorage.getItem(MKEY)||'[]').filter(function(c){ return c.id !== matchedId; });
-        localStorage.setItem(MKEY, JSON.stringify(ml));
+        const ml = JSON.parse(_scopedGet(MKEY)||'[]').filter(function(c){ return c.id !== matchedId; });
+        _scopedSet(MKEY, JSON.stringify(ml));
       } catch(e){}
       _forceOpen('matched');
     };
 
     window._diarySetStatus = function(realIdx, status) {
       try {
-        const raw = localStorage.getItem('pathfinder_job_diary');
+        const raw = _scopedGet('pathfinder_job_diary');
         if (!raw) return;
         const list = JSON.parse(raw);
         if (list[realIdx]) { list[realIdx].status = status; list[realIdx].applied = true; }
-        localStorage.setItem('pathfinder_job_diary', JSON.stringify(list));
+        _scopedSet('pathfinder_job_diary', JSON.stringify(list));
       } catch(e){}
       _forceOpen('diary');
     };
