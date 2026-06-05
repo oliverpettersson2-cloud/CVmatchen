@@ -68,6 +68,43 @@ const ALLOWED_EVENTS = new Set([
 ]);
 const MAX_METADATA_BYTES = 4096;
 
+// ============================================================================
+// OTP rate-limit (per e-post, per timme)
+// ----------------------------------------------------------------------------
+// In-memory broms mot OTP-bombning. Nollställs vid Vercel cold start, men
+// räcker som första lager mot enkel abuse. Hård gräns vid Supabase Auth tar
+// resten. Max 3 send_otp per e-post under ett rullande 1h-fönster.
+// ============================================================================
+const OTP_RATE_WINDOW_MS = 60 * 60 * 1000;
+const OTP_RATE_MAX = 3;
+const otpRateMap = new Map(); // key: lowercased email, value: number[] (timestamps ms)
+function otpRateAllow(email) {
+  const key = String(email || '').toLowerCase();
+  if (!key) return true;
+  const now = Date.now();
+  const cutoff = now - OTP_RATE_WINDOW_MS;
+  const arr = (otpRateMap.get(key) || []).filter(ts => ts > cutoff);
+  if (arr.length >= OTP_RATE_MAX) {
+    otpRateMap.set(key, arr);
+    return false;
+  }
+  arr.push(now);
+  otpRateMap.set(key, arr);
+  // Lazy GC: rensa map om den växer för stor
+  if (otpRateMap.size > 5000) {
+    for (const [k, v] of otpRateMap) {
+      const kept = v.filter(ts => ts > cutoff);
+      if (kept.length === 0) otpRateMap.delete(k);
+      else otpRateMap.set(k, kept);
+    }
+  }
+  return true;
+}
+
+// Tillåtna roller vid invite. 'superadmin' tilldelas aldrig via invite-flödet
+// (säkerhetsspärr — superadmin sätts manuellt eller via seed_superadmin).
+const INVITE_ALLOWED_ROLES = new Set(['admin', 'handlaggare', 'invanare']);
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -86,7 +123,8 @@ export default async function handler(req, res) {
     title, description, category, deadline, durationMinutes, note,
     targetUserId, role, kommunId, enhetId, name: personName,
     filters, phone: personPhone,
-    event_type, metadata
+    event_type, metadata,
+    inviteId, seedToken
   } = req.body || {};
 
   function makeRequest(url, options, body) {
@@ -201,6 +239,34 @@ export default async function handler(req, res) {
     } catch (e) { /* loggning får inte blockera */ }
   }
 
+  // Loggar lyckad admin-åtgärd till admin_activity_log. Samma forensik-spår
+  // som logAdminDenied men med action='success'-prefix så att granskning kan
+  // skilja på beviljade/nekade försök. Blockerar aldrig svaret.
+  async function logAdminAction(adminId, action, detail) {
+    try {
+      await makeRequest(
+        `${SUPABASE_URL}/rest/v1/admin_activity_log`,
+        { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=minimal' } },
+        { admin_id: adminId || null, action, detail: detail || null }
+      );
+    } catch (e) { /* loggning får inte blockera */ }
+  }
+
+  // Validerar grov e-postform. Inte RFC-perfekt men räcker som sanity-check
+  // innan vi skickar vidare till Supabase Auth / sparar i DB.
+  function isEmail(s) {
+    return typeof s === 'string' &&
+      s.length <= 254 &&
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+  }
+
+  // Validerar UUID v4-form (PostgREST-injektionsskydd, samma som isUuid nedan
+  // men deklareras tidigare så att admin_invite_user/admin_revoke_invite kan
+  // kontrollera inviteId före verifyAdmin-anropet.)
+  function isUuidStrict(s) {
+    return typeof s === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
+  }
+
   // Wrappar verifyAdmin: returnerar { admin } eller skickar HTTP-fel + loggar.
   async function requireAdmin(res, token, action, opts = {}) {
     try {
@@ -265,7 +331,40 @@ export default async function handler(req, res) {
         return res.status(429).json({ error: 'För många förfrågningar — försök igen senare' });
       }
 
-      const result = await makeRequest(`${SUPABASE_URL}/auth/v1/otp`, { method: 'POST', headers: baseHeaders }, { email: normalizedEmail, options: { shouldCreateUser: true } });
+      // Invite-only gate (B2B-pilot): publik registrering är stängd.
+      // Vi släpper in om:
+      //   a) e-posten har en aktiv pending_invite (ej accepterad, ej utgången), ELLER
+      //   b) e-posten är redan en befintlig användare i auth.users.
+      const nowIso = new Date().toISOString();
+      const inviteRes = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/pending_invites?email=eq.${encodeURIComponent(normalizedEmail)}&accepted_at=is.null&expires_at=gt.${encodeURIComponent(nowIso)}&select=id&limit=1`,
+        { method: 'GET', headers: serviceHeaders() }
+      );
+      const hasInvite = Array.isArray(inviteRes.data) && inviteRes.data.length > 0;
+
+      let isExistingUser = false;
+      if (!hasInvite) {
+        const authLookup = await makeRequest(
+          `${SUPABASE_URL}/auth/v1/admin/users?email=${encodeURIComponent(normalizedEmail)}`,
+          { method: 'GET', headers: serviceHeaders() }
+        );
+        const users = Array.isArray(authLookup.data?.users) ? authLookup.data.users
+          : (Array.isArray(authLookup.data) ? authLookup.data : []);
+        isExistingUser = users.some(u => (u.email || '').toLowerCase() === normalizedEmail);
+      }
+
+      if (!hasInvite && !isExistingUser) {
+        return res.status(403).json({
+          error: 'Du måste vara inbjuden för att skapa konto. Kontakta din handläggare.'
+        });
+      }
+
+      // shouldCreateUser endast om invite finns; annars är det en ren login.
+      const result = await makeRequest(
+        `${SUPABASE_URL}/auth/v1/otp`,
+        { method: 'POST', headers: baseHeaders },
+        { email: normalizedEmail, options: { shouldCreateUser: hasInvite } }
+      );
       if (result.status >= 400) return res.status(result.status).json({ error: result.data.error_description || result.data.msg || result.data.message || JSON.stringify(result.data) });
       return res.status(200).json({ success: true });
     }
@@ -286,6 +385,46 @@ export default async function handler(req, res) {
 
       const result = await makeRequest(`${SUPABASE_URL}/auth/v1/verify`, { method: 'POST', headers: baseHeaders }, { email: normalizedEmail, token, type: 'email' });
       if (result.status >= 400) return res.status(result.status).json({ error: result.data.error_description || result.data.msg || result.data.message || 'Felaktig eller utgången kod' });
+
+      // Invite-acceptance: efter lyckad OTP, om en pending invite finns för
+      // e-posten — markera accepterad och skapa user_assignments-rad med
+      // kommun/enhet/role från inbjudan. Best effort: misslyckanden här
+      // blockerar inte inloggningen (användaren har giltig session ändå).
+      try {
+        const verifiedUser = result.data?.user;
+        if (verifiedUser?.id) {
+          const emailLc = String(email).toLowerCase();
+          const nowIso = new Date().toISOString();
+          const inviteRes = await makeRequest(
+            `${SUPABASE_URL}/rest/v1/pending_invites?email=eq.${encodeURIComponent(emailLc)}&accepted_at=is.null&expires_at=gt.${encodeURIComponent(nowIso)}&select=id,kommun_id,enhet_id,role&limit=1`,
+            { method: 'GET', headers: serviceHeaders() }
+          );
+          const invites = Array.isArray(inviteRes.data) ? inviteRes.data : [];
+          if (invites.length) {
+            const inv = invites[0];
+            await makeRequest(
+              `${SUPABASE_URL}/rest/v1/user_assignments`,
+              { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'resolution=ignore-duplicates,return=minimal' } },
+              {
+                user_id: verifiedUser.id,
+                kommun_id: inv.kommun_id || null,
+                enhet_id: inv.enhet_id || null,
+                role: inv.role,
+                status: 'active',
+                created_at: nowIso
+              }
+            );
+            await makeRequest(
+              `${SUPABASE_URL}/rest/v1/pending_invites?id=eq.${inv.id}`,
+              { method: 'PATCH', headers: { ...serviceHeaders(), 'Prefer': 'return=minimal' } },
+              { accepted_at: nowIso }
+            );
+          }
+        }
+      } catch (e) {
+        console.error('[verify_otp] invite accept failed:', maskPII(e.message || String(e)));
+      }
+
       return res.status(200).json({ access_token: result.data.access_token, user: result.data.user });
     }
 
@@ -747,6 +886,198 @@ export default async function handler(req, res) {
         { method: 'GET', headers: authHeaders(accessToken) }
       );
       return res.status(200).json({ sessions: Array.isArray(result.data) ? result.data : [] });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // INVITE-SYSTEM — admin_invite_user / admin_list_invites / admin_revoke_invite
+    // Stänger publik registrering. send_otp ovan kontrollerar att e-posten har
+    // en aktiv rad i pending_invites (eller är befintlig användare).
+    // ═══════════════════════════════════════════════════════════════
+
+    if (action === 'admin_invite_user') {
+      if (!isEmail(email)) return res.status(400).json({ error: 'Ogiltig e-postadress' });
+      const reqRole = role || 'invanare';
+      if (!INVITE_ALLOWED_ROLES.has(reqRole)) {
+        return res.status(400).json({ error: 'Ogiltig roll' });
+      }
+      const { admin } = await requireAdmin(res, accessToken, action, {
+        requestedKommunId: kommunId, requestedEnhetId: enhetId
+      });
+      if (!admin) return;
+
+      // Behörighetsmatris för att skapa invite:
+      //   superadmin       — får bjuda in vem som helst, vilken roll som helst
+      //   admin            — får bjuda in handlaggare/invanare till sin kommun
+      //   handlaggare      — får BARA bjuda in invanare till sin enhet
+      //   invanare         — får inte bjuda in alls (ingen admin-token = blockerad redan)
+      let inviteKommunId = kommunId, inviteEnhetId = enhetId, inviteRole = reqRole;
+      if (admin.role === 'superadmin') {
+        // ingen tvångsmappning
+      } else if (admin.role === 'admin') {
+        inviteKommunId = admin.kommun_id;
+        if (admin.enhet_id != null) inviteEnhetId = admin.enhet_id;
+        if (inviteRole === 'admin' && admin.enhet_id != null) {
+          // enhet-admin kan inte skapa kommun-admin
+          await logAdminDenied(admin.id, action, 'forbidden_role_admin_from_enhet');
+          return res.status(403).json({ error: 'forbidden_role' });
+        }
+      } else if (admin.role === 'handlaggare') {
+        if (inviteRole !== 'invanare') {
+          await logAdminDenied(admin.id, action, 'handlaggare_can_only_invite_invanare');
+          return res.status(403).json({ error: 'forbidden_role' });
+        }
+        inviteKommunId = admin.kommun_id;
+        inviteEnhetId = admin.enhet_id || enhetId || null;
+        if (!inviteEnhetId) {
+          return res.status(400).json({ error: 'enhetId krävs' });
+        }
+      } else {
+        await logAdminDenied(admin.id, action, 'role_cannot_invite');
+        return res.status(403).json({ error: 'forbidden_role' });
+      }
+
+      const emailLc = email.toLowerCase();
+      // Konflikt: redan en aktiv invite för e-posten?
+      const existing = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/pending_invites?email=eq.${encodeURIComponent(emailLc)}&accepted_at=is.null&select=id&limit=1`,
+        { method: 'GET', headers: serviceHeaders() }
+      );
+      if (Array.isArray(existing.data) && existing.data.length) {
+        return res.status(409).json({ error: 'En aktiv inbjudan finns redan för denna e-post' });
+      }
+
+      const inviteTok = crypto.randomBytes(32).toString('hex');
+      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+      const insertRes = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/pending_invites`,
+        { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=representation' } },
+        {
+          email: emailLc,
+          kommun_id: inviteKommunId || null,
+          enhet_id: inviteEnhetId || null,
+          invited_by_admin_id: admin.id,
+          role: inviteRole,
+          token: inviteTok,
+          expires_at: expiresAt
+        }
+      );
+      if (insertRes.status >= 400) {
+        console.error('[admin_invite_user] insert failed:', maskPII(insertRes.data));
+        return res.status(500).json({ error: 'Kunde inte skapa inbjudan' });
+      }
+      const rows = Array.isArray(insertRes.data) ? insertRes.data : [];
+      const created = rows[0] || null;
+      await logAdminAction(admin.id, 'invite_created', `role=${inviteRole} kommun=${inviteKommunId || '-'} enhet=${inviteEnhetId || '-'}`);
+      // Returnera inte token (skickas separat via mejl-flöde när det är på plats).
+      return res.status(201).json({
+        invite: created ? {
+          id: created.id,
+          email: created.email,
+          role: created.role,
+          kommun_id: created.kommun_id,
+          enhet_id: created.enhet_id,
+          expires_at: created.expires_at,
+          created_at: created.created_at
+        } : null
+      });
+    }
+
+    if (action === 'admin_list_invites') {
+      const { admin } = await requireAdmin(res, accessToken, action, {
+        requestedKommunId: filters?.kommun_id, requestedEnhetId: filters?.enhet_id
+      });
+      if (!admin) return;
+      const isSuper = admin.role === 'superadmin';
+      let url = `${SUPABASE_URL}/rest/v1/pending_invites?select=id,email,role,kommun_id,enhet_id,invited_by_admin_id,expires_at,accepted_at,created_at&order=created_at.desc`;
+      // Tenant-scope: non-super låses till sin kommun (+ enhet om enhet-bunden)
+      if (!isSuper) {
+        url += `&kommun_id=eq.${admin.kommun_id}`;
+        if (admin.enhet_id != null) url += `&enhet_id=eq.${admin.enhet_id}`;
+      } else {
+        if (filters?.kommun_id) url += `&kommun_id=eq.${filters.kommun_id}`;
+        if (filters?.enhet_id)  url += `&enhet_id=eq.${filters.enhet_id}`;
+      }
+      // Default: visa bara pending (icke-accepterade, icke-utgångna)
+      if (filters?.includeAccepted !== true) url += `&accepted_at=is.null`;
+      if (filters?.limit)  url += `&limit=${parseInt(filters.limit) || 100}`;
+      if (filters?.offset) url += `&offset=${parseInt(filters.offset) || 0}`;
+      const result = await makeRequest(url, { method: 'GET', headers: serviceHeaders() });
+      return res.status(200).json({ data: Array.isArray(result.data) ? result.data : [] });
+    }
+
+    if (action === 'admin_revoke_invite') {
+      if (!isUuidStrict(inviteId)) return res.status(400).json({ error: 'invalid inviteId' });
+      // Hämta invitens scope först så vi kan tenant-kolla.
+      const lookup = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/pending_invites?id=eq.${inviteId}&select=id,email,kommun_id,enhet_id,accepted_at&limit=1`,
+        { method: 'GET', headers: serviceHeaders() }
+      );
+      const rows = Array.isArray(lookup.data) ? lookup.data : [];
+      if (!rows.length) return res.status(404).json({ error: 'invite_not_found' });
+      const inv = rows[0];
+      const { admin } = await requireAdmin(res, accessToken, action, {
+        requestedKommunId: inv.kommun_id, requestedEnhetId: inv.enhet_id
+      });
+      if (!admin) return;
+      if (inv.accepted_at) {
+        return res.status(409).json({ error: 'Inbjudan är redan använd eller återkallad' });
+      }
+      await makeRequest(
+        `${SUPABASE_URL}/rest/v1/pending_invites?id=eq.${inviteId}`,
+        { method: 'PATCH', headers: { ...serviceHeaders(), 'Prefer': 'return=minimal' } },
+        { accepted_at: new Date().toISOString(), token: 'revoked' }
+      );
+      await logAdminAction(admin.id, 'invite_revoked', `invite=${inviteId}`);
+      return res.status(200).json({ success: true });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // SEED_SUPERADMIN — bootstrapping (env-skyddat)
+    // Skapar första superadmin när systemet rullas ut. Idempotent: gör
+    // ingenting om SUPERADMIN_EMAIL redan finns som admin. Kräver både
+    // env-match på SUPERADMIN_EMAIL och delad hemlighet SEED_TOKEN i body.
+    // ═══════════════════════════════════════════════════════════════
+    if (action === 'seed_superadmin') {
+      const envEmail = (process.env.SUPERADMIN_EMAIL || '').toLowerCase().trim();
+      const envSeedTok = process.env.SEED_TOKEN || '';
+      if (!envEmail || !envSeedTok) {
+        return res.status(503).json({ error: 'seed_not_configured' });
+      }
+      if (!isEmail(email) || email.toLowerCase().trim() !== envEmail) {
+        return res.status(403).json({ error: 'forbidden' });
+      }
+      if (!seedToken || typeof seedToken !== 'string' ||
+          seedToken.length !== envSeedTok.length ||
+          !crypto.timingSafeEqual(Buffer.from(seedToken), Buffer.from(envSeedTok))) {
+        return res.status(403).json({ error: 'forbidden' });
+      }
+      // Finns redan en admin för e-posten? Idempotent no-op.
+      const existing = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/admins?email=eq.${encodeURIComponent(envEmail)}&select=id,role&limit=1`,
+        { method: 'GET', headers: serviceHeaders() }
+      );
+      if (Array.isArray(existing.data) && existing.data.length) {
+        return res.status(200).json({ ok: true, message: 'redan seedad', admin: existing.data[0] });
+      }
+      const insertRes = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/admins`,
+        { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=representation' } },
+        {
+          name: envEmail.split('@')[0],
+          email: envEmail,
+          role: 'superadmin',
+          kommun_id: null,
+          enhet_id: null
+        }
+      );
+      if (insertRes.status >= 400) {
+        console.error('[seed_superadmin] insert failed:', maskPII(insertRes.data));
+        return res.status(500).json({ error: 'Kunde inte skapa superadmin' });
+      }
+      const rows = Array.isArray(insertRes.data) ? insertRes.data : [];
+      const created = rows[0] || null;
+      await logAdminAction(created?.id || null, 'seed_superadmin', `email=${envEmail}`);
+      return res.status(201).json({ ok: true, admin: created });
     }
 
     return res.status(400).json({ error: 'Unknown action: ' + action });
