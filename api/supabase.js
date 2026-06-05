@@ -13,6 +13,41 @@ function maskPII(value) {
 }
 
 // ============================================================================
+// Rate limiting för OTP — samma in-memory-mönster som api/chat.js.
+// Per-instans (Vercel-container), inte global. Cold-start nollställer,
+// men det är ok som första försvar. Skyddar mot e-post-bombning och
+// OTP-bruteforce. För hård global gräns: byt till Upstash Redis.
+// ============================================================================
+const OTP_SEND_EMAIL_WINDOW_MS = 60 * 60 * 1000;   // 1 timme
+const OTP_SEND_EMAIL_LIMIT = 3;                    // OTP per e-post per timme
+const OTP_SEND_IP_WINDOW_MS = 60 * 60 * 1000;      // 1 timme
+const OTP_SEND_IP_LIMIT = 10;                      // OTP per IP per timme
+const OTP_VERIFY_WINDOW_MS = 15 * 60 * 1000;       // 15 minuter
+const OTP_VERIFY_LIMIT = 5;                        // försök per e-post per 15 min
+
+const otpSendEmailBuckets = new Map();   // email -> [timestamps]
+const otpSendIpBuckets = new Map();      // ip    -> [timestamps]
+const otpVerifyEmailBuckets = new Map(); // email -> [timestamps]
+
+function bucketHit(map, key, windowMs, limit) {
+  const now = Date.now();
+  const hits = (map.get(key) || []).filter(t => now - t < windowMs);
+  hits.push(now);
+  map.set(key, hits);
+  // Enkel städning så Map inte växer obegränsat
+  if (map.size > 5000) {
+    for (const [k, v] of map) {
+      if (!v.length || now - v[v.length - 1] > windowMs) map.delete(k);
+    }
+  }
+  return hits.length > limit;
+}
+
+// Enkel e-post-regex — tillräcklig för att blockera trams innan vi
+// ringer Supabase Auth (enumerationsskydd).
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// ============================================================================
 // log_event — tillåtna event-typer och storleksgräns
 // ============================================================================
 const ALLOWED_EVENTS = new Set([
@@ -208,13 +243,48 @@ export default async function handler(req, res) {
   try {
 
     if (action === 'send_otp') {
-      const result = await makeRequest(`${SUPABASE_URL}/auth/v1/otp`, { method: 'POST', headers: baseHeaders }, { email, options: { shouldCreateUser: true } });
+      // Validera e-post-format innan vi anropar Supabase Auth — annars
+      // kan endpoint missbrukas för enumerations-/spam-svar.
+      if (typeof email !== 'string' || !EMAIL_RE.test(email)) {
+        return res.status(400).json({ error: 'Ogiltig e-postadress' });
+      }
+      const normalizedEmail = email.toLowerCase().trim();
+      const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim()
+        || req.headers['x-real-ip'] || 'unknown';
+
+      // Per-e-post: skydda godtycklig användare mot mail-bombning
+      if (bucketHit(otpSendEmailBuckets, normalizedEmail, OTP_SEND_EMAIL_WINDOW_MS, OTP_SEND_EMAIL_LIMIT)) {
+        console.warn('[send_otp] 429 email-limit ' + maskPII(normalizedEmail));
+        res.setHeader('Retry-After', '3600');
+        return res.status(429).json({ error: 'För många koder skickade till denna e-post — försök igen senare' });
+      }
+      // Per-IP: skydda mot bredare missbruk från en angripare
+      if (bucketHit(otpSendIpBuckets, ip, OTP_SEND_IP_WINDOW_MS, OTP_SEND_IP_LIMIT)) {
+        console.warn('[send_otp] 429 ip-limit ip=' + ip);
+        res.setHeader('Retry-After', '3600');
+        return res.status(429).json({ error: 'För många förfrågningar — försök igen senare' });
+      }
+
+      const result = await makeRequest(`${SUPABASE_URL}/auth/v1/otp`, { method: 'POST', headers: baseHeaders }, { email: normalizedEmail, options: { shouldCreateUser: true } });
       if (result.status >= 400) return res.status(result.status).json({ error: result.data.error_description || result.data.msg || result.data.message || JSON.stringify(result.data) });
       return res.status(200).json({ success: true });
     }
 
     if (action === 'verify_otp') {
-      const result = await makeRequest(`${SUPABASE_URL}/auth/v1/verify`, { method: 'POST', headers: baseHeaders }, { email, token, type: 'email' });
+      // Validera e-post-format
+      if (typeof email !== 'string' || !EMAIL_RE.test(email)) {
+        return res.status(400).json({ error: 'Ogiltig e-postadress' });
+      }
+      const normalizedEmail = email.toLowerCase().trim();
+
+      // Bruteforce-skydd: max 5 försök per e-post per 15 min
+      if (bucketHit(otpVerifyEmailBuckets, normalizedEmail, OTP_VERIFY_WINDOW_MS, OTP_VERIFY_LIMIT)) {
+        console.warn('[verify_otp] 429 email-limit ' + maskPII(normalizedEmail));
+        res.setHeader('Retry-After', '900');
+        return res.status(429).json({ error: 'För många försök — vänta en stund och begär ny kod' });
+      }
+
+      const result = await makeRequest(`${SUPABASE_URL}/auth/v1/verify`, { method: 'POST', headers: baseHeaders }, { email: normalizedEmail, token, type: 'email' });
       if (result.status >= 400) return res.status(result.status).json({ error: result.data.error_description || result.data.msg || result.data.message || 'Felaktig eller utgången kod' });
       return res.status(200).json({ access_token: result.data.access_token, user: result.data.user });
     }

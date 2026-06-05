@@ -6,6 +6,27 @@ Sentry.init({ dsn: process.env.SENTRY_DSN, environment: process.env.VERCEL_ENV |
 
 const ALLOWED_ORIGINS = ['https://cvmatchen.com', 'https://www.cvmatchen.com'];
 
+// In-memory rate limiter — samma mönster som api/chat.js.
+// Per-instans (Vercel-container), inte global. PDF-generering är dyrt
+// (1GB minne + puppeteer), så lägre gräns än chat.
+const PDF_RATE_WINDOW_MS = 60_000;
+const PDF_RATE_LIMIT = 10;          // PDF-genereringar per IP per minut
+const pdfRateBuckets = new Map();   // ip -> [timestamps]
+
+function pdfRateLimited(ip) {
+  const now = Date.now();
+  const hits = (pdfRateBuckets.get(ip) || []).filter(t => now - t < PDF_RATE_WINDOW_MS);
+  hits.push(now);
+  pdfRateBuckets.set(ip, hits);
+  // Enkel städning så Map inte växer obegränsat
+  if (pdfRateBuckets.size > 5000) {
+    for (const [k, v] of pdfRateBuckets) {
+      if (!v.length || now - v[v.length - 1] > PDF_RATE_WINDOW_MS) pdfRateBuckets.delete(k);
+    }
+  }
+  return hits.length > PDF_RATE_LIMIT;
+}
+
 module.exports = async (req, res) => {
   const origin = req.headers.origin;
   if (ALLOWED_ORIGINS.includes(origin)) {
@@ -16,6 +37,15 @@ module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  // Rate limiting per IP — skydd mot DoS/kostnadsexplosion
+  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim()
+    || req.headers['x-real-ip'] || 'unknown';
+  if (pdfRateLimited(ip)) {
+    console.warn('[pdf.js] 429 rate-limit ip=' + ip);
+    res.setHeader('Retry-After', '60');
+    return res.status(429).json({ error: 'För många PDF-förfrågningar — försök igen om en stund' });
+  }
 
   const { html, filename = 'CV.pdf' } = req.body || {};
   if (!html || typeof html !== 'string') {
