@@ -1080,12 +1080,10 @@
   // VIEW SWITCHING
   // ============================================================
   window.switchView = function(view) {
-    // ALIAS: 'intervju' och 'train' → 'ovningar' (numera "Träna"-fliken som rymmer båda)
-    let openIntervju = false;
-    if (view === 'intervju') {
-      openIntervju = true;
-      view = 'ovningar';
-    } else if (view === 'train') {
+    // 'train' kvar som alias till "Träna"-fliken (hub + övningar).
+    // 'intervju' är numera en egen sidopanelflik med eget #view-intervju
+    // som monteras av intervju.js (samma init-funktion som mobilen anropar).
+    if (view === 'train') {
       view = 'ovningar';
     }
 
@@ -1134,18 +1132,17 @@
     }
     if (view === 'ovningar') {
       // "Träna"-vyn — innehåller hub med Övningar + Intervjuträning + Uppgifter
-      if (openIntervju) {
-        // Användaren klickade på en intervju-länk eller liknande shortcut
-        currentTrainCat = 'intervju';
-        renderTrainingHome();
-        if (typeof window.ivInit === 'function') {
-          setTimeout(() => { try { window.ivInit(); } catch(e) {} }, 50);
-        }
-      } else {
-        currentTrainCat = null;
-        renderTrainingHome();
-      }
+      currentTrainCat = null;
+      renderTrainingHome();
       if (typeof loadMyTasks === 'function') loadMyTasks(true);
+    }
+    if (view === 'intervju') {
+      // Intervjuträning som egen sidopanelflik (säljargument i produktbladet).
+      // Monterar intervju.js mot #trainView-intervju i #view-intervju — samma
+      // init-funktion som mobilen anropar via trainSwitchView('intervju').
+      if (typeof window.ivInit === 'function') {
+        setTimeout(() => { try { window.ivInit(); } catch(e) { console.warn('ivInit fail:', e); } }, 50);
+      }
     }
     if (view === 'profil') {
       renderProfilView();
@@ -5711,28 +5708,13 @@
 
     const grid = document.getElementById('ovGrid');
 
-    // Specialfall: intervjuträning vald — använd intervju.js (laddad i HTML:en)
+    // Specialfall: intervjuträning vald via hub — delegera till intervju-fliken
+    // istället för att duplicera #trainView-intervju (id måste vara unikt).
     if (currentTrainCat === 'intervju') {
-      document.getElementById('ov-home').style.display = 'none';
-      document.getElementById('ov-detail').style.display = 'block';
-      const detail = document.getElementById('ov-detail');
-      detail.innerHTML = `
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
-          <button class="train-back ov-back" onclick="trainBackToHub()" style="margin:0;">← Tillbaka till Träna</button>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <span style="font-size:22px;">🎤</span>
-            <div>
-              <div style="font-size:17px;font-weight:800;color:#fff;">Intervjuträning</div>
-              <div style="font-size:12px;color:rgba(255,255,255,0.45);">Öva på vanliga intervjufrågor</div>
-            </div>
-          </div>
-        </div>
-        <div id="trainView-intervju"></div>`;
-      setTimeout(() => {
-        if (typeof window.ivInit === 'function') {
-          try { window.ivInit(); } catch(e) { console.warn('ivInit fail:', e); }
-        }
-      }, 50);
+      currentTrainCat = null;
+      if (typeof window.switchView === 'function') {
+        setTimeout(() => { try { window.switchView('intervju'); } catch(e) {} }, 0);
+      }
       return;
     }
 
@@ -6517,11 +6499,10 @@
           document.head.appendChild(style);
         }
       }
-      // 2. Dölj "Intervjuträning"-tabben (vyn finns kvar men nås via Träna-hub)
-      const ivTab = document.querySelector('.sb-tab[data-view="intervju"]');
-      if (ivTab) {
-        ivTab.style.display = 'none';
-      }
+      // 2. Intervjuträning är åter en egen sidopanelflik (säljargument i
+      // produktbladet). Tidigare doldes den och nåddes endast via Träna-hub,
+      // men det aliaset gjorde att fliken aldrig fick aktiv-klassen.
+      // (Lämnar avsiktligt sb-tab[data-view="intervju"] synlig.)
       // 3. Flagga: uppgifter visas bara inom Träna, inte i Profil
       window._tasksOnlyInTrain = true;
 
