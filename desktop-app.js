@@ -5764,7 +5764,27 @@
           </div>
         `;
       }).join('');
-      grid.innerHTML = backBtn + catsHtml;
+
+      // Uppgifter-tile (motsvarande mobilens uppg-kategori i ovnCatGrid)
+      const uppgColor    = '#f0c040';
+      const uppgOpen     = (typeof tasksOpen === 'function') ? tasksOpen().length : 0;
+      const uppgTotal    = (typeof assignedTasks !== 'undefined' && assignedTasks) ? assignedTasks.length : 0;
+      const uppgLabel    = uppgTotal > 0
+        ? (uppgOpen > 0 ? uppgOpen + '/' + uppgTotal + ' kvar' : 'Alla klara!')
+        : 'Din checklista';
+      const uppgHtml = `
+        <div class="ov-card train-cat-card" onclick="trainOpenCat('uppg')"
+             style="border-color: ${uppgColor}40; background: ${uppgColor}0d; position:relative;">
+          ${uppgOpen > 0 ? `<div style="position:absolute;top:10px;right:12px;background:#ef4444;color:#fff;font-size:11px;font-weight:900;border-radius:12px;padding:3px 9px;">${uppgOpen}</div>` : ''}
+          <div class="ov-card-icon" style="background: ${uppgColor}20; color: ${uppgColor};">✅</div>
+          <div class="ov-card-title" style="color: #fff;">Uppgifter</div>
+          <div class="ov-card-desc">${uppgLabel}</div>
+          <div class="ov-card-meta">
+            <span style="color: ${uppgColor}; font-weight: 700;">${uppgOpen > 0 ? 'Att göra' : (uppgTotal > 0 ? 'Klar' : 'Inga ännu')}</span>
+          </div>
+        </div>
+      `;
+      grid.innerHTML = backBtn + catsHtml + uppgHtml;
       return;
     }
 
@@ -5785,7 +5805,7 @@
           <div style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.3px;margin-bottom:4px;">Träna</div>
           <div style="font-size:13px;color:rgba(255,255,255,0.5);">Förbered dig för arbetslivet — välj ett område nedan.</div>
         </div>
-        <div style="grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
+        <div style="grid-column:1/-1;display:grid;grid-template-columns:repeat(2, 1fr);gap:14px;">
           <!-- Övningar — leder till kategori-grid -->
           <div class="ov-card train-cat-card" onclick="trainOpenCat('ovningar_grid')"
                style="border-color:rgba(62,180,137,0.4);background:linear-gradient(135deg,rgba(62,180,137,0.10),rgba(62,180,137,0.04));padding:22px 20px;display:flex;flex-direction:column;gap:14px;min-height:170px;">
@@ -5834,6 +5854,20 @@
             <div style="margin-top:auto;font-size:12px;color:${taskColor};font-weight:700;">
               ${openTaskCount > 0 ? openTaskCount + ' att göra' : (totalTasks > 0 ? 'Alla klara!' : 'Väntar på tilldelning')}
             </div>
+          </div>
+
+          <!-- Språkassistent (Duolingo-liknande) — Kommer snart -->
+          <div class="ov-card train-cat-card" onclick="trainShowComingSoon && trainShowComingSoon('sprak')"
+               style="border-color:rgba(34,197,94,0.4);background:linear-gradient(135deg,rgba(34,197,94,0.10),rgba(34,197,94,0.03));padding:22px 20px;display:flex;flex-direction:column;gap:14px;min-height:170px;position:relative;">
+            <div style="position:absolute;top:12px;right:12px;background:#22c55e;color:#fff;font-size:10px;font-weight:900;padding:3px 10px;border-radius:10px;letter-spacing:0.6px;text-transform:uppercase;z-index:2;">Snart</div>
+            <div style="display:flex;align-items:flex-start;gap:14px;">
+              <div class="ov-card-icon" style="background:rgba(34,197,94,0.2);color:#22c55e;font-size:26px;flex-shrink:0;filter:drop-shadow(0 4px 12px rgba(34,197,94,0.35));">🦉</div>
+              <div>
+                <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:2px;">Språkassistent</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.45;">Träna svenska 5 min/dag — som Duolingo, anpassat för jobb och vardag.</div>
+              </div>
+            </div>
+            <div style="margin-top:auto;font-size:12px;color:#22c55e;font-weight:700;font-style:italic;">Under utveckling</div>
           </div>
         </div>
       `;

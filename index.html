@@ -7150,8 +7150,12 @@ ${styleTexts}
     // Visas direkt när användaren landar i appen (alltid på "Hej"-sidan).
     // Undertrycker "Din data är laddad"- och "Profilbild dold"-toasts.
     function showLoginSplash(emailOrName) {
-      // Plocka ut förnamnet (ur email eller fullt namn)
-      var name = (emailOrName || '').trim().split(/[\s@]/)[0];
+      // Plocka ut förnamnet — i prioritetsordning:
+      // 1) Sparat CV-namn (mest tillförlitligt)
+      // 2) Auth user_metadata.first_name (om Supabase satt det)
+      // 3) Om emailOrName ser ut som ett riktigt namn (inte e-post) — använd det
+      // 4) Annars: ingen greeting med namn alls. ALDRIG email-localpart (ex. "oliverpettersson2")
+      var name = '';
       try {
         var saved = pfRead('cvData');
         if (saved) {
@@ -7159,6 +7163,17 @@ ${styleTexts}
           if (d.name) name = d.name.trim().split(' ')[0];
         }
       } catch(e) {}
+      if (!name) {
+        try {
+          var meta = (window.authCurrentUser && window.authCurrentUser.user_metadata) || {};
+          var metaName = (meta.first_name || meta.given_name || meta.name || '').toString().trim();
+          if (metaName) name = metaName.split(' ')[0];
+        } catch(e) {}
+      }
+      if (!name && emailOrName && emailOrName.indexOf('@') === -1) {
+        // Bara om det INTE är en e-post — vi vill aldrig visa "oliverpettersson2"
+        name = String(emailOrName).trim().split(' ')[0];
+      }
 
       var el = document.getElementById('splashGreeting');
       if (el) el.textContent = name ? 'Hej ' + name + ', din profil laddas…' : 'Din profil laddas…';
@@ -12054,13 +12069,27 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
 
     const prevData = JSON.parse(JSON.stringify(cvData));
     Object.assign(cvData, JSON.parse(JSON.stringify(entry.data)));
+    // Synka DOM-fälten så updatePreview() ser samma data
+    const _sd = document.getElementById('summary'); if (_sd) _sd.value = cvData.summary || '';
+    const _sn = document.getElementById('name');    if (_sn) _sn.value = cvData.name    || '';
+    const _st = document.getElementById('title');   if (_st) _st.value = cvData.title   || '';
     updatePreview();
     window._activeMatchedAdText = '';
     window._mobAdPdfForced = false;
     if (typeof showAiLoader === 'function') showAiLoader('Skapar PDF…', 'Genererar ditt CV som PDF-fil');
     else showToast('⏳ Skapar PDF...', 'info');
     try {
+      // Vänta in att cvDocument rendrerats fullt innan PDF-generering.
+      // Annars kan /api/pdf få tom/halvgjord HTML och returnera "Tom PDF från servern".
+      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+      const cvEl = document.getElementById('cvDocument');
+      if (!cvEl || !cvEl.innerHTML || cvEl.innerHTML.trim().length < 50) {
+        throw new Error('CV-vyn är inte laddad — öppna CV:t först (tryck på det i listan) och försök igen.');
+      }
       await mobGenerateAndSharePDF();
+    } catch (err) {
+      if (typeof hideAiLoader === 'function') hideAiLoader();
+      showToast('❌ ' + (err && err.message ? err.message : 'Kunde inte skapa PDF'), 'error');
     } finally {
       Object.assign(cvData, prevData);
       updatePreview();
