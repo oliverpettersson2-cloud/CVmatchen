@@ -18,6 +18,8 @@
   <!-- White-label + GDPR cookie consent (laddas tidigt så CSS-vars hinner sättas) -->
   <script src="branding.js"></script>
   <script src="cookie-consent.js" defer></script>
+  <!-- Demo-läge för pitch/sälj (?demo=1 eller "Prova demo"-knappen) -->
+  <script src="demo-mode.js"></script>
 
   <!-- Intervjuträning-modul (lazy-initieras av Träning-hubben) -->
   <link rel="stylesheet" href="intervju.css">
@@ -2611,6 +2613,12 @@
         <input type="email" id="authEmail" class="auth-input" placeholder="din@epost.se" autocomplete="email" inputmode="email" aria-label="E-postadress" aria-required="true">
         <button class="auth-btn" id="authSendBtn" onclick="authSendMagicLink()">Skicka kod till min e-post</button>
         <div id="authStep1Error" class="auth-error"></div>
+
+        <!-- Demo-knapp för pitch/sälj — kräver ingen inloggning -->
+        <button type="button" onclick="window.startDemo && window.startDemo()"
+          style="margin-top:14px;width:100%;padding:11px;background:rgba(240,192,64,0.10);color:#f0c040;font-size:13px;font-weight:700;border:1px dashed rgba(240,192,64,0.45);border-radius:10px;cursor:pointer;letter-spacing:0.3px;">
+          ★ Prova demo — ingen registrering krävs
+        </button>
 
         <div style="margin-top:24px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:center;gap:16px;font-size:11px;">
           <a href="#" onclick="showLegalModal('terms');return false;" style="color:rgba(255,255,255,0.62);text-decoration:none;">Allmänna villkor</a>
