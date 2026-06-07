@@ -15,6 +15,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>CVmatchen — AI-driven jobbmatchning</title>
   
+  <!-- White-label + GDPR cookie consent (laddas tidigt så CSS-vars hinner sättas) -->
+  <script src="branding.js"></script>
+  <script src="cookie-consent.js" defer></script>
+  <!-- Demo-läge för pitch/sälj (?demo=1 eller "Prova demo"-knappen) -->
+  <script src="demo-mode.js"></script>
+
   <!-- Intervjuträning-modul (lazy-initieras av Träning-hubben) -->
   <link rel="stylesheet" href="intervju.css">
   <script src="intervju.js" defer></script>
@@ -2607,6 +2613,12 @@
         <input type="email" id="authEmail" class="auth-input" placeholder="din@epost.se" autocomplete="email" inputmode="email" aria-label="E-postadress" aria-required="true">
         <button class="auth-btn" id="authSendBtn" onclick="authSendMagicLink()">Skicka kod till min e-post</button>
         <div id="authStep1Error" class="auth-error"></div>
+
+        <!-- Demo-knapp för pitch/sälj — kräver ingen inloggning -->
+        <button type="button" onclick="window.startDemo && window.startDemo()"
+          style="margin-top:14px;width:100%;padding:11px;background:rgba(240,192,64,0.10);color:#f0c040;font-size:13px;font-weight:700;border:1px dashed rgba(240,192,64,0.45);border-radius:10px;cursor:pointer;letter-spacing:0.3px;">
+          ★ Prova demo — ingen registrering krävs
+        </button>
 
         <div style="margin-top:24px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:center;gap:16px;font-size:11px;">
           <a href="#" onclick="showLegalModal('terms');return false;" style="color:rgba(255,255,255,0.62);text-decoration:none;">Allmänna villkor</a>
@@ -7150,8 +7162,12 @@ ${styleTexts}
     // Visas direkt när användaren landar i appen (alltid på "Hej"-sidan).
     // Undertrycker "Din data är laddad"- och "Profilbild dold"-toasts.
     function showLoginSplash(emailOrName) {
-      // Plocka ut förnamnet (ur email eller fullt namn)
-      var name = (emailOrName || '').trim().split(/[\s@]/)[0];
+      // Plocka ut förnamnet — i prioritetsordning:
+      // 1) Sparat CV-namn (mest tillförlitligt)
+      // 2) Auth user_metadata.first_name (om Supabase satt det)
+      // 3) Om emailOrName ser ut som ett riktigt namn (inte e-post) — använd det
+      // 4) Annars: ingen greeting med namn alls. ALDRIG email-localpart (ex. "oliverpettersson2")
+      var name = '';
       try {
         var saved = pfRead('cvData');
         if (saved) {
@@ -7159,6 +7175,17 @@ ${styleTexts}
           if (d.name) name = d.name.trim().split(' ')[0];
         }
       } catch(e) {}
+      if (!name) {
+        try {
+          var meta = (window.authCurrentUser && window.authCurrentUser.user_metadata) || {};
+          var metaName = (meta.first_name || meta.given_name || meta.name || '').toString().trim();
+          if (metaName) name = metaName.split(' ')[0];
+        } catch(e) {}
+      }
+      if (!name && emailOrName && emailOrName.indexOf('@') === -1) {
+        // Bara om det INTE är en e-post — vi vill aldrig visa "oliverpettersson2"
+        name = String(emailOrName).trim().split(' ')[0];
+      }
 
       var el = document.getElementById('splashGreeting');
       if (el) el.textContent = name ? 'Hej ' + name + ', din profil laddas…' : 'Din profil laddas…';
@@ -12054,13 +12081,27 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
 
     const prevData = JSON.parse(JSON.stringify(cvData));
     Object.assign(cvData, JSON.parse(JSON.stringify(entry.data)));
+    // Synka DOM-fälten så updatePreview() ser samma data
+    const _sd = document.getElementById('summary'); if (_sd) _sd.value = cvData.summary || '';
+    const _sn = document.getElementById('name');    if (_sn) _sn.value = cvData.name    || '';
+    const _st = document.getElementById('title');   if (_st) _st.value = cvData.title   || '';
     updatePreview();
     window._activeMatchedAdText = '';
     window._mobAdPdfForced = false;
     if (typeof showAiLoader === 'function') showAiLoader('Skapar PDF…', 'Genererar ditt CV som PDF-fil');
     else showToast('⏳ Skapar PDF...', 'info');
     try {
+      // Vänta in att cvDocument rendrerats fullt innan PDF-generering.
+      // Annars kan /api/pdf få tom/halvgjord HTML och returnera "Tom PDF från servern".
+      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+      const cvEl = document.getElementById('cvDocument');
+      if (!cvEl || !cvEl.innerHTML || cvEl.innerHTML.trim().length < 50) {
+        throw new Error('CV-vyn är inte laddad — öppna CV:t först (tryck på det i listan) och försök igen.');
+      }
       await mobGenerateAndSharePDF();
+    } catch (err) {
+      if (typeof hideAiLoader === 'function') hideAiLoader();
+      showToast('❌ ' + (err && err.message ? err.message : 'Kunde inte skapa PDF'), 'error');
     } finally {
       Object.assign(cvData, prevData);
       updatePreview();
