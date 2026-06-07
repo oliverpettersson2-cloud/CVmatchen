@@ -51,7 +51,8 @@ export default async function handler(req, res) {
     title, description, category, deadline, durationMinutes, note,
     targetUserId, role, kommunId, enhetId, name: personName,
     filters, phone: personPhone,
-    event_type, metadata
+    event_type, metadata,
+    aiConsent, aiConsentVersion
   } = req.body || {};
 
   function makeRequest(url, options, body) {
@@ -306,6 +307,36 @@ export default async function handler(req, res) {
         );
       }
       return res.status(200).json({ ok: true });
+    }
+
+    if (action === 'save_ai_consent') {
+      // Sparar/återkallar deltagarens AI-samtycke. Idempotent — kör
+      // ensure_participant först om raden saknas så vi inte tappar samtycket.
+      if (!userId) return res.status(400).json({ error: 'userId krävs' });
+      const version = (aiConsentVersion && String(aiConsentVersion).slice(0, 32)) || '2026-06-07';
+      const now = new Date().toISOString();
+      const patch = aiConsent === false
+        ? { ai_consent_withdrawn_at: now }
+        : { ai_consent_at: now, ai_consent_version: version, ai_consent_withdrawn_at: null };
+
+      // Säkerställ att raden finns innan vi PATCH:ar
+      await makeRequest(
+        `${SUPABASE_URL}/rest/v1/user_assignments`,
+        { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'resolution=ignore-duplicates,return=minimal' } },
+        { user_id: userId, status: 'active', created_at: now }
+      );
+      const result = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${userId}`,
+        { method: 'PATCH', headers: serviceHeaders() },
+        patch
+      );
+      if (result.status >= 400) {
+        // Migration ej körd? Logga men låt frontend fortsätta — samtycket
+        // lagras även i localStorage så vi inte blockerar piloten.
+        console.warn('[save_ai_consent] DB-patch misslyckades:', result.status, maskPII(result.data));
+        return res.status(200).json({ ok: true, persisted: false });
+      }
+      return res.status(200).json({ ok: true, persisted: true, at: now, version });
     }
 
     if (action === 'admin_login') {

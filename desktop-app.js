@@ -840,6 +840,14 @@
       errEl.classList.add('visible');
       return;
     }
+    const consentEl = document.getElementById('onbAiConsent');
+    if (consentEl && !consentEl.checked) {
+      errEl.textContent = 'Du måste godkänna AI-analys för att skapa konto.';
+      errEl.classList.add('visible');
+      consentEl.focus();
+      return;
+    }
+    if (typeof window.saveAiConsent === 'function') window.saveAiConsent();
 
     cvData.name = (firstName + ' ' + lastName).trim();
     if (phone) cvData.phone = phone;

@@ -2612,6 +2612,7 @@
           <a href="#" onclick="showLegalModal('terms');return false;" style="color:rgba(255,255,255,0.62);text-decoration:none;">Allmänna villkor</a>
           <a href="#" onclick="showLegalModal('gdpr');return false;" style="color:rgba(255,255,255,0.62);text-decoration:none;">GDPR</a>
           <a href="tillganglighet.html" style="color:rgba(255,255,255,0.62);text-decoration:none;">Tillgänglighet</a>
+          <a href="sakerhet.html" style="color:rgba(255,255,255,0.62);text-decoration:none;">Säkerhet</a>
         </div>
         <div style="text-align:center;font-size:10px;color:rgba(255, 255, 255, 0.72);margin-top:8px;">PathfinderAI AB</div>
       </div>
@@ -2676,6 +2677,18 @@
           placeholder="Telefonnummer (valfritt)" autocomplete="tel"
           aria-label="Telefonnummer (valfritt)"
           inputmode="tel" style="margin-bottom:6px;">
+
+        <!-- AI-samtycke (GDPR art. 6.1.a) — krävs för pilot/produktion -->
+        <label for="onbAiConsent" style="display:flex;align-items:flex-start;gap:10px;text-align:left;margin:14px 0 4px;padding:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:10px;color:rgba(255,255,255,0.92);font-size:12px;line-height:1.55;cursor:pointer;">
+          <input type="checkbox" id="onbAiConsent" aria-required="true"
+            style="margin-top:2px;flex-shrink:0;width:18px;height:18px;cursor:pointer;accent-color:#f0c040;"
+            oninput="document.getElementById('onbErr').textContent=''">
+          <span>Jag godkänner att mitt CV och mina svar analyseras av AI
+            (Claude via AWS Bedrock EU) för att skapa förslag, översättningar
+            och jobbmatchningar. Behandlingen sker inom EU/EES. Jag kan när
+            som helst återkalla samtycket. Se
+            <a href="#" onclick="showLegalModal('gdpr');return false;" style="color:#f0c040;font-weight:600;">integritetspolicyn</a>.</span>
+        </label>
 
         <div id="onbErr" style="color:#ff8fa3;font-size:12px;min-height:18px;margin-bottom:10px;"></div>
         <button class="auth-btn" onclick="authCompleteOnboarding()">Skapa mitt CV →</button>
@@ -7533,6 +7546,10 @@ ${styleTexts}
         const welcomeText = 'Du är inloggad som ' + email;
         document.getElementById('authWelcomeText').textContent = welcomeText;
         document.getElementById('authStep3').classList.add('active');
+        // Backfill: visa samtyckes-modal för befintliga konton som saknar det
+        if (typeof hasAiConsent === 'function' && !hasAiConsent()) {
+          setTimeout(showAiConsentBackfillModal, 400);
+        }
       }
 
       // Ladda CV från Supabase om inloggad
@@ -7540,6 +7557,47 @@ ${styleTexts}
         loadAllFromSupabase(userId, accessToken);
       }
     }
+
+    // ── Backfill-modal för befintliga användare utan AI-samtycke ─────────
+    function showAiConsentBackfillModal() {
+      if (document.getElementById('aiConsentBackfillModal')) return;
+      const wrap = document.createElement('div');
+      wrap.id = 'aiConsentBackfillModal';
+      wrap.setAttribute('role', 'dialog');
+      wrap.setAttribute('aria-modal', 'true');
+      wrap.setAttribute('aria-labelledby', 'aiConsentTitle');
+      wrap.style.cssText = 'position:fixed;inset:0;background:rgba(8,12,24,0.86);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
+      wrap.innerHTML = '<div style="background:#1a2238;border:1px solid rgba(255,255,255,0.12);border-radius:14px;max-width:480px;width:100%;padding:28px;color:#fff;box-shadow:0 12px 48px rgba(0,0,0,0.5);">'
+        + '<div style="font-size:36px;margin-bottom:8px;" aria-hidden="true">🛡️</div>'
+        + '<h2 id="aiConsentTitle" style="margin:0 0 10px;font-size:20px;">Godkänn AI-analys</h2>'
+        + '<p style="margin:0 0 16px;font-size:14px;line-height:1.6;color:rgba(255,255,255,0.88);">'
+        + 'För att fortsätta använda CVmatchen behöver du godkänna att ditt CV och dina svar '
+        + 'analyseras av AI (Claude via AWS Bedrock EU). Behandlingen sker inom EU/EES. '
+        + 'Du kan när som helst återkalla samtycket genom att logga ut och radera kontot. '
+        + 'Se <a href="#" onclick="showLegalModal(\'gdpr\');return false;" style="color:#f0c040;font-weight:600;">integritetspolicyn</a>.</p>'
+        + '<label style="display:flex;align-items:flex-start;gap:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:12px;margin-bottom:14px;cursor:pointer;font-size:13px;line-height:1.5;">'
+        + '<input type="checkbox" id="aiConsentBackfillCheck" style="margin-top:2px;width:18px;height:18px;cursor:pointer;accent-color:#f0c040;">'
+        + '<span>Jag godkänner AI-analys enligt ovan.</span></label>'
+        + '<div style="display:flex;gap:10px;justify-content:flex-end;">'
+        + '<button id="aiConsentBackfillCancel" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);padding:10px 16px;border-radius:8px;cursor:pointer;font-size:14px;">Logga ut</button>'
+        + '<button id="aiConsentBackfillConfirm" style="background:#f0c040;border:0;color:#1a1a1a;padding:10px 18px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;">Godkänn och fortsätt</button>'
+        + '</div></div>';
+      document.body.appendChild(wrap);
+      document.getElementById('aiConsentBackfillConfirm').addEventListener('click', function() {
+        if (!document.getElementById('aiConsentBackfillCheck').checked) {
+          document.getElementById('aiConsentBackfillCheck').focus();
+          return;
+        }
+        saveAiConsent();
+        wrap.remove();
+      });
+      document.getElementById('aiConsentBackfillCancel').addEventListener('click', function() {
+        wrap.remove();
+        if (typeof logout === 'function') logout(); else window.location.reload();
+      });
+      setTimeout(function() { document.getElementById('aiConsentBackfillCheck').focus(); }, 50);
+    }
+    window.showAiConsentBackfillModal = showAiConsentBackfillModal;
 
 
     let _saveDebounceSupabase = null;
@@ -7658,15 +7716,53 @@ ${styleTexts}
       showLoginSplash(authCurrentEmail || '');
     }
 
+    // ── AI-SAMTYCKE ──────────────────────────────────────────────
+    // Lagras både i localStorage (omedelbar gate i appen) och i Supabase
+    // (källa-på-sanning för admins). DB-write failar tyst om migrationen
+    // inte är körd än — vi blockerar inte piloten på det.
+    window.AI_CONSENT_VERSION = '2026-06-07';
+    window.AI_CONSENT_KEY = 'pf_ai_consent';
+    function hasAiConsent() {
+      try {
+        const raw = localStorage.getItem(window.AI_CONSENT_KEY);
+        if (!raw) return false;
+        const v = JSON.parse(raw);
+        return !!(v && v.at && !v.withdrawnAt);
+      } catch(e) { return false; }
+    }
+    function saveAiConsent() {
+      const now = new Date().toISOString();
+      const payload = { at: now, version: window.AI_CONSENT_VERSION, withdrawnAt: null };
+      try { localStorage.setItem(window.AI_CONSENT_KEY, JSON.stringify(payload)); } catch(e) {}
+      const uid = window.authUserId || null;
+      const tok = window.authAccessToken || null;
+      if (!uid) return;
+      fetch('/api/supabase', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(tok ? { 'Authorization': 'Bearer ' + tok } : {}) },
+        body: JSON.stringify({ action: 'save_ai_consent', userId: uid, accessToken: tok,
+          aiConsent: true, aiConsentVersion: window.AI_CONSENT_VERSION })
+      }).catch(() => {});
+    }
+    window.hasAiConsent = hasAiConsent;
+    window.saveAiConsent = saveAiConsent;
+
     function authCompleteOnboarding() {
       const firstName = (document.getElementById('onbFirstName').value || '').trim();
       const lastName  = (document.getElementById('onbLastName').value  || '').trim();
       const phone     = (document.getElementById('onbPhone').value     || '').trim();
       const email     = authCurrentEmail || '';
       const errEl     = document.getElementById('onbErr');
+      const consentEl = document.getElementById('onbAiConsent');
 
       if (!firstName) { errEl.textContent = 'Förnamn krävs.'; return; }
       if (!lastName)  { errEl.textContent = 'Efternamn krävs.'; return; }
+      if (consentEl && !consentEl.checked) {
+        errEl.textContent = 'Du måste godkänna AI-analys för att skapa konto.';
+        consentEl.focus();
+        return;
+      }
+      saveAiConsent();
 
       // Spara ALLT i cvData → direkt in i CV-byggaren
       cvData.name  = (firstName + ' ' + lastName).trim();
