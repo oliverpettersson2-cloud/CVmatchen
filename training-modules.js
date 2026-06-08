@@ -4859,7 +4859,7 @@ quiz:[
 {q:'Vad hjälper SYV med?',o:['Bara CV-skrivning','Utbildnings- och karriärplanering','Bara universitetsansökan'],c:1},
 {q:'Har SYV tystnadsplikt?',o:['Nej','Ja','Bara för känsliga ärenden'],c:1}
 ],
-pr:['Hjälp mig formulera frågor till mitt SYV-möte.','Vilken utbildningsväg är snabbast till [yrke]?','Sammanfatta min situation och rekommendera nästa steg.']},,
+pr:['Hjälp mig formulera frågor till mitt SYV-möte.','Vilken utbildningsväg är snabbast till [yrke]?','Sammanfatta min situation och rekommendera nästa steg.']},
 {id:'s20',icon:'🤖',title:'Din AI-SYV',sub:'Chatta med en AI-vägledare',color:'#38bdf8',bc:'rgba(56,189,248,.3)',bg:'rgba(56,189,248,.07)',video:'/videos/s20-aisyv.mp4',
 lessons:[
 {t:'Översikt',intro:'overview',
