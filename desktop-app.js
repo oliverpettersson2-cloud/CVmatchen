@@ -5925,8 +5925,10 @@
           </div>
         `;
       }
+      // Använder data-attribut + event delegation (se _bindOvGridDelegation)
+      // istället för inline onclick — robustare mot CSP, escape-buggar och CSS.
       return `
-        <div class="ov-card" onclick="trainOpen('${escape(m.id)}')">
+        <div class="ov-card" data-modid="${escape(m.id)}" role="button" tabindex="0">
           <div class="ov-card-icon">${m.icon || '📘'}</div>
           <div class="ov-card-title">${escape(m.title || '')}</div>
           <div class="ov-card-desc">${escape(desc)}</div>
@@ -5939,6 +5941,40 @@
     }).join('');
 
     grid.innerHTML = catHeader + moduleCards;
+    _bindOvGridDelegation();
+  }
+
+  // Engångs-event-delegation på #ovGrid. Fångar klick på .ov-card[data-modid]
+  // oavsett om kortet renderats om. Robust mot CSP-inline-restriktioner.
+  let _ovGridDelegated = false;
+  function _bindOvGridDelegation() {
+    if (_ovGridDelegated) return;
+    const grid = document.getElementById('ovGrid');
+    if (!grid) return;
+    grid.addEventListener('click', function(e) {
+      const card = e.target.closest('.ov-card[data-modid]');
+      if (!card) return;
+      const modId = card.getAttribute('data-modid');
+      if (!modId) return;
+      try {
+        if (typeof window.trainOpen === 'function') {
+          window.trainOpen(modId);
+        } else {
+          console.error('[CVmatchen] trainOpen saknas — JS kanske inte fullt laddad');
+        }
+      } catch(err) {
+        console.error('[CVmatchen] trainOpen kraschade för modid=' + modId, err);
+        alert('Något gick fel när modulen skulle öppnas. Öppna konsolen (F12) och skicka felmeddelandet.');
+      }
+    });
+    grid.addEventListener('keydown', function(e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const card = e.target.closest('.ov-card[data-modid]');
+      if (!card) return;
+      e.preventDefault();
+      card.click();
+    });
+    _ovGridDelegated = true;
   }
 
   window.trainOpenCat = function(catId) {
