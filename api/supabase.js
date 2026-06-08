@@ -566,13 +566,26 @@ export default async function handler(req, res) {
         requestedKommunId: kommunId, requestedEnhetId: enhetId
       });
       if (!admin) return;
-      // Icke-superadmin: tvinga egen kommun/enhet + förbjud superadmin-roll
       let inviteKommunId = kommunId, inviteEnhetId = enhetId, inviteRole = role || 'handlaggare';
-      if (admin.role !== 'superadmin') {
+
+      // Behörighetsmatris per inbjudarens roll
+      if (admin.role === 'superadmin') {
+        // får bjuda in vad som helst
+      } else if (admin.role === 'kommunadmin') {
+        inviteKommunId = admin.kommun_id;                      // låst till egen kommun
+        if (!['kommunadmin','enhetsadmin','handlaggare'].includes(inviteRole)) {
+          return res.status(403).json({ error: 'forbidden_role' });
+        }
+      } else if (admin.role === 'enhetsadmin') {
         inviteKommunId = admin.kommun_id;
-        if (admin.enhet_id != null) inviteEnhetId = admin.enhet_id;
-        if (inviteRole === 'superadmin') return res.status(403).json({ error: 'forbidden_role' });
+        inviteEnhetId  = admin.enhet_id;                        // låst till egen enhet
+        if (inviteRole !== 'handlaggare') {
+          return res.status(403).json({ error: 'forbidden_role' });
+        }
+      } else {
+        return res.status(403).json({ error: 'forbidden' });    // handläggare får ej bjuda in admins
       }
+
       const existing = await makeRequest(`${SUPABASE_URL}/rest/v1/admins?email=eq.${encodeURIComponent(email)}&limit=1`, { method: 'GET', headers: serviceHeaders() });
       if (Array.isArray(existing.data) && existing.data.length) return res.status(409).json({ error: 'E-postadressen finns redan' });
       const inviteToken = crypto.randomBytes(32).toString('hex');
@@ -626,6 +639,17 @@ export default async function handler(req, res) {
         tasks: { total: tasks.length, completed: tasks.filter(t => t.status === 'completed').length, pending: tasks.filter(t => t.status === 'pending').length, active: tasks.filter(t => t.status === 'active').length, expired: tasks.filter(t => t.status === 'expired').length, total_time_sec: tasks.reduce((s, t) => s + (t.time_spent_sec || 0), 0) },
         byCategory: Object.entries(tasks.reduce((acc, t) => { if (!acc[t.category]) acc[t.category] = { total: 0, completed: 0 }; acc[t.category].total++; if (t.status === 'completed') acc[t.category].completed++; return acc; }, {})).map(([cat, data]) => ({ category: cat, ...data })),
       });
+    }
+
+    if (action === 'admin_get_kommuner') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      let url = `${SUPABASE_URL}/rest/v1/kommuner?select=id,name&order=name`;
+      if (admin.role !== 'superadmin' && admin.kommun_id) {
+        url += `&id=eq.${admin.kommun_id}`;
+      }
+      const result = await makeRequest(url, { method: 'GET', headers: serviceHeaders() });
+      return res.status(200).json({ data: Array.isArray(result.data) ? result.data : [] });
     }
 
     if (action === 'admin_get_enheter') {
