@@ -3168,9 +3168,10 @@
       <span class="sb-tab-icon">🎯</span>
       <span>Matcha</span>
     </button>
-    <button class="sb-tab" data-view="intervju" onclick="switchView('intervju')">
+    <button class="sb-tab" data-view="intervju" onclick="trainShowInterviewMaintenance()" style="opacity:0.7;cursor:not-allowed;position:relative;" title="Under uppdatering">
       <span class="sb-tab-icon">🎤</span>
       <span>Intervju</span>
+      <span style="position:absolute;top:50%;right:10px;transform:translateY(-50%);background:#f59e0b;color:#1a1a1a;font-size:8px;font-weight:900;padding:2px 6px;border-radius:8px;letter-spacing:0.4px;text-transform:uppercase;">Uppdat.</span>
     </button>
     <button class="sb-tab" data-view="aisyv" onclick="switchView('aisyv')">
       <span class="sb-tab-icon">🎓</span>
@@ -3265,7 +3266,8 @@
         </div>
       </div>
 
-      <div class="hej-card intervju" onclick="switchView('intervju')">
+      <div class="hej-card intervju" onclick="trainShowInterviewMaintenance()" style="position:relative;opacity:0.85;cursor:not-allowed;">
+        <div style="position:absolute;top:14px;right:14px;background:#f59e0b;color:#1a1a1a;font-size:9px;font-weight:900;padding:3px 9px;border-radius:10px;letter-spacing:0.6px;text-transform:uppercase;z-index:2;">Under uppdatering</div>
         <div class="hej-card-icon">🎤</div>
         <div class="hej-card-body">
           <div class="hej-card-head">
@@ -3273,8 +3275,8 @@
             <span class="hej-card-arrow">›</span>
           </div>
           <div class="hej-card-desc">
-            Öva på vanliga intervjufrågor med AI-feedback. Träna rösten,
-            strukturen och självförtroendet inför skarpa intervjuer.
+            Öva på vanliga intervjufrågor med AI-feedback. Modulen är under
+            uppdatering — återkommer snart med skarpare träningsupplevelse.
           </div>
         </div>
       </div>

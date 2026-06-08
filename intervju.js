@@ -20,7 +20,7 @@
   // KONFIGURATION
   // ══════════════════════════════════════════════════════════════
   var CONFIG = {
-    claudeModel: 'claude-haiku-4-5-20251001',  // Samma modell som AI-SYV/edu-chat använder. Snabb, bra på samtals-AI.
+    claudeModel: 'claude-sonnet-4-6',  // Sonnet 4.6 för intervjun — bättre nyanserade följdfrågor, läser CV-kontext skarpare. ~5x dyrare än Haiku men ~10 kr/intervju är försumbart.
     maxSpeechHistoryChars: 8000, // trunkera om historiken blir enorm
     defaultVoiceLang: 'sv-SE',
     ttsRate: 0.95,
@@ -479,6 +479,7 @@
   // ══════════════════════════════════════════════════════════════
   async function callClaude(messages, systemPrompt, opts) {
     opts = opts || {};
+    requireAiConsent();
     // Kick-off: om messages är tom är det första intervjufrågan som ska
     // genereras — skicka då ett user-meddelande som triggar intervjuaren.
     // (Anthropic kräver att `messages` har minst ett element och börjar med user.)
@@ -635,6 +636,24 @@
       throw new Error('Du måste vara inloggad för att starta en intervju.');
     }
     return a;
+  }
+
+  // AI-samtycke-gate (GDPR art. 6.1.a). Läser samma localStorage-flagga som
+  // index.html sätter i onboarding/backfill. Definierar lokal fallback om
+  // window.hasAiConsent inte finns (desktop-kontext).
+  function hasAiConsentLocal() {
+    if (typeof window.hasAiConsent === 'function') return window.hasAiConsent();
+    try {
+      var raw = localStorage.getItem('pf_ai_consent');
+      if (!raw) return false;
+      var v = JSON.parse(raw);
+      return !!(v && v.at && !v.withdrawnAt);
+    } catch(e) { return false; }
+  }
+  function requireAiConsent() {
+    if (!hasAiConsentLocal()) {
+      throw new Error('AI-samtycke saknas. Logga ut och in igen för att godkänna AI-analys, eller godkänn i onboardingen.');
+    }
   }
 
   async function createSession(input) {

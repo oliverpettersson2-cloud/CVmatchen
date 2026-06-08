@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Säkerhet & dataskydd — CVmatchen</title>
+  <meta name="description" content="Säkerhet, GDPR och dataskydd för CVmatchen. Lagring inom EU, AI via AWS Bedrock EU, multi-tenant-isolering, incidenthantering.">
+  <style>
+    :root { color-scheme: light; }
+    body {
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+      max-width: 820px; margin: 0 auto; padding: 40px 24px 80px;
+      color: #1a1a1a; background: #fff; line-height: 1.65;
+    }
+    h1 { font-size: 30px; margin-bottom: 4px; }
+    h2 { font-size: 20px; margin-top: 38px; border-bottom: 2px solid #e0e0e0; padding-bottom: 6px; }
+    h3 { font-size: 15px; margin-top: 22px; margin-bottom: 4px; }
+    .meta { color: #555; font-size: 14px; margin-bottom: 8px; }
+    ul { padding-left: 22px; }
+    li { margin-bottom: 6px; }
+    a { color: #1558b0; }
+    a:focus-visible { outline: 3px solid #1a73e8; outline-offset: 2px; }
+    .box {
+      background: #f4f7fb; border: 1px solid #d4dde8;
+      border-radius: 8px; padding: 16px 20px; margin: 16px 0;
+    }
+    .pill {
+      display: inline-block; background: #e8f0fe; color: #1558b0;
+      padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
+      margin-right: 6px;
+    }
+    table { border-collapse: collapse; width: 100%; margin: 12px 0 20px; font-size: 14px; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e0e0e0; vertical-align: top; }
+    th { background: #f4f7fb; font-weight: 700; }
+    footer { margin-top: 56px; font-size: 13px; color: #777; }
+    .skip-link {
+      position: absolute; left: -9999px; top: auto;
+    }
+    .skip-link:focus { left: 24px; top: 8px; background: #1a73e8; color: #fff; padding: 8px 14px; border-radius: 6px; z-index: 999; }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Hoppa till innehåll</a>
+  <main id="main">
+    <h1>Säkerhet &amp; dataskydd</h1>
+    <p class="meta">Sammanställning för IT-, säkerhets- och dataskyddsansvariga hos
+      uppdragsgivande kommuner och organisationer. Senast uppdaterad 2026-06-07.</p>
+
+    <div class="box">
+      <strong>Snabbfakta</strong>
+      <ul style="margin:8px 0 0;">
+        <li><span class="pill">EU-only</span> All databehandling sker inom EU/EES (Supabase Frankfurt, Vercel Stockholm, AWS Bedrock Frankfurt).</li>
+        <li><span class="pill">Ingen AI-träning</span> Anthropic tränar inte modeller på era data (zero data retention via Bedrock).</li>
+        <li><span class="pill">Multi-tenant</span> Strikt isolering per kommun och enhet — handläggare ser bara sin enhets deltagare.</li>
+        <li><span class="pill">PuB-avtal</span> Vi tecknar SKR:s personuppgiftsbiträdesavtal med varje uppdragsgivare.</li>
+      </ul>
+    </div>
+
+    <h2>1. Roller enligt GDPR</h2>
+    <p>När CVmatchen används av en kommun eller organisation är <strong>kunden
+      personuppgiftsansvarig</strong> för deltagarnas uppgifter. PathfinderAI AB
+      är <strong>personuppgiftsbiträde</strong> och behandlar uppgifter endast
+      enligt skriftliga instruktioner i PuB-avtalet.</p>
+    <p>För deltagare som använder CVmatchen.com utan kommunavtal är PathfinderAI AB
+      själv personuppgiftsansvarig.</p>
+
+    <h2>2. Var lagras data?</h2>
+    <table>
+      <thead><tr><th>Datatyp</th><th>Lagras hos</th><th>Region</th></tr></thead>
+      <tbody>
+        <tr><td>Konton, CV, övningsprogress, samtycken</td><td>Supabase (Postgres)</td><td>EU — Frankfurt (eu-central-1)</td></tr>
+        <tr><td>Hosting av webbapp</td><td>Vercel</td><td>EU — Stockholm (arn1)</td></tr>
+        <tr><td>AI-analys (CV, matchning, översättningar)</td><td>AWS Bedrock — Claude (Anthropic)</td><td>EU — Frankfurt (eu-central-1, EU-inference-profil)</td></tr>
+        <tr><td>Inloggning via SSO</td><td>Microsoft Entra ID (om kommunen kör SSO)</td><td>EU</td></tr>
+        <tr><td>E-postutskick (engångskoder)</td><td>Resend</td><td>EU</td></tr>
+        <tr><td>Felövervakning (avidentifierade fel)</td><td>Sentry</td><td>EU</td></tr>
+      </tbody>
+    </table>
+    <p>Ingen data lämnar EU/EES för normal drift. Vi använder inte tjänster som
+      kräver tredjelandsöverföring (USA, m.fl.).</p>
+
+    <h2>3. AI och dataskydd</h2>
+    <h3>Vilken AI används?</h3>
+    <p>Claude (Anthropic) via AWS Bedrock i EU-regionen Frankfurt. Vi använder
+      Bedrocks EU-inferensprofil, vilket innebär att prompter och svar stannar
+      inom EU/EES.</p>
+    <h3>Tränas modellerna på era data?</h3>
+    <p>Nej. Via AWS Bedrock gäller <em>zero data retention</em> — Anthropic
+      lagrar varken prompter, svar eller metadata, och använder dem inte för
+      modellträning.</p>
+    <h3>Vad analyseras?</h3>
+    <ul>
+      <li>CV-text för förslag, översättning och rättstavning.</li>
+      <li>Jobbannonser från Arbetsförmedlingen (Platsbanken) för matchning mot CV.</li>
+      <li>Användarens skrivna chat-meddelanden i SYV-coachen.</li>
+    </ul>
+    <h3>Samtycke</h3>
+    <p>Deltagaren godkänner AI-analys aktivt vid första inloggningen
+      (GDPR art. 6.1.a). Samtycket lagras med tidsstämpel och kan när som
+      helst återkallas genom att kontot raderas.</p>
+    <h3>Automatiserat beslutsfattande?</h3>
+    <p>Nej. CVmatchen tar inga beslut om individer. AI ger förslag som
+      deltagaren själv väljer att använda eller förkasta. Handläggare bedömer
+      alltid själva.</p>
+
+    <h2>4. Inloggning och behörigheter</h2>
+    <h3>Deltagare</h3>
+    <ul>
+      <li>Engångskod (OTP) via e-post — 6 siffror, giltig i 10 minuter.</li>
+      <li>Ingen lösenordshantering, inga sparade lösenord.</li>
+      <li>Sessioner med signerade tokens; auto-utloggning vid inaktivitet.</li>
+    </ul>
+    <h3>Handläggare</h3>
+    <ul>
+      <li>Microsoft Entra ID (SSO) eller engångskod via e-post.</li>
+      <li>Endast inbjudna konton — bootstrap via superadmin.</li>
+      <li>HMAC-signerade session-tokens med inbyggd kommun- och enhets-binding.</li>
+    </ul>
+    <h3>Multi-tenant-isolering</h3>
+    <p>Varje handläggare är knuten till en specifik kommun och enhet.
+      Alla admin-anrop verifierar HMAC-token + slår upp behörighet färskt mot
+      databasen vid varje anrop. En handläggare i kommun A kan inte se eller
+      påverka data i kommun B.</p>
+
+    <h2>5. Kryptering</h2>
+    <ul>
+      <li><strong>I transit:</strong> TLS 1.2+ på all trafik (HSTS aktiv).</li>
+      <li><strong>I vila:</strong> AES-256 (Supabase, Vercel, AWS — leverantörshanterat).</li>
+      <li>Strikt Content Security Policy (CSP) blockerar inline-skript från okända källor.</li>
+      <li>HMAC-SHA256 på alla session-tokens; rate-limiting på AI- och admin-endpoints.</li>
+    </ul>
+
+    <h2>6. Personuppgifter vi behandlar</h2>
+    <table>
+      <thead><tr><th>Kategori</th><th>Exempel</th><th>Rättslig grund</th></tr></thead>
+      <tbody>
+        <tr><td>Identitet</td><td>Namn, e-post, telefon</td><td>Avtal (art. 6.1.b)</td></tr>
+        <tr><td>CV-innehåll</td><td>Arbetslivserfarenhet, utbildning, språk</td><td>Avtal (art. 6.1.b) + samtycke för AI</td></tr>
+        <tr><td>Användningsdata</td><td>Inloggningar, slutförda moduler, sparade CV</td><td>Berättigat intresse (art. 6.1.f)</td></tr>
+        <tr><td>SSN/personnummer</td><td><strong>Lagras inte.</strong></td><td>—</td></tr>
+        <tr><td>Hälsodata</td><td><strong>Samlas inte in.</strong></td><td>—</td></tr>
+      </tbody>
+    </table>
+    <p>PII (e-post, telefon) maskeras automatiskt i applikations- och felloggar.</p>
+
+    <h2>7. Sub-processors</h2>
+    <table>
+      <thead><tr><th>Leverantör</th><th>Tjänst</th><th>Plats</th></tr></thead>
+      <tbody>
+        <tr><td>Supabase</td><td>Databas, autentisering</td><td>EU — Frankfurt</td></tr>
+        <tr><td>Vercel</td><td>Hosting, edge functions</td><td>EU — Stockholm</td></tr>
+        <tr><td>Amazon Web Services (AWS Bedrock)</td><td>AI-inferens (Claude)</td><td>EU — Frankfurt</td></tr>
+        <tr><td>Microsoft</td><td>Entra ID (SSO, för handläggare)</td><td>EU</td></tr>
+        <tr><td>Resend</td><td>Transaktionsmejl (engångskoder)</td><td>EU</td></tr>
+        <tr><td>Sentry</td><td>Felövervakning (avidentifierad)</td><td>EU</td></tr>
+      </tbody>
+    </table>
+    <p>Listan uppdateras innan nya sub-processors tas i bruk. Kunden meddelas
+      i god tid och kan invända.</p>
+
+    <h2>8. Backup och tillgänglighet</h2>
+    <ul>
+      <li>Daglig automatisk backup av databasen (Point-in-Time-Recovery 7 dagar).</li>
+      <li>Disaster recovery: RPO ≤ 24h, RTO ≤ 8h vid totalt avbrott.</li>
+      <li>Drift-status och planerat underhåll kommuniceras via e-post till adminkontakten.</li>
+    </ul>
+
+    <h2>9. Incidenthantering</h2>
+    <ul>
+      <li>Säkerhetsincident upptäcks via Sentry, Supabase-loggar eller intern detektion.</li>
+      <li>Personuppgiftsincident anmäls till kundens dataskyddsombud inom <strong>24 timmar</strong> från upptäckt.</li>
+      <li>PathfinderAI bistår kunden i dennes anmälan till IMY (72 timmar enligt GDPR art. 33).</li>
+      <li>Kontaktväg: <a href="mailto:info@cvmatchen.com">info@cvmatchen.com</a> med ämnesrad "Säkerhetsincident".</li>
+    </ul>
+
+    <h2>10. Lagringstid och radering</h2>
+    <ul>
+      <li>Deltagarkonto raderas på begäran inom 30 dagar.</li>
+      <li>Vid avtalets upphörande raderas all kunddata inom 90 dagar (efter eventuell exportbegäran).</li>
+      <li>Backuper roterar ut inom 7 dagar och rör inte tidigare raderade poster.</li>
+      <li>Avidentifierad statistik (antal CV, antal inloggningar) får behållas.</li>
+    </ul>
+
+    <h2>11. Den registrerades rättigheter</h2>
+    <p>Deltagare har enligt GDPR rätt till tillgång (art. 15), rättelse (art. 16),
+      radering (art. 17), begränsning (art. 18), portabilitet (art. 20) och
+      invändning (art. 21). Begäran riktas i första hand till uppdragsgivande
+      kommun (personuppgiftsansvarig); CVmatchen bistår med teknisk export
+      eller radering inom 30 dagar.</p>
+
+    <h2>12. Tillgänglighet</h2>
+    <p>CVmatchen följer WCAG 2.1 nivå AA i största möjliga utsträckning. Se
+      vår <a href="tillganglighet.html">tillgänglighetsredogörelse</a>.</p>
+
+    <h2>13. Penetrationstest och granskningar</h2>
+    <ul>
+      <li>Intern säkerhetsgranskning utförd 2026-05 (multi-tenant-isolering,
+        rate-limit, CSP, PII-maskning).</li>
+      <li>Extern penetrationstest planerad inför produktionssättning hos första
+        kommun. Rapport delas med uppdragsgivare under sekretessavtal.</li>
+      <li>Automatiska beroende-skanningar (Vercel + GitHub Dependabot).</li>
+    </ul>
+
+    <h2>14. Cookies och spårning</h2>
+    <ul>
+      <li>Endast nödvändiga cookies (sessions, samtyckes-flagga).</li>
+      <li>Inga analyscookies eller tredjepartsspårning.</li>
+      <li>Ingen reklam, ingen profilering för marknadsföring.</li>
+    </ul>
+
+    <h2>15. Avtalsmodell</h2>
+    <p>Standardavtal för pilot och full drift:</p>
+    <ul>
+      <li><strong>Huvudavtal</strong> — tjänsten, pris, support.</li>
+      <li><strong>PuB-avtal</strong> (SKR-mall) — dataskydd, sub-processors,
+        instruktioner.</li>
+      <li><strong>Säkerhetsbilaga</strong> — denna sida i versionsstämplad form.</li>
+    </ul>
+
+    <h2>15.1 Immateriella rättigheter (IP)</h2>
+    <table>
+      <thead><tr><th>Vad?</th><th>Vem äger?</th><th>Vad innebär det?</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Tjänsten CVmatchen, källkod, design, modulinnehåll, AI-prompter</td>
+          <td>PathfinderAI AB</td>
+          <td>Kunden licensierar nyttjanderätten under avtalstiden. Källkod
+            lämnas inte ut. Samma modell som Office 365, Visma m.fl.</td>
+        </tr>
+        <tr>
+          <td>Deltagardata (CV, kontaktuppgifter, progress, samtycken)</td>
+          <td>Kunden (kommunen)</td>
+          <td>Personuppgiftsansvarig. Får full export i standardformat
+            (PDF/CSV) när som helst och vid avtalsslut.</td>
+        </tr>
+        <tr>
+          <td>Aggregerad, avidentifierad statistik</td>
+          <td>PathfinderAI AB</td>
+          <td>Får användas för produktutveckling och benchmarking, aldrig
+            spårbart till enskild deltagare eller kommun.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>16. Kontakt</h2>
+    <p>PathfinderAI AB (under registrering) · Helsingborg<br>
+      Säkerhets- och dataskyddsfrågor: <a href="mailto:info@cvmatchen.com">info@cvmatchen.com</a><br>
+      Webbplats: <a href="https://cvmatchen.com">cvmatchen.com</a></p>
+
+    <footer>
+      Detta dokument utgör en sammanfattning. Bindande villkor återfinns i
+      huvudavtal och PuB-avtal mellan PathfinderAI AB och uppdragsgivaren.
+    </footer>
+  </main>
+</body>
+</html>

@@ -321,8 +321,40 @@
     }
   }
 
+  // "Under uppdatering"-modal för Intervjuträningen (samma som mobil).
+  window.trainShowInterviewMaintenance = function() {
+    var ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;';
+    ov.onclick = function(e) { if (e.target === ov) ov.remove(); };
+    ov.innerHTML =
+      '<div role="dialog" aria-modal="true" aria-labelledby="ivMaintTitleD" style="background:linear-gradient(180deg, rgba(30,20,5,0.98) 0%, rgba(20,15,5,0.98) 100%);border:1.5px solid rgba(245,158,11,0.4);border-radius:20px;padding:28px 24px;max-width:440px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);">' +
+      '<div style="font-size:64px;line-height:1;margin-bottom:10px;filter:drop-shadow(0 4px 16px rgba(245,158,11,0.5));">🛠️</div>' +
+      '<div id="ivMaintTitleD" style="font-size:22px;font-weight:900;color:#fff;margin-bottom:4px;letter-spacing:-0.5px;">Intervjuträning</div>' +
+      '<div style="display:inline-block;background:#f59e0b;color:#1a1a1a;font-size:10px;font-weight:900;padding:4px 12px;border-radius:12px;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Under uppdatering</div>' +
+      '<div style="font-size:14px;color:rgba(255,255,255,0.85);line-height:1.55;margin-bottom:20px;">Vi förbättrar intervjutekniken just nu för att ge dig en skarpare och mer realistisk träningsupplevelse. Modulen är tillbaka inom kort.</div>' +
+      '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="background:#f59e0b;color:#1a1a1a;border:none;border-radius:12px;padding:14px 28px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;width:100%;">OK</button>' +
+      '</div>';
+    document.body.appendChild(ov);
+  };
+
   function saveCVLocal() {
     safeSet(STORAGE_KEY, JSON.stringify(cvData));
+    // Auto-synk till Supabase med debounce — samma mönster som mobilen
+    // (index.html:saveData/saveCVToSupabase). Utan detta tappar desktop
+    // CV-ändringar tills användaren klickar "Spara CV"-knappen, vilket
+    // gör att mobilen ser gammal data efter desktop-redigering.
+    _cvCloudDebounce && clearTimeout(_cvCloudDebounce);
+    _cvCloudDebounce = setTimeout(_cvCloudSync, 3000);
+  }
+  let _cvCloudDebounce = null;
+  async function _cvCloudSync() {
+    const auth = (typeof getAuth === 'function') ? getAuth() : null;
+    if (!auth || !auth.userId || !auth.accessToken) return;
+    try {
+      if (typeof sbCall === 'function') {
+        await sbCall({ action: 'save_cv', userId: auth.userId, cvData: cvData });
+      }
+    } catch(e) { /* tyst — local är källan, nästa edit triggar nytt försök */ }
   }
 
   function loadTrainingProgress() {
@@ -840,6 +872,14 @@
       errEl.classList.add('visible');
       return;
     }
+    const consentEl = document.getElementById('onbAiConsent');
+    if (consentEl && !consentEl.checked) {
+      errEl.textContent = 'Du måste godkänna AI-analys för att skapa konto.';
+      errEl.classList.add('visible');
+      consentEl.focus();
+      return;
+    }
+    if (typeof window.saveAiConsent === 'function') window.saveAiConsent();
 
     cvData.name = (firstName + ' ' + lastName).trim();
     if (phone) cvData.phone = phone;
@@ -5807,17 +5847,18 @@
             </div>
           </div>
 
-          <!-- Intervjuträning -->
-          <div class="ov-card train-cat-card" onclick="trainOpenCat('intervju')"
-               style="border-color:rgba(167,139,250,0.4);background:linear-gradient(135deg,rgba(167,139,250,0.12),rgba(167,139,250,0.04));padding:22px 20px;display:flex;flex-direction:column;gap:14px;min-height:170px;">
+          <!-- Intervjuträning — Under uppdatering -->
+          <div class="ov-card train-cat-card" onclick="trainShowInterviewMaintenance()"
+               style="border-color:rgba(245,158,11,0.4);background:linear-gradient(135deg,rgba(245,158,11,0.10),rgba(245,158,11,0.03));padding:22px 20px;display:flex;flex-direction:column;gap:14px;min-height:170px;position:relative;opacity:0.85;cursor:not-allowed;">
+            <div style="position:absolute;top:14px;right:14px;background:#f59e0b;color:#1a1a1a;font-size:9px;font-weight:900;padding:3px 9px;border-radius:10px;letter-spacing:0.6px;text-transform:uppercase;z-index:2;">Under uppdatering</div>
             <div style="display:flex;align-items:flex-start;gap:14px;">
-              <div class="ov-card-icon" style="background:rgba(167,139,250,0.2);color:#a78bfa;font-size:26px;flex-shrink:0;">🎤</div>
+              <div class="ov-card-icon" style="background:rgba(245,158,11,0.2);color:#f59e0b;font-size:26px;flex-shrink:0;">🎤</div>
               <div>
                 <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:2px;">Intervjuträning</div>
                 <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.45;">Öva på vanliga intervjufrågor med exempelsvar.</div>
               </div>
             </div>
-            <div style="margin-top:auto;font-size:12px;color:#a78bfa;font-weight:700;">Öppna →</div>
+            <div style="margin-top:auto;font-size:12px;color:#f59e0b;font-weight:700;font-style:italic;">Återkommer snart</div>
           </div>
 
           <!-- Uppgifter från handläggare -->
