@@ -6707,11 +6707,21 @@ ${styleTexts}
         cvClone.querySelectorAll('.cv-entry').forEach(e => protected_blocks.push(blockY(e)));
 
         const totalH = cvClone.scrollHeight;
+
+        // Trim: hitta sista skyddade blockets bottom. Om scrollHeight har
+        // trailing whitespace (margin/padding efter sista sektionen) → kapa
+        // dit så vi inte genererar en tom sista PDF-sida.
+        let contentBottom = 0;
+        protected_blocks.forEach(b => { if (b.bottom > contentBottom) contentBottom = b.bottom; });
+        const effectiveH = (contentBottom > 0)
+          ? Math.min(totalH, Math.round(contentBottom + 16))
+          : totalH;
+
         const breaks = [0];
         let cur = 0;
-        while (cur < totalH) {
+        while (cur < effectiveH) {
           let next = cur + PAGE_PX_H;
-          if (next >= totalH) break;
+          if (next >= effectiveH) break;
           for (const blk of protected_blocks) {
             if (next > blk.top + 2 && next < blk.bottom - 2) {
               const before = blk.top - 8;
@@ -6722,7 +6732,14 @@ ${styleTexts}
           breaks.push(Math.round(next));
           cur = next;
         }
-        breaks.push(totalH);
+        breaks.push(effectiveH);
+
+        // Säkerhetsnät: om sista sidan ändå blir mycket kort (< 8% av sidan)
+        // och vi har minst 2 sidor — släng den.
+        if (breaks.length >= 3) {
+          const lastH = breaks[breaks.length - 1] - breaks[breaks.length - 2];
+          if (lastH < PAGE_PX_H * 0.08) breaks.pop();
+        }
 
         const fullCanvas = await html2canvas(cvClone, {
           scale: SCALE, useCORS: true, allowTaint: true,
