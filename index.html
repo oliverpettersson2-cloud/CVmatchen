@@ -11930,9 +11930,15 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
   // ── Dela PDF ─────────────────────────────────────────
 
   async function mobGenerateAndSharePDF() {
-    if (!cvData.name) { showToast('⚠️ Fyll i ditt namn först', 'error'); return; }
+    // Validering: kräv minst namn för meningsfull CV-PDF
+    if (!cvData || !cvData.name || !String(cvData.name).trim()) {
+      showToast('⚠️ Fyll i ditt namn först', 'error');
+      return;
+    }
 
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    // Web Share API med filer kräver BÅDE navigator.share och canShare
+    // (saknas helt i Firefox och de flesta desktop-browsers)
     const canShareFiles = !!(navigator.share && navigator.canShare);
 
     // Pre-öppna fönster på iOS när share inte finns (måste ske i user-gesture)
@@ -11944,58 +11950,111 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
       }
     }
 
+    // Hjälpare: ladda ned blob som fil
+    const _downloadBlob = function(b, name) {
+      const url = URL.createObjectURL(b);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function() { URL.revokeObjectURL(url); }, 2000);
+    };
+
     showToast('⏳ Skapar PDF...', 'info');
+
+    let blob, fileName, clientDataUri = null;
+
+    // 1) Försök server-side, fall tillbaka till klient-PDF — fel hanteras vänligt
     try {
-      let blob, fileName;
-
-      // Försök server-side
+      ({ blob, fileName } = await _generateServerPDF());
+    } catch (serverErr) {
+      console.warn('Server-PDF misslyckades, kör klient-fallback:', serverErr && serverErr.message);
       try {
-        ({ blob, fileName } = await _generateServerPDF());
-      } catch (serverErr) {
-        console.warn('Server misslyckades, kör klient-fallback:', serverErr.message);
-
-        // Klient-side fallback — använd full A4-logik med sidbrytning
         const clientResult = await _generateClientPDF();
-        blob     = clientResult.blob;
-        fileName = clientResult.fileName;
-
-        // iOS utan share: öppna data URI direkt
-        if (isIOS && !canShareFiles) {
-          if (iosWindow) {
-            iosWindow.location.href = clientResult.dataUri;
-            showToast('✅ PDF öppnad!', 'success');
-          }
-          return;
-        }
+        blob          = clientResult.blob;
+        fileName      = clientResult.fileName;
+        clientDataUri = clientResult.dataUri || null;
+      } catch (clientErr) {
+        console.error('Klient-PDF misslyckades:', clientErr);
+        if (iosWindow) { try { iosWindow.close(); } catch(_) {} }
+        showToast('Kunde inte skapa PDF just nu. Försök igen om en stund.', 'error');
+        return;
       }
 
-      // Dela eller ladda ned
-      const file = new File([blob], fileName, { type: 'application/pdf' });
-      if (canShareFiles && navigator.canShare({ files: [file] })) {
-        if (iosWindow) { try { iosWindow.close(); } catch(e) {} }
+      // iOS utan share-API: öppna data URI direkt i förvalt fönster
+      if (isIOS && !canShareFiles && clientDataUri) {
+        if (iosWindow) {
+          iosWindow.location.href = clientDataUri;
+          showToast('✅ PDF öppnad!', 'success');
+        } else {
+          _downloadBlob(blob, fileName);
+          showToast('📄 PDF sparad!', 'success');
+        }
+        return;
+      }
+    }
+
+    if (!blob) {
+      if (iosWindow) { try { iosWindow.close(); } catch(_) {} }
+      showToast('Kunde inte skapa PDF just nu. Försök igen om en stund.', 'error');
+      return;
+    }
+
+    // 2) Försök dela via Web Share API (mobil) — fall tillbaka till nedladdning vid fel
+    const file = new File([blob], fileName, { type: 'application/pdf' });
+    if (canShareFiles && navigator.canShare({ files: [file] })) {
+      if (iosWindow) { try { iosWindow.close(); } catch(_) {} }
+      try {
         await navigator.share({
           title: 'Mitt CV — ' + (cvData.name || ''),
           text: 'Här är mitt CV skapat med CVmatchen.',
           files: [file]
         });
         showToast('✅ Delat!', 'success');
-      } else {
-        const url = URL.createObjectURL(blob);
-        if (isIOS && iosWindow) {
-          iosWindow.location.href = url;
-          showToast('📄 PDF öppnad — spara via dela-knappen', 'success');
-        } else {
-          if (iosWindow) { try { iosWindow.close(); } catch(e) {} }
-          const a = document.createElement('a');
-          a.href = url; a.download = fileName;
-          document.body.appendChild(a); a.click(); document.body.removeChild(a);
-          setTimeout(() => URL.revokeObjectURL(url), 2000);
-          showToast('📄 PDF sparad!', 'success');
+      } catch (shareErr) {
+        // Användaren avbröt — visa inget felmeddelande
+        if (shareErr && shareErr.name === 'AbortError') return;
+        console.warn('navigator.share misslyckades, faller tillbaka:', shareErr);
+        try {
+          _downloadBlob(blob, fileName);
+          showToast('📄 PDF sparad — delning stöds inte här', 'success');
+        } catch (_) {
+          showToast('Kunde inte spara PDF. Försök igen.', 'error');
         }
       }
-    } catch(e) {
-      if (iosWindow) { try { iosWindow.close(); } catch(err) {} }
-      if (e.name !== 'AbortError') showToast('❌ Fel: ' + e.message, 'error');
+      return;
+    }
+
+    // 3) Ingen Web Share — ladda ned. Erbjud "kopiera länk" via clipboard som extra fallback
+    //    (t.ex. Firefox / desktop / icke-HTTPS där navigator.share saknas helt).
+    try {
+      if (isIOS && iosWindow) {
+        const url = URL.createObjectURL(blob);
+        iosWindow.location.href = url;
+        showToast('📄 PDF öppnad — spara via dela-knappen', 'success');
+        return;
+      }
+      if (iosWindow) { try { iosWindow.close(); } catch(_) {} }
+
+      _downloadBlob(blob, fileName);
+
+      // Bästa möjliga "kopiera länk" — object URL fungerar i samma flik tills den revokeas
+      const objectUrl = URL.createObjectURL(blob);
+      let copied = false;
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(objectUrl);
+          copied = true;
+        }
+      } catch (_) { /* clipboard kan blockeras (HTTP / behörigheter) — ignorera */ }
+      setTimeout(function() { URL.revokeObjectURL(objectUrl); }, 60000);
+
+      showToast(copied
+        ? '📄 PDF sparad — länk kopierad till urklipp'
+        : '📄 PDF sparad!', 'success');
+    } catch (dlErr) {
+      if (iosWindow) { try { iosWindow.close(); } catch(_) {} }
+      console.error('Nedladdning misslyckades:', dlErr);
+      showToast('Kunde inte spara PDF. Försök igen.', 'error');
     }
   }
 
