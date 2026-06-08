@@ -150,7 +150,9 @@ JOIN public.kommuner k ON k.name = e.kommun_name
 ON CONFLICT (kommun_id, name) DO NOTHING;
 
 INSERT INTO public.admins (email, role)
-VALUES ('oliver@cvmatchen.se', 'superadmin')
+VALUES
+  ('oliver@cvmatchen.se',    'superadmin'),
+  ('cvmatchen@outlook.com',  'superadmin')
 ON CONFLICT (email) DO UPDATE SET role = 'superadmin';
 
 -- ============================================================================
