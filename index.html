@@ -12472,6 +12472,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
     list[idx].applied = true;
     list[idx].appliedAt = Date.now();
     try { localStorage.setItem(JOB_DIARY_KEY, JSON.stringify(list)); } catch(e) {}
+    if (typeof _sbSync === 'function') _sbSync('job_diary', list);
     mobRenderSavedCVs();
     showToast('✅ Markerat som sökt!', 'success');
   }
@@ -14443,9 +14444,10 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
         if (raw) {
           const list = JSON.parse(raw);
           const idx = list.findIndex(function(e){ return e.matchedCVId === matchedId; });
-          if (idx >= 0) { list[idx].applied = true; list[idx].status = 'sokt'; }
-          else { list.unshift({ savedAt: Date.now(), jobTitle: matchedId, company: '', jobUrl: '', matchedCVId: matchedId, applied: true, status: 'sokt' }); }
+          if (idx >= 0) { list[idx].applied = true; list[idx].status = 'sokt'; list[idx].appliedAt = Date.now(); }
+          else { list.unshift({ savedAt: Date.now(), jobTitle: matchedId, company: '', jobUrl: '', matchedCVId: matchedId, applied: true, appliedAt: Date.now(), status: 'sokt' }); }
           localStorage.setItem('pathfinder_job_diary', JSON.stringify(list));
+          if (typeof _sbSync === 'function') _sbSync('job_diary', list);
         }
       } catch(e){}
       // Remove from matched list directly without going through mobDeleteMatchedCV (which calls mobRenderSavedCVs/renderGrid)
@@ -14453,6 +14455,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
         const MKEY = 'pathfinder_matched_cvs';
         const ml = JSON.parse(localStorage.getItem(MKEY)||'[]').filter(function(c){ return c.id !== matchedId; });
         localStorage.setItem(MKEY, JSON.stringify(ml));
+        if (typeof _sbSync === 'function') _sbSync('matched_cvs', ml);
       } catch(e){}
       _forceOpen('matched');
     };
@@ -14463,12 +14466,14 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
         if (raw) {
           const list = JSON.parse(raw).filter(function(e){ return e.matchedCVId !== matchedId; });
           localStorage.setItem('pathfinder_job_diary', JSON.stringify(list));
+          if (typeof _sbSync === 'function') _sbSync('job_diary', list);
         }
       } catch(e){}
       try {
         const MKEY = 'pathfinder_matched_cvs';
         const ml = JSON.parse(localStorage.getItem(MKEY)||'[]').filter(function(c){ return c.id !== matchedId; });
         localStorage.setItem(MKEY, JSON.stringify(ml));
+        if (typeof _sbSync === 'function') _sbSync('matched_cvs', ml);
       } catch(e){}
       _forceOpen('matched');
     };
@@ -14478,8 +14483,9 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
         const raw = localStorage.getItem('pathfinder_job_diary');
         if (!raw) return;
         const list = JSON.parse(raw);
-        if (list[realIdx]) { list[realIdx].status = status; list[realIdx].applied = true; }
+        if (list[realIdx]) { list[realIdx].status = status; list[realIdx].applied = true; if (!list[realIdx].appliedAt) list[realIdx].appliedAt = Date.now(); }
         localStorage.setItem('pathfinder_job_diary', JSON.stringify(list));
+        if (typeof _sbSync === 'function') _sbSync('job_diary', list);
       } catch(e){}
       _forceOpen('diary');
     };

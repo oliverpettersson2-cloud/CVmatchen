@@ -5294,6 +5294,7 @@
           '<button class="pf-card-btn primary" onclick="pfOpenMatched(\'' + cv.id + '\')">Öppna</button>' +
           '<button class="pf-card-btn" onclick="pfExportMatched(\'' + cv.id + '\')">📤 PDF</button>' +
           jobUrlBtn +
+          '<button class="pf-card-btn" style="background:rgba(232,93,38,0.15);border-color:rgba(232,93,38,0.4);color:#f0a040;" onclick="pfMarkMatchedSokt(\'' + cv.id + '\', \'' + escapeAttr(title) + '\', \'' + escapeAttr(company) + '\', \'' + escapeAttr(cv.jobUrl || '') + '\')" title="Markera som sökt — sparas i jobbdagboken">✓ Sökt</button>' +
           '<button class="pf-card-btn danger" onclick="pfDeleteMatched(\'' + cv.id + '\')" title="Ta bort">✕</button>' +
         '</div>' +
       '</div>';
@@ -5692,6 +5693,44 @@
     pfPutMatched(list.filter(c => c.id !== id));
     pfRenderMatchedList();
     toast('🗑️ Borttaget');
+  };
+
+  // Markerar matchat CV som sökt — lägger till i jobbdagboken (job_diary)
+  // och synkar till Supabase så handläggare ser det. Samma logik som
+  // mobilens _matchMarkSokt.
+  window.pfMarkMatchedSokt = function(matchedId, jobTitle, company, jobUrl) {
+    const DIARY_KEY = 'pathfinder_job_diary';
+    try {
+      let list = [];
+      try { list = JSON.parse(localStorage.getItem(DIARY_KEY) || '[]'); } catch(_) {}
+      const idx = list.findIndex(e => e.matchedCVId === matchedId);
+      const now = Date.now();
+      if (idx >= 0) {
+        list[idx].applied = true;
+        list[idx].status = 'sokt';
+        list[idx].appliedAt = now;
+      } else {
+        list.unshift({
+          savedAt: now, appliedAt: now,
+          jobTitle: jobTitle || matchedId,
+          company: company || '',
+          jobUrl: jobUrl || '',
+          matchedCVId: matchedId,
+          applied: true, status: 'sokt'
+        });
+      }
+      if (list.length > 50) list = list.slice(0, 50);
+      localStorage.setItem(DIARY_KEY, JSON.stringify(list));
+      if (typeof sbSync === 'function') sbSync('job_diary', list);
+    } catch(e) { console.warn('pfMarkMatchedSokt fail:', e); }
+
+    // Plocka bort från matchningar-listan (samma beteende som mobilen)
+    const matchedList = pfGetMatched().filter(c => c.id !== matchedId);
+    pfPutMatched(matchedList);
+    if (typeof pfRenderMatchedList === 'function') pfRenderMatchedList();
+    if (typeof renderProfilDetail === 'function') renderProfilDetail();
+    if (typeof renderProfilView === 'function') renderProfilView();
+    toast('✅ Markerat som sökt — finns i jobbdagboken');
   };
 
   window.pfExportMatched = async function(id) {
