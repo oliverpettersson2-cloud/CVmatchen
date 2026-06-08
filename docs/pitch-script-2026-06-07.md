@@ -86,9 +86,28 @@ Kärnpunkter (välj 2–3 som matchar vad de just sa):
 
 ### "Vad händer om ni går i konkurs?"
 
-> "Då äger ni er data och får en full export. Inget är inlåst — vi använder
-> standardformat (PDF för CV, CSV för deltagardata). Inga proprietära format.
-> Det skrivs in i PuB-avtalet."
+> "Ni får full export av **er deltagardata** — i standardformat (PDF för CV,
+> CSV för deltagardata). Inga proprietära format, inget inlåst. Det skrivs in
+> i PuB-avtalet.
+>
+> Själva tjänsten och koden ägs av PathfinderAI AB — det är vår produkt och
+> vår IP. Ni licensierar nyttjanderätten under avtalstiden. Det är samma modell
+> som med Office 365, Visma eller andra SaaS-tjänster ni redan använder."
+
+### "Får vi källkoden om vi köper?"
+
+> "Nej. Ni köper en **licens att använda** CVmatchen — inte källkoden.
+> CVmatchen är PathfinderAI:s produkt och vår immateriella egendom (IP).
+> Detta är standardmodellen för all SaaS — ni äger inte koden bakom Office,
+> Visma eller Lifecare heller.
+>
+> Det ni **får och äger** är:
+> - **Er egen data** — deltagar­uppgifter, CV, progress. Exporterbar när som helst.
+> - **Nyttjanderätten** — obegränsat antal användare i er kommun under avtalstiden.
+> - **Tydliga SLA** — drift, säkerhet, support enligt avtal.
+>
+> Vill ni ha en egenutvecklad lösning där ni äger koden kostar det 1,5–2 Mkr
+> i utveckling plus drift och underhåll. CVmatchen-licens är 99 000 kr/år."
 
 ### "Vad gör Candeno annorlunda?"
 
@@ -163,3 +182,17 @@ Mejl-mall: se `docs/mejl-utkast-2026-06-07.md`
 - **105 moduler · 6 spår** (Intro · Arbete · Studier · Hälsa · Ekonomi · Digitalt)
 - **Svenska + 23 språk** för översättning
 - **WCAG 2.1 AA** delvis (full inom 2026-06-30)
+
+## IP & ägarskap — säg det rätt från början
+
+Detta är centralt. Förväxla ALDRIG dessa två:
+
+| Vad? | Vem äger? |
+|---|---|
+| **Källkoden + tjänsten CVmatchen** | **PathfinderAI AB** (vår IP) |
+| **Deltagardata, CV, progress** | **Kunden** (kommunen, som personuppgiftsansvarig) |
+
+- Kommunen **licensierar nyttjanderätten** — de köper INTE koden.
+- Det är samma modell som Office 365, Visma, Lifecare, Tieto — ingen kommun "äger" Word.
+- Vid avtalsslut: kunden får sin **data exporterad**. Koden lämnas inte ut.
+- Skriv aldrig och säg aldrig "ni får / ni äger systemet". Säg "ni får licens" eller "nyttjanderätten".
