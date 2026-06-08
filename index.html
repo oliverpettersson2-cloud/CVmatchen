@@ -8879,14 +8879,15 @@ ${styleTexts}
               </div>
               <div class="train-tile-meta" id="trainOvnMeta">0% klarat</div>
             </div>
-            <div class="train-tile train-tile--interview" onclick="trainSwitchView('intervju')">
+            <div class="train-tile train-tile--interview" onclick="trainShowInterviewMaintenance()" style="position:relative;opacity:0.85;cursor:not-allowed;">
+              <div style="position:absolute;top:14px;right:14px;background:#f59e0b;color:#1a1a1a;font-size:9px;font-weight:900;padding:3px 9px;border-radius:10px;letter-spacing:0.6px;text-transform:uppercase;z-index:2;">Under uppdatering</div>
               <div class="train-tile-glow"></div>
               <div>
                 <div class="train-tile-icon">🎤</div>
                 <div class="train-tile-name">Intervjuträning</div>
                 <div class="train-tile-desc">Öva på vanliga intervjufrågor och få AI-feedback.</div>
               </div>
-              <div class="train-tile-meta">Öppna →</div>
+              <div class="train-tile-meta" style="color:#f59e0b;font-style:italic;">Återkommer snart</div>
             </div>
             <!-- Språkassistent (Duolingo-liknande) — Kommer snart-kort -->
             <div class="train-tile train-tile--coming" onclick="trainShowComingSoon('sprak')" style="border-color:rgba(34,197,94,0.35);background:linear-gradient(180deg, rgba(34,197,94,0.08) 0%, rgba(34,197,94,0.03) 100%);position:relative;">
@@ -10721,6 +10722,24 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
       '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="background:' + def.color + ';color:#fff;border:none;border-radius:12px;padding:14px 28px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;width:100%;">OK, ser fram emot det!</button>' +
       '</div>';
 
+    document.body.appendChild(ov);
+  };
+
+  // ═══════════════════════════════════════════════════════════════
+  // "Under uppdatering"-modal för Intervjuträningen (mobil + desktop delar).
+  // ═══════════════════════════════════════════════════════════════
+  window.trainShowInterviewMaintenance = function() {
+    var ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;';
+    ov.onclick = function(e) { if (e.target === ov) ov.remove(); };
+    ov.innerHTML =
+      '<div role="dialog" aria-modal="true" aria-labelledby="ivMaintTitle" style="background:linear-gradient(180deg, rgba(30,20,5,0.98) 0%, rgba(20,15,5,0.98) 100%);border:1.5px solid rgba(245,158,11,0.4);border-radius:20px;padding:28px 24px;max-width:400px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);">' +
+      '<div style="font-size:64px;line-height:1;margin-bottom:10px;filter:drop-shadow(0 4px 16px rgba(245,158,11,0.5));">🛠️</div>' +
+      '<div id="ivMaintTitle" style="font-size:22px;font-weight:900;color:#fff;margin-bottom:4px;letter-spacing:-0.5px;">Intervjuträning</div>' +
+      '<div style="display:inline-block;background:#f59e0b;color:#1a1a1a;font-size:10px;font-weight:900;padding:4px 12px;border-radius:12px;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">Under uppdatering</div>' +
+      '<div style="font-size:14px;color:rgba(255,255,255,0.85);line-height:1.55;margin-bottom:20px;">Vi förbättrar intervjutekniken just nu för att ge dig en skarpare och mer realistisk träningsupplevelse. Modulen är tillbaka inom kort.</div>' +
+      '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="background:#f59e0b;color:#1a1a1a;border:none;border-radius:12px;padding:14px 28px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;width:100%;">OK</button>' +
+      '</div>';
     document.body.appendChild(ov);
   };
 
