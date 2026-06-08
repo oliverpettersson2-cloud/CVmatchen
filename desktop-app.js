@@ -2166,7 +2166,13 @@
       tasksLoadedOnce = true;
       updateTaskBadges();
       // Re-render om användaren just nu tittar på en av vyerna
-      if (currentView === 'profil') renderTasksInProfil();
+      if (currentView === 'profil') {
+        renderTasksInProfil();
+        // Hub-tile + ev. öppen detaljvy måste också uppdateras när tasks
+        // landar asynkront (annars visar tile fortfarande 0).
+        if (typeof renderProfilHub === 'function') renderProfilHub();
+        if (pfActiveTile === 'tasks' && typeof renderProfilDetail === 'function') renderProfilDetail();
+      }
       if (currentView === 'ovningar' && !currentTrainCat && typeof renderTrainingHome === 'function') {
         renderTrainingHome();
       }
@@ -2488,7 +2494,11 @@
 
   function refreshTaskViews() {
     updateTaskBadges();
-    if (currentView === 'profil') renderTasksInProfil();
+    if (currentView === 'profil') {
+      renderTasksInProfil();
+      if (typeof renderProfilHub === 'function') renderProfilHub();
+      if (pfActiveTile === 'tasks' && typeof renderProfilDetail === 'function') renderProfilDetail();
+    }
     if (currentView === 'ovningar') {
       if (currentTrainCat === 'uppg') renderTasksCategoryView();
       else if (!currentTrainCat && typeof renderTrainingHome === 'function') renderTrainingHome();
@@ -5061,8 +5071,11 @@
 
     const saved   = pfGetSaved() || [];
     const matched = pfMatchedActiveList() || [];
-    const tasks   = (window._myTasks && Array.isArray(window._myTasks)) ? window._myTasks : [];
-    const pendingTasks = tasks.filter(t => !t.done).length;
+    // Tilldelade uppgifter från handläggare (Supabase action='my_tasks').
+    // Källa = closure-variabeln `assignedTasks` som fylls av loadMyTasks().
+    // Tidigare lästes window._myTasks här men den sattes aldrig → räknaren
+    // visade alltid 0 på desktop trots att uppgifter fanns i backend.
+    const pendingTasks = (typeof tasksOpen === 'function') ? tasksOpen().length : 0;
     const diary   = (typeof getDiary === 'function') ? (getDiary() || []).filter(e => e.applied) : [];
 
     // Övningar-procent
@@ -5200,21 +5213,34 @@
   }
 
   function renderProfilTasksDetail() {
-    const tasks = (window._myTasks && Array.isArray(window._myTasks)) ? window._myTasks : [];
-    const pending = tasks.filter(t => !t.done);
+    // Använd samma datakälla som Träna-vyn: closure-variabeln `assignedTasks`
+    // populerad av loadMyTasks() (Supabase action='my_tasks'). buildTaskCard()
+    // återanvänds så att layouten matchar mobilens uppg-tab inkl. "Markera klar"
+    // (window.completeTask → action='complete_task').
+    const open = (typeof tasksOpen === 'function') ? tasksOpen() : [];
+    const done = (typeof tasksCompleted === 'function') ? tasksCompleted() : [];
 
-    let html = '<div class="pf-detail-header"><div class="pf-detail-title">✅ Uppgifter från handläggare</div></div>';
-    if (!pending.length) {
+    let html = '<div class="pf-detail-header"><div class="pf-detail-title">✅ Uppgifter från handläggare</div>' +
+               '<button class="btn btn-secondary" onclick="loadMyTasks()" style="font-size:12px;">🔄 Uppdatera</button></div>';
+
+    if (!open.length && !done.length) {
       html += '<div class="pf-detail-empty"><div class="pf-detail-empty-icon">✅</div>' +
         '<div class="pf-detail-empty-text">Du har inga uppgifter just nu.<br>Uppgifter från din handläggare dyker upp här.</div></div>';
-    } else {
-      // Delegera till befintliga renderTasksInProfil om den finns — den bygger till pfTasksList
-      // Men eftersom vi ändrat DOM'en, skapa en enkel lista inline
-      html += '<div id="pfTasksList" class="task-list"></div>';
-      setTimeout(() => {
-        if (typeof renderTasksInProfil === 'function') renderTasksInProfil();
-      }, 0);
+      return html;
     }
+
+    html += '<div class="task-list">';
+    if (open.length) {
+      html += open.map(buildTaskCard).join('');
+    } else {
+      html += '<div class="task-empty"><div class="task-empty-icon">✅</div>' +
+              '<div style="font-size:13px;">Alla uppgifter slutförda — bra jobbat!</div></div>';
+    }
+    if (done.length) {
+      html += '<div style="font-size:11px;font-weight:800;letter-spacing:0.8px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin:16px 0 8px;">Slutförda (' + done.length + ')</div>';
+      html += done.slice(0, 10).map(buildTaskCard).join('');
+    }
+    html += '</div>';
     return html;
   }
 
