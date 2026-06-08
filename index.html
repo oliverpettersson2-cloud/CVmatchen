@@ -1457,9 +1457,11 @@
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
       z-index: 9999;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       padding: 20px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
     #authOverlay.hidden { display: none; }
 
@@ -1473,6 +1475,10 @@
       backdrop-filter: blur(20px);
       box-shadow: 0 24px 80px rgba(0,0,0,0.5);
       text-align: center;
+      margin: auto 0;
+    }
+    @media (max-height: 760px) {
+      .auth-card { padding: 28px 24px; margin: 0; }
     }
 
     .auth-logo {
