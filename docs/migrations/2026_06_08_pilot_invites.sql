@@ -2,7 +2,7 @@
 -- Pilot-invites: kommuner, enheter, admins + bootstrap superadmin
 -- Datum: 2026-06-08
 -- Multi-tenant: varje kommun lever isolerat. Handläggare ser bara sin
--- kommun/enhet. Superadmin (Oliver) ser allt.
+-- kommun/enhet. Superadmin ser allt.
 --
 -- VIKTIGT: befintlig admins-tabell har id BIGINT. Vi BEHÅLLER den och
 -- lägger bara till saknade kolumner. admin_audit/invited_by använder BIGINT
@@ -131,11 +131,11 @@ CREATE POLICY audit_deny    ON public.admin_audit FOR ALL USING (false);
 -- BOOTSTRAP
 -- ============================================================================
 
-INSERT INTO public.kommuner (name, org_nr, contact_email, is_pilot, pilot_ends, notes)
+INSERT INTO public.kommuner (name, org_nr, is_pilot, pilot_ends)
 VALUES
-  ('Helsingborg',  '212000-1157', NULL, true, now() + interval '90 days', 'Hemma-pilot. Oliver är SYV där.'),
-  ('Perstorp',     '212000-0910', NULL, true, now() + interval '90 days', 'Första externa pilot. Kontakt: Peter Lindow.'),
-  ('PathfinderAI', NULL,          'info@cvmatchen.com', false, NULL,       'Intern test-tenant — använd för demo/QA.')
+  ('Helsingborg',  '212000-1157', true, now() + interval '90 days'),
+  ('Perstorp',     '212000-0910', true, now() + interval '90 days'),
+  ('PathfinderAI', NULL,          false, NULL)
 ON CONFLICT (name) DO NOTHING;
 
 INSERT INTO public.enheter (kommun_id, name)
@@ -149,27 +149,14 @@ FROM (VALUES
 JOIN public.kommuner k ON k.name = e.kommun_name
 ON CONFLICT (kommun_id, name) DO NOTHING;
 
-INSERT INTO public.admins (email, name, role, last_login)
-VALUES (
-  'oliver.mac@pathfinderai.se',
-  'Oliver Pettersson',
-  'superadmin',
-  NULL
-)
-ON CONFLICT (email) DO UPDATE SET
-  role = 'superadmin',
-  name = COALESCE(public.admins.name, EXCLUDED.name);
+INSERT INTO public.admins (email, role)
+VALUES ('oliver.mac@pathfinderai.se', 'superadmin')
+ON CONFLICT (email) DO UPDATE SET role = 'superadmin';
 
-INSERT INTO public.admins (email, name, role, kommun_id, enhet_id)
-SELECT
-  'oliver.pettersson2@gmail.com',
-  'Oliver Pettersson (test)',
-  'handlaggare',
-  k.id,
-  e.id
+INSERT INTO public.admins (email, role, kommun_id, enhet_id)
+SELECT 'oliver.pettersson2@gmail.com', 'handlaggare', k.id, e.id
 FROM public.kommuner k
-LEFT JOIN public.enheter e
-  ON e.kommun_id = k.id AND e.name = 'Arbetsmarknadsenheten'
+LEFT JOIN public.enheter e ON e.kommun_id = k.id AND e.name = 'Arbetsmarknadsenheten'
 WHERE k.name = 'Helsingborg'
 ON CONFLICT (email) DO NOTHING;
 
