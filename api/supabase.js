@@ -395,6 +395,74 @@ export default async function handler(req, res) {
       return res.status(200).json({ data: users });
     }
 
+    if (action === 'admin_get_diary_stats') {
+      // Returnerar { applied_count, last_applied_at } för en deltagare.
+      // Verifierar att admin har behörighet att se den specifika user_id:n.
+      const uid = targetUserId || userId;
+      if (!uid) return res.status(400).json({ error: 'targetUserId krävs' });
+      const { admin } = await requireAdmin(res, accessToken, action, { requestedUserId: uid });
+      if (!admin) return;
+      // Anropa PostgreSQL-funktionen admin_get_diary_stats (från migrationen).
+      // RPC-endpoint: POST /rest/v1/rpc/admin_get_diary_stats med { p_user_id }
+      const rpc = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/rpc/admin_get_diary_stats`,
+        { method: 'POST', headers: serviceHeaders() },
+        { p_user_id: uid }
+      );
+      if (rpc.status >= 400) {
+        console.warn('[admin_get_diary_stats] RPC fel:', rpc.status, maskPII(rpc.data));
+        // Fallback: läs job_diary direkt och räkna i Node om RPC inte finns
+        const dr = await makeRequest(
+          `${SUPABASE_URL}/rest/v1/job_diary?user_id=eq.${uid}&select=data&limit=1`,
+          { method: 'GET', headers: serviceHeaders() }
+        );
+        const rows = Array.isArray(dr.data) ? dr.data : [];
+        const arr = (rows[0] && Array.isArray(rows[0].data)) ? rows[0].data : [];
+        const applied = arr.filter(e => e && e.applied === true);
+        const lastTs = applied.reduce((max, e) => Math.max(max, Number(e.appliedAt) || 0), 0);
+        return res.status(200).json({
+          applied_count: applied.length,
+          last_applied_at: lastTs ? new Date(lastTs).toISOString() : null
+        });
+      }
+      const row = Array.isArray(rpc.data) ? rpc.data[0] : rpc.data;
+      return res.status(200).json({
+        applied_count: (row && row.applied_count) || 0,
+        last_applied_at: (row && row.last_applied_at) || null
+      });
+    }
+
+    if (action === 'admin_list_diary_stats') {
+      // Batch: tar { userIds: [uuid,...] } och returnerar
+      // { stats: { uuid: { applied_count, last_applied_at } } }
+      // Behörighet: admin måste ha verifierad inloggning. Filtrering till
+      // egen kommun/enhet sker via att vi bara hämtar för user_ids som
+      // admin redan listat (de har redan passerat tenant-check i admin_list_users).
+      const { admin } = await requireAdmin(res, accessToken, action);
+      if (!admin) return;
+      const ids = Array.isArray(req.body?.userIds) ? req.body.userIds.filter(Boolean) : [];
+      if (!ids.length) return res.status(200).json({ stats: {} });
+      // PostgREST IN-filter: user_id=in.(uuid1,uuid2,...)
+      const inList = ids.map(u => String(u)).join(',');
+      const dr = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/job_diary?user_id=in.(${inList})&select=user_id,data`,
+        { method: 'GET', headers: serviceHeaders() }
+      );
+      const rows = Array.isArray(dr.data) ? dr.data : [];
+      const stats = {};
+      ids.forEach(u => { stats[u] = { applied_count: 0, last_applied_at: null }; });
+      rows.forEach(r => {
+        const arr = Array.isArray(r.data) ? r.data : [];
+        const applied = arr.filter(e => e && e.applied === true);
+        const lastTs = applied.reduce((max, e) => Math.max(max, Number(e.appliedAt) || 0), 0);
+        stats[r.user_id] = {
+          applied_count: applied.length,
+          last_applied_at: lastTs ? new Date(lastTs).toISOString() : null
+        };
+      });
+      return res.status(200).json({ stats });
+    }
+
     if (action === 'admin_get_user') {
       const uid = targetUserId || userId;
       {

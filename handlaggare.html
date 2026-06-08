@@ -881,8 +881,8 @@ td{padding:10px 13px;vertical-align:middle}
           <!-- Tabell -->
           <div class="tw">
             <table>
-              <thead><tr><th style="width:36px;text-align:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--mu);vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></th><th>Namn</th><th class="hm">Handläggare</th><th class="hm">Enhet</th><th>Senast aktiv</th><th class="hm">CV</th><th class="hm">Övningar</th><th class="hm">Uppgifter</th><th>Status</th></tr></thead>
-              <tbody id="tBody"><tr><td colspan="9" class="loading">Laddar deltagare...</td></tr></tbody>
+              <thead><tr><th style="width:36px;text-align:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--mu);vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></th><th>Namn</th><th class="hm">Handläggare</th><th class="hm">Enhet</th><th>Senast aktiv</th><th class="hm">CV</th><th class="hm">Övningar</th><th class="hm">Uppgifter</th><th class="hm" title="Antal sökta jobb (jobbdagbok)">Sökta</th><th>Status</th></tr></thead>
+              <tbody id="tBody"><tr><td colspan="10" class="loading">Laddar deltagare...</td></tr></tbody>
             </table>
             <div class="pg-bar"><span id="pgInfo"></span></div>
           </div>
@@ -1598,7 +1598,7 @@ function switchTab(id){
 
 // ═══ USERS-LISTA ═══
 async function loadUsers(){
-  document.getElementById('tBody').innerHTML='<tr><td colspan="9" class="loading">Laddar ärenden...</td></tr>';
+  document.getElementById('tBody').innerHTML='<tr><td colspan="10" class="loading">Laddar ärenden...</td></tr>';
   // Skicka inga filter till backend — visa ALLA registrerade användare.
   // Handläggaren styr själv via enhet- och handläggar-dropdownsen i UI:t.
   // (Tidigare filtrerade backend automatiskt på admin.kommun_id/enhet_id
@@ -1607,8 +1607,8 @@ async function loadUsers(){
   const filters={};
   let data;
   try{data=await post('admin_list_users',{filters,adminId:admin.id});}
-  catch(e){document.getElementById('tBody').innerHTML=`<tr><td colspan="9" class="loading" style="color:var(--rd)">API-anslutningsfel: ${e.message}</td></tr>`;showErr('Kunde inte hämta användare: '+e.message);return;}
-  if(data.error){document.getElementById('tBody').innerHTML=`<tr><td colspan="9" class="loading" style="color:var(--rd)">Fel från API: ${data.error}</td></tr>`;showErr('API-fel: '+data.error);return;}
+  catch(e){document.getElementById('tBody').innerHTML=`<tr><td colspan="10" class="loading" style="color:var(--rd)">API-anslutningsfel: ${e.message}</td></tr>`;showErr('Kunde inte hämta användare: '+e.message);return;}
+  if(data.error){document.getElementById('tBody').innerHTML=`<tr><td colspan="10" class="loading" style="color:var(--rd)">Fel från API: ${data.error}</td></tr>`;showErr('API-fel: '+data.error);return;}
   let backendUsers = data.data||data.users||(Array.isArray(data)?data:[]);
   // DIAGNOSTIK: logga vad backend returnerar så vi kan se varför Oliver Pettersson saknas
   console.log('[CVmatchen] Backend returnerade ' + backendUsers.length + ' användare:',
@@ -1620,7 +1620,7 @@ async function loadUsers(){
   );
   // Injicera demo-handläggare + deltagare för demonstration
   allUsers = injectDemoUsers(backendUsers);
-  if(allUsers.length===0) document.getElementById('tBody').innerHTML='<tr><td colspan="9" class="loading">Inga deltagare hittades</td></tr>';
+  if(allUsers.length===0) document.getElementById('tBody').innerHTML='<tr><td colspan="10" class="loading">Inga deltagare hittades</td></tr>';
 
   // Fyll enhet-filtret — inkludera "Utan enhet" för användare som loggat in själva
   const enheter = [...new Set(allUsers.map(u=>u.enheter?.name||u.enhet_name).filter(Boolean))].sort();
@@ -1832,10 +1832,39 @@ function renderTable(users){
       <td class="hm tc">${cvd.name||cvd.title?'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--gn);vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg>':'<span style="color:var(--mu)">—</span>'}</td>
       <td class="hm tc">${progPct}%</td>
       <td class="hm tc">${taskInfo}</td>
+      <td class="hm tc" data-diary-uid="${uid}"><span style="color:var(--mu)">…</span></td>
       <td><span class="bd ${u.status||'new'}">${SL[u.status]||'Ny'}</span></td>
     </tr>`;
-  }).join(''):'<tr><td colspan="9" class="loading">Inga deltagare matchar sökningen</td></tr>';
+  }).join(''):'<tr><td colspan="10" class="loading">Inga deltagare matchar sökningen</td></tr>';
   document.getElementById('pgInfo').textContent=`${f.length} deltagare`;
+  // Hämta sökta-jobb-stats i batch (1 API-anrop för alla synliga deltagare)
+  loadDiaryStats(f.map(u => u.user_id || u.id).filter(Boolean));
+}
+
+// Batch-hämtning av sökta-jobb-stats för alla synliga deltagare.
+// Fyller i celler markerade med data-diary-uid efter rendering.
+async function loadDiaryStats(userIds) {
+  if (!Array.isArray(userIds) || !userIds.length) return;
+  try {
+    const tok = (typeof window.adminToken === 'string') ? window.adminToken : (admin && admin.token);
+    const r = await fetch('/api/supabase', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...(tok ? { 'Authorization': 'Bearer ' + tok } : {}) },
+      body: JSON.stringify({ action: 'admin_list_diary_stats', accessToken: tok, userIds })
+    });
+    if (!r.ok) return;
+    const data = await r.json();
+    const stats = data && data.stats || {};
+    Object.keys(stats).forEach(uid => {
+      const cell = document.querySelector('td[data-diary-uid="' + uid + '"]');
+      if (!cell) return;
+      const n = (stats[uid] && stats[uid].applied_count) || 0;
+      const last = stats[uid] && stats[uid].last_applied_at;
+      const lastTxt = last ? ' · ' + String(last).split('T')[0] : '';
+      const color = n > 0 ? 'var(--gn)' : 'var(--mu)';
+      cell.innerHTML = '<span style="color:' + color + ';font-weight:' + (n > 0 ? '700' : '400') + ';" title="Senast sökt:' + (last ? ' ' + lastTxt.replace(' · ', '') : ' aldrig') + '">' + n + '</span>';
+    });
+  } catch(e) { /* tyst — kolumnen visar bara '…' om det failar */ }
 }
 document.getElementById('searchIn')?.addEventListener('input',()=>renderTable(allUsers));
 document.getElementById('enhetFlt')?.addEventListener('change',()=>renderTable(allUsers));
