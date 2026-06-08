@@ -15,25 +15,47 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- ── kommuner ────────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.kommuner (
-  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name       TEXT NOT NULL UNIQUE,
-  org_nr     TEXT,
-  contact_email TEXT,
-  contact_phone TEXT,
-  is_pilot   BOOLEAN NOT NULL DEFAULT true,
-  pilot_ends TIMESTAMPTZ,
-  notes      TEXT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  id   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL
 );
+
+ALTER TABLE public.kommuner ADD COLUMN IF NOT EXISTS org_nr        TEXT;
+ALTER TABLE public.kommuner ADD COLUMN IF NOT EXISTS contact_email TEXT;
+ALTER TABLE public.kommuner ADD COLUMN IF NOT EXISTS contact_phone TEXT;
+ALTER TABLE public.kommuner ADD COLUMN IF NOT EXISTS is_pilot      BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE public.kommuner ADD COLUMN IF NOT EXISTS pilot_ends    TIMESTAMPTZ;
+ALTER TABLE public.kommuner ADD COLUMN IF NOT EXISTS notes         TEXT;
+ALTER TABLE public.kommuner ADD COLUMN IF NOT EXISTS created_at    TIMESTAMPTZ NOT NULL DEFAULT now();
+
+-- UNIQUE på name (om saknas)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'kommuner_name_key' AND conrelid = 'public.kommuner'::regclass
+  ) AND NOT EXISTS (SELECT name FROM public.kommuner GROUP BY name HAVING COUNT(*) > 1) THEN
+    ALTER TABLE public.kommuner ADD CONSTRAINT kommuner_name_key UNIQUE (name);
+  END IF;
+END $$;
 
 -- ── enheter ─────────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.enheter (
-  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  kommun_id  UUID NOT NULL REFERENCES public.kommuner(id) ON DELETE CASCADE,
-  name       TEXT NOT NULL,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  UNIQUE (kommun_id, name)
+  id   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL
 );
+
+ALTER TABLE public.enheter ADD COLUMN IF NOT EXISTS kommun_id  UUID REFERENCES public.kommuner(id) ON DELETE CASCADE;
+ALTER TABLE public.enheter ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT now();
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'enheter_kommun_id_name_key' AND conrelid = 'public.enheter'::regclass
+  ) THEN
+    ALTER TABLE public.enheter ADD CONSTRAINT enheter_kommun_id_name_key UNIQUE (kommun_id, name);
+  END IF;
+END $$;
 
 CREATE INDEX IF NOT EXISTS idx_enheter_kommun ON public.enheter (kommun_id);
 
