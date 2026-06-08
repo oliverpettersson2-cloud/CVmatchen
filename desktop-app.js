@@ -5848,6 +5848,20 @@
               ${openTaskCount > 0 ? openTaskCount + ' att göra' : (totalTasks > 0 ? 'Alla klara!' : 'Väntar på tilldelning')}
             </div>
           </div>
+
+          <!-- Språkassistent (Duolingo-liknande) — Kommer snart-kort (paritet med mobil) -->
+          <div class="ov-card train-cat-card" onclick="trainShowComingSoonDesktop('sprak')"
+               style="border-color:rgba(34,197,94,0.35);background:linear-gradient(135deg,rgba(34,197,94,0.10),rgba(34,197,94,0.03));padding:22px 20px;display:flex;flex-direction:column;gap:14px;min-height:170px;position:relative;cursor:pointer;">
+            <div style="position:absolute;top:12px;right:12px;background:#22c55e;color:#fff;font-size:10px;font-weight:900;padding:4px 10px;border-radius:10px;letter-spacing:0.6px;text-transform:uppercase;z-index:2;">Snart</div>
+            <div style="display:flex;align-items:flex-start;gap:14px;">
+              <div class="ov-card-icon" style="background:rgba(34,197,94,0.2);color:#22c55e;font-size:26px;flex-shrink:0;">🦉</div>
+              <div>
+                <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:2px;">Språkassistent</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.45;">Träna svenska 5 min/dag — som Duolingo, anpassat för jobb och vardag.</div>
+              </div>
+            </div>
+            <div style="margin-top:auto;font-size:12px;color:#22c55e;font-weight:700;font-style:italic;">Under utveckling</div>
+          </div>
         </div>
       `;
       return;
@@ -5916,6 +5930,56 @@
   window.trainOpenCat = function(catId) {
     currentTrainCat = catId;
     renderTrainingHome();
+  };
+
+  // ═══════════════════════════════════════════════════════════════
+  // "Kommer snart"-modal för funktioner under utveckling.
+  // Desktop-motsvarighet till mobilens trainShowComingSoon. Spegelar
+  // samma innehåll så badge/status är konsistent över plattformarna.
+  // ═══════════════════════════════════════════════════════════════
+  window.trainShowComingSoonDesktop = function(id) {
+    var defs = {
+      sprak: {
+        icon: '🦉',
+        color: '#22c55e',
+        title: 'Språkassistent',
+        sub: 'Som Duolingo — fast för svenska du behöver i jobb och vardag',
+        features: [
+          ['📅', 'Daglig träning', '5 minuter om dagen — bygg en streak'],
+          ['💼', 'Yrkesvokabulär', 'Lager, vård, bygg, kontor — anpassat för ditt mål'],
+          ['🎙️', 'Uttal & lyssning', 'Hör hur orden låter — repetera tills det sitter'],
+          ['🎯', 'Personligt anpassat', 'AI-tester ger dig nästa lektion baserat på vad du kan'],
+          ['🏆', 'Belöningar', 'XP, streaks och nivåer som peppar dig framåt']
+        ]
+      }
+    };
+    var def = defs[id];
+    if (!def) return;
+
+    var ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;';
+    ov.onclick = function(e) { if (e.target === ov) ov.remove(); };
+
+    var featuresHtml = def.features.map(function(f) {
+      return '<div style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);">' +
+        '<div style="font-size:22px;line-height:1;flex-shrink:0;width:28px;text-align:center;">' + f[0] + '</div>' +
+        '<div style="flex:1;min-width:0;text-align:left;">' +
+        '<div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;">' + f[1] + '</div>' +
+        '<div style="font-size:12px;color:rgba(255,255,255,0.6);line-height:1.4;">' + f[2] + '</div>' +
+        '</div></div>';
+    }).join('');
+
+    ov.innerHTML =
+      '<div style="background:linear-gradient(180deg, rgba(20,30,25,0.98) 0%, rgba(15,20,18,0.98) 100%);border:1.5px solid ' + def.color + '66;border-radius:20px;padding:28px 24px;max-width:440px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);max-height:88vh;overflow-y:auto;">' +
+      '<div style="font-size:64px;line-height:1;margin-bottom:10px;filter:drop-shadow(0 4px 16px ' + def.color + '88);">' + def.icon + '</div>' +
+      '<div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:4px;letter-spacing:-0.5px;">' + def.title + '</div>' +
+      '<div style="display:inline-block;background:' + def.color + ';color:#fff;font-size:10px;font-weight:900;padding:4px 12px;border-radius:12px;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">🚧 Kommer snart</div>' +
+      '<div style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.5;margin-bottom:18px;">' + def.sub + '</div>' +
+      '<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:6px 16px;margin-bottom:20px;">' + featuresHtml + '</div>' +
+      '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="background:' + def.color + ';color:#fff;border:none;border-radius:12px;padding:14px 28px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;width:100%;">OK, ser fram emot det!</button>' +
+      '</div>';
+
+    document.body.appendChild(ov);
   };
 
   // Från Övningar-kategori-grid tillbaka till Träna-hub (3 rutor)
