@@ -323,6 +323,22 @@
 
   function saveCVLocal() {
     safeSet(STORAGE_KEY, JSON.stringify(cvData));
+    // Auto-synk till Supabase med debounce — samma mönster som mobilen
+    // (index.html:saveData/saveCVToSupabase). Utan detta tappar desktop
+    // CV-ändringar tills användaren klickar "Spara CV"-knappen, vilket
+    // gör att mobilen ser gammal data efter desktop-redigering.
+    _cvCloudDebounce && clearTimeout(_cvCloudDebounce);
+    _cvCloudDebounce = setTimeout(_cvCloudSync, 3000);
+  }
+  let _cvCloudDebounce = null;
+  async function _cvCloudSync() {
+    const auth = (typeof getAuth === 'function') ? getAuth() : null;
+    if (!auth || !auth.userId || !auth.accessToken) return;
+    try {
+      if (typeof sbCall === 'function') {
+        await sbCall({ action: 'save_cv', userId: auth.userId, cvData: cvData });
+      }
+    } catch(e) { /* tyst — local är källan, nästa edit triggar nytt försök */ }
   }
 
   function loadTrainingProgress() {

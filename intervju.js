@@ -20,7 +20,7 @@
   // KONFIGURATION
   // ══════════════════════════════════════════════════════════════
   var CONFIG = {
-    claudeModel: 'claude-haiku-4-5-20251001',  // Samma modell som AI-SYV/edu-chat använder. Snabb, bra på samtals-AI.
+    claudeModel: 'claude-sonnet-4-6',  // Sonnet 4.6 för intervjun — bättre nyanserade följdfrågor, läser CV-kontext skarpare. ~5x dyrare än Haiku men ~10 kr/intervju är försumbart.
     maxSpeechHistoryChars: 8000, // trunkera om historiken blir enorm
     defaultVoiceLang: 'sv-SE',
     ttsRate: 0.95,
