@@ -7177,17 +7177,48 @@ ${styleTexts}
       delete _authMemory[key];
     }
 
+    // ===== NAMN-HJÄLPARE =====
+    // Härled ett presentabelt förnamn från Supabase user_metadata.full_name
+    // eller — som fallback — den lokala delen av e-postadressen.
+    // För "oliver.pettersson2@gmail.com" returneras "Oliver".
+    function deriveFirstNameFromEmail(email) {
+      var local = String(email || '').split('@')[0] || '';
+      if (!local) return '';
+      // Splitta på punkt, understreck, bindestreck eller siffror — ta första
+      var parts = local.split(/[._\-0-9]+/).filter(Boolean);
+      var first = parts[0] || local;
+      if (!first) return '';
+      return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
+    }
+    function deriveFirstName(fullName, email) {
+      var fn = String(fullName || '').trim();
+      if (fn) {
+        var firstFn = fn.split(/\s+/)[0];
+        if (firstFn) return firstFn.charAt(0).toUpperCase() + firstFn.slice(1);
+      }
+      return deriveFirstNameFromEmail(email);
+    }
+    window.deriveFirstName = deriveFirstName;
+    window.deriveFirstNameFromEmail = deriveFirstNameFromEmail;
+
     // ===== INLOGGNINGS-SPLASH =====
     // Visas direkt när användaren landar i appen (alltid på "Hej"-sidan).
     // Undertrycker "Din data är laddad"- och "Profilbild dold"-toasts.
-    function showLoginSplash(emailOrName) {
-      // Plocka ut förnamnet (ur email eller fullt namn)
-      var name = (emailOrName || '').trim().split(/[\s@]/)[0];
+    function showLoginSplash(emailOrName, fullNameHint) {
+      // Plocka ut förnamnet (ur fullt namn eller email)
+      // Om input innehåller "@" → behandla som e-post; annars som visningsnamn.
+      var raw = String(emailOrName || '').trim();
+      var name = '';
+      if (raw.indexOf('@') !== -1) {
+        name = deriveFirstName(fullNameHint, raw);
+      } else if (raw) {
+        name = raw.split(/\s+/)[0];
+      }
       try {
         var saved = pfRead('cvData');
         if (saved) {
           var d = JSON.parse(saved);
-          if (d.name) name = d.name.trim().split(' ')[0];
+          if (d.name) name = d.name.trim().split(/\s+/)[0];
         }
       } catch(e) {}
 
@@ -7247,11 +7278,14 @@ ${styleTexts}
         const data = await resp.json();
         const email = data.email || data.user?.email || '';
         const userId = data.id || data.user?.id || '';
+        const fullName = (data.user_metadata && data.user_metadata.full_name)
+          || (data.user && data.user.user_metadata && data.user.user_metadata.full_name)
+          || '';
         if (email) {
           authSetLoggedIn(email, false, userId, accessToken);
           document.getElementById('authOverlay').classList.add('hidden');
           setNavStep(2);
-          showLoginSplash(email);
+          showLoginSplash(email, fullName);
         } else {
           authInitFallback();
         }

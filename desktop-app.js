@@ -1150,14 +1150,45 @@
   };
 
   // ============================================================
+  // NAMN-HJÄLPARE — härled förnamn från user_metadata.full_name eller e-post
+  // För "oliver.pettersson2@gmail.com" returneras "Oliver".
+  // ============================================================
+  function deriveFirstNameFromEmail(email) {
+    const local = String(email || '').split('@')[0] || '';
+    if (!local) return '';
+    const parts = local.split(/[._\-0-9]+/).filter(Boolean);
+    const first = parts[0] || local;
+    if (!first) return '';
+    return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
+  }
+  function deriveFirstName(fullName, email) {
+    const fn = String(fullName || '').trim();
+    if (fn) {
+      const firstFn = fn.split(/\s+/)[0];
+      if (firstFn) return firstFn.charAt(0).toUpperCase() + firstFn.slice(1);
+    }
+    return deriveFirstNameFromEmail(email);
+  }
+  window.deriveFirstName = deriveFirstName;
+  window.deriveFirstNameFromEmail = deriveFirstNameFromEmail;
+
+  // ============================================================
   // HEJ-VYN: personlig hälsning
   // ============================================================
   function renderHejView() {
     const el = document.getElementById('hejGreet');
     if (!el) return;
+    let firstName = '';
     const name = (cvData && cvData.name ? String(cvData.name).trim() : '');
     if (name) {
-      const firstName = name.split(/\s+/)[0];
+      firstName = name.split(/\s+/)[0];
+    } else {
+      // Fall tillbaka till user_metadata.full_name eller e-post
+      const email = (typeof authCurrentEmail === 'string' && authCurrentEmail) || '';
+      const fullName = (typeof window !== 'undefined' && window.authUserFullName) || '';
+      firstName = deriveFirstName(fullName, email);
+    }
+    if (firstName) {
       el.textContent = 'Hej ' + firstName + ' 👋';
       el.style.display = 'block';
     } else {
