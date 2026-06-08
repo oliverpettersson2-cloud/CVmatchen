@@ -150,15 +150,8 @@ JOIN public.kommuner k ON k.name = e.kommun_name
 ON CONFLICT (kommun_id, name) DO NOTHING;
 
 INSERT INTO public.admins (email, role)
-VALUES ('oliver.mac@pathfinderai.se', 'superadmin')
+VALUES ('oliver@cvmatchen.se', 'superadmin')
 ON CONFLICT (email) DO UPDATE SET role = 'superadmin';
-
-INSERT INTO public.admins (email, role, kommun_id, enhet_id)
-SELECT 'oliver.pettersson2@gmail.com', 'handlaggare', k.id, e.id
-FROM public.kommuner k
-LEFT JOIN public.enheter e ON e.kommun_id = k.id AND e.name = 'Arbetsmarknadsenheten'
-WHERE k.name = 'Helsingborg'
-ON CONFLICT (email) DO NOTHING;
 
 -- ============================================================================
 -- VERIFIERING
