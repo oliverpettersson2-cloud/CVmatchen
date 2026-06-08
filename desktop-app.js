@@ -5719,7 +5719,7 @@
   function getTrainingPct(modId) {
     const p = trainingProgress[modId];
     if (!p) return 0;
-    const mod = TRAINING_MODULES.find(m => m.id === modId);
+    const mod = TRAINING_MODULES.find(m => m && m.id === modId);
     if (!mod) return 0;
     const lessonsLen = (mod.lessons || []).length;
     const quizLen    = (mod.quiz    || []).length;
@@ -5996,7 +5996,7 @@
 
 
   window.trainOpen = function(modId) {
-    const mod = TRAINING_MODULES.find(m => m.id === modId);
+    const mod = TRAINING_MODULES.find(m => m && m.id === modId);
     if (!mod) return;
 
     document.getElementById('ov-home').style.display = 'none';
