@@ -834,6 +834,8 @@ td{padding:10px 13px;vertical-align:middle}
   </aside>
 
   <main class="main" id="huvudinnehall">
+    <!-- Pilot-utgångsbanner: visas när admins egen kommun har < 14 dagar kvar -->
+    <div id="pilotExpiryBanner" style="display:none;margin:8px 12px;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600;"></div>
     <div class="cnt">
 
       <!-- Listvy: page header + flikar -->
@@ -1649,7 +1651,32 @@ function enterApp(){
   document.getElementById('sbRole').textContent=admin.email||'';
   document.getElementById('sbAv').textContent=ini(admin.name||admin.email||'?');
   document.getElementById('pgSub').textContent=roleSubtitle();
-  buildNav();loadUsers();loadStats();startRefreshTimer();
+  buildNav();loadUsers();loadStats();startRefreshTimer();checkPilotExpiry();
+}
+
+// Visar varningsbanner när admins egen kommun har < 14 dagar kvar av piloten.
+async function checkPilotExpiry(){
+  try {
+    if (!admin || admin.role === 'superadmin') return;  // superadmin ser översikten istället
+    if (!admin.kommun_id) return;
+    const data = await post('admin_overview_per_kommun', {});
+    const k = (data.data || []).find(x => String(x.id) === String(admin.kommun_id));
+    if (!k || !k.is_pilot || !k.pilot_ends) return;
+    const days = Math.ceil((new Date(k.pilot_ends) - new Date()) / 86400000);
+    if (days > 14) return;
+    const banner = document.getElementById('pilotExpiryBanner');
+    if (!banner) return;
+    const color = days < 0 ? '#dc2626' : days < 7 ? '#dc2626' : '#d97706';
+    const bg    = days < 0 ? 'rgba(220,38,38,0.10)' : days < 7 ? 'rgba(220,38,38,0.10)' : 'rgba(217,119,6,0.10)';
+    const msg = days < 0
+      ? `⚠️ Pilot-perioden för ${k.name} gick ut för ${Math.abs(days)} dagar sedan. Kontakta PathfinderAI för att förlänga eller övergå till full drift.`
+      : `⚠️ Pilot-perioden för ${k.name} går ut om ${days} ${days===1?'dag':'dagar'}. Kontakta PathfinderAI för förlängning.`;
+    banner.textContent = msg;
+    banner.style.color = color;
+    banner.style.background = bg;
+    banner.style.border = `1px solid ${color}`;
+    banner.style.display = 'block';
+  } catch(_) {}
 }
 
 // ═══ SIDOMENY ═══
@@ -3373,6 +3400,19 @@ async function sendAdminInvite(){
     statusEl.innerHTML = '<div style="color:#dc2626;font-size:12px;">Fel: ' + e.message + '</div>';
     btn.disabled = false; btn.textContent = 'Skapa inbjudan';
   }
+}
+
+async function resendAdminInvite(adminId, ev){
+  if (ev) ev.stopPropagation();
+  try {
+    const data = await post('admin_resend_invite', { targetAdminId: adminId });
+    if (data.error) { alert('Fel: ' + data.error); return; }
+    const link = window.location.origin + '/handlaggare.html?invite=' + encodeURIComponent(data.invite_token);
+    try { await navigator.clipboard.writeText(link); alert('Ny invite-länk skapad och kopierad till urklipp:\n\n' + link); }
+    catch(_) { prompt('Ny invite-länk skapad. Kopiera och skicka:', link); }
+    adminsCache = null;
+    renderAdminsView();
+  } catch(e) { alert('Kunde inte skicka om: ' + e.message); }
 }
 
 function copyAdminInviteLink(){
@@ -6227,8 +6267,15 @@ function renderAdminsList(wrap, admins, append) {
       if (isMe) html += '<span style="font-size:10px;font-weight:700;background:rgba(62,180,137,0.15);color:#3eb489;padding:2px 6px;border-radius:6px;">DU</span>';
       if (a.isReal === false) html += '<span style="font-size:10px;font-weight:700;background:rgba(124,58,237,0.15);color:#a78bfa;padding:2px 6px;border-radius:6px;">DEMO</span>';
       html += '</div>';
-      html += '<div style="font-size:11px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + email + '</div>';
-      html += '<div style="font-size:11px;color:var(--mu);margin-top:2px;">' + placering + '</div>';
+      html += '<div style="font-size:11px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(email) + '</div>';
+      html += '<div style="font-size:11px;color:var(--mu);margin-top:2px;">' + escapeHtml(placering) + '</div>';
+      // Visa "väntar på aktivering"-status + Skicka om-knapp för admins som inte loggat in än
+      if (a.pending_invite) {
+        const expired = a.invite_expires && new Date(a.invite_expires) < new Date();
+        html += '<div style="font-size:11px;font-weight:600;margin-top:4px;color:' + (expired ? '#dc2626' : '#d97706') + ';">' +
+          (expired ? '⚠️ Inbjudan utgången' : '⏳ Väntar på aktivering') +
+          ' <button onclick="resendAdminInvite(\'' + a.id + '\',event)" style="margin-left:6px;background:none;border:1px solid currentColor;color:inherit;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;">↻ Skicka om</button></div>';
+      }
       html += '</div>';
       html += '</div>';
     });

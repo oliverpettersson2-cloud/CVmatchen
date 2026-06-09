@@ -80,7 +80,7 @@ module.exports = async (req, res) => {
   } catch (error) {
     Sentry.captureException(error);
     console.error('[pdf.js] error:', error.message);
-    res.status(500).json({ error: 'PDF generation failed', message: error.message });
+    res.status(500).json({ error: 'PDF generation failed' });
   } finally {
     if (browser) {
       try { await browser.close(); } catch (e) { }

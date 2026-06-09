@@ -2473,10 +2473,33 @@
     }
   };
 
+  // Snygg centrerad bekräftelse-modal — ersätter browser-confirm() som
+  // dyker upp i en ful svart ruta högst upp i fönstret.
+  function showConfirmModal(message, okText, cancelText) {
+    return new Promise(resolve => {
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:999999;backdrop-filter:blur(4px);';
+      overlay.innerHTML =
+        '<div style="background:#1a1a1a;color:#fff;border-radius:14px;padding:24px;max-width:380px;width:calc(100% - 32px);box-shadow:0 20px 60px rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.1);">' +
+          '<div style="font-size:15px;font-weight:600;margin-bottom:18px;line-height:1.45;">' + message + '</div>' +
+          '<div style="display:flex;gap:8px;justify-content:flex-end;">' +
+            '<button id="_cmCancel" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">' + (cancelText || 'Avbryt') + '</button>' +
+            '<button id="_cmOk" style="background:#3eb489;border:none;color:#fff;padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">' + (okText || 'OK') + '</button>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(overlay);
+      const close = (ok) => { overlay.remove(); resolve(ok); };
+      overlay.querySelector('#_cmOk').onclick = () => close(true);
+      overlay.querySelector('#_cmCancel').onclick = () => close(false);
+      overlay.onclick = (e) => { if (e.target === overlay) close(false); };
+    });
+  }
+  window.showConfirmModal = showConfirmModal;
+
   window.completeTask = async function(taskId) {
     const auth = getAuth();
     if (!auth || !auth.accessToken || !auth.userId) return;
-    if (!confirm('Markera uppgiften som slutförd?')) return;
+    if (!(await showConfirmModal('Markera uppgiften som slutförd?', 'Ja, slutför', 'Avbryt'))) return;
 
     // Stoppa eventuell timer
     const timer = taskTimers[taskId];

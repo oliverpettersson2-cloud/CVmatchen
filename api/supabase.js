@@ -91,6 +91,15 @@ export default async function handler(req, res) {
     return { ...baseHeaders, 'apikey': key, 'Authorization': `Bearer ${key}` };
   }
 
+  // Sanering av UUID-arrays innan de stoppas in i PostgREST `in.(...)`-filter.
+  // Skyddar mot SQL/PostgREST-injection om en bus-rad innehåller t.ex. `"`.
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  function safeUuidIn(arr) {
+    return (arr || [])
+      .filter(id => typeof id === 'string' && UUID_RE.test(id))
+      .map(id => `"${id}"`).join(',');
+  }
+
   // verifierar accessToken mot Supabase och returnerar { id, email } eller null.
   // Används för att stoppa attacker där `userId` skickas i body — vi använder
   // ALLTID id:t från JWT istället så användare endast kan skriva sin egen data.
@@ -434,7 +443,8 @@ export default async function handler(req, res) {
       const users = Array.isArray(result.data) ? result.data : [];
       const userIds = users.map(u => u.user_id).filter(Boolean);
       if (userIds.length) {
-        const idsFilter = userIds.map(id => `"${id}"`).join(',');
+        const idsFilter = safeUuidIn(userIds);
+        if (!idsFilter) return res.status(200).json({ data: [] });
         const [cvRes, progressRes, taskRes] = await Promise.all([
           makeRequest(`${SUPABASE_URL}/rest/v1/cvs?user_id=in.(${idsFilter})&select=user_id,data,updated_at`, { method: 'GET', headers: serviceHeaders() }),
           makeRequest(`${SUPABASE_URL}/rest/v1/ovning_progress?user_id=in.(${idsFilter})&select=user_id,progress`, { method: 'GET', headers: serviceHeaders() }),
@@ -505,10 +515,26 @@ export default async function handler(req, res) {
       // admin redan listat (de har redan passerat tenant-check i admin_list_users).
       const { admin } = await requireAdmin(res, accessToken, action);
       if (!admin) return;
-      const ids = Array.isArray(req.body?.userIds) ? req.body.userIds.filter(Boolean) : [];
-      if (!ids.length) return res.status(200).json({ stats: {} });
-      // PostgREST IN-filter: user_id=in.(uuid1,uuid2,...)
-      const inList = ids.map(u => String(u)).join(',');
+      const rawIds = Array.isArray(req.body?.userIds) ? req.body.userIds.filter(Boolean) : [];
+      if (!rawIds.length) return res.status(200).json({ stats: {} });
+      // #20: Re-validera per-user att varje id ligger inom admins tenant.
+      // Skyddar mot att en angripare skickar in user-IDs från annan kommun.
+      const inListAll = safeUuidIn(rawIds);
+      if (!inListAll) return res.status(200).json({ stats: {} });
+      let allowedIds = rawIds;
+      if (admin.role !== 'superadmin') {
+        const uaRes = await makeRequest(
+          `${SUPABASE_URL}/rest/v1/user_assignments?user_id=in.(${inListAll})&select=user_id,kommun_id,enhet_id`,
+          { method: 'GET', headers: serviceHeaders() }
+        );
+        const allowed = (Array.isArray(uaRes.data) ? uaRes.data : [])
+          .filter(u => String(u.kommun_id) === String(admin.kommun_id)
+                    && (admin.enhet_id == null || String(u.enhet_id) === String(admin.enhet_id)))
+          .map(u => u.user_id);
+        allowedIds = allowed;
+      }
+      const inList = safeUuidIn(allowedIds);
+      if (!inList) return res.status(200).json({ stats: {} });
       const dr = await makeRequest(
         `${SUPABASE_URL}/rest/v1/job_diary?user_id=in.(${inList})&select=user_id,data`,
         { method: 'GET', headers: serviceHeaders() }
@@ -697,11 +723,21 @@ export default async function handler(req, res) {
         requestedKommunId: filters?.kommun_id
       });
       if (!admin) return;
-      let url = `${SUPABASE_URL}/rest/v1/admins?select=*,kommuner(name),enheter(name)&order=role.asc,name.asc`;
+      // Returnera bara säkra kolumner — invite_token är en credential och får
+      // aldrig lämna backend. Vi exponerar `pending_invite` (boolean) istället.
+      let url = `${SUPABASE_URL}/rest/v1/admins?select=id,email,name,role,kommun_id,enhet_id,last_login,invite_token,invite_expires,kommuner(name),enheter(name)&order=role.asc,name.asc`;
       const scopeKommunId = admin.role === 'superadmin' ? filters?.kommun_id : admin.kommun_id;
       if (scopeKommunId) url += `&kommun_id=eq.${scopeKommunId}`;
       const result = await makeRequest(url, { method: 'GET', headers: serviceHeaders() });
-      return res.status(200).json({ data: Array.isArray(result.data) ? result.data : [] });
+      const rows = (Array.isArray(result.data) ? result.data : []).map(r => ({
+        id: r.id, email: r.email, name: r.name, role: r.role,
+        kommun_id: r.kommun_id, enhet_id: r.enhet_id,
+        last_login: r.last_login,
+        kommuner: r.kommuner, enheter: r.enheter,
+        pending_invite: !!(r.invite_token && !r.last_login),
+        invite_expires: r.invite_expires
+      }));
+      return res.status(200).json({ data: rows });
     }
 
     if (action === 'admin_stats') {
@@ -727,9 +763,12 @@ export default async function handler(req, res) {
       } else {
         const statUserIds = users.map(u => u.user_id).filter(Boolean);
         if (statUserIds.length) {
-          const idsFilter = statUserIds.map(id => `"${id}"`).join(',');
+          const idsFilter = safeUuidIn(statUserIds);
+          if (!idsFilter) { tasks = []; }
+          else {
           const taskRes = await makeRequest(`${SUPABASE_URL}/rest/v1/tasks?user_id=in.(${idsFilter})&select=status,category,time_spent_sec,user_id`, { method: 'GET', headers: serviceHeaders() });
           tasks = Array.isArray(taskRes.data) ? taskRes.data : [];
+          }
         }
       }
       return res.status(200).json({
@@ -762,7 +801,8 @@ export default async function handler(req, res) {
           invited_by: admin.id, invite_message: req.body?.message || null, expires_at: expires }
       );
       if (result.status >= 400) {
-        return res.status(500).json({ error: 'Kunde inte skapa inbjudan', detail: result.data });
+        console.error('[user_invite] DB-insert failed:', maskPII(result.data));
+        return res.status(500).json({ error: 'Kunde inte skapa inbjudan' });
       }
 
       // Skicka mejl via Supabase Auth (som i sin tur går via Resend SMTP).
@@ -821,12 +861,14 @@ export default async function handler(req, res) {
       const allUserIds = allUA.map(u => u.user_id).filter(Boolean);
       let tasks = [];
       if (allUserIds.length) {
-        const idsFilter = allUserIds.map(id => `"${id}"`).join(',');
+        const idsFilter = safeUuidIn(allUserIds);
+        if (idsFilter) {
         const taskRes = await makeRequest(
           `${SUPABASE_URL}/rest/v1/tasks?user_id=in.(${idsFilter})&select=user_id,status`,
           { method: 'GET', headers: serviceHeaders() }
         );
         tasks = Array.isArray(taskRes.data) ? taskRes.data : [];
+        }
       }
 
       const userIdToKommun = new Map(allUA.map(u => [u.user_id, u.kommun_id]));
@@ -853,6 +895,28 @@ export default async function handler(req, res) {
       });
 
       return res.status(200).json({ data: rows });
+    }
+
+    if (action === 'admin_resend_invite') {
+      // Genererar ny invite_token för en admin som inte loggat in än,
+      // och returnerar en kopierbar länk (mejl-utskick kan läggas till senare).
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const adminId = req.body?.targetAdminId;
+      if (!adminId) return res.status(400).json({ error: 'targetAdminId krävs' });
+      const targetRes = await makeRequest(`${SUPABASE_URL}/rest/v1/admins?id=eq.${encodeURIComponent(adminId)}&select=id,email,role,kommun_id,enhet_id,last_login&limit=1`, { method: 'GET', headers: serviceHeaders() });
+      const target = (Array.isArray(targetRes.data) ? targetRes.data : [])[0];
+      if (!target) return res.status(404).json({ error: 'Admin saknas' });
+      if (target.last_login) return res.status(400).json({ error: 'Admin har redan aktiverat sitt konto' });
+      // Behörighet: superadmin = alla; kommunadmin = inom egen kommun; enhetsadmin = inom egen enhet
+      if (admin.role !== 'superadmin') {
+        if (String(target.kommun_id) !== String(admin.kommun_id)) return res.status(403).json({ error: 'forbidden' });
+        if (admin.role === 'enhetsadmin' && String(target.enhet_id) !== String(admin.enhet_id)) return res.status(403).json({ error: 'forbidden' });
+      }
+      const newToken = crypto.randomBytes(32).toString('hex');
+      const newExpires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+      await makeRequest(`${SUPABASE_URL}/rest/v1/admins?id=eq.${target.id}`, { method: 'PATCH', headers: serviceHeaders() }, { invite_token: newToken, invite_expires: newExpires });
+      return res.status(200).json({ invite_token: newToken });
     }
 
     if (action === 'admin_get_kommuner') {

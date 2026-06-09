@@ -5173,16 +5173,25 @@
       updatePreview();
     }
 
+    // HTML-escape för säker rendering av CV-data via innerHTML.
+    // Användardata (skill/job/utbildning) kan teoretiskt komma från en
+    // manipulerad load_cv-respons; vi vill aldrig riskera DOM-XSS.
+    function cvEsc(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+
     function renderSkills() {
       const grid = document.getElementById('skillsGrid');
       grid.innerHTML = cvData.skills.map((skill, i) => `
         <div class="skill-badge selected" draggable="true"
-          ondragstart="startDrag(event, 'skills', ${i})" 
-          ondragover="dragOver(event)" 
+          ondragstart="startDrag(event, 'skills', ${i})"
+          ondragover="dragOver(event)"
           ondrop="drop(event, 'skills', ${i})"
           ondragend="dragEnd(event)"
           style="cursor: grab; user-select: none;">
-          ${skill}
+          ${cvEsc(skill)}
           <span style="opacity: 0.7; cursor: pointer; margin-left: 4px;" onclick="removeSkill(${i})">×</span>
         </div>
       `).join('');
@@ -5709,8 +5718,8 @@
           style="cursor: grab;">
           <span style="display: flex; gap: 4px; align-items: center; margin-right: 10px;"><span style="font-size: 16px; font-weight: bold; cursor: pointer; color: #fff;" onclick="moveJobUp(${i})" title="Flytta upp">▲</span><span style="font-size: 16px; font-weight: bold; cursor: pointer; color: #fff;" onclick="moveJobDown(${i})" title="Flytta ned">▼</span></span>
           <div class="item-card-text">
-            <strong>${job.title}</strong>
-            <small>${job.company} · ${job.startMonth} ${job.startYear}${job.endMonth ? ' - ' + job.endMonth + ' ' + job.endYear : ''}</small>
+            <strong>${cvEsc(job.title)}</strong>
+            <small>${cvEsc(job.company)} · ${cvEsc(job.startMonth)} ${cvEsc(job.startYear)}${job.endMonth ? ' - ' + cvEsc(job.endMonth) + ' ' + cvEsc(job.endYear) : ''}</small>
           </div>
           <div class="item-card-buttons">
             <button class="btn-icon" onclick="openJobModal(${i})" title="Redigera" aria-label="Redigera">✏️</button>
@@ -5826,8 +5835,8 @@
           style="cursor: grab;">
           <span style="display: flex; gap: 4px; align-items: center; margin-right: 10px;"><span style="font-size: 16px; font-weight: bold; cursor: pointer; color: #fff;" onclick="moveEduUp(${i})" title="Flytta upp">▲</span><span style="font-size: 16px; font-weight: bold; cursor: pointer; color: #fff;" onclick="moveEduDown(${i})" title="Flytta ned">▼</span></span>
           <div class="item-card-text">
-            <strong>${edu.degree}</strong>
-            <small>${edu.schoolName || edu.school} · ${edu.startYear}${edu.endYear ? ' - ' + edu.endYear : ''}</small>
+            <strong>${cvEsc(edu.degree)}</strong>
+            <small>${cvEsc(edu.schoolName || edu.school)} · ${cvEsc(edu.startYear)}${edu.endYear ? ' - ' + cvEsc(edu.endYear) : ''}</small>
           </div>
           <div class="item-card-buttons">
             <button class="btn-icon" onclick="openEduModal(${i})" title="Redigera" aria-label="Redigera">✏️</button>

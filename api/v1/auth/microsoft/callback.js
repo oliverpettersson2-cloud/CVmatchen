@@ -118,7 +118,7 @@ export default async function handler(req, res) {
     const email = (graphData.mail || graphData.userPrincipalName || '').toLowerCase().trim();
     const name = graphData.displayName || '';
     if (!email) {
-      console.error('[MS-callback] Hittade ingen email för användaren', graphData);
+      console.error('[MS-callback] Hittade ingen email för användaren (graph-data utelämnad pga PII)');
       return redirectWithError(req, res, 'no_email');
     }
 
@@ -144,7 +144,9 @@ export default async function handler(req, res) {
     const admins = await adminCheckResp.json();
     if (!Array.isArray(admins) || admins.length === 0) {
       // Användaren loggade in på Microsoft men finns inte i vår admins-tabell
-      console.warn('[MS-callback] Unauthorized email:', email);
+      // Maskerar email i loggar för att undvika PII-läckage
+      const _maskedEmail = email ? email.replace(/(.{1,2}).*(@.*)/, '$1***$2') : '[okänd]';
+      console.warn('[MS-callback] Unauthorized email:', _maskedEmail);
       return redirectWithError(req, res, 'unauthorized', email);
     }
 
