@@ -774,10 +774,13 @@ export default async function handler(req, res) {
         : `https://cvmatchen.com/?invite=${encodeURIComponent(token)}`;
       let emailSent = false, emailError = null;
       try {
+        // /auth/v1/invite skickar en magic-link-mejl med klickbar URL,
+        // till skillnad mot /auth/v1/otp som skickar en 6-siffrig kod.
+        // Kräver service-role-nyckel.
         const mailRes = await makeRequest(
-          `${SUPABASE_URL}/auth/v1/otp`,
+          `${SUPABASE_URL}/auth/v1/invite?redirect_to=${encodeURIComponent(redirectTo)}`,
           { method: 'POST', headers: serviceHeaders() },
-          { email: inviteEmail, create_user: true, data: { invited_by_admin_id: admin.id, kommun_id: inviteKommunId, enhet_id: inviteEnhetId }, options: { emailRedirectTo: redirectTo } }
+          { email: inviteEmail, data: { invited_by_admin_id: admin.id, kommun_id: inviteKommunId, enhet_id: inviteEnhetId } }
         );
         emailSent = mailRes.status < 400;
         if (!emailSent) emailError = mailRes.data;
