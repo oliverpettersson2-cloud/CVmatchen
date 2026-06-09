@@ -312,6 +312,8 @@ export default async function handler(req, res) {
     if (action === 'save_ai_consent') {
       // Sparar/återkallar deltagarens AI-samtycke. Idempotent — kör
       // ensure_participant först om raden saknas så vi inte tappar samtycket.
+      // Konsumerar ev. user_invite (inviteToken) och kopplar kommun/enhet.
+      // Saknas invite: faller tillbaka på "Övrigt"-kommunen.
       if (!userId) return res.status(400).json({ error: 'userId krävs' });
       const version = (aiConsentVersion && String(aiConsentVersion).slice(0, 32)) || '2026-06-07';
       const now = new Date().toISOString();
@@ -319,11 +321,41 @@ export default async function handler(req, res) {
         ? { ai_consent_withdrawn_at: now }
         : { ai_consent_at: now, ai_consent_version: version, ai_consent_withdrawn_at: null };
 
-      // Säkerställ att raden finns innan vi PATCH:ar
+      // Slå upp ev. invite för att kunna tilldela kommun/enhet vid första-gångs-skapande
+      let inviteKommunId = null, inviteEnhetId = null, inviteIdToConsume = null;
+      const userEmail = (req.body?.email || '').toLowerCase();
+      const inviteToken = req.body?.inviteToken;
+      if (inviteToken && userEmail) {
+        const inv = await makeRequest(
+          `${SUPABASE_URL}/rest/v1/user_invites?token=eq.${encodeURIComponent(inviteToken)}&email=eq.${encodeURIComponent(userEmail)}&consumed_at=is.null&select=id,kommun_id,enhet_id,expires_at&limit=1`,
+          { method: 'GET', headers: serviceHeaders() }
+        );
+        const inviteRow = Array.isArray(inv.data) && inv.data[0];
+        if (inviteRow && new Date(inviteRow.expires_at) > new Date()) {
+          inviteKommunId = inviteRow.kommun_id;
+          inviteEnhetId  = inviteRow.enhet_id;
+          inviteIdToConsume = inviteRow.id;
+        }
+      }
+      // Fallback till "Övrigt" om ingen invite matchade
+      if (!inviteKommunId) {
+        const ovrigt = await makeRequest(
+          `${SUPABASE_URL}/rest/v1/kommuner?name=eq.${encodeURIComponent('Övrigt')}&select=id,enheter(id,name)&limit=1`,
+          { method: 'GET', headers: serviceHeaders() }
+        );
+        const orow = Array.isArray(ovrigt.data) && ovrigt.data[0];
+        if (orow) {
+          inviteKommunId = orow.id;
+          const defEnhet = (orow.enheter || []).find(e => e.name === 'Allmänna användare');
+          inviteEnhetId  = defEnhet ? defEnhet.id : null;
+        }
+      }
+
+      // Säkerställ att raden finns (UPSERT — sätter kommun/enhet endast vid nyskapande)
       await makeRequest(
         `${SUPABASE_URL}/rest/v1/user_assignments`,
         { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'resolution=ignore-duplicates,return=minimal' } },
-        { user_id: userId, status: 'active', created_at: now }
+        { user_id: userId, status: 'active', created_at: now, kommun_id: inviteKommunId, enhet_id: inviteEnhetId }
       );
       const result = await makeRequest(
         `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${userId}`,
@@ -331,10 +363,16 @@ export default async function handler(req, res) {
         patch
       );
       if (result.status >= 400) {
-        // Migration ej körd? Logga men låt frontend fortsätta — samtycket
-        // lagras även i localStorage så vi inte blockerar piloten.
         console.warn('[save_ai_consent] DB-patch misslyckades:', result.status, maskPII(result.data));
         return res.status(200).json({ ok: true, persisted: false });
+      }
+      // Konsumera invite efter lyckad patch
+      if (inviteIdToConsume) {
+        await makeRequest(
+          `${SUPABASE_URL}/rest/v1/user_invites?id=eq.${inviteIdToConsume}`,
+          { method: 'PATCH', headers: serviceHeaders() },
+          { consumed_at: now, consumed_user_id: userId }
+        );
       }
       return res.status(200).json({ ok: true, persisted: true, at: now, version });
     }
@@ -639,6 +677,35 @@ export default async function handler(req, res) {
         tasks: { total: tasks.length, completed: tasks.filter(t => t.status === 'completed').length, pending: tasks.filter(t => t.status === 'pending').length, active: tasks.filter(t => t.status === 'active').length, expired: tasks.filter(t => t.status === 'expired').length, total_time_sec: tasks.reduce((s, t) => s + (t.time_spent_sec || 0), 0) },
         byCategory: Object.entries(tasks.reduce((acc, t) => { if (!acc[t.category]) acc[t.category] = { total: 0, completed: 0 }; acc[t.category].total++; if (t.status === 'completed') acc[t.category].completed++; return acc; }, {})).map(([cat, data]) => ({ category: cat, ...data })),
       });
+    }
+
+    if (action === 'user_invite') {
+      // Handläggare/admin bjuder in en deltagare. Skapar token, ingen mejl-utskick än.
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const inviteEmail = (email || '').toLowerCase().trim();
+      if (!inviteEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inviteEmail)) {
+        return res.status(400).json({ error: 'Ogiltig e-postadress' });
+      }
+      // Scope: superadmin får välja kommun/enhet fritt, övriga låses till egen
+      let inviteKommunId = kommunId || null, inviteEnhetId = enhetId || null;
+      if (admin.role !== 'superadmin') {
+        inviteKommunId = admin.kommun_id;
+        if (admin.enhet_id != null) inviteEnhetId = admin.enhet_id;
+      }
+      const token = crypto.randomBytes(32).toString('hex');
+      const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(); // 30 dagar
+      const result = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/user_invites`,
+        { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=representation' } },
+        { email: inviteEmail, token, kommun_id: inviteKommunId, enhet_id: inviteEnhetId,
+          invited_by: admin.id, invite_message: req.body?.message || null, expires_at: expires }
+      );
+      if (result.status >= 400) {
+        return res.status(500).json({ error: 'Kunde inte skapa inbjudan', detail: result.data });
+      }
+      const rows = Array.isArray(result.data) ? result.data : [];
+      return res.status(201).json({ invite: rows[0] || null, invite_token: token });
     }
 
     if (action === 'admin_get_kommuner') {

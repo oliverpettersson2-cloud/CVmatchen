@@ -3181,7 +3181,7 @@ function closeInviteModal(){
 }
 function showInviteStatus(msg, ok){
   const el=document.getElementById('inviteStatus');
-  el.textContent=msg;
+  el.innerHTML=msg;
   el.className='modal-status '+(ok?'ok':'err');
 }
 
@@ -3196,24 +3196,32 @@ async function sendInvite(){
   const btn=document.getElementById('inviteSendBtn');
   btn.disabled=true;btn.textContent='Skickar…';
   try{
-    const data = await post('invite_user', {
+    const data = await post('user_invite', {
       email,
-      name: name || null,
+      personName: name || null,
       message: message || null,
-      enhet_id: admin.enhet_id || null,
-      kommun_id: admin.kommun_id || null,
-      invitedBy: admin.id
+      enhetId:  admin.enhet_id  || null,
+      kommunId: admin.kommun_id || null
     });
     if(data.error){
       showInviteStatus(data.error, false);
       btn.disabled=false;btn.textContent='Skicka inbjudan';
       return;
     }
-    showInviteStatus(`Inbjudan skickad till ${email}!`, true);
-    btn.textContent='Skickad ✓';
-    setTimeout(()=>{ closeInviteModal(); loadUsers(); }, 1800);
+    const link = window.location.origin + '/?invite=' + encodeURIComponent(data.invite_token);
+    showInviteStatus(
+      'Inbjudan skapad ✓ Kopiera länken och skicka till ' + email + ':<br>' +
+      '<div style="display:flex;gap:6px;margin-top:8px;">' +
+        '<input type="text" id="userInviteLinkInput" readonly value="' + link.replace(/"/g, '&quot;') + '" ' +
+          'style="flex:1;padding:8px;font-size:11px;border:1px solid var(--bd);border-radius:6px;background:#fff;">' +
+        '<button class="btn" onclick="(function(){var i=document.getElementById(\'userInviteLinkInput\');i.select();document.execCommand(\'copy\');this.textContent=\'Kopierat ✓\';}).call(this)">Kopiera</button>' +
+      '</div>',
+      true
+    );
+    btn.textContent='Skapad ✓';
+    setTimeout(()=>{ loadUsers(); }, 800);
   } catch(e) {
-    showInviteStatus('Kunde inte skicka: '+e.message+'. Kontrollera att invite_user-endpoint är konfigurerat.', false);
+    showInviteStatus('Kunde inte skapa inbjudan: '+e.message, false);
     btn.disabled=false;btn.textContent='Skicka inbjudan';
   }
 }
