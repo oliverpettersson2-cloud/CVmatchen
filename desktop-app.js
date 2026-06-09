@@ -2284,10 +2284,7 @@
             <span class="task-timer" id="taskTimer_${escape(String(task.id))}">${formatTime(taskTimers[task.id].elapsedSec)}</span>`;
         } else {
           actions = `
-            <button class="task-btn primary" onclick="startTaskSession('${escape(String(task.id))}')">
-              ▶ Starta session
-            </button>
-            <button class="task-btn secondary" onclick="completeTask('${escape(String(task.id))}')">
+            <button class="task-btn primary" onclick="completeTask('${escape(String(task.id))}')">
               ✓ Markera klar
             </button>`;
         }

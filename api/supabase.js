@@ -33,9 +33,40 @@ const ALLOWED_EVENTS = new Set([
 ]);
 const MAX_METADATA_BYTES = 4096;
 
+// Enkel in-memory rate-limit per IP+action. Lever per Lambda-instans, så
+// inte vattentätt — men höjer kostnaden för brute-force avsevärt. Auth +
+// invite-endpoints är prioriterade.
+const _rateBuckets = new Map();
+function checkRateLimit(ip, action, maxPerMin) {
+  const key = `${ip}::${action}`;
+  const now = Date.now();
+  const arr = (_rateBuckets.get(key) || []).filter(t => now - t < 60000);
+  if (arr.length >= maxPerMin) return false;
+  arr.push(now);
+  _rateBuckets.set(key, arr);
+  // GC
+  if (_rateBuckets.size > 5000) {
+    for (const [k, v] of _rateBuckets) {
+      if (!v.length || now - v[v.length - 1] > 60000) _rateBuckets.delete(k);
+    }
+  }
+  return true;
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  // Rate-limit för känsliga actions (auth / invites / login / radering)
+  const _ip = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '').toString().split(',')[0].trim() || 'unknown';
+  const _action = req.body?.action;
+  const _RATE_LIMITS = {
+    admin_login: 20, admin_invite: 20, user_invite: 30, admin_resend_invite: 20,
+    admin_delete_user: 10, user_delete_self: 5, send_otp: 10, verify_otp: 20
+  };
+  if (_action && _RATE_LIMITS[_action] && !checkRateLimit(_ip, _action, _RATE_LIMITS[_action])) {
+    return res.status(429).json({ error: 'För många försök — vänta en minut och försök igen.' });
   }
 
   const SUPABASE_URL = process.env.SUPABASE_URL;
@@ -174,6 +205,19 @@ export default async function handler(req, res) {
     }
 
     return admin;
+  }
+
+  // Loggar lyckad admin-åtgärd till admin_audit (forensik + compliance).
+  // Blockerar aldrig svaret. Detaljer maskeras inte här — använd endast
+  // ID-värden eller redan maskerad data i `details`.
+  async function logAdminAction(adminId, action, details) {
+    try {
+      await makeRequest(
+        `${SUPABASE_URL}/rest/v1/admin_audit`,
+        { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=minimal' } },
+        { admin_id: adminId || null, action, details: details || null }
+      );
+    } catch (e) { /* loggning får aldrig blockera */ }
   }
 
   // Loggar nekade admin-försök till admin_activity_log (forensik vid
@@ -600,6 +644,7 @@ export default async function handler(req, res) {
       };
       const result = await makeRequest(`${SUPABASE_URL}/rest/v1/tasks`, { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=representation' } }, task);
       await makeRequest(`${SUPABASE_URL}/rest/v1/admin_activity_log`, { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=minimal' } }, { user_id: targetUserId, admin_id: filters?.adminId, action: 'task_assigned', detail: title });
+      await logAdminAction(filters?.adminId, 'assign_task', { target_user_id: targetUserId, category });
       const rows = Array.isArray(result.data) ? result.data : [];
       return res.status(201).json({ task: rows[0] || null, message: 'Uppgift tilldelad' });
     }
@@ -715,6 +760,7 @@ export default async function handler(req, res) {
       const inviteToken = crypto.randomBytes(32).toString('hex');
       const result = await makeRequest(`${SUPABASE_URL}/rest/v1/admins`, { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=representation' } }, { name: personName || email.split('@')[0], email: email.toLowerCase(), role: inviteRole, kommun_id: inviteKommunId || null, enhet_id: inviteEnhetId || null, invite_token: inviteToken, invite_expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() });
       const rows = Array.isArray(result.data) ? result.data : [];
+      await logAdminAction(admin.id, 'admin_invite', { invited_role: inviteRole, kommun_id: inviteKommunId, enhet_id: inviteEnhetId });
       return res.status(201).json({ admin: rows[0] || null, invite_token: inviteToken });
     }
 
@@ -827,6 +873,7 @@ export default async function handler(req, res) {
       } catch(e) { emailError = String(e); }
 
       const rows = Array.isArray(result.data) ? result.data : [];
+      await logAdminAction(admin.id, 'user_invite', { kommun_id: inviteKommunId, enhet_id: inviteEnhetId, email_sent: emailSent });
       return res.status(201).json({
         invite: rows[0] || null,
         invite_token: token,
@@ -916,6 +963,7 @@ export default async function handler(req, res) {
       const newToken = crypto.randomBytes(32).toString('hex');
       const newExpires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
       await makeRequest(`${SUPABASE_URL}/rest/v1/admins?id=eq.${target.id}`, { method: 'PATCH', headers: serviceHeaders() }, { invite_token: newToken, invite_expires: newExpires });
+      await logAdminAction(admin.id, 'admin_resend_invite', { target_admin_id: target.id });
       return res.status(200).json({ invite_token: newToken });
     }
 

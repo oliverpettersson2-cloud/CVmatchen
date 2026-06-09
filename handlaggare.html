@@ -725,6 +725,18 @@ td{padding:10px 13px;vertical-align:middle}
   .bulk-bar.show{transform:translateY(0)}
   .bulk-actions{width:100%;margin-left:0}
   .bulk-btn{flex:1}
+  /* Toolbar (sökrad + filter + knappar) ska wrappa snyggt på mobil */
+  .tb{flex-wrap:wrap;gap:8px}
+  .tb .sw,.tb select{flex:1 1 100%;min-width:0}
+  .tb .sp{display:none}
+  .tb .btn{flex:1 1 calc(50% - 4px)}
+  /* Tabell-overflow: tillåt horisontell scroll på mobil */
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{min-width:560px}
+}
+@media(max-width:420px){
+  .stats{grid-template-columns:1fr}
+  .mina-grid{grid-template-columns:1fr}
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1651,7 +1663,45 @@ function enterApp(){
   document.getElementById('sbRole').textContent=admin.email||'';
   document.getElementById('sbAv').textContent=ini(admin.name||admin.email||'?');
   document.getElementById('pgSub').textContent=roleSubtitle();
-  buildNav();loadUsers();loadStats();startRefreshTimer();checkPilotExpiry();
+  buildNav();loadUsers();loadStats();startRefreshTimer();checkPilotExpiry();maybeShowOnboarding();
+}
+
+// Visar en kort välkomst-guide första gången en handläggare loggar in.
+// Sparas i localStorage per email så den inte spammas vid varje besök.
+function maybeShowOnboarding(){
+  try {
+    if (!admin || !admin.email) return;
+    const key = 'cvm_onboarding_seen_' + admin.email.toLowerCase();
+    if (localStorage.getItem(key)) return;
+    const role = admin.role || 'handlaggare';
+    const ROLE = {
+      superadmin: 'Superadmin — du ser alla kommuner och kan bjuda in vem som helst.',
+      kommunadmin: 'Kommunadmin — du ser hela din kommun och kan bjuda in enhetsadmins och handläggare.',
+      enhetsadmin: 'Enhetsadmin — du ser din enhet och kan bjuda in handläggare.',
+      handlaggare: 'Handläggare — du hanterar deltagare på din enhet.'
+    };
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:99999;backdrop-filter:blur(4px);padding:16px;';
+    overlay.innerHTML =
+      '<div style="background:#fff;color:#0c0c0c;border-radius:16px;padding:28px;max-width:480px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,0.35);">' +
+        '<div style="font-size:20px;font-weight:800;margin-bottom:8px;">👋 Välkommen till CVmatchen, ' + escapeHtml(admin.name || admin.email.split('@')[0]) + '!</div>' +
+        '<div style="font-size:13px;color:#666;margin-bottom:18px;line-height:1.5;">' + ROLE[role] + '</div>' +
+        '<ol style="font-size:13px;line-height:1.7;padding-left:18px;margin:0 0 20px;color:#333;">' +
+          '<li><b>Deltagare</b> — sök, filtrera och öppna profiler. Stjärnmarkera dina egna.</li>' +
+          '<li><b>Bjud in</b> — klicka knappen uppe till höger för att bjuda in en ny deltagare. De får en magic-link via mejl.</li>' +
+          (role !== 'handlaggare' ? '<li><b>Handläggare & admins</b> (nedre vänster) — bjud in fler admins på din nivå.</li>' : '') +
+          '<li><b>Tilldela uppgifter</b> — kryssa flera deltagare och tilldela samma uppgift i bulk.</li>' +
+          '<li><b>Sparat material & uppgifter</b> — egna mallar du kan återanvända.</li>' +
+        '</ol>' +
+        '<div style="font-size:12px;color:#888;margin-bottom:18px;">Behöver du hjälp? Skicka mejl till <a href="mailto:info@cvmatchen.com" style="color:#3eb489;">info@cvmatchen.com</a>.</div>' +
+        '<button id="_onbDone" style="background:#3eb489;border:none;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;width:100%;">Sätt igång →</button>' +
+      '</div>';
+    document.body.appendChild(overlay);
+    overlay.querySelector('#_onbDone').onclick = () => {
+      try { localStorage.setItem(key, new Date().toISOString()); } catch(_){}
+      overlay.remove();
+    };
+  } catch(_) {}
 }
 
 // Visar varningsbanner när admins egen kommun har < 14 dagar kvar av piloten.
@@ -3400,6 +3450,32 @@ async function sendAdminInvite(){
     statusEl.innerHTML = '<div style="color:#dc2626;font-size:12px;">Fel: ' + e.message + '</div>';
     btn.disabled = false; btn.textContent = 'Skapa inbjudan';
   }
+}
+
+async function exportKommunStatsCSV(){
+  try {
+    const data = await post('admin_overview_per_kommun', {});
+    const rows = data.data || [];
+    if (!rows.length) { alert('Inga kommuner att exportera.'); return; }
+    const header = ['Kommun','Pilot','Pilot slut','Användare totalt','Aktiva','Nya','Inaktiva','Enheter','Admins','Uppgifter','Slutförda','Klar-rate %'];
+    const lines = [header.join(';')];
+    rows.forEach(k => {
+      const rate = k.tasks.total ? Math.round((k.tasks.completed / k.tasks.total) * 100) : 0;
+      lines.push([
+        k.name, k.is_pilot ? 'Ja' : 'Nej',
+        k.pilot_ends ? new Date(k.pilot_ends).toISOString().slice(0,10) : '',
+        k.users.total, k.users.active, k.users.new_count, k.users.inactive,
+        k.enheter, k.admins, k.tasks.total, k.tasks.completed, rate
+      ].map(v => String(v).replace(/[;\n\r]/g,' ')).join(';'));
+    });
+    const blob = new Blob(['﻿' + lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cvmatchen-pilot-stats-' + new Date().toISOString().slice(0,10) + '.csv';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch(e) { alert('Kunde inte exportera: ' + e.message); }
 }
 
 async function resendAdminInvite(adminId, ev){
@@ -6185,7 +6261,10 @@ async function renderKommunerOverview(wrap){
   };
 
   let html = '<div style="padding:20px 24px 0;">';
-  html += '<div style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:12px;">Pilot-översikt</div>';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">';
+  html += '<div style="font-size:13px;font-weight:700;color:var(--tx);">Pilot-översikt</div>';
+  html += '<button onclick="exportKommunStatsCSV()" style="background:rgba(0,0,0,0.04);border:1px solid var(--bd);color:var(--tx);padding:6px 12px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;">⬇ Exportera CSV</button>';
+  html += '</div>';
   html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-bottom:24px;">';
   rows.forEach(k => {
     const compRate = k.tasks.total ? Math.round((k.tasks.completed / k.tasks.total) * 100) : 0;
