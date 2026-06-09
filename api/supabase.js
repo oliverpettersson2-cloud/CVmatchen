@@ -704,8 +704,32 @@ export default async function handler(req, res) {
       if (result.status >= 400) {
         return res.status(500).json({ error: 'Kunde inte skapa inbjudan', detail: result.data });
       }
+
+      // Skicka mejl via Supabase Auth (som i sin tur går via Resend SMTP).
+      // signInWithOtp + shouldCreateUser:true skickar en magic-link med vår invite-token
+      // i redirectTo, så att vår frontend kan plocka upp den och koppla kommun/enhet.
+      const origin = req.headers?.origin || req.headers?.referer?.split('/').slice(0,3).join('/') || '';
+      const redirectTo = origin
+        ? `${origin}/?invite=${encodeURIComponent(token)}`
+        : `https://cvmatchen.com/?invite=${encodeURIComponent(token)}`;
+      let emailSent = false, emailError = null;
+      try {
+        const mailRes = await makeRequest(
+          `${SUPABASE_URL}/auth/v1/otp`,
+          { method: 'POST', headers: serviceHeaders() },
+          { email: inviteEmail, create_user: true, data: { invited_by_admin_id: admin.id, kommun_id: inviteKommunId, enhet_id: inviteEnhetId }, options: { emailRedirectTo: redirectTo } }
+        );
+        emailSent = mailRes.status < 400;
+        if (!emailSent) emailError = mailRes.data;
+      } catch(e) { emailError = String(e); }
+
       const rows = Array.isArray(result.data) ? result.data : [];
-      return res.status(201).json({ invite: rows[0] || null, invite_token: token });
+      return res.status(201).json({
+        invite: rows[0] || null,
+        invite_token: token,
+        email_sent: emailSent,
+        email_error: emailError ? String(emailError).slice(0, 200) : null
+      });
     }
 
     if (action === 'admin_get_kommuner') {
