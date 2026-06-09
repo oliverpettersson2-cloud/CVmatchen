@@ -866,6 +866,10 @@ td{padding:10px 13px;vertical-align:middle}
             <select id="handlaggareFlt" aria-label="Filtrera på handläggare" style="min-width:160px"><option value="">Alla handläggare</option></select>
             <select id="enhetFlt" aria-label="Filtrera på enhet" style="min-width:140px"><option value="">Alla enheter</option></select>
             <div class="sp"></div>
+            <button class="btn btn-primary" onclick="openInviteModal()" title="Bjud in en ny deltagare">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:-2px;margin-right:4px;"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+              Bjud in
+            </button>
             <button class="btn" onclick="exportData()">Exportera</button>
           </div>
 
@@ -957,6 +961,53 @@ td{padding:10px 13px;vertical-align:middle}
     <div class="modal-actions">
       <button class="btn" onclick="closeInviteModal()">Avbryt</button>
       <button class="btn btn-primary" id="inviteSendBtn" onclick="sendInvite()">Skicka inbjudan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: Bjud in admin/handläggare ═══ -->
+<div class="modal-ov" id="adminInviteModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="adminInviteTitle">
+    <button class="modal-close" onclick="closeAdminInviteModal()" aria-label="Stäng">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-h" id="adminInviteTitle">Bjud in admin/handläggare</div>
+    <div class="modal-s">Skapa en inbjudan. Du får en länk att skicka manuellt — mottagaren loggar in med Microsoft och kopplas automatiskt till sitt konto.</div>
+
+    <div class="modal-status" id="adminInviteStatus"></div>
+
+    <div class="modal-field">
+      <label class="modal-label">E-postadress *</label>
+      <input type="email" class="modal-input" id="adminInviteEmail" placeholder="namn@kommun.se">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Namn (valfritt)</label>
+      <input type="text" class="modal-input" id="adminInviteName" placeholder="Förnamn Efternamn" style="padding-left:12px">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Roll *</label>
+      <select class="modal-input" id="adminInviteRole" style="padding-left:12px" onchange="onAdminInviteRoleChange()"></select>
+    </div>
+    <div class="modal-field" id="adminInviteKommunWrap">
+      <label class="modal-label">Kommun *</label>
+      <select class="modal-input" id="adminInviteKommun" style="padding-left:12px" onchange="onAdminInviteKommunChange()"></select>
+    </div>
+    <div class="modal-field" id="adminInviteEnhetWrap">
+      <label class="modal-label">Enhet</label>
+      <select class="modal-input" id="adminInviteEnhet" style="padding-left:12px"></select>
+    </div>
+
+    <div id="adminInviteResult" style="display:none;margin:14px 0;padding:12px;background:rgba(62,180,137,0.08);border:1px solid #3eb489;border-radius:8px;">
+      <div style="font-size:12px;font-weight:700;color:#3eb489;margin-bottom:6px;">Inbjudan skapad — kopiera länken</div>
+      <div style="display:flex;gap:6px;">
+        <input type="text" id="adminInviteLink" readonly style="flex:1;padding:8px;font-size:11px;border:1px solid var(--bd);border-radius:6px;background:#fff;">
+        <button class="btn" onclick="copyAdminInviteLink()" id="adminInviteCopyBtn">Kopiera</button>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" onclick="closeAdminInviteModal()">Stäng</button>
+      <button class="btn btn-primary" id="adminInviteSendBtn" onclick="sendAdminInvite()">Skapa inbjudan</button>
     </div>
   </div>
 </div>
@@ -1173,7 +1224,14 @@ function getHandlaggareName(u){
 // - Demo-data injiceras OVANPÅ backend-data så riktiga användare visas också.
 // För att stänga av demo-data: sätt DEMO_MODE = false.
 // ═══════════════════════════════════════════════════════════════
-const DEMO_MODE = true;
+// DEMO_MODE styrs via URL-param ?demo=1 ELLER localStorage. Default = OFF i prod.
+const DEMO_MODE = (function(){
+  try {
+    if (new URLSearchParams(location.search).get('demo') === '1') return true;
+    if (localStorage.getItem('cvm_demo_mode') === '1') return true;
+  } catch(_){}
+  return false;
+})();
 
 const DEMO_OLIVER_EMAIL = 'cvmatchen@outlook.com';
 
@@ -1520,8 +1578,29 @@ function loginMicrosoft(){
   const btn=document.getElementById('msBtn'),txt=document.getElementById('msBtnText');
   if(btn) btn.disabled=true;
   if(txt) txt.textContent='Skickar dig till Microsoft…';
-  setTimeout(()=>{window.location.href='/api/v1/auth/microsoft';},150);
+  // Vidarebefordra ev. invite-token (från ?invite=… i URL eller localStorage)
+  // så att backend kan konsumera den vid första-gångs-aktivering.
+  let qs = '';
+  try {
+    const urlT = new URLSearchParams(location.search).get('invite');
+    const storedT = localStorage.getItem('cvm_admin_invite_token');
+    const t = (urlT && /^[a-f0-9]{32,128}$/i.test(urlT)) ? urlT
+            : (storedT && /^[a-f0-9]{32,128}$/i.test(storedT)) ? storedT : '';
+    if (t) qs = '?invite=' + encodeURIComponent(t);
+  } catch(_){}
+  setTimeout(()=>{window.location.href='/api/v1/auth/microsoft' + qs;},150);
 }
+
+// Spara invite-token från ?invite=… så loginMicrosoft kan plocka upp den
+// även om användaren går igenom någon mellan-vy först.
+(function(){
+  try {
+    const t = new URLSearchParams(location.search).get('invite');
+    if (t && /^[a-f0-9]{32,128}$/i.test(t)) {
+      localStorage.setItem('cvm_admin_invite_token', t);
+    }
+  } catch(_){}
+})();
 (function checkMicrosoftCallback(){
   const params=new URLSearchParams(location.search);
   const msToken=params.get('ms_token'),msError=params.get('ms_error'),msInfo=params.get('ms_info');
@@ -1825,9 +1904,9 @@ function renderTable(users){
     const avatarStyle = isPlaceholder ? 'background:rgba(245,158,11,0.12);color:#d97706;' : '';
     return `<tr onclick="openDetail('${uid}')">
       <td style="text-align:center" onclick="event.stopPropagation()"><button class="star-btn${isStarred?' starred':''}" data-uid="${uid}" onclick="toggleFavorite('${uid}',event)" title="${isStarred?'Ta bort från Mina':'Lägg till i Mina'}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button></td>
-      <td><div class="uc"><div class="ua" style="${avatarStyle}">${avatarText}</div><div style="min-width:0;flex:1;"><div class="un" style="${nameStyle}">${name}${placeholderBadge}${testBadge}</div><div class="ue">${email}</div>${uid?`<div style="font-size:10px;color:rgba(0,0,0,0.32);font-family:ui-monospace,'SF Mono','Menlo',monospace;letter-spacing:0.2px;margin-top:1px;cursor:pointer;" onclick="event.stopPropagation();navigator.clipboard?.writeText('${uid}');this.textContent='✓ Kopierat!';setTimeout(()=>this.textContent='ID: ${uid.substring(0,12)}${uid.length>12?'…':''}',1500);" title="Kopiera fullständigt ID: ${uid}">ID: ${uid.substring(0,12)}${uid.length>12?'…':''}</div>`:''}</div></div></td>
+      <td><div class="uc"><div class="ua" style="${avatarStyle}">${escapeHtml(avatarText)}</div><div style="min-width:0;flex:1;"><div class="un" style="${nameStyle}">${escapeHtml(name)}${placeholderBadge}${testBadge}</div><div class="ue">${escapeHtml(email)}</div>${uid?`<div style="font-size:10px;color:rgba(0,0,0,0.32);font-family:ui-monospace,'SF Mono','Menlo',monospace;letter-spacing:0.2px;margin-top:1px;cursor:pointer;" onclick="event.stopPropagation();navigator.clipboard?.writeText('${uid}');this.textContent='✓ Kopierat!';setTimeout(()=>this.textContent='ID: ${uid.substring(0,12)}${uid.length>12?'…':''}',1500);" title="Kopiera fullständigt ID: ${uid}">ID: ${uid.substring(0,12)}${uid.length>12?'…':''}</div>`:''}</div></div></td>
       <td class="hm dc">${handlaggareCell}</td>
-      <td class="hm dc">${u.enheter?.name||u.enhet_name||''}</td>
+      <td class="hm dc">${escapeHtml(u.enheter?.name||u.enhet_name||'')}</td>
       <td class="dc">${lastSeen}</td>
       <td class="hm tc">${cvd.name||cvd.title?'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--gn);vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg>':'<span style="color:var(--mu)">—</span>'}</td>
       <td class="hm tc">${progPct}%</td>
@@ -3134,7 +3213,7 @@ function closeInviteModal(){
 }
 function showInviteStatus(msg, ok){
   const el=document.getElementById('inviteStatus');
-  el.textContent=msg;
+  el.innerHTML=msg;
   el.className='modal-status '+(ok?'ok':'err');
 }
 
@@ -3149,27 +3228,164 @@ async function sendInvite(){
   const btn=document.getElementById('inviteSendBtn');
   btn.disabled=true;btn.textContent='Skickar…';
   try{
-    const data = await post('invite_user', {
+    const data = await post('user_invite', {
       email,
-      name: name || null,
+      personName: name || null,
       message: message || null,
-      enhet_id: admin.enhet_id || null,
-      kommun_id: admin.kommun_id || null,
-      invitedBy: admin.id
+      enhetId:  admin.enhet_id  || null,
+      kommunId: admin.kommun_id || null
     });
     if(data.error){
       showInviteStatus(data.error, false);
       btn.disabled=false;btn.textContent='Skicka inbjudan';
       return;
     }
-    showInviteStatus(`Inbjudan skickad till ${email}!`, true);
-    btn.textContent='Skickad ✓';
-    setTimeout(()=>{ closeInviteModal(); loadUsers(); }, 1800);
+    const link = window.location.origin + '/?invite=' + encodeURIComponent(data.invite_token);
+    const safeLink = link.replace(/"/g, '&quot;');
+    const headline = data.email_sent
+      ? '✉️ Inbjudan skickad till ' + email + '. Mottagaren får ett mejl med en magic-link.'
+      : '⚠️ Inbjudan skapad, men mejl kunde inte skickas. Kopiera länken och skicka manuellt:';
+    showInviteStatus(
+      headline + '<br>' +
+      '<div style="display:flex;gap:6px;margin-top:8px;">' +
+        '<input type="text" id="userInviteLinkInput" readonly value="' + safeLink + '" ' +
+          'style="flex:1;padding:8px;font-size:11px;border:1px solid var(--bd);border-radius:6px;background:#fff;">' +
+        '<button class="btn" onclick="(function(){var i=document.getElementById(\'userInviteLinkInput\');i.select();document.execCommand(\'copy\');this.textContent=\'Kopierat ✓\';}).call(this)">Kopiera</button>' +
+      '</div>',
+      data.email_sent
+    );
+    btn.textContent = data.email_sent ? 'Skickad ✓' : 'Skapad ✓';
+    setTimeout(()=>{ loadUsers(); }, 800);
   } catch(e) {
-    showInviteStatus('Kunde inte skicka: '+e.message+'. Kontrollera att invite_user-endpoint är konfigurerat.', false);
+    showInviteStatus('Kunde inte skapa inbjudan: '+e.message, false);
     btn.disabled=false;btn.textContent='Skicka inbjudan';
   }
 }
+
+// ═══ ADMIN-INVITE (handläggare/admins bjuder in nya admins) ═══
+let _adminInviteKommuner = [];
+async function openAdminInviteModal(){
+  document.getElementById('adminInviteEmail').value = '';
+  document.getElementById('adminInviteName').value = '';
+  document.getElementById('adminInviteResult').style.display = 'none';
+  document.getElementById('adminInviteStatus').innerHTML = '';
+  document.getElementById('adminInviteSendBtn').disabled = false;
+  document.getElementById('adminInviteSendBtn').textContent = 'Skapa inbjudan';
+
+  // Fyll roll-dropdown utifrån inloggad admins behörighet
+  const roleSel = document.getElementById('adminInviteRole');
+  const allowedRoles = (admin.role === 'superadmin')
+    ? [['superadmin','Superadmin'],['kommunadmin','Kommunadmin'],['enhetsadmin','Enhetsadmin'],['handlaggare','Handläggare']]
+    : (admin.role === 'kommunadmin')
+      ? [['kommunadmin','Kommunadmin'],['enhetsadmin','Enhetsadmin'],['handlaggare','Handläggare']]
+      : [['handlaggare','Handläggare']];
+  roleSel.innerHTML = allowedRoles.map(([v,l]) => `<option value="${v}">${l}</option>`).join('');
+
+  // Hämta kommuner (scopas i backend till superadmin=alla, övriga=egen)
+  try {
+    const data = await post('admin_get_kommuner', {});
+    _adminInviteKommuner = data.data || [];
+  } catch(e) { _adminInviteKommuner = []; }
+
+  const kSel = document.getElementById('adminInviteKommun');
+  kSel.innerHTML = _adminInviteKommuner.map(k => `<option value="${k.id}">${k.name}</option>`).join('');
+
+  // Förlås kommun för icke-superadmin
+  document.getElementById('adminInviteKommunWrap').style.display = (admin.role === 'superadmin') ? '' : 'none';
+  if (admin.role !== 'superadmin' && admin.kommun_id) {
+    kSel.value = admin.kommun_id;
+  }
+  await onAdminInviteKommunChange();
+
+  document.getElementById('adminInviteModal').classList.add('open');
+}
+
+function closeAdminInviteModal(){
+  document.getElementById('adminInviteModal').classList.remove('open');
+}
+
+async function onAdminInviteKommunChange(){
+  const kommunId = document.getElementById('adminInviteKommun').value;
+  const eSel = document.getElementById('adminInviteEnhet');
+  eSel.innerHTML = '<option value="">— ingen specifik enhet —</option>';
+  if (!kommunId) { onAdminInviteRoleChange(); return; }
+  try {
+    const data = await post('admin_get_enheter', { filters: { kommun_id: kommunId } });
+    (data.data || []).forEach(e => {
+      const opt = document.createElement('option');
+      opt.value = e.id; opt.textContent = e.name;
+      eSel.appendChild(opt);
+    });
+  } catch(e) {}
+  // Förlås enhet för enhetsadmin
+  if (admin.role === 'enhetsadmin' && admin.enhet_id) {
+    eSel.value = admin.enhet_id;
+  }
+  onAdminInviteRoleChange();
+}
+
+function onAdminInviteRoleChange(){
+  const role = document.getElementById('adminInviteRole').value;
+  // Enhet är obligatorisk för enhetsadmin/handlaggare, valfri för kommunadmin, döljs för superadmin
+  const enhetWrap = document.getElementById('adminInviteEnhetWrap');
+  enhetWrap.style.display = (role === 'superadmin') ? 'none' : '';
+}
+
+async function sendAdminInvite(){
+  const email = document.getElementById('adminInviteEmail').value.trim();
+  const name  = document.getElementById('adminInviteName').value.trim();
+  const role  = document.getElementById('adminInviteRole').value;
+  const kommunId = document.getElementById('adminInviteKommun').value || null;
+  const enhetId  = document.getElementById('adminInviteEnhet').value || null;
+  const statusEl = document.getElementById('adminInviteStatus');
+  statusEl.innerHTML = '';
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    statusEl.innerHTML = '<div style="color:#dc2626;font-size:12px;">Ange en giltig e-postadress.</div>';
+    return;
+  }
+  if (role !== 'superadmin' && !kommunId) {
+    statusEl.innerHTML = '<div style="color:#dc2626;font-size:12px;">Välj kommun.</div>';
+    return;
+  }
+
+  const btn = document.getElementById('adminInviteSendBtn');
+  btn.disabled = true; btn.textContent = 'Skapar…';
+  try {
+    const data = await post('admin_invite', {
+      email, role, personName: name || null,
+      kommunId: role === 'superadmin' ? null : kommunId,
+      enhetId:  role === 'superadmin' ? null : enhetId
+    });
+    if (data.error) {
+      statusEl.innerHTML = '<div style="color:#dc2626;font-size:12px;">' + data.error + '</div>';
+      btn.disabled = false; btn.textContent = 'Skapa inbjudan';
+      return;
+    }
+    const token = data.invite_token;
+    const link  = window.location.origin + '/handlaggare.html?invite=' + encodeURIComponent(token);
+    document.getElementById('adminInviteLink').value = link;
+    document.getElementById('adminInviteResult').style.display = '';
+    statusEl.innerHTML = '<div style="color:#3eb489;font-size:12px;font-weight:600;">Inbjudan skapad ✓</div>';
+    btn.textContent = 'Skapad ✓';
+    adminsCache = null;
+  } catch(e) {
+    statusEl.innerHTML = '<div style="color:#dc2626;font-size:12px;">Fel: ' + e.message + '</div>';
+    btn.disabled = false; btn.textContent = 'Skapa inbjudan';
+  }
+}
+
+function copyAdminInviteLink(){
+  const inp = document.getElementById('adminInviteLink');
+  inp.select(); document.execCommand('copy');
+  const btn = document.getElementById('adminInviteCopyBtn');
+  const old = btn.textContent; btn.textContent = 'Kopierat ✓';
+  setTimeout(() => { btn.textContent = old; }, 1500);
+}
+
+document.getElementById('adminInviteModal')?.addEventListener('click',(e)=>{
+  if(e.target.id==='adminInviteModal') closeAdminInviteModal();
+});
 
 async function resendInvite(){
   if(!currentUserData) return;
@@ -3683,8 +3899,8 @@ function _legacyRenderMinaView_unused(){
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                   </button>
                 </td>
-                <td><div class="uc"><div class="ua" style="${avatarStyle}">${avatarText}</div><div><div class="un" style="${nameStyle}">${name}${placeholderBadge}</div><div class="ue">${email}</div></div></div></td>
-                <td class="hm dc">${u.enheter?.name||u.enhet_name||''}</td>
+                <td><div class="uc"><div class="ua" style="${avatarStyle}">${escapeHtml(avatarText)}</div><div><div class="un" style="${nameStyle}">${escapeHtml(name)}${placeholderBadge}</div><div class="ue">${escapeHtml(email)}</div></div></div></td>
+                <td class="hm dc">${escapeHtml(u.enheter?.name||u.enhet_name||'')}</td>
                 <td class="dc">${lastSeen}</td>
                 <td class="hm tc">${cvd.name||cvd.title?'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--gn);vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg>':'<span style="color:var(--mu)">—</span>'}</td>
                 <td class="hm tc">${taskInfo}</td>
@@ -5885,7 +6101,8 @@ async function renderAdminsView(){
 
   // Om vi har cachen, rendera från den direkt
   if (adminsCache) {
-    renderAdminsList(wrap, adminsCache);
+    await renderKommunerOverview(wrap);
+    renderAdminsList(wrap, adminsCache, true);
     return;
   }
 
@@ -5894,24 +6111,64 @@ async function renderAdminsView(){
   try {
     const data = await post('admin_list_admins', { adminId: admin.id });
     if (data.error) {
-      // Backend-endpoint saknas — fall tillbaka på enbart demo-data
       adminsCache = injectDemoAdmins([]);
-      renderAdminsList(wrap, adminsCache);
+      await renderKommunerOverview(wrap);
+      renderAdminsList(wrap, adminsCache, true);
       return;
     }
     const realAdmins = data.data || data.admins || (Array.isArray(data) ? data : []);
     adminsCache = injectDemoAdmins(realAdmins);
-    renderAdminsList(wrap, adminsCache);
+    await renderKommunerOverview(wrap);
+    renderAdminsList(wrap, adminsCache, true);
   } catch (e) {
-    // Inget API alls — visa enbart demo-data
     adminsCache = injectDemoAdmins([]);
-    renderAdminsList(wrap, adminsCache);
+    await renderKommunerOverview(wrap);
+    renderAdminsList(wrap, adminsCache, true);
   }
 }
 
-function renderAdminsList(wrap, admins) {
+async function renderKommunerOverview(wrap){
+  if (!['superadmin','kommunadmin'].includes(admin?.role)) return;
+  let rows = [];
+  try {
+    const data = await post('admin_overview_per_kommun', {});
+    rows = data.data || [];
+  } catch(e) { return; }
+  if (!rows.length) return;
+
+  const fmtPilot = (k) => {
+    if (!k.is_pilot) return '<span style="font-size:10px;font-weight:700;background:rgba(107,114,128,0.15);color:#6b7280;padding:2px 6px;border-radius:6px;">FULL DRIFT</span>';
+    if (!k.pilot_ends) return '<span style="font-size:10px;font-weight:700;background:rgba(245,158,11,0.15);color:#d97706;padding:2px 6px;border-radius:6px;">PILOT</span>';
+    const days = Math.ceil((new Date(k.pilot_ends) - new Date()) / (1000*60*60*24));
+    const color = days < 14 ? '#dc2626' : days < 30 ? '#d97706' : '#3eb489';
+    return `<span style="font-size:10px;font-weight:700;background:${color}22;color:${color};padding:2px 6px;border-radius:6px;">PILOT · ${days}d kvar</span>`;
+  };
+
+  let html = '<div style="padding:20px 24px 0;">';
+  html += '<div style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:12px;">Pilot-översikt</div>';
+  html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-bottom:24px;">';
+  rows.forEach(k => {
+    const compRate = k.tasks.total ? Math.round((k.tasks.completed / k.tasks.total) * 100) : 0;
+    html += '<div style="padding:12px 14px;background:rgba(0,0,0,0.02);border:1px solid var(--bd);border-radius:10px;">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:8px;">';
+    html += '<div style="font-size:13px;font-weight:700;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + k.name + '</div>';
+    html += fmtPilot(k);
+    html += '</div>';
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px;">';
+    html += '<div><div style="color:var(--mu);">Användare</div><div style="font-weight:700;color:var(--tx);font-size:14px;">' + k.users.total + ' <span style="font-size:10px;color:var(--mu);font-weight:500;">(' + k.users.active + ' aktiva)</span></div></div>';
+    html += '<div><div style="color:var(--mu);">Admins</div><div style="font-weight:700;color:var(--tx);font-size:14px;">' + k.admins + ' <span style="font-size:10px;color:var(--mu);font-weight:500;">på ' + k.enheter + ' enheter</span></div></div>';
+    html += '<div><div style="color:var(--mu);">Uppgifter</div><div style="font-weight:700;color:var(--tx);font-size:14px;">' + k.tasks.total + '</div></div>';
+    html += '<div><div style="color:var(--mu);">Klar-rate</div><div style="font-weight:700;color:' + (compRate >= 50 ? '#3eb489' : compRate >= 20 ? '#d97706' : 'var(--tx)') + ';font-size:14px;">' + compRate + '%</div></div>';
+    html += '</div></div>';
+  });
+  html += '</div></div>';
+  wrap.innerHTML = html;
+}
+
+function renderAdminsList(wrap, admins, append) {
   if (!admins || admins.length === 0) {
-    wrap.innerHTML = '<div class="loading" style="padding:40px;text-align:center;">Inga admins hittades.</div>';
+    const empty = '<div class="loading" style="padding:40px;text-align:center;">Inga admins hittades.</div>';
+    if (append) wrap.insertAdjacentHTML('beforeend', empty); else wrap.innerHTML = empty;
     return;
   }
 
@@ -5934,7 +6191,13 @@ function renderAdminsList(wrap, admins) {
   let html = '<div style="padding:20px 24px;">';
   html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">';
   html += '<div style="font-size:13px;color:var(--mu);">Totalt <strong style="color:var(--tx);">' + admins.length + '</strong> admin' + (admins.length !== 1 ? 's' : '') + ' i systemet</div>';
+  html += '<div style="display:flex;gap:8px;">';
+  const canInviteAdmin = admin && ['superadmin','kommunadmin','enhetsadmin'].includes(admin.role);
+  if (canInviteAdmin) {
+    html += '<button onclick="openAdminInviteModal()" style="background:#3eb489;border:1px solid #3eb489;color:#fff;padding:6px 12px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;">+ Bjud in</button>';
+  }
   html += '<button onclick="adminsCache=null;renderAdminsView();" style="background:rgba(0,0,0,0.04);border:1px solid var(--bd);color:var(--tx);padding:6px 12px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;">↻ Uppdatera</button>';
+  html += '</div>';
   html += '</div>';
 
   ROLE_ORDER.forEach(role => {
@@ -5973,7 +6236,7 @@ function renderAdminsList(wrap, admins) {
   });
 
   html += '</div>';
-  wrap.innerHTML = html;
+  if (append) wrap.insertAdjacentHTML('beforeend', html); else wrap.innerHTML = html;
 }
 
 

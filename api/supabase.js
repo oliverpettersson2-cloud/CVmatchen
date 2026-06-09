@@ -91,6 +91,18 @@ export default async function handler(req, res) {
     return { ...baseHeaders, 'apikey': key, 'Authorization': `Bearer ${key}` };
   }
 
+  // verifierar accessToken mot Supabase och returnerar { id, email } eller null.
+  // Används för att stoppa attacker där `userId` skickas i body — vi använder
+  // ALLTID id:t från JWT istället så användare endast kan skriva sin egen data.
+  async function verifyJwtUser(accessToken) {
+    if (!accessToken) return null;
+    try {
+      const r = await makeRequest(`${SUPABASE_URL}/auth/v1/user`, { method: 'GET', headers: authHeaders(accessToken) });
+      if (r.status >= 400 || !r.data?.id) return null;
+      return { id: r.data.id, email: (r.data.email || '').toLowerCase() };
+    } catch(_) { return null; }
+  }
+
   // ════════════════════════════════════════════════════════════════
   // verifyAdmin — multi-tenant-skydd för admin_*-actions.
   // HMAC-verifierar handläggarens session-token (samma signering som
@@ -200,12 +212,16 @@ export default async function handler(req, res) {
     }
 
     if (action === 'save_cv') {
-      await makeRequest(`${SUPABASE_URL}/rest/v1/cvs`, { method: 'POST', headers: { ...authHeaders(accessToken), 'Prefer': 'resolution=merge-duplicates' } }, { user_id: userId, data: cvData, updated_at: new Date().toISOString() });
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
+      await makeRequest(`${SUPABASE_URL}/rest/v1/cvs`, { method: 'POST', headers: { ...authHeaders(accessToken), 'Prefer': 'resolution=merge-duplicates' } }, { user_id: jwt.id, data: cvData, updated_at: new Date().toISOString() });
       return res.status(200).json({ success: true });
     }
 
     if (action === 'load_cv') {
-      const result = await makeRequest(`${SUPABASE_URL}/rest/v1/cvs?user_id=eq.${userId}&select=data&limit=1`, { method: 'GET', headers: authHeaders(accessToken) });
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
+      const result = await makeRequest(`${SUPABASE_URL}/rest/v1/cvs?user_id=eq.${jwt.id}&select=data&limit=1`, { method: 'GET', headers: authHeaders(accessToken) });
       const rows = Array.isArray(result.data) ? result.data : [];
       return res.status(200).json({ cv: rows[0]?.data || null });
     }
@@ -213,13 +229,17 @@ export default async function handler(req, res) {
     if (action === 'save_table') {
       const ALLOWED = ['saved_cvs', 'matched_cvs', 'saved_edu', 'job_diary'];
       if (!ALLOWED.includes(table)) return res.status(400).json({ error: 'Invalid table: ' + table });
-      await makeRequest(`${SUPABASE_URL}/rest/v1/${table}?user_id=eq.${userId}`, { method: 'DELETE', headers: authHeaders(accessToken) });
-      await makeRequest(`${SUPABASE_URL}/rest/v1/${table}`, { method: 'POST', headers: { ...authHeaders(accessToken), 'Prefer': 'return=minimal' } }, { user_id: userId, data: data, saved_at: new Date().toISOString() });
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
+      await makeRequest(`${SUPABASE_URL}/rest/v1/${table}?user_id=eq.${jwt.id}`, { method: 'DELETE', headers: authHeaders(accessToken) });
+      await makeRequest(`${SUPABASE_URL}/rest/v1/${table}`, { method: 'POST', headers: { ...authHeaders(accessToken), 'Prefer': 'return=minimal' } }, { user_id: jwt.id, data: data, saved_at: new Date().toISOString() });
       return res.status(200).json({ success: true });
     }
 
     if (action === 'save_progress') {
-      await makeRequest(`${SUPABASE_URL}/rest/v1/ovning_progress`, { method: 'POST', headers: { ...authHeaders(accessToken), 'Prefer': 'resolution=merge-duplicates' } }, { user_id: userId, progress: data, updated_at: new Date().toISOString() });
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
+      await makeRequest(`${SUPABASE_URL}/rest/v1/ovning_progress`, { method: 'POST', headers: { ...authHeaders(accessToken), 'Prefer': 'resolution=merge-duplicates' } }, { user_id: jwt.id, progress: data, updated_at: new Date().toISOString() });
       return res.status(200).json({ success: true });
     }
 
@@ -283,8 +303,10 @@ export default async function handler(req, res) {
     }
 
     if (action === 'check_onboarding') {
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
       const result = await makeRequest(
-        `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${userId}&select=name&limit=1`,
+        `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${jwt.id}&select=name&limit=1`,
         { method: 'GET', headers: serviceHeaders() }
       );
       const rows = Array.isArray(result.data) ? result.data : [];
@@ -293,15 +315,17 @@ export default async function handler(req, res) {
     }
 
     if (action === 'ensure_participant') {
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
       // FIX: Bara kolumner som faktiskt finns i user_assignments (ingen email/updated_at)
       await makeRequest(
         `${SUPABASE_URL}/rest/v1/user_assignments`,
         { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'resolution=ignore-duplicates,return=minimal' } },
-        { user_id: userId, name: personName || null, phone: personPhone || null, status: 'active', created_at: new Date().toISOString() }
+        { user_id: jwt.id, name: personName || null, phone: personPhone || null, status: 'active', created_at: new Date().toISOString() }
       );
       if (personName) {
         await makeRequest(
-          `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${userId}`,
+          `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${jwt.id}`,
           { method: 'PATCH', headers: serviceHeaders() },
           { name: personName, phone: personPhone || null }
         );
@@ -312,29 +336,70 @@ export default async function handler(req, res) {
     if (action === 'save_ai_consent') {
       // Sparar/återkallar deltagarens AI-samtycke. Idempotent — kör
       // ensure_participant först om raden saknas så vi inte tappar samtycket.
-      if (!userId) return res.status(400).json({ error: 'userId krävs' });
+      // Konsumerar ev. user_invite (inviteToken) och kopplar kommun/enhet.
+      // Saknas invite: faller tillbaka på "Övrigt"-kommunen.
+      const _jwt = await verifyJwtUser(accessToken);
+      if (!_jwt) return res.status(401).json({ error: 'invalid_token' });
+      const _uid = _jwt.id;  // använd ALLTID id från JWT, inte body
       const version = (aiConsentVersion && String(aiConsentVersion).slice(0, 32)) || '2026-06-07';
       const now = new Date().toISOString();
       const patch = aiConsent === false
         ? { ai_consent_withdrawn_at: now }
         : { ai_consent_at: now, ai_consent_version: version, ai_consent_withdrawn_at: null };
 
-      // Säkerställ att raden finns innan vi PATCH:ar
+      // Slå upp ev. invite för att kunna tilldela kommun/enhet vid första-gångs-skapande.
+      // email kommer från verifierat JWT (_jwt.email) — aldrig från body.
+      let inviteKommunId = null, inviteEnhetId = null, inviteIdToConsume = null;
+      const verifiedEmail = _jwt.email;
+      const inviteToken = req.body?.inviteToken;
+      if (inviteToken && verifiedEmail) {
+        const inv = await makeRequest(
+          `${SUPABASE_URL}/rest/v1/user_invites?token=eq.${encodeURIComponent(inviteToken)}&email=eq.${encodeURIComponent(verifiedEmail)}&consumed_at=is.null&select=id,kommun_id,enhet_id,expires_at&limit=1`,
+          { method: 'GET', headers: serviceHeaders() }
+        );
+        const inviteRow = Array.isArray(inv.data) && inv.data[0];
+        if (inviteRow && new Date(inviteRow.expires_at) > new Date()) {
+          inviteKommunId = inviteRow.kommun_id;
+          inviteEnhetId  = inviteRow.enhet_id;
+          inviteIdToConsume = inviteRow.id;
+        }
+      }
+      // Fallback till "Övrigt" om ingen invite matchade
+      if (!inviteKommunId) {
+        const ovrigt = await makeRequest(
+          `${SUPABASE_URL}/rest/v1/kommuner?name=eq.${encodeURIComponent('Övrigt')}&select=id,enheter(id,name)&limit=1`,
+          { method: 'GET', headers: serviceHeaders() }
+        );
+        const orow = Array.isArray(ovrigt.data) && ovrigt.data[0];
+        if (orow) {
+          inviteKommunId = orow.id;
+          const defEnhet = (orow.enheter || []).find(e => e.name === 'Allmänna användare');
+          inviteEnhetId  = defEnhet ? defEnhet.id : null;
+        }
+      }
+
+      // Säkerställ att raden finns (UPSERT — sätter kommun/enhet endast vid nyskapande)
       await makeRequest(
         `${SUPABASE_URL}/rest/v1/user_assignments`,
         { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'resolution=ignore-duplicates,return=minimal' } },
-        { user_id: userId, status: 'active', created_at: now }
+        { user_id: _uid, status: 'active', created_at: now, kommun_id: inviteKommunId, enhet_id: inviteEnhetId }
       );
       const result = await makeRequest(
-        `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${userId}`,
+        `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${_uid}`,
         { method: 'PATCH', headers: serviceHeaders() },
         patch
       );
       if (result.status >= 400) {
-        // Migration ej körd? Logga men låt frontend fortsätta — samtycket
-        // lagras även i localStorage så vi inte blockerar piloten.
         console.warn('[save_ai_consent] DB-patch misslyckades:', result.status, maskPII(result.data));
         return res.status(200).json({ ok: true, persisted: false });
+      }
+      // Konsumera invite efter lyckad patch
+      if (inviteIdToConsume) {
+        await makeRequest(
+          `${SUPABASE_URL}/rest/v1/user_invites?id=eq.${inviteIdToConsume}`,
+          { method: 'PATCH', headers: serviceHeaders() },
+          { consumed_at: now, consumed_user_id: _uid }
+        );
       }
       return res.status(200).json({ ok: true, persisted: true, at: now, version });
     }
@@ -561,18 +626,64 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true });
     }
 
+    if (action === 'admin_delete_user') {
+      // GDPR-radering: admin tar bort en deltagare ur sin tenant.
+      // Raderar alla deltagar-rader + auth.users (kaskad-radering).
+      const { admin } = await requireAdmin(res, accessToken, action, { requestedUserId: req.body?.targetUserId });
+      if (!admin) return;
+      const targetUserId = req.body?.targetUserId;
+      if (!targetUserId) return res.status(400).json({ error: 'targetUserId krävs' });
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','tasks','task_sessions','interview_messages','interview_sessions','saved_questions'];
+      for (const t of TABLES) {
+        await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${targetUserId}`, { method: 'DELETE', headers: serviceHeaders() });
+      }
+      // Konsumera ev. öppna user_invites för samma user
+      await makeRequest(`${SUPABASE_URL}/rest/v1/user_invites?consumed_user_id=eq.${targetUserId}`, { method: 'DELETE', headers: serviceHeaders() });
+      // Radera auth.users via Supabase Admin API
+      await makeRequest(`${SUPABASE_URL}/auth/v1/admin/users/${targetUserId}`, { method: 'DELETE', headers: serviceHeaders() });
+      // Audit
+      await makeRequest(`${SUPABASE_URL}/rest/v1/admin_audit`, { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=minimal' } }, { admin_id: admin.id, action: 'admin_delete_user', details: { target_user_id: targetUserId } });
+      return res.status(200).json({ ok: true });
+    }
+
+    if (action === 'user_delete_self') {
+      // GDPR: deltagare raderar sitt eget konto.
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','tasks','task_sessions','interview_messages','interview_sessions','saved_questions'];
+      for (const t of TABLES) {
+        await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${jwt.id}`, { method: 'DELETE', headers: serviceHeaders() });
+      }
+      await makeRequest(`${SUPABASE_URL}/rest/v1/user_invites?consumed_user_id=eq.${jwt.id}`, { method: 'DELETE', headers: serviceHeaders() });
+      await makeRequest(`${SUPABASE_URL}/auth/v1/admin/users/${jwt.id}`, { method: 'DELETE', headers: serviceHeaders() });
+      return res.status(200).json({ ok: true });
+    }
+
     if (action === 'admin_invite') {
       const { admin } = await requireAdmin(res, accessToken, action, {
         requestedKommunId: kommunId, requestedEnhetId: enhetId
       });
       if (!admin) return;
-      // Icke-superadmin: tvinga egen kommun/enhet + förbjud superadmin-roll
       let inviteKommunId = kommunId, inviteEnhetId = enhetId, inviteRole = role || 'handlaggare';
-      if (admin.role !== 'superadmin') {
+
+      // Behörighetsmatris per inbjudarens roll
+      if (admin.role === 'superadmin') {
+        // får bjuda in vad som helst
+      } else if (admin.role === 'kommunadmin') {
+        inviteKommunId = admin.kommun_id;                      // låst till egen kommun
+        if (!['kommunadmin','enhetsadmin','handlaggare'].includes(inviteRole)) {
+          return res.status(403).json({ error: 'forbidden_role' });
+        }
+      } else if (admin.role === 'enhetsadmin') {
         inviteKommunId = admin.kommun_id;
-        if (admin.enhet_id != null) inviteEnhetId = admin.enhet_id;
-        if (inviteRole === 'superadmin') return res.status(403).json({ error: 'forbidden_role' });
+        inviteEnhetId  = admin.enhet_id;                        // låst till egen enhet
+        if (inviteRole !== 'handlaggare') {
+          return res.status(403).json({ error: 'forbidden_role' });
+        }
+      } else {
+        return res.status(403).json({ error: 'forbidden' });    // handläggare får ej bjuda in admins
       }
+
       const existing = await makeRequest(`${SUPABASE_URL}/rest/v1/admins?email=eq.${encodeURIComponent(email)}&limit=1`, { method: 'GET', headers: serviceHeaders() });
       if (Array.isArray(existing.data) && existing.data.length) return res.status(409).json({ error: 'E-postadressen finns redan' });
       const inviteToken = crypto.randomBytes(32).toString('hex');
@@ -626,6 +737,130 @@ export default async function handler(req, res) {
         tasks: { total: tasks.length, completed: tasks.filter(t => t.status === 'completed').length, pending: tasks.filter(t => t.status === 'pending').length, active: tasks.filter(t => t.status === 'active').length, expired: tasks.filter(t => t.status === 'expired').length, total_time_sec: tasks.reduce((s, t) => s + (t.time_spent_sec || 0), 0) },
         byCategory: Object.entries(tasks.reduce((acc, t) => { if (!acc[t.category]) acc[t.category] = { total: 0, completed: 0 }; acc[t.category].total++; if (t.status === 'completed') acc[t.category].completed++; return acc; }, {})).map(([cat, data]) => ({ category: cat, ...data })),
       });
+    }
+
+    if (action === 'user_invite') {
+      // Handläggare/admin bjuder in en deltagare. Skapar token, ingen mejl-utskick än.
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const inviteEmail = (email || '').toLowerCase().trim();
+      if (!inviteEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inviteEmail)) {
+        return res.status(400).json({ error: 'Ogiltig e-postadress' });
+      }
+      // Scope: superadmin får välja kommun/enhet fritt, övriga låses till egen
+      let inviteKommunId = kommunId || null, inviteEnhetId = enhetId || null;
+      if (admin.role !== 'superadmin') {
+        inviteKommunId = admin.kommun_id;
+        if (admin.enhet_id != null) inviteEnhetId = admin.enhet_id;
+      }
+      const token = crypto.randomBytes(32).toString('hex');
+      const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(); // 30 dagar
+      const result = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/user_invites`,
+        { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=representation' } },
+        { email: inviteEmail, token, kommun_id: inviteKommunId, enhet_id: inviteEnhetId,
+          invited_by: admin.id, invite_message: req.body?.message || null, expires_at: expires }
+      );
+      if (result.status >= 400) {
+        return res.status(500).json({ error: 'Kunde inte skapa inbjudan', detail: result.data });
+      }
+
+      // Skicka mejl via Supabase Auth (som i sin tur går via Resend SMTP).
+      // signInWithOtp + shouldCreateUser:true skickar en magic-link med vår invite-token
+      // i redirectTo, så att vår frontend kan plocka upp den och koppla kommun/enhet.
+      const origin = req.headers?.origin || req.headers?.referer?.split('/').slice(0,3).join('/') || '';
+      const redirectTo = origin
+        ? `${origin}/?invite=${encodeURIComponent(token)}`
+        : `https://cvmatchen.com/?invite=${encodeURIComponent(token)}`;
+      let emailSent = false, emailError = null;
+      try {
+        const mailRes = await makeRequest(
+          `${SUPABASE_URL}/auth/v1/otp`,
+          { method: 'POST', headers: serviceHeaders() },
+          { email: inviteEmail, create_user: true, data: { invited_by_admin_id: admin.id, kommun_id: inviteKommunId, enhet_id: inviteEnhetId }, options: { emailRedirectTo: redirectTo } }
+        );
+        emailSent = mailRes.status < 400;
+        if (!emailSent) emailError = mailRes.data;
+      } catch(e) { emailError = String(e); }
+
+      const rows = Array.isArray(result.data) ? result.data : [];
+      return res.status(201).json({
+        invite: rows[0] || null,
+        invite_token: token,
+        email_sent: emailSent,
+        email_error: emailError ? String(emailError).slice(0, 200) : null
+      });
+    }
+
+    if (action === 'admin_overview_per_kommun') {
+      // Superadmin-överblick: en rad per kommun med pilot-status och nyckeltal.
+      // Övriga admins ser bara sin egen kommun.
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+
+      let komUrl = `${SUPABASE_URL}/rest/v1/kommuner?select=id,name,is_pilot,pilot_ends,contact_email&order=name`;
+      if (admin.role !== 'superadmin' && admin.kommun_id) {
+        komUrl += `&id=eq.${admin.kommun_id}`;
+      }
+      const [komRes, uaRes, adminsRes, enhRes] = await Promise.all([
+        makeRequest(komUrl, { method: 'GET', headers: serviceHeaders() }),
+        makeRequest(`${SUPABASE_URL}/rest/v1/user_assignments?select=user_id,kommun_id,status`, { method: 'GET', headers: serviceHeaders() }),
+        makeRequest(`${SUPABASE_URL}/rest/v1/admins?select=id,role,kommun_id`, { method: 'GET', headers: serviceHeaders() }),
+        makeRequest(`${SUPABASE_URL}/rest/v1/enheter?select=id,kommun_id`, { method: 'GET', headers: serviceHeaders() })
+      ]);
+
+      const kommuner = Array.isArray(komRes.data) ? komRes.data : [];
+      const allUA    = Array.isArray(uaRes.data) ? uaRes.data : [];
+      const allAdm   = Array.isArray(adminsRes.data) ? adminsRes.data : [];
+      const allEnh   = Array.isArray(enhRes.data) ? enhRes.data : [];
+
+      // Hämta tasks för alla relevanta deltagare i en bulk
+      const allUserIds = allUA.map(u => u.user_id).filter(Boolean);
+      let tasks = [];
+      if (allUserIds.length) {
+        const idsFilter = allUserIds.map(id => `"${id}"`).join(',');
+        const taskRes = await makeRequest(
+          `${SUPABASE_URL}/rest/v1/tasks?user_id=in.(${idsFilter})&select=user_id,status`,
+          { method: 'GET', headers: serviceHeaders() }
+        );
+        tasks = Array.isArray(taskRes.data) ? taskRes.data : [];
+      }
+
+      const userIdToKommun = new Map(allUA.map(u => [u.user_id, u.kommun_id]));
+
+      const rows = kommuner.map(k => {
+        const ua = allUA.filter(u => u.kommun_id === k.id);
+        const adm = allAdm.filter(a => a.kommun_id === k.id);
+        const enh = allEnh.filter(e => e.kommun_id === k.id);
+        const kTasks = tasks.filter(t => userIdToKommun.get(t.user_id) === k.id);
+        return {
+          id: k.id, name: k.name, is_pilot: k.is_pilot, pilot_ends: k.pilot_ends,
+          contact_email: k.contact_email,
+          users: {
+            total: ua.length,
+            active: ua.filter(u => u.status === 'active').length,
+            recent: ua.filter(u => u.status === 'recent').length,
+            new_count: ua.filter(u => u.status === 'new').length,
+            inactive: ua.filter(u => u.status === 'inactive').length
+          },
+          enheter: enh.length,
+          admins: adm.length,
+          tasks: { total: kTasks.length, completed: kTasks.filter(t => t.status === 'completed').length }
+        };
+      });
+
+      return res.status(200).json({ data: rows });
+    }
+
+    if (action === 'admin_get_kommuner') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      let url = `${SUPABASE_URL}/rest/v1/kommuner?select=id,name&order=name`;
+      if (admin.role !== 'superadmin' && admin.kommun_id) {
+        url += `&id=eq.${admin.kommun_id}`;
+      }
+      const result = await makeRequest(url, { method: 'GET', headers: serviceHeaders() });
+      return res.status(200).json({ data: Array.isArray(result.data) ? result.data : [] });
     }
 
     if (action === 'admin_get_enheter') {

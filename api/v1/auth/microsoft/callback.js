@@ -57,18 +57,29 @@ export default async function handler(req, res) {
     return redirectWithError(req, res, 'missing_code');
   }
 
-  // CSRF-skydd: verifiera state-cookie
+  // CSRF-skydd: verifiera state-cookie.
+  // State kan vara "<csrf>" eller "<csrf>.<invite_token>" — vi jämför endast CSRF-delen.
   const cookies = parseCookies(req.headers.cookie || '');
   const expectedState = cookies.ms_oauth_state;
-  if (!expectedState || expectedState !== state) {
+  const csrfPart = (state || '').split('.')[0];
+  if (!expectedState || expectedState !== csrfPart) {
     console.error('[MS-callback] State mismatch — möjlig CSRF-attack');
     return redirectWithError(req, res, 'invalid_state');
   }
 
   try {
     // Steg 1: Byt code → access_token
-    const host = req.headers['x-forwarded-host'] || req.headers.host;
-    const protocol = req.headers['x-forwarded-proto'] || 'https';
+    // Whitelista host för att förhindra host-header-injection (annars kan
+    // attacker styra redirectUri och stjäla auth-code).
+    const ALLOWED_HOSTS = new Set([
+      'www.cvmatchen.com',
+      'cvmatchen.com',
+      process.env.PUBLIC_HOST,
+      process.env.VERCEL_URL
+    ].filter(Boolean));
+    const rawHost = (req.headers['x-forwarded-host'] || req.headers.host || '').split(',')[0].trim();
+    const host = ALLOWED_HOSTS.has(rawHost) ? rawHost : 'www.cvmatchen.com';
+    const protocol = 'https';
     const redirectUri = `${protocol}://${host}/api/v1/auth/microsoft/callback`;
 
     const tokenResponse = await fetch(
@@ -112,8 +123,10 @@ export default async function handler(req, res) {
     }
 
     // Steg 3: Kolla admins-tabellen — är email behörig handläggare?
+    // invite_token/invite_expires hämtas också så vi kan konsumera token vid
+    // första lyckade login (= aktivera kontot).
     const adminCheckResp = await fetch(
-      `${supabaseUrl}/rest/v1/admins?email=eq.${encodeURIComponent(email)}&select=id,name,email,role`,
+      `${supabaseUrl}/rest/v1/admins?email=eq.${encodeURIComponent(email)}&select=id,name,email,role,invite_token,invite_expires,last_login`,
       {
         method: 'GET',
         headers: {
@@ -136,6 +149,34 @@ export default async function handler(req, res) {
     }
 
     const admin = admins[0];
+
+    // Steg 3b: Aktivering — om kontot har en pending invite_token (har aldrig
+    // loggat in), kräv att första loginet sker via invite-länken (?invite=TOKEN).
+    // Det förhindrar att en angripare som råkar äga en email vi tänkt bjuda in
+    // kan logga in innan rätt person hinner använda länken.
+    if (!admin.last_login && admin.invite_token) {
+      const expires = admin.invite_expires ? new Date(admin.invite_expires) : null;
+      if (expires && expires < new Date()) {
+        return redirectWithError(req, res, 'invite_expired', email);
+      }
+      // Token kan ha skickats antingen via state-param (vid OAuth-start) eller cookie
+      const presentedToken = (req.query?.invite_token) || extractInviteFromState(state) || '';
+      if (presentedToken !== admin.invite_token) {
+        return redirectWithError(req, res, 'invite_required', email);
+      }
+      // Konsumera — nolla invite_token så framtida loginer går rakt igenom
+      await fetch(`${supabaseUrl}/rest/v1/admins?id=eq.${admin.id}`, {
+        method: 'PATCH',
+        headers: { 'apikey': supabaseServiceKey, 'Authorization': `Bearer ${supabaseServiceKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ invite_token: null, invite_expires: null, name: admin.name || name })
+      });
+    }
+    // Uppdatera last_login
+    await fetch(`${supabaseUrl}/rest/v1/admins?id=eq.${admin.id}`, {
+      method: 'PATCH',
+      headers: { 'apikey': supabaseServiceKey, 'Authorization': `Bearer ${supabaseServiceKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ last_login: new Date().toISOString() })
+    });
 
     // Steg 4: Skapa en session-token som frontend kan använda
     // För enkelhet skapar vi en signerad JSON-payload (kort TTL).
@@ -193,6 +234,14 @@ export default async function handler(req, res) {
 // ══════════════════════════════════════════════════════════════
 // HJÄLPFUNKTIONER
 // ══════════════════════════════════════════════════════════════
+
+function extractInviteFromState(state) {
+  if (!state || typeof state !== 'string') return '';
+  const parts = state.split('.');
+  if (parts.length < 2) return '';
+  const t = parts[1];
+  return /^[a-f0-9]{32,128}$/i.test(t) ? t : '';
+}
 
 function parseCookies(cookieHeader) {
   const result = {};

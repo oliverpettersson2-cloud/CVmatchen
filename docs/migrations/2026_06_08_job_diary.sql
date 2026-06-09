@@ -74,5 +74,5 @@ GRANT EXECUTE ON FUNCTION public.admin_get_diary_stats(UUID) TO service_role;
 --   WHERE table_schema='public' AND table_name='job_diary';
 --
 -- SELECT * FROM public.admin_get_diary_stats(
---   (SELECT id FROM auth.users WHERE email='oliver.pettersson2@gmail.com')
+--   (SELECT id FROM auth.users WHERE email='<user-email>')
 -- );

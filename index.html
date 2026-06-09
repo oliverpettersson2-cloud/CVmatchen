@@ -2543,6 +2543,24 @@
 <body>
   <a href="#huvudinnehall" class="skip-link">Hoppa till innehåll</a>
 
+  <!-- ═══ Cookie-banner (visas tills användaren bekräftar) ═══ -->
+  <div id="cvmCookieBanner" style="display:none;position:fixed;bottom:16px;left:16px;right:16px;max-width:520px;margin:0 auto;background:#1a1a1a;color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:14px 16px;box-shadow:0 10px 30px rgba(0,0,0,0.4);z-index:999999;font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:13px;line-height:1.5;">
+    <div style="margin-bottom:10px;">
+      🍪 CVmatchen använder endast <strong>strikt nödvändiga cookies</strong> för att hålla dig inloggad och spara ditt CV lokalt. Inga spårnings- eller annonscookies.
+      <a href="/sakerhet.html" style="color:#3eb489;text-decoration:underline;">Läs mer</a>
+    </div>
+    <button onclick="(function(){try{localStorage.setItem('cvm_cookie_ack','1');}catch(_){}document.getElementById('cvmCookieBanner').style.display='none';})()" style="background:#3eb489;border:none;color:#fff;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">OK, jag förstår</button>
+  </div>
+  <script>
+    (function(){
+      try {
+        if (!localStorage.getItem('cvm_cookie_ack')) {
+          setTimeout(function(){ var b=document.getElementById('cvmCookieBanner'); if(b) b.style.display='block'; }, 800);
+        }
+      } catch(_){}
+    })();
+  </script>
+
   <!-- ===== SPLASH SCREEN ===== -->
   <div id="splashScreen" class="splash-hidden">
     <div class="splash-logo"><span>CV</span><span>matchen</span></div>
@@ -6647,6 +6665,16 @@ ${styleTexts}
 
     // ===== KLIENT-SIDE PDF HELPER (smart sidbrytning, A4) =====
     async function _generateClientPDF() {
+      // Säkerställ att aktuell CV-data är persisterad innan vi går in i
+      // print-flödet — print-dialogen kan i sällsynta fall förstöra session.
+      try { await flushPendingCVSave(); } catch(_) {}
+      // Vänta in jsPDF-libbet om det inte är klart vid första-klicket på mobil
+      // (vanlig race när användaren klickar Exportera direkt efter sidladdning).
+      if (!window.jspdf) {
+        for (let i = 0; i < 30 && !window.jspdf; i++) {
+          await new Promise(r => setTimeout(r, 100));
+        }
+      }
       if (!window.jspdf) throw new Error('PDF-biblioteket ej laddat');
       const { jsPDF } = window.jspdf;
 
@@ -7288,7 +7316,10 @@ ${styleTexts}
       const params = new URLSearchParams(window.location.search);
       const msToken = params.get('ms_token');
       const msError = params.get('ms_error');
-      const msInfo = params.get('ms_info');
+      // Tillåt endast email-tecken i ms_info för att förhindra XSS om värdet
+      // någonsin renderas via innerHTML i framtida kod.
+      const _rawInfo = params.get('ms_info');
+      const msInfo = _rawInfo && /^[\w.+@-]{1,254}$/.test(_rawInfo) ? _rawInfo : null;
 
       // Rensa alltid URL:en så känslig data inte ligger kvar
       function cleanUrl() {
@@ -7638,6 +7669,19 @@ ${styleTexts}
       }
     }
 
+    // Flush eventuell pending debounce och spara synkront. Anropas före
+    // alla export/print-flöden så att vi aldrig tappar arbete vid tex en
+    // browser-omladdning eller förlorad session under print-dialogen.
+    async function flushPendingCVSave() {
+      if (typeof _saveDebounce !== 'undefined' && _saveDebounce) {
+        clearTimeout(_saveDebounce);
+        _saveDebounce = null;
+      }
+      try { safeStorage.setItem('cvData', JSON.stringify(cvData)); } catch(_){}
+      if (window.authUserId) await saveCVToSupabase();
+    }
+    window.flushPendingCVSave = flushPendingCVSave;
+
     // ── Supabase-synk: sparar valfri tabell med debounce ──────────────────
     const _sbDebounces = {};
     function _sbSync(table, data) {
@@ -7744,6 +7788,15 @@ ${styleTexts}
     // (källa-på-sanning för admins). DB-write failar tyst om migrationen
     // inte är körd än — vi blockerar inte piloten på det.
     window.AI_CONSENT_VERSION = '2026-06-07';
+
+    // Fånga ?invite=TOKEN och spara — konsumeras vid save_ai_consent när användaren skapat konto
+    try {
+      const _p = new URLSearchParams(window.location.search);
+      const _t = _p.get('invite');
+      if (_t && /^[a-f0-9]{32,}$/i.test(_t)) {
+        localStorage.setItem('cvm_invite_token', _t);
+      }
+    } catch(_) {}
     window.AI_CONSENT_KEY = 'pf_ai_consent';
     function hasAiConsent() {
       try {
@@ -7760,11 +7813,20 @@ ${styleTexts}
       const uid = window.authUserId || null;
       const tok = window.authAccessToken || null;
       if (!uid) return;
+      // Plocka upp ev. invite-token (sparad från ?invite=...-länken vid landning)
+      const inviteToken = (() => {
+        try { return localStorage.getItem('cvm_invite_token') || null; } catch(_) { return null; }
+      })();
+      const userEmail = window.authCurrentEmail || null;
       fetch('/api/supabase', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(tok ? { 'Authorization': 'Bearer ' + tok } : {}) },
         body: JSON.stringify({ action: 'save_ai_consent', userId: uid, accessToken: tok,
-          aiConsent: true, aiConsentVersion: window.AI_CONSENT_VERSION })
+          aiConsent: true, aiConsentVersion: window.AI_CONSENT_VERSION,
+          inviteToken, email: userEmail })
+      }).then(() => {
+        // Konsumerad — ta bort token så den inte återanvänds vid framtida samtycke-uppdateringar
+        try { localStorage.removeItem('cvm_invite_token'); } catch(_) {}
       }).catch(() => {});
     }
     window.hasAiConsent = hasAiConsent;
