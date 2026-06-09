@@ -67,8 +67,17 @@ export default async function handler(req, res) {
 
   try {
     // Steg 1: Byt code → access_token
-    const host = req.headers['x-forwarded-host'] || req.headers.host;
-    const protocol = req.headers['x-forwarded-proto'] || 'https';
+    // Whitelista host för att förhindra host-header-injection (annars kan
+    // attacker styra redirectUri och stjäla auth-code).
+    const ALLOWED_HOSTS = new Set([
+      'www.cvmatchen.com',
+      'cvmatchen.com',
+      process.env.PUBLIC_HOST,
+      process.env.VERCEL_URL
+    ].filter(Boolean));
+    const rawHost = (req.headers['x-forwarded-host'] || req.headers.host || '').split(',')[0].trim();
+    const host = ALLOWED_HOSTS.has(rawHost) ? rawHost : 'www.cvmatchen.com';
+    const protocol = 'https';
     const redirectUri = `${protocol}://${host}/api/v1/auth/microsoft/callback`;
 
     const tokenResponse = await fetch(

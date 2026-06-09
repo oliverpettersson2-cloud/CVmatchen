@@ -7316,7 +7316,10 @@ ${styleTexts}
       const params = new URLSearchParams(window.location.search);
       const msToken = params.get('ms_token');
       const msError = params.get('ms_error');
-      const msInfo = params.get('ms_info');
+      // Tillåt endast email-tecken i ms_info för att förhindra XSS om värdet
+      // någonsin renderas via innerHTML i framtida kod.
+      const _rawInfo = params.get('ms_info');
+      const msInfo = _rawInfo && /^[\w.+@-]{1,254}$/.test(_rawInfo) ? _rawInfo : null;
 
       // Rensa alltid URL:en så känslig data inte ligger kvar
       function cleanUrl() {

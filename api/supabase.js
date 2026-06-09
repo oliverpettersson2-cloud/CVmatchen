@@ -91,6 +91,18 @@ export default async function handler(req, res) {
     return { ...baseHeaders, 'apikey': key, 'Authorization': `Bearer ${key}` };
   }
 
+  // verifierar accessToken mot Supabase och returnerar { id, email } eller null.
+  // Används för att stoppa attacker där `userId` skickas i body — vi använder
+  // ALLTID id:t från JWT istället så användare endast kan skriva sin egen data.
+  async function verifyJwtUser(accessToken) {
+    if (!accessToken) return null;
+    try {
+      const r = await makeRequest(`${SUPABASE_URL}/auth/v1/user`, { method: 'GET', headers: authHeaders(accessToken) });
+      if (r.status >= 400 || !r.data?.id) return null;
+      return { id: r.data.id, email: (r.data.email || '').toLowerCase() };
+    } catch(_) { return null; }
+  }
+
   // ════════════════════════════════════════════════════════════════
   // verifyAdmin — multi-tenant-skydd för admin_*-actions.
   // HMAC-verifierar handläggarens session-token (samma signering som
@@ -200,12 +212,16 @@ export default async function handler(req, res) {
     }
 
     if (action === 'save_cv') {
-      await makeRequest(`${SUPABASE_URL}/rest/v1/cvs`, { method: 'POST', headers: { ...authHeaders(accessToken), 'Prefer': 'resolution=merge-duplicates' } }, { user_id: userId, data: cvData, updated_at: new Date().toISOString() });
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
+      await makeRequest(`${SUPABASE_URL}/rest/v1/cvs`, { method: 'POST', headers: { ...authHeaders(accessToken), 'Prefer': 'resolution=merge-duplicates' } }, { user_id: jwt.id, data: cvData, updated_at: new Date().toISOString() });
       return res.status(200).json({ success: true });
     }
 
     if (action === 'load_cv') {
-      const result = await makeRequest(`${SUPABASE_URL}/rest/v1/cvs?user_id=eq.${userId}&select=data&limit=1`, { method: 'GET', headers: authHeaders(accessToken) });
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
+      const result = await makeRequest(`${SUPABASE_URL}/rest/v1/cvs?user_id=eq.${jwt.id}&select=data&limit=1`, { method: 'GET', headers: authHeaders(accessToken) });
       const rows = Array.isArray(result.data) ? result.data : [];
       return res.status(200).json({ cv: rows[0]?.data || null });
     }
@@ -213,13 +229,17 @@ export default async function handler(req, res) {
     if (action === 'save_table') {
       const ALLOWED = ['saved_cvs', 'matched_cvs', 'saved_edu', 'job_diary'];
       if (!ALLOWED.includes(table)) return res.status(400).json({ error: 'Invalid table: ' + table });
-      await makeRequest(`${SUPABASE_URL}/rest/v1/${table}?user_id=eq.${userId}`, { method: 'DELETE', headers: authHeaders(accessToken) });
-      await makeRequest(`${SUPABASE_URL}/rest/v1/${table}`, { method: 'POST', headers: { ...authHeaders(accessToken), 'Prefer': 'return=minimal' } }, { user_id: userId, data: data, saved_at: new Date().toISOString() });
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
+      await makeRequest(`${SUPABASE_URL}/rest/v1/${table}?user_id=eq.${jwt.id}`, { method: 'DELETE', headers: authHeaders(accessToken) });
+      await makeRequest(`${SUPABASE_URL}/rest/v1/${table}`, { method: 'POST', headers: { ...authHeaders(accessToken), 'Prefer': 'return=minimal' } }, { user_id: jwt.id, data: data, saved_at: new Date().toISOString() });
       return res.status(200).json({ success: true });
     }
 
     if (action === 'save_progress') {
-      await makeRequest(`${SUPABASE_URL}/rest/v1/ovning_progress`, { method: 'POST', headers: { ...authHeaders(accessToken), 'Prefer': 'resolution=merge-duplicates' } }, { user_id: userId, progress: data, updated_at: new Date().toISOString() });
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
+      await makeRequest(`${SUPABASE_URL}/rest/v1/ovning_progress`, { method: 'POST', headers: { ...authHeaders(accessToken), 'Prefer': 'resolution=merge-duplicates' } }, { user_id: jwt.id, progress: data, updated_at: new Date().toISOString() });
       return res.status(200).json({ success: true });
     }
 
@@ -283,8 +303,10 @@ export default async function handler(req, res) {
     }
 
     if (action === 'check_onboarding') {
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
       const result = await makeRequest(
-        `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${userId}&select=name&limit=1`,
+        `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${jwt.id}&select=name&limit=1`,
         { method: 'GET', headers: serviceHeaders() }
       );
       const rows = Array.isArray(result.data) ? result.data : [];
@@ -293,15 +315,17 @@ export default async function handler(req, res) {
     }
 
     if (action === 'ensure_participant') {
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
       // FIX: Bara kolumner som faktiskt finns i user_assignments (ingen email/updated_at)
       await makeRequest(
         `${SUPABASE_URL}/rest/v1/user_assignments`,
         { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'resolution=ignore-duplicates,return=minimal' } },
-        { user_id: userId, name: personName || null, phone: personPhone || null, status: 'active', created_at: new Date().toISOString() }
+        { user_id: jwt.id, name: personName || null, phone: personPhone || null, status: 'active', created_at: new Date().toISOString() }
       );
       if (personName) {
         await makeRequest(
-          `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${userId}`,
+          `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${jwt.id}`,
           { method: 'PATCH', headers: serviceHeaders() },
           { name: personName, phone: personPhone || null }
         );
@@ -314,20 +338,23 @@ export default async function handler(req, res) {
       // ensure_participant först om raden saknas så vi inte tappar samtycket.
       // Konsumerar ev. user_invite (inviteToken) och kopplar kommun/enhet.
       // Saknas invite: faller tillbaka på "Övrigt"-kommunen.
-      if (!userId) return res.status(400).json({ error: 'userId krävs' });
+      const _jwt = await verifyJwtUser(accessToken);
+      if (!_jwt) return res.status(401).json({ error: 'invalid_token' });
+      const _uid = _jwt.id;  // använd ALLTID id från JWT, inte body
       const version = (aiConsentVersion && String(aiConsentVersion).slice(0, 32)) || '2026-06-07';
       const now = new Date().toISOString();
       const patch = aiConsent === false
         ? { ai_consent_withdrawn_at: now }
         : { ai_consent_at: now, ai_consent_version: version, ai_consent_withdrawn_at: null };
 
-      // Slå upp ev. invite för att kunna tilldela kommun/enhet vid första-gångs-skapande
+      // Slå upp ev. invite för att kunna tilldela kommun/enhet vid första-gångs-skapande.
+      // email kommer från verifierat JWT (_jwt.email) — aldrig från body.
       let inviteKommunId = null, inviteEnhetId = null, inviteIdToConsume = null;
-      const userEmail = (req.body?.email || '').toLowerCase();
+      const verifiedEmail = _jwt.email;
       const inviteToken = req.body?.inviteToken;
-      if (inviteToken && userEmail) {
+      if (inviteToken && verifiedEmail) {
         const inv = await makeRequest(
-          `${SUPABASE_URL}/rest/v1/user_invites?token=eq.${encodeURIComponent(inviteToken)}&email=eq.${encodeURIComponent(userEmail)}&consumed_at=is.null&select=id,kommun_id,enhet_id,expires_at&limit=1`,
+          `${SUPABASE_URL}/rest/v1/user_invites?token=eq.${encodeURIComponent(inviteToken)}&email=eq.${encodeURIComponent(verifiedEmail)}&consumed_at=is.null&select=id,kommun_id,enhet_id,expires_at&limit=1`,
           { method: 'GET', headers: serviceHeaders() }
         );
         const inviteRow = Array.isArray(inv.data) && inv.data[0];
@@ -355,10 +382,10 @@ export default async function handler(req, res) {
       await makeRequest(
         `${SUPABASE_URL}/rest/v1/user_assignments`,
         { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'resolution=ignore-duplicates,return=minimal' } },
-        { user_id: userId, status: 'active', created_at: now, kommun_id: inviteKommunId, enhet_id: inviteEnhetId }
+        { user_id: _uid, status: 'active', created_at: now, kommun_id: inviteKommunId, enhet_id: inviteEnhetId }
       );
       const result = await makeRequest(
-        `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${userId}`,
+        `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${_uid}`,
         { method: 'PATCH', headers: serviceHeaders() },
         patch
       );
@@ -371,7 +398,7 @@ export default async function handler(req, res) {
         await makeRequest(
           `${SUPABASE_URL}/rest/v1/user_invites?id=eq.${inviteIdToConsume}`,
           { method: 'PATCH', headers: serviceHeaders() },
-          { consumed_at: now, consumed_user_id: userId }
+          { consumed_at: now, consumed_user_id: _uid }
         );
       }
       return res.status(200).json({ ok: true, persisted: true, at: now, version });
