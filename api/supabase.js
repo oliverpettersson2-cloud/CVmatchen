@@ -732,6 +732,66 @@ export default async function handler(req, res) {
       });
     }
 
+    if (action === 'admin_overview_per_kommun') {
+      // Superadmin-överblick: en rad per kommun med pilot-status och nyckeltal.
+      // Övriga admins ser bara sin egen kommun.
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+
+      let komUrl = `${SUPABASE_URL}/rest/v1/kommuner?select=id,name,is_pilot,pilot_ends,contact_email&order=name`;
+      if (admin.role !== 'superadmin' && admin.kommun_id) {
+        komUrl += `&id=eq.${admin.kommun_id}`;
+      }
+      const [komRes, uaRes, adminsRes, enhRes] = await Promise.all([
+        makeRequest(komUrl, { method: 'GET', headers: serviceHeaders() }),
+        makeRequest(`${SUPABASE_URL}/rest/v1/user_assignments?select=user_id,kommun_id,status`, { method: 'GET', headers: serviceHeaders() }),
+        makeRequest(`${SUPABASE_URL}/rest/v1/admins?select=id,role,kommun_id`, { method: 'GET', headers: serviceHeaders() }),
+        makeRequest(`${SUPABASE_URL}/rest/v1/enheter?select=id,kommun_id`, { method: 'GET', headers: serviceHeaders() })
+      ]);
+
+      const kommuner = Array.isArray(komRes.data) ? komRes.data : [];
+      const allUA    = Array.isArray(uaRes.data) ? uaRes.data : [];
+      const allAdm   = Array.isArray(adminsRes.data) ? adminsRes.data : [];
+      const allEnh   = Array.isArray(enhRes.data) ? enhRes.data : [];
+
+      // Hämta tasks för alla relevanta deltagare i en bulk
+      const allUserIds = allUA.map(u => u.user_id).filter(Boolean);
+      let tasks = [];
+      if (allUserIds.length) {
+        const idsFilter = allUserIds.map(id => `"${id}"`).join(',');
+        const taskRes = await makeRequest(
+          `${SUPABASE_URL}/rest/v1/tasks?user_id=in.(${idsFilter})&select=user_id,status`,
+          { method: 'GET', headers: serviceHeaders() }
+        );
+        tasks = Array.isArray(taskRes.data) ? taskRes.data : [];
+      }
+
+      const userIdToKommun = new Map(allUA.map(u => [u.user_id, u.kommun_id]));
+
+      const rows = kommuner.map(k => {
+        const ua = allUA.filter(u => u.kommun_id === k.id);
+        const adm = allAdm.filter(a => a.kommun_id === k.id);
+        const enh = allEnh.filter(e => e.kommun_id === k.id);
+        const kTasks = tasks.filter(t => userIdToKommun.get(t.user_id) === k.id);
+        return {
+          id: k.id, name: k.name, is_pilot: k.is_pilot, pilot_ends: k.pilot_ends,
+          contact_email: k.contact_email,
+          users: {
+            total: ua.length,
+            active: ua.filter(u => u.status === 'active').length,
+            recent: ua.filter(u => u.status === 'recent').length,
+            new_count: ua.filter(u => u.status === 'new').length,
+            inactive: ua.filter(u => u.status === 'inactive').length
+          },
+          enheter: enh.length,
+          admins: adm.length,
+          tasks: { total: kTasks.length, completed: kTasks.filter(t => t.status === 'completed').length }
+        };
+      });
+
+      return res.status(200).json({ data: rows });
+    }
+
     if (action === 'admin_get_kommuner') {
       const { admin } = await requireAdmin(res, accessToken, action, {});
       if (!admin) return;
