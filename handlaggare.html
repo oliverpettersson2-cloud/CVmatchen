@@ -1574,8 +1574,29 @@ function loginMicrosoft(){
   const btn=document.getElementById('msBtn'),txt=document.getElementById('msBtnText');
   if(btn) btn.disabled=true;
   if(txt) txt.textContent='Skickar dig till Microsoft…';
-  setTimeout(()=>{window.location.href='/api/v1/auth/microsoft';},150);
+  // Vidarebefordra ev. invite-token (från ?invite=… i URL eller localStorage)
+  // så att backend kan konsumera den vid första-gångs-aktivering.
+  let qs = '';
+  try {
+    const urlT = new URLSearchParams(location.search).get('invite');
+    const storedT = localStorage.getItem('cvm_admin_invite_token');
+    const t = (urlT && /^[a-f0-9]{32,128}$/i.test(urlT)) ? urlT
+            : (storedT && /^[a-f0-9]{32,128}$/i.test(storedT)) ? storedT : '';
+    if (t) qs = '?invite=' + encodeURIComponent(t);
+  } catch(_){}
+  setTimeout(()=>{window.location.href='/api/v1/auth/microsoft' + qs;},150);
 }
+
+// Spara invite-token från ?invite=… så loginMicrosoft kan plocka upp den
+// även om användaren går igenom någon mellan-vy först.
+(function(){
+  try {
+    const t = new URLSearchParams(location.search).get('invite');
+    if (t && /^[a-f0-9]{32,128}$/i.test(t)) {
+      localStorage.setItem('cvm_admin_invite_token', t);
+    }
+  } catch(_){}
+})();
 (function checkMicrosoftCallback(){
   const params=new URLSearchParams(location.search);
   const msToken=params.get('ms_token'),msError=params.get('ms_error'),msInfo=params.get('ms_info');

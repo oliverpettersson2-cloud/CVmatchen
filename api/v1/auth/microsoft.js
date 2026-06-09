@@ -36,13 +36,18 @@ export default function handler(req, res) {
   const redirectUri = `${protocol}://${host}/api/v1/auth/microsoft/callback`;
 
   // State = skydd mot CSRF. Vi genererar en slumpmässig sträng, sätter i cookie
-  // och verifierar att den kommer tillbaka oförändrad i callback.
-  const state = crypto.randomBytes(16).toString('hex');
+  // och verifierar att den kommer tillbaka oförändrad i callback. Om en
+  // invite-token är med (?invite=TOKEN, hex) bakar vi in den så callback kan
+  // konsumera den vid första-gångs-aktivering.
+  const csrf = crypto.randomBytes(16).toString('hex');
+  const inviteIn = (req.query.invite || '').toString();
+  const inviteSafe = /^[a-f0-9]{32,128}$/i.test(inviteIn) ? inviteIn : '';
+  const state = inviteSafe ? `${csrf}.${inviteSafe}` : csrf;
 
   // Sätt cookie för state-validering (HttpOnly så JS kan inte läsa den)
   // SameSite=Lax krävs för OAuth-flows där vi kommer tillbaka via redirect.
   res.setHeader('Set-Cookie',
-    `ms_oauth_state=${state}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=600`);
+    `ms_oauth_state=${csrf}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=600`);
 
   // Bygg Microsoft-login-URL
   const params = new URLSearchParams({

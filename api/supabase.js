@@ -626,6 +626,39 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true });
     }
 
+    if (action === 'admin_delete_user') {
+      // GDPR-radering: admin tar bort en deltagare ur sin tenant.
+      // Raderar alla deltagar-rader + auth.users (kaskad-radering).
+      const { admin } = await requireAdmin(res, accessToken, action, { requestedUserId: req.body?.targetUserId });
+      if (!admin) return;
+      const targetUserId = req.body?.targetUserId;
+      if (!targetUserId) return res.status(400).json({ error: 'targetUserId krävs' });
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','tasks','task_sessions','interview_messages','interview_sessions','saved_questions'];
+      for (const t of TABLES) {
+        await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${targetUserId}`, { method: 'DELETE', headers: serviceHeaders() });
+      }
+      // Konsumera ev. öppna user_invites för samma user
+      await makeRequest(`${SUPABASE_URL}/rest/v1/user_invites?consumed_user_id=eq.${targetUserId}`, { method: 'DELETE', headers: serviceHeaders() });
+      // Radera auth.users via Supabase Admin API
+      await makeRequest(`${SUPABASE_URL}/auth/v1/admin/users/${targetUserId}`, { method: 'DELETE', headers: serviceHeaders() });
+      // Audit
+      await makeRequest(`${SUPABASE_URL}/rest/v1/admin_audit`, { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=minimal' } }, { admin_id: admin.id, action: 'admin_delete_user', details: { target_user_id: targetUserId } });
+      return res.status(200).json({ ok: true });
+    }
+
+    if (action === 'user_delete_self') {
+      // GDPR: deltagare raderar sitt eget konto.
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','tasks','task_sessions','interview_messages','interview_sessions','saved_questions'];
+      for (const t of TABLES) {
+        await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${jwt.id}`, { method: 'DELETE', headers: serviceHeaders() });
+      }
+      await makeRequest(`${SUPABASE_URL}/rest/v1/user_invites?consumed_user_id=eq.${jwt.id}`, { method: 'DELETE', headers: serviceHeaders() });
+      await makeRequest(`${SUPABASE_URL}/auth/v1/admin/users/${jwt.id}`, { method: 'DELETE', headers: serviceHeaders() });
+      return res.status(200).json({ ok: true });
+    }
+
     if (action === 'admin_invite') {
       const { admin } = await requireAdmin(res, accessToken, action, {
         requestedKommunId: kommunId, requestedEnhetId: enhetId
