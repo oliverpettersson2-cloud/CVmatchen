@@ -3499,9 +3499,10 @@ function copyAdminInviteLink(){
   setTimeout(() => { btn.textContent = old; }, 1500);
 }
 
-document.getElementById('adminInviteModal')?.addEventListener('click',(e)=>{
-  if(e.target.id==='adminInviteModal') closeAdminInviteModal();
-});
+// Klick utanför modal stänger INTE — användaren ska inte tappa formuläret av misstag.
+// document.getElementById('adminInviteModal')?.addEventListener('click',(e)=>{
+//   if(e.target.id==='adminInviteModal') closeAdminInviteModal();
+// });
 
 async function resendInvite(){
   if(!currentUserData) return;
@@ -3516,9 +3517,11 @@ async function resendInvite(){
 }
 
 // Stäng modal vid klick utanför
-document.getElementById('inviteModal')?.addEventListener('click',(e)=>{
-  if(e.target.id==='inviteModal') closeInviteModal();
-});
+// Klick utanför modalen stänger INTE — annars riskerar man tappa
+// halvskrivet formulär. Stängning sker via X, Avbryt eller Esc.
+// document.getElementById('inviteModal')?.addEventListener('click',(e)=>{
+//   if(e.target.id==='inviteModal') closeInviteModal();
+// });
 // Esc stänger modal & detaljvy
 document.addEventListener('keydown',(e)=>{
   if(e.key==='Escape'){
