@@ -604,21 +604,31 @@ export default async function handler(req, res) {
         const { admin } = await requireAdmin(res, accessToken, action, { requestedUserId: uid });
         if (!admin) return;
       }
-      const [assignRes, cvRes, progressRes, tasksRes, matchRes] = await Promise.all([
+      const [assignRes, cvRes, progressRes, tasksRes, matchRes, diaryRes, eduRes, savedCvRes, intervRes] = await Promise.all([
         makeRequest(`${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${uid}&select=*&limit=1`, { method: 'GET', headers: serviceHeaders() }),
         makeRequest(`${SUPABASE_URL}/rest/v1/cvs?user_id=eq.${uid}&select=data,updated_at&limit=1`, { method: 'GET', headers: serviceHeaders() }),
         makeRequest(`${SUPABASE_URL}/rest/v1/ovning_progress?user_id=eq.${uid}&select=progress&limit=1`, { method: 'GET', headers: serviceHeaders() }),
         makeRequest(`${SUPABASE_URL}/rest/v1/tasks?user_id=eq.${uid}&select=*&order=created_at.desc`, { method: 'GET', headers: serviceHeaders() }),
         makeRequest(`${SUPABASE_URL}/rest/v1/matched_cvs?user_id=eq.${uid}&select=data&limit=1`, { method: 'GET', headers: serviceHeaders() }),
+        makeRequest(`${SUPABASE_URL}/rest/v1/job_diary?user_id=eq.${uid}&select=data&limit=1`, { method: 'GET', headers: serviceHeaders() }),
+        makeRequest(`${SUPABASE_URL}/rest/v1/saved_edu?user_id=eq.${uid}&select=data&limit=1`, { method: 'GET', headers: serviceHeaders() }),
+        makeRequest(`${SUPABASE_URL}/rest/v1/saved_cvs?user_id=eq.${uid}&select=data&limit=1`, { method: 'GET', headers: serviceHeaders() }),
+        makeRequest(`${SUPABASE_URL}/rest/v1/interview_sessions?user_id=eq.${uid}&select=id,branch,company,role_title,status,created_at&order=created_at.desc`, { method: 'GET', headers: serviceHeaders() }),
       ]);
       const pick = (r, key) => { const rows = Array.isArray(r.data) ? r.data : []; return rows[0]?.[key] || null; };
+      const intervRows = Array.isArray(intervRes.data) ? intervRes.data : [];
       return res.status(200).json({
         assignment: (Array.isArray(assignRes.data) ? assignRes.data : [])[0] || null,
         cv: pick(cvRes, 'data'),
         cv_updated: pick(cvRes, 'updated_at'),
         progress: pick(progressRes, 'progress'),
         tasks: Array.isArray(tasksRes.data) ? tasksRes.data : [],
-        matchedCvs: pick(matchRes, 'data')
+        matchedCvs: pick(matchRes, 'data'),
+        job_diary: pick(diaryRes, 'data'),
+        saved_edu: pick(eduRes, 'data'),
+        saved_cvs: pick(savedCvRes, 'data'),
+        interview_sessions: intervRows,
+        interview_sessions_completed: intervRows.filter(s => s.status === 'completed').length
       });
     }
 

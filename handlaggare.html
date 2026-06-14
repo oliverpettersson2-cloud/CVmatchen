@@ -2125,8 +2125,8 @@ async function openDetail(userId){
 
   // Diagram (visar veckonummer V.X för senaste 6 veckorna)
   renderUserCharts(data);
-  // Flikinnehåll
-  renderDetailTab('kurser', data);
+  // Flikinnehåll — starta på CV-fliken (matchar currentDetailTab='cv')
+  renderDetailTab('cv', data);
   // Realtidssynk: polla data så länge detaljvy är öppen
   startDetailPolling();
 }
@@ -2439,7 +2439,10 @@ function renderTabCV(data){
     </div>
   `).join('') : '';
 
-  return `<div class="ud-body-h">CV <span style="font-weight:500;color:var(--mu);font-size:13px">· ${cvName(cvd) || 'deltagare'}</span></div>
+  return `<div class="ud-body-h" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+      <span>CV <span style="font-weight:500;color:var(--mu);font-size:13px">· ${escapeHtml(cvName(cvd) || 'deltagare')}</span></span>
+      <button onclick="downloadParticipantCV()" id="dlCvBtn" style="background:#3eb489;border:none;color:#fff;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;">⬇ Ladda ner CV (PDF)</button>
+    </div>
 
     <div class="cv-summary">
       ${fields.map(f=>`<div class="cv-field"><div class="cv-field-l">${f.l}</div><div class="cv-field-v">${escapeHtml(String(f.v||'—'))}</div></div>`).join('')}
@@ -2459,12 +2462,88 @@ function renderTabCV(data){
   `;
 }
 
+// Bygger en ren A4-CV som HTML och skickar till /api/pdf för nedladdning.
+// Låter handläggaren ladda ner deltagarens CV utan att deltagaren behöver göra det.
+async function downloadParticipantCV(){
+  const data = currentUserData;
+  if (!data) { alert('Ingen deltagare vald.'); return; }
+  const cvd = data.cv?.data || data.cv || {};
+  const nm = cvName(cvd) || 'CV';
+  const btn = document.getElementById('dlCvBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Skapar PDF…'; }
+
+  const esc = (s) => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const fdate = (d) => d ? String(d).split('T')[0].slice(0,7) : '';
+  const range = (s,e,cur) => [fdate(s), cur?'nu':fdate(e)].filter(Boolean).join(' – ');
+  const experience = cvd.experience || cvd.workExperience || cvd.work || [];
+  const education = cvd.education || cvd.studies || [];
+  const skills = cvd.skills || cvd.competencies || [];
+  const languages = cvd.languages || [];
+  const certs = cvd.certifications || cvd.certificates || [];
+
+  const expH = experience.map(e=>`<div class="e"><div class="eh"><b>${esc(e.title||e.role||e.position||'Tjänst')}</b><span>${esc(range(e.startDate||e.start,e.endDate||e.end,e.current))}</span></div><div class="es">${esc(e.company||e.employer||'')}${e.location?' · '+esc(e.location):''}</div>${e.description?`<div class="ed">${esc(e.description)}</div>`:''}</div>`).join('');
+  const eduH = education.map(e=>`<div class="e"><div class="eh"><b>${esc(e.degree||e.program||e.title||'Utbildning')}</b><span>${esc(range(e.startDate||e.start,e.endDate||e.end,e.current))}</span></div><div class="es">${esc(e.school||e.institution||'')}${e.field?' · '+esc(e.field):''}</div>${e.description?`<div class="ed">${esc(e.description)}</div>`:''}</div>`).join('');
+  const skillH = skills.map(s=>`<span class="t">${esc(typeof s==='string'?s:(s.name||s.skill||''))}</span>`).join('');
+  const langH = languages.map(l=>{const n=typeof l==='string'?l:(l.language||l.name||'');const lv=typeof l==='object'?(l.level||l.proficiency||''):'';return `<span class="t">${esc(n)}${lv?' · '+esc(lv):''}</span>`;}).join('');
+  const certH = certs.map(c=>`<div class="e"><div class="eh"><b>${esc(c.name||c.title||'Certifikat')}</b><span>${esc(fdate(c.date||c.issuedDate))}</span></div>${c.issuer?`<div class="es">${esc(c.issuer)}</div>`:''}</div>`).join('');
+  const contact = [cvd.email, cvd.phone, cvd.city||cvd.location].filter(Boolean).map(esc).join(' · ');
+
+  const html = `<!DOCTYPE html><html lang="sv"><head><meta charset="utf-8"><style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;color:#1a1a1a;padding:40px 48px;font-size:13px;line-height:1.5}
+    h1{font-size:26px;margin-bottom:2px}
+    .role{font-size:15px;color:#3eb489;font-weight:600;margin-bottom:6px}
+    .contact{font-size:12px;color:#555;margin-bottom:20px;border-bottom:2px solid #3eb489;padding-bottom:14px}
+    .sec{margin-bottom:18px}
+    .sec h2{font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:#3eb489;border-bottom:1px solid #ddd;padding-bottom:4px;margin-bottom:10px}
+    .summary{font-size:13px;color:#333;margin-bottom:18px}
+    .e{margin-bottom:11px}
+    .eh{display:flex;justify-content:space-between;gap:12px}
+    .eh b{font-size:13.5px}
+    .eh span{font-size:11.5px;color:#888;white-space:nowrap}
+    .es{font-size:12.5px;color:#555;margin-top:1px}
+    .ed{font-size:12px;color:#444;margin-top:3px}
+    .t{display:inline-block;background:#eef6f2;color:#1a6b4f;border:1px solid #cfe7dc;border-radius:6px;padding:3px 9px;font-size:11.5px;margin:0 5px 5px 0}
+  </style></head><body>
+    <h1>${esc(cvName(cvd)||'')}</h1>
+    ${cvd.title||cvd.role?`<div class="role">${esc(cvd.title||cvd.role)}</div>`:''}
+    <div class="contact">${contact||''}</div>
+    ${cvd.summary?`<div class="summary">${esc(cvd.summary)}</div>`:''}
+    ${expH?`<div class="sec"><h2>Arbetslivserfarenhet</h2>${expH}</div>`:''}
+    ${eduH?`<div class="sec"><h2>Utbildning</h2>${eduH}</div>`:''}
+    ${skillH?`<div class="sec"><h2>Kompetenser</h2>${skillH}</div>`:''}
+    ${langH?`<div class="sec"><h2>Språk</h2>${langH}</div>`:''}
+    ${certH?`<div class="sec"><h2>Certifikat</h2>${certH}</div>`:''}
+  </body></html>`;
+
+  try {
+    const resp = await fetch('/api/pdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ html, filename: 'CV - ' + nm + '.pdf' })
+    });
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const blob = await resp.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'CV - ' + nm + '.pdf'; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch(e) {
+    alert('Kunde inte skapa PDF: ' + e.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '⬇ Ladda ner CV (PDF)'; }
+  }
+}
+
 let currentJaSubtab = 'sokta';
 function renderTabJobbansok(data){
   // Stöd flera fältnamn — backend kan använda "applications", "jobApplications" eller "job_diary".
   // Stub-datan för Oliver Pettersson använder job_diary + matched_cvs (mobilappens namnvall).
   const apps = data.applications || data.jobApplications || data.job_diary || [];
-  const matches = data.matches || data.jobMatches || data.matchedJobs || data.matched_cvs || [];
+  // Backend returnerar matchedCvs (camelCase); stödjer även äldre fältnamn.
+  let matches = data.matches || data.jobMatches || data.matchedJobs || data.matchedCvs || data.matched_cvs || [];
+  if (matches && !Array.isArray(matches) && Array.isArray(matches.items)) matches = matches.items;
+  if (!Array.isArray(matches)) matches = [];
 
   if(!apps.length && !matches.length){
     return `<div class="ud-body-h">Jobbansökan</div>
@@ -3079,6 +3158,40 @@ const CREATE_TASK_TYPES = [
     category: 'matchning',
     buildTitle: (n) => `Matcha CV mot ${n} annonser`,
     buildParams: (n) => ({ verify_field: 'match_count_delta', verify_operator: '>=', verify_target: String(n) })
+  },
+  {
+    id: 'build_cv',
+    icon: '📝',
+    color: '#0ea5e9',
+    title: 'Bygg klart ditt CV',
+    desc: 'Deltagaren fyller i och färdigställer sitt CV i CV-byggaren',
+    countable: false,
+    category: 'cv',
+    buildTitle: () => 'Bygg klart ditt CV',
+    buildParams: () => ({})  // manuell — deltagaren markerar själv klar
+  },
+  {
+    id: 'personal_letter',
+    icon: '✉️',
+    color: '#8b5cf6',
+    title: 'Skriv ett personligt brev',
+    desc: 'Deltagaren skriver ett personligt brev till en tjänst',
+    countable: false,
+    category: 'matchning',
+    buildTitle: () => 'Skriv ett personligt brev',
+    buildParams: () => ({})  // manuell
+  },
+  {
+    id: 'custom',
+    icon: '✏️',
+    color: '#64748b',
+    title: 'Fri uppgift',
+    desc: 'Skriv en egen uppgift med valfri titel och beskrivning',
+    countable: false,
+    isCustom: true,
+    category: 'övrigt',
+    buildTitle: () => 'Egen uppgift',
+    buildParams: () => ({})  // manuell
   }
 ];
 
@@ -3167,6 +3280,18 @@ function renderCreateTaskStep2() {
 
   html += '<div style="display:grid;gap:14px;">';
 
+  // Fri uppgift — egen titel + beskrivning
+  if (t.isCustom) {
+    html += `<div>
+      <label style="display:block;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--mu);margin-bottom:6px;">Uppgiftens titel *</label>
+      <input type="text" id="_ctCustomTitle" placeholder="T.ex. Ring Arbetsförmedlingen" aria-label="Uppgiftens titel" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;font-size:14px;font-family:inherit;color:var(--tx);">
+    </div>
+    <div>
+      <label style="display:block;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--mu);margin-bottom:6px;">Beskrivning (valfritt)</label>
+      <textarea id="_ctCustomDesc" rows="2" placeholder="Vad ska deltagaren göra?" aria-label="Beskrivning" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;font-size:13px;font-family:inherit;color:var(--tx);resize:vertical;"></textarea>
+    </div>`;
+  }
+
   // Antal — bara för "countable"-typer
   if (t.countable) {
     html += `<div>
@@ -3234,8 +3359,16 @@ async function confirmCreateTask() {
   const deadline = document.getElementById('_ctDeadline')?.value;
   const message = document.getElementById('_ctMessage')?.value || '';
   const n = t.countable ? _ctCount : null;
-  const title = t.buildTitle(n);
-  const params = t.buildParams(n);
+  let title, params, customDesc = '';
+  if (t.isCustom) {
+    title = (document.getElementById('_ctCustomTitle')?.value || '').trim();
+    customDesc = (document.getElementById('_ctCustomDesc')?.value || '').trim();
+    if (!title) { showErr('Ange en titel för uppgiften.'); return; }
+    params = {};
+  } else {
+    title = t.buildTitle(n);
+    params = t.buildParams(n);
+  }
   const btn = document.getElementById('_ctConfirmBtn');
   if (btn) { btn.disabled = true; btn.textContent = 'Skickar...'; }
 
@@ -3243,7 +3376,7 @@ async function confirmCreateTask() {
     const result = await post('assign_task', {
       targetUserId: currentUserId,
       title,
-      description: message || t.desc,
+      description: message || customDesc || t.desc,
       category: t.category,
       deadline: deadline ? new Date(deadline + 'T23:59:59').toISOString() : null,
       tParams: { ...params, task_type: t.id, count: n },
