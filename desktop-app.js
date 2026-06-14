@@ -2192,6 +2192,37 @@
   }
   window.loadMyTasks = loadMyTasks;
 
+  // ═══ Realtidssynk: polling + cross-tab-signal ═══
+  let _tasksPollTimer = null;
+  function startTasksPolling() {
+    stopTasksPolling();
+    if (typeof document !== 'undefined' && document.hidden) return;
+    _tasksPollTimer = setInterval(() => {
+      if (!document.hidden) loadMyTasks(true);
+    }, 25000);
+  }
+  function stopTasksPolling() {
+    if (_tasksPollTimer) { clearInterval(_tasksPollTimer); _tasksPollTimer = null; }
+  }
+  function notifyTasksChanged() {
+    try { localStorage.setItem('cvm_tasks_dirty', String(Date.now())); } catch(_){}
+  }
+  window.startTasksPolling = startTasksPolling;
+  window.stopTasksPolling = stopTasksPolling;
+  window.notifyTasksChanged = notifyTasksChanged;
+
+  // Cross-tab: en annan flik markerade en uppgift klar → refresha här
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'cvm_tasks_dirty') loadMyTasks(true);
+  });
+  // Pausa polling när flik döljs, börja om när den syns
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopTasksPolling();
+    else { loadMyTasks(true); startTasksPolling(); }
+  });
+  // Starta polling när auth finns
+  setTimeout(() => { if (getAuth()) startTasksPolling(); }, 3000);
+
   function updateTaskBadges() {
     const openCount = tasksOpen().length;
     const ovBadge = document.getElementById('sbOvningarBadge');
@@ -2513,6 +2544,7 @@
       toast('✅ Uppgift slutförd!');
       logEvent('task_completed', { task_id: taskId });
       await loadMyTasks(true);
+      if (typeof notifyTasksChanged === 'function') notifyTasksChanged();
     } catch(e) {
       toast('Kunde inte slutföra uppgift', 'error');
     }

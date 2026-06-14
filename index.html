@@ -9150,6 +9150,52 @@ async function loadAssignedTasks(){
 }
 window.loadAssignedTasks = loadAssignedTasks;
 
+// ═══ Realtidssynk för uppgifter & progress ═══
+// Pull-baserad: pollar var 25:e sek när fliken är synlig.
+// Cross-tab: localStorage 'cvm_tasks_dirty' fungerar som broadcast-signal —
+// när en flik gör complete_task / save_progress sätter den nyckeln, alla
+// andra öppna flikar plockar upp via 'storage'-event och refetch:ar direkt.
+var _tasksPollTimer = null;
+function startTasksPolling(callback) {
+  stopTasksPolling();
+  if (typeof document !== 'undefined' && document.hidden) return;
+  _tasksPollTimer = setInterval(function(){
+    if (!document.hidden) { try { callback && callback(); } catch(_){} }
+  }, 25000);
+}
+function stopTasksPolling() {
+  if (_tasksPollTimer) { clearInterval(_tasksPollTimer); _tasksPollTimer = null; }
+}
+function notifyTasksChanged() {
+  try { localStorage.setItem('cvm_tasks_dirty', String(Date.now())); } catch(_){}
+}
+window.notifyTasksChanged = notifyTasksChanged;
+window.startTasksPolling = startTasksPolling;
+window.stopTasksPolling = stopTasksPolling;
+
+// Lyssna på cross-tab-signal: andra flikens complete_task → refresha här
+window.addEventListener('storage', function(e){
+  if (e.key === 'cvm_tasks_dirty' && typeof loadAssignedTasks === 'function') {
+    loadAssignedTasks().then(function(){
+      if (typeof renderAssignedTasks === 'function') try { renderAssignedTasks(); } catch(_){}
+    });
+  }
+});
+// Pausa polling när flik döljs, starta om när den syns igen
+document.addEventListener('visibilitychange', function(){
+  if (document.hidden) stopTasksPolling();
+  else if (typeof loadAssignedTasks === 'function') {
+    loadAssignedTasks().then(function(){
+      if (typeof renderAssignedTasks === 'function') try { renderAssignedTasks(); } catch(_){}
+    });
+    startTasksPolling(function(){
+      loadAssignedTasks().then(function(){
+        if (typeof renderAssignedTasks === 'function') try { renderAssignedTasks(); } catch(_){}
+      });
+    });
+  }
+});
+
 // Category config
 
 // AI-SYV lyfts till position 2 i Studier
@@ -9429,7 +9475,10 @@ var D={
         })
       }).then(function(r){
         if (r.ok) return loadAssignedTasks();
-      }).then(function(){ D.renderTasks(); }).catch(function(e){
+      }).then(function(){
+        D.renderTasks();
+        if (typeof notifyTasksChanged === 'function') notifyTasksChanged();
+      }).catch(function(e){
         console.error('Kunde inte slutföra uppgift:', e);
       });
       return;

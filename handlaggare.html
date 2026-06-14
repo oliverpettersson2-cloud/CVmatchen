@@ -967,10 +967,6 @@ td{padding:10px 13px;vertical-align:middle}
       <label class="modal-label">Namn (valfritt)</label>
       <input type="text" class="modal-input" id="inviteName" placeholder="Förnamn Efternamn" aria-label="Namn (valfritt)" style="padding-left:12px">
     </div>
-    <div class="modal-field">
-      <label class="modal-label">Personligt meddelande (valfritt)</label>
-      <textarea class="modal-textarea" id="inviteMsg" placeholder="Hej! Här kommer din inbjudan till CVmatchen…" aria-label="Personligt meddelande (valfritt)"></textarea>
-    </div>
 
     <div class="modal-actions">
       <button class="btn" onclick="closeInviteModal()">Avbryt</button>
@@ -1578,6 +1574,14 @@ function post(action, data) {
       throw new Error('HTTP ' + r.status);
     }
     return r.json();
+  }).then(result => {
+    // Cross-tab signal: actions som ändrar uppgifter/progress triggar
+    // refresh i andra öppna flikar (deltagar-vyn på telefon/desktop).
+    const DIRTY_ACTIONS = ['assign_task','complete_task','admin_delete_user'];
+    if (DIRTY_ACTIONS.includes(action) && result && !result.error) {
+      try { localStorage.setItem('cvm_tasks_dirty', String(Date.now())); } catch(_){}
+    }
+    return result;
   }).catch(e => {
     // Nätverksfel / parse-fel: samma soft-behandling
     if (SOFT_ACTIONS.has(action)) {
@@ -2123,6 +2127,8 @@ async function openDetail(userId){
   renderUserCharts(data);
   // Flikinnehåll
   renderDetailTab('kurser', data);
+  // Realtidssynk: polla data så länge detaljvy är öppen
+  startDetailPolling();
 }
 
 function closeDetail(){
@@ -2130,7 +2136,36 @@ function closeDetail(){
   document.getElementById('listView').style.display='';
   currentUserId = null;
   currentUserData = null;
+  stopDetailPolling();
 }
+
+// ═══ Realtidssynk: pollar öppen detaljvy + cross-tab-signal ═══
+let _detailPollTimer = null;
+async function refreshOpenDetail(){
+  if (!currentUserId) return;
+  try {
+    const data = await post('admin_get_user', { targetUserId: currentUserId, adminId: admin.id });
+    if (!currentUserId) return; // detaljen kan ha stängts under requesten
+    currentUserData = data;
+    if (typeof renderDetailTab === 'function') renderDetailTab(currentDetailTab, data);
+    if (typeof renderUserCharts === 'function') renderUserCharts(data);
+  } catch(_) {}
+}
+function startDetailPolling(){
+  stopDetailPolling();
+  if (document.hidden) return;
+  _detailPollTimer = setInterval(() => { if (!document.hidden) refreshOpenDetail(); }, 20000);
+}
+function stopDetailPolling(){
+  if (_detailPollTimer) { clearInterval(_detailPollTimer); _detailPollTimer = null; }
+}
+window.addEventListener('storage', (e) => {
+  if (e.key === 'cvm_tasks_dirty' && currentUserId) refreshOpenDetail();
+});
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) stopDetailPolling();
+  else if (currentUserId) { refreshOpenDetail(); startDetailPolling(); }
+});
 
 function switchDetailTab(tabId){
   currentDetailTab = tabId;
@@ -3278,7 +3313,6 @@ function openInviteModal(){
   document.getElementById('inviteModal').classList.add('open');
   document.getElementById('inviteEmail').value='';
   document.getElementById('inviteName').value='';
-  document.getElementById('inviteMsg').value='';
   document.getElementById('inviteStatus').className='modal-status';
   document.getElementById('inviteStatus').textContent='';
   document.getElementById('inviteSendBtn').disabled=false;
@@ -3297,7 +3331,6 @@ function showInviteStatus(msg, ok){
 async function sendInvite(){
   const email=document.getElementById('inviteEmail').value.trim();
   const name=document.getElementById('inviteName').value.trim();
-  const message=document.getElementById('inviteMsg').value.trim();
   if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
     showInviteStatus('Ange en giltig e-postadress.', false);
     return;
@@ -3308,7 +3341,6 @@ async function sendInvite(){
     const data = await post('user_invite', {
       email,
       personName: name || null,
-      message: message || null,
       enhetId:  admin.enhet_id  || null,
       kommunId: admin.kommun_id || null
     });
