@@ -63,27 +63,59 @@ export default async function handler(req, res) {
     max_tokens: Math.min(Number(body.max_tokens) || 1024, MAX_OUTPUT_TOKENS)
   };
 
+  // ── Bedrock vs Anthropic direct ──────────────────────────────────────────
+  // Om AWS_BEARER_TOKEN_BEDROCK finns → använd Bedrock i EU-region (eu-central-1
+  // = Frankfurt). All data håller sig då inom EU → GDPR-rent för kommunpiloter.
+  // Annars: fall tillbaka på direktanrop mot api.anthropic.com (USA) som idag.
+  const bedrockToken = process.env.AWS_BEARER_TOKEN_BEDROCK;
+  const useBedrock = !!bedrockToken;
+
+  let endpoint, headers, payload;
+  if (useBedrock) {
+    const region = process.env.AWS_REGION || 'eu-central-1';
+    // Bedrock kräver eu.-prefix för cross-region inference inom EU
+    // (det är så Frankfurt-konsolen listar modellerna)
+    const modelId = 'eu.anthropic.' + safeBody.model;
+    // Bedrock InvokeModel-endpoint. Body är samma Messages API-format,
+    // men model-fältet flyttas in i URL:en och anthropic_version krävs i body.
+    endpoint = `https://bedrock-runtime.${region}.amazonaws.com/model/${encodeURIComponent(modelId)}/invoke`;
+    const { model, ...bodyWithoutModel } = safeBody;
+    payload = { anthropic_version: 'bedrock-2023-05-31', ...bodyWithoutModel };
+    headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${bedrockToken}`
+    };
+  } else {
+    if (!apiKey) {
+      return res.status(500).json({ error: 'AI-tjänsten är inte konfigurerad' });
+    }
+    endpoint = 'https://api.anthropic.com/v1/messages';
+    headers = {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01'
+    };
+    payload = safeBody;
+  }
+
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(endpoint, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify(safeBody)
+      headers,
+      body: JSON.stringify(payload)
     });
 
     const data = await response.json();
 
     if (!response.ok) {
+      console.error('[chat] AI-anrop fel:', response.status, useBedrock ? 'bedrock' : 'direct');
       return res.status(response.status).json(data);
     }
 
     return res.status(200).json(data);
   } catch (error) {
     Sentry.captureException(error);
-    console.error('[chat] Anthropic-anrop misslyckades:', error.message);
+    console.error('[chat] AI-anrop misslyckades:', error.message, useBedrock ? 'bedrock' : 'direct');
     return res.status(500).json({ error: 'AI-tjänsten är tillfälligt otillgänglig' });
   }
 }
