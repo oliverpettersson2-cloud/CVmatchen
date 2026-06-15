@@ -901,12 +901,14 @@ td{padding:10px 13px;vertical-align:middle}
           <!-- Tabell -->
           <div class="tw">
             <table>
-              <thead><tr><th style="width:36px;text-align:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--mu);vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></th><th>Namn</th><th class="hm">Handläggare</th><th class="hm">Enhet</th><th>Senast aktiv</th><th class="hm">CV</th><th class="hm">Övningar</th><th class="hm">Uppgifter</th><th class="hm" title="Antal sökta jobb (jobbdagbok)">Sökta</th><th>Status</th></tr></thead>
+              <thead><tr><th style="width:36px;text-align:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--mu);vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></th><th onclick="sortBy('namn')">Namn<span class="sort-ind" data-k="namn"></span></th><th class="hm" onclick="sortBy('handlaggare')">Handläggare<span class="sort-ind" data-k="handlaggare"></span></th><th class="hm" onclick="sortBy('enhet')">Enhet<span class="sort-ind" data-k="enhet"></span></th><th onclick="sortBy('lastSeen')">Senast aktiv<span class="sort-ind" data-k="lastSeen"></span></th><th class="hm" onclick="sortBy('cv')">CV<span class="sort-ind" data-k="cv"></span></th><th class="hm" onclick="sortBy('ovningar')">Övningar<span class="sort-ind" data-k="ovningar"></span></th><th class="hm" onclick="sortBy('uppgifter')">Uppgifter<span class="sort-ind" data-k="uppgifter"></span></th><th class="hm" title="Antal sökta jobb (jobbdagbok)" onclick="sortBy('sokta')">Sökta<span class="sort-ind" data-k="sokta"></span></th><th onclick="sortBy('status')">Status<span class="sort-ind" data-k="status"></span></th></tr></thead>
               <tbody id="tBody"><tr><td colspan="10" class="loading">Laddar deltagare...</td></tr></tbody>
             </table>
             <div class="pg-bar"><span id="pgInfo"></span></div>
           </div>
         </div>
+
+        <div class="pan" id="p-uppgifter"><div id="tasksContent" class="loading">Laddar tilldelade uppgifter...</div></div>
 
         <div class="pan" id="p-admins"><div id="adminsContent" class="loading">Laddar handläggare och admins...</div></div>
 
@@ -1126,6 +1128,7 @@ const SL = {active:'Aktiv',recent:'Nyligen aktiv',new:'Ny',inactive:'Inaktiv'};
 
 const PAGE_INFO = {
   mina:      {title:'Deltagare',  sub: () => roleSubtitle()},
+  uppgifter: {title:'Tilldelade uppgifter', sub: () => 'Alla uppgifter du tilldelat — aktiva, avklarade och försenade'},
   admins:    {title:'Handläggare & admins', sub: () => 'Användare med admin-roll i systemet'},
   material:  {title:'Sparat material & uppgifter',  sub: () => 'Delat bibliotek för hela enheten — uppgifter, PowerPoints och AI-uppdaterade versioner'}
 };
@@ -1743,6 +1746,7 @@ async function checkPilotExpiry(){
 function buildNav(){
   const items=[
     {id:'mina',label:'Deltagare',icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'},
+    {id:'uppgifter',label:'Tilldelade uppgifter',icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>'},
     {id:'material',label:'Sparat material & uppgifter',icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>'}
   ];
   document.getElementById('sbNav').innerHTML=items.map((it,i)=>`<div class="sb-nav-item${i===0?' act':''}" data-id="${it.id}" onclick="switchTab('${it.id}')">${it.icon}<span>${it.label}</span></div>`).join('');
@@ -1758,6 +1762,7 @@ function switchTab(id){
   const info=PAGE_INFO[id];
   if(info){document.getElementById('pgTitle').textContent=info.title;document.getElementById('pgSub').textContent=info.sub();}
   if(id==='mina') renderMinaView();
+  if(id==='uppgifter') renderTasksView();
   if(id==='admins') renderAdminsView();
   if(id==='material') renderMaterialView();
 }
@@ -1928,6 +1933,44 @@ function renderChipCounts(){
   document.getElementById('cnt-recent').textContent = u.filter(x=>x.status==='recent').length;
   document.getElementById('cnt-inactive').textContent = u.filter(x=>x.status==='inactive').length;
 }
+// Kolumnsortering för deltagar-tabellen. null = standardsortering (test först, namn)
+let sortState = { key: null, dir: 1 };
+function sortBy(key){
+  if (sortState.key === key) {
+    // Cykla: stigande → fallande → av
+    if (sortState.dir === 1) sortState.dir = -1;
+    else { sortState.key = null; sortState.dir = 1; }
+  } else {
+    sortState.key = key; sortState.dir = 1;
+  }
+  renderTable(allUsers);
+}
+// Extraherar jämförbart värde per kolumn för en deltagare
+function _sortVal(u, key){
+  const cvd = u.cv?.data || u.cv || {};
+  switch(key){
+    case 'namn':       return (cvName(cvd) || '').toLowerCase();
+    case 'handlaggare':return (getHandlaggareName(u) || '').toLowerCase();
+    case 'enhet':      return (u.enheter?.name || u.enhet_name || '').toLowerCase();
+    case 'lastSeen':   return u.cv?.updated_at || u.last_seen || '';
+    case 'cv':         return (cvd.name || cvd.title) ? 1 : 0;
+    case 'ovningar': {
+      const vals = Object.values(u.progress||{});
+      const done = vals.filter(v=>v===true||(v&&v.done===true)).length;
+      return vals.length ? done/vals.length : 0;
+    }
+    case 'uppgifter':  return u.tasks ? (u.tasks.total||0) : 0;
+    case 'sokta':      return u.applied_count || u.sokta_count || 0;
+    case 'status':     return u.status || '';
+    default:           return '';
+  }
+}
+function _updateSortIndicators(){
+  document.querySelectorAll('.sort-ind').forEach(el => {
+    el.textContent = (el.dataset.k === sortState.key) ? (sortState.dir === 1 ? ' ↑' : ' ↓') : '';
+  });
+}
+
 function renderTable(users){
   const q=(document.getElementById('searchIn')?.value||'').toLowerCase();
   const enhet=document.getElementById('enhetFlt')?.value||'';
@@ -1951,14 +1994,26 @@ function renderTable(users){
         && enhetMatch
         && (!handlaggareId||hid===handlaggareId);
   });
-  // Sortera: din riktiga test-deltagare (isMyTestUser) först, sen alfabetiskt på namn
-  f.sort((a, b) => {
-    if (a.isMyTestUser && !b.isMyTestUser) return -1;
-    if (!a.isMyTestUser && b.isMyTestUser) return 1;
-    const na = (cvName(a.cv?.data||a.cv) || '').toLowerCase();
-    const nb = (cvName(b.cv?.data||b.cv) || '').toLowerCase();
-    return na.localeCompare(nb, 'sv');
-  });
+  if (sortState.key) {
+    // Användarvald kolumnsortering
+    f.sort((a, b) => {
+      const va = _sortVal(a, sortState.key), vb = _sortVal(b, sortState.key);
+      let cmp;
+      if (typeof va === 'number' && typeof vb === 'number') cmp = va - vb;
+      else cmp = String(va).localeCompare(String(vb), 'sv');
+      return cmp * sortState.dir;
+    });
+  } else {
+    // Standard: din riktiga test-deltagare (isMyTestUser) först, sen alfabetiskt på namn
+    f.sort((a, b) => {
+      if (a.isMyTestUser && !b.isMyTestUser) return -1;
+      if (!a.isMyTestUser && b.isMyTestUser) return 1;
+      const na = (cvName(a.cv?.data||a.cv) || '').toLowerCase();
+      const nb = (cvName(b.cv?.data||b.cv) || '').toLowerCase();
+      return na.localeCompare(nb, 'sv');
+    });
+  }
+  _updateSortIndicators();
   document.getElementById('tBody').innerHTML=f.length?f.map(u=>{
     const cvd=u.cv?.data||u.cv||{};
     const dn = displayName(u);
@@ -2170,7 +2225,12 @@ function stopDetailPolling(){
   if (_detailPollTimer) { clearInterval(_detailPollTimer); _detailPollTimer = null; }
 }
 window.addEventListener('storage', (e) => {
-  if (e.key === 'cvm_tasks_dirty' && currentUserId) refreshOpenDetail();
+  if (e.key === 'cvm_tasks_dirty') {
+    if (currentUserId) refreshOpenDetail();
+    // Uppdatera Tilldelade uppgifter-fliken om den är aktiv
+    _tasksCache = null;
+    if (currentTab === 'uppgifter') renderTasksView();
+  }
 });
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) stopDetailPolling();
@@ -3408,6 +3468,7 @@ async function confirmCreateTask() {
       showOk(`✅ Uppgiften "${title}" skickad`);
     }
     closeCreateTaskModal();
+    _tasksCache = null; // Tilldelade uppgifter-fliken hämtar färskt nästa gång
     // Lägg till uppgiften lokalt så UI uppdateras direkt
     if (currentUserData) {
       currentUserData.tasks = currentUserData.tasks || [];
@@ -6544,6 +6605,105 @@ function renderAdminsList(wrap, admins, append) {
   if (append) wrap.insertAdjacentHTML('beforeend', html); else wrap.innerHTML = html;
 }
 
+
+// ═══════════════════════════════════════════════════════════════════════
+// TILLDELADE UPPGIFTER — egen flik, alla uppgifter i handläggarens scope
+// ═══════════════════════════════════════════════════════════════════════
+let _tasksCache = null;
+let _tasksFilter = 'alla'; // alla | active | completed | overdue
+
+async function renderTasksView(){
+  const wrap = document.getElementById('tasksContent');
+  if (!wrap) return;
+  if (!_tasksCache) {
+    wrap.innerHTML = '<div class="loading" style="padding:40px;text-align:center;">Laddar tilldelade uppgifter...</div>';
+    try {
+      const data = await post('admin_list_tasks', { adminId: admin.id });
+      _tasksCache = (data && data.data) ? data.data : [];
+    } catch(e) {
+      wrap.innerHTML = `<div class="loading" style="padding:40px;text-align:center;color:var(--rd)">Kunde inte hämta uppgifter: ${escapeHtml(e.message)}</div>`;
+      return;
+    }
+  }
+  drawTasksView(wrap, _tasksCache);
+}
+
+function _taskState(t){
+  // returnerar 'completed' | 'overdue' | 'active'
+  if (t.status === 'completed') return 'completed';
+  const dl = t.deadline ? new Date(t.deadline) : null;
+  if (dl && dl < new Date()) return 'overdue';
+  return 'active';
+}
+
+function drawTasksView(wrap, tasks){
+  const counts = { alla: tasks.length, active: 0, completed: 0, overdue: 0 };
+  tasks.forEach(t => { counts[_taskState(t)]++; });
+
+  const filtered = _tasksFilter === 'alla'
+    ? tasks
+    : tasks.filter(t => _taskState(t) === _tasksFilter);
+
+  const CHIP = (key, label, color) => {
+    const active = _tasksFilter === key;
+    return `<button onclick="_tasksFilter='${key}';drawTasksView(document.getElementById('tasksContent'),_tasksCache)" style="padding:7px 14px;border-radius:8px;border:1px solid ${active?color:'var(--bd)'};background:${active?color+'18':'#fff'};color:${active?color:'var(--tx)'};font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">${label} <span style="opacity:.7">${counts[key]}</span></button>`;
+  };
+
+  const STATE_META = {
+    active:    { label: 'Aktiv',    color: '#2563eb' },
+    completed: { label: 'Avklarad', color: '#1a8a5a' },
+    overdue:   { label: 'Försenad', color: '#d94444' }
+  };
+
+  let html = '<div style="padding:20px 24px;">';
+  html += '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;">'
+    + CHIP('alla','Alla','#1a1917')
+    + CHIP('active','Aktiva','#2563eb')
+    + CHIP('completed','Avklarade','#1a8a5a')
+    + CHIP('overdue','Försenade','#d94444')
+    + '<div style="flex:1"></div>'
+    + `<button onclick="_tasksCache=null;renderTasksView();" style="background:rgba(0,0,0,0.04);border:1px solid var(--bd);color:var(--tx);padding:7px 12px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;">↻ Uppdatera</button>`
+    + '</div>';
+
+  if (!filtered.length) {
+    html += '<div class="loading" style="padding:40px;text-align:center;">Inga uppgifter i denna kategori.</div></div>';
+    wrap.innerHTML = html;
+    return;
+  }
+
+  html += '<div style="display:grid;gap:8px;">';
+  filtered.forEach(t => {
+    const st = _taskState(t);
+    const meta = STATE_META[st];
+    const who = t.participant_name || '(namnlös deltagare)';
+    const dl = t.deadline ? new Date(t.deadline) : null;
+    let dlStr = '';
+    if (dl) {
+      const days = Math.ceil((dl - new Date()) / 86400000);
+      const dlColor = st === 'completed' ? 'var(--mu)' : (days < 0 ? '#d94444' : days <= 3 ? '#d97706' : 'var(--mu)');
+      const dlLabel = st === 'completed' ? dl.toISOString().slice(0,10)
+        : days < 0 ? `Försenad ${Math.abs(days)} d (${dl.toISOString().slice(0,10)})`
+        : days === 0 ? 'Deadline idag'
+        : `${days} d kvar (${dl.toISOString().slice(0,10)})`;
+      dlStr = `<span style="font-size:11px;color:${dlColor};font-weight:600;">📅 ${dlLabel}</span>`;
+    } else {
+      dlStr = '<span style="font-size:11px;color:var(--mu);">Ingen deadline</span>';
+    }
+    html += `<div onclick="openDetail('${t.user_id}')" style="display:flex;align-items:center;gap:14px;padding:13px 15px;background:rgba(0,0,0,0.02);border:1px solid var(--bd);border-radius:10px;cursor:pointer;">
+      <div style="width:8px;height:8px;border-radius:50%;background:${meta.color};flex-shrink:0;"></div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:700;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(t.title || 'Uppgift')}</div>
+        <div style="font-size:11px;color:var(--mu);margin-top:2px;">👤 ${escapeHtml(who)}${t.category ? ' · ' + escapeHtml(t.category) : ''}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;">
+        <span style="font-size:10px;font-weight:700;background:${meta.color}18;color:${meta.color};padding:2px 8px;border-radius:6px;">${meta.label}</span>
+        ${dlStr}
+      </div>
+    </div>`;
+  });
+  html += '</div></div>';
+  wrap.innerHTML = html;
+}
 
 // Filter-state för Sparat material & uppgifter-fliken
 let materialFilter = { q: '', cat: '', lang: '' };

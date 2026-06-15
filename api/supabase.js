@@ -465,6 +465,38 @@ export default async function handler(req, res) {
       return res.status(200).json({ admin: rows[0] });
     }
 
+    if (action === 'admin_list_tasks') {
+      // Lista ALLA tilldelade uppgifter inom handläggarens scope, med
+      // deltagarnamn och deadline. Superadmin ser alla; övriga sin kommun/enhet.
+      const { admin } = await requireAdmin(res, accessToken, action, {
+        requestedKommunId: filters?.kommun_id, requestedEnhetId: filters?.enhet_id
+      });
+      if (!admin) return;
+      // 1) Hitta deltagar-IDs inom scope
+      let uaUrl = `${SUPABASE_URL}/rest/v1/user_assignments?select=user_id,name,kommun_id,enhet_id`;
+      if (admin.role !== 'superadmin') {
+        uaUrl += `&kommun_id=eq.${admin.kommun_id}`;
+        if (admin.enhet_id != null) uaUrl += `&enhet_id=eq.${admin.enhet_id}`;
+      }
+      const uaRes = await makeRequest(uaUrl, { method: 'GET', headers: serviceHeaders() });
+      const uas = Array.isArray(uaRes.data) ? uaRes.data : [];
+      const nameByUser = {};
+      uas.forEach(u => { nameByUser[u.user_id] = u.name || null; });
+      const scopeIds = uas.map(u => u.user_id).filter(Boolean);
+      if (!scopeIds.length) return res.status(200).json({ data: [] });
+      const idsFilter = safeUuidIn(scopeIds);
+      if (!idsFilter) return res.status(200).json({ data: [] });
+      // 2) Hämta alla tasks för dessa deltagare
+      const tRes = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/tasks?user_id=in.(${idsFilter})&select=id,user_id,title,category,status,deadline,created_at,completed_at,assigned_by&order=created_at.desc`,
+        { method: 'GET', headers: serviceHeaders() }
+      );
+      const tasks = (Array.isArray(tRes.data) ? tRes.data : []).map(t => ({
+        ...t, participant_name: nameByUser[t.user_id] || null
+      }));
+      return res.status(200).json({ data: tasks });
+    }
+
     if (action === 'admin_list_users') {
       const { admin } = await requireAdmin(res, accessToken, action, {
         requestedKommunId: filters?.kommun_id, requestedEnhetId: filters?.enhet_id
