@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CVmatchen — Handläggarvy</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- Delad modulkatalog (samma 105 moduler som deltagar-appen) — exponerar window.TRAINING_DATA -->
+<script src="training-modules.js"></script>
 <style>
 :focus-visible{outline:3px solid #1a73e8;outline-offset:2px;}
 .skip-link{position:absolute;left:-9999px;top:0;z-index:9999;background:#1a73e8;color:#fff;padding:10px 16px;border-radius:0 0 6px 0;}
@@ -2524,6 +2526,16 @@ async function downloadParticipantCV(){
     ${certH?`<div class="sec"><h2>Certifikat</h2>${certH}</div>`:''}
   </body></html>`;
 
+  // Print-fallback: öppnar CV:t i ett nytt fönster och triggar webbläsarens
+  // "Spara som PDF". 100% pålitligt även om server-PDF (puppeteer) failar.
+  const printFallback = () => {
+    const w = window.open('', '_blank');
+    if (!w) { alert('Tillåt popup-fönster för att ladda ner CV.'); return; }
+    w.document.write(html.replace('</body>',
+      '<scr'+'ipt>window.onload=function(){setTimeout(function(){window.print();},300);};</scr'+'ipt></body>'));
+    w.document.close();
+  };
+
   try {
     const resp = await fetch('/api/pdf', {
       method: 'POST',
@@ -2532,12 +2544,14 @@ async function downloadParticipantCV(){
     });
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const blob = await resp.blob();
+    if (!blob || blob.size < 100) throw new Error('Tom PDF');
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url; a.download = 'CV - ' + nm + '.pdf'; a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   } catch(e) {
-    alert('Kunde inte skapa PDF: ' + e.message);
+    // Server-PDF misslyckades → använd print-fönster istället
+    printFallback();
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = '⬇ Ladda ner CV (PDF)'; }
   }
@@ -2631,11 +2645,6 @@ function renderTabJobbansok(data){
         <div class="inst-row"><span class="inst-row-l">Skickade ansökningar</span><span class="inst-row-v">${sent}</span></div>
         <div class="inst-row"><span class="inst-row-l">Intervjuer</span><span class="inst-row-v" style="color:var(--or)">${interviews}</span></div>
         <div class="inst-row"><span class="inst-row-l">Erbjudanden</span><span class="inst-row-v" style="color:var(--gn)">${offers}</span></div>
-      </div>
-      <div class="inst-group">
-        <div class="inst-group-h">Handläggarverktyg</div>
-        <button class="btn" style="width:100%;margin-bottom:6px" onclick="quickAssign('matcha-5')">Tilldela: Matcha 5 annonser</button>
-        <button class="btn" style="width:100%" onclick="document.getElementById('udCustomTask').value='Sök 3 jobb denna vecka';switchDetailTab('uppgifter');">Tilldela: Sök 3 jobb</button>
       </div>
     </div>
 
@@ -2911,7 +2920,10 @@ function renderTabTraning(data){
   const GROUPS = [
     { key:'intro',   title:'🌱 Introduktion',  desc:'Förstå systemet och dina rättigheter' },
     { key:'arbete',  title:'💼 Arbete',        desc:'CV, matchning och arbetsmarknad' },
-    { key:'studier', title:'🎓 Studier',       desc:'YH, Komvux, Folkhögskola' }
+    { key:'studier', title:'🎓 Studier',       desc:'YH, Komvux, Folkhögskola' },
+    { key:'digital', title:'💻 Digital',       desc:'LinkedIn, jobbsök online, digitala verktyg' },
+    { key:'ekonomi', title:'💰 Ekonomi',       desc:'Budget, bidrag och sparande' },
+    { key:'hälsa',   title:'🫀 Hälsa',         desc:'Mental hälsa, stress och sömn' }
   ];
 
   html += `<div style="margin-bottom:12px;padding:0 2px;">
@@ -4357,39 +4369,30 @@ const AI_QUOTA_PER_MONTH = 10;
 // VIKTIGT: Håll synkat med ACTIVE_MODS i desktop-app.js!
 // När en modul aktiveras där ska den läggas till här också.
 // ═══════════════════════════════════════════════════════════════════════
-const ACTIVE_MODULES = [
-  // Intro
-  {id:'m1',     cat:'intro',   icon:'📋', title:'Regler & Rättigheter',     sub:'Närvaro, frånvaro & skyldigheter'},
-  {id:'m2',     cat:'intro',   icon:'💻', title:'SKills-systemet',           sub:'Introduktion till SKills & din plan'},
-  {id:'m3',     cat:'intro',   icon:'🤖', title:'AI & CVmatchen',            sub:'Hur AI hjälper dig hitta jobb'},
-  {id:'ai_gen', cat:'intro',   icon:'🧠', title:'AI som verktyg',            sub:'Vad AI är & hur du använder det klokt'},
-  // Arbete
-  {id:'a0',     cat:'arbete',  icon:'📊', title:'Arbetsmarknaden',           sub:'Sverige, Skåne & Öresundsregionen'},
-  {id:'a_match',cat:'arbete',  icon:'🎯', title:'Matcha med AI',             sub:'Förstå matchningslogiken'},
-  {id:'a_cv',   cat:'arbete',  icon:'📄', title:'CV-byggaren',               sub:'Förstå varje del av ditt CV'},
-  {id:'a3',     cat:'arbete',  icon:'🎯', title:'SMARTA mål',                sub:'Sätt tydliga mål'},
-  {id:'a4',     cat:'arbete',  icon:'🎤', title:'Min pitch',                 sub:'30 sekunder om dig'},
-  {id:'a8',     cat:'arbete',  icon:'🤝', title:'Intervju-grunder',          sub:'Förberedelse & trygghet'},
-  {id:'a_brev', cat:'arbete',  icon:'✉️', title:'Personligt brev',           sub:'Skrivet rätt öppnar det dörren'},
-  // Digital
-  {id:'d2',     cat:'digital', icon:'🔵', title:'LinkedIn-grunder',          sub:'Din profil online'},
-  {id:'d6',     cat:'digital', icon:'🔍', title:'Söka jobb digitalt',        sub:'Platsbanken, AF och jobboarderna'},
-  // Ekonomi
-  {id:'e1',     cat:'ekonomi', icon:'💳', title:'Budget & vardagsekonomi',   sub:'Koll på pengarna — varje månad'},
-  {id:'e3',     cat:'ekonomi', icon:'🆘', title:'Ekonomiskt bistånd & bidrag', sub:'Hjälp finns — ta reda på vad du har rätt till'},
-  {id:'e5',     cat:'ekonomi', icon:'🐷', title:'Spara & buffert',           sub:'Trygghet börjar med 1000 kr'},
-  // Hälsa
-  {id:'h1',     cat:'hälsa',   icon:'🧠', title:'Mental hälsa & stress',     sub:'Hantera press och mående'},
-  {id:'h2',     cat:'hälsa',   icon:'😴', title:'Sömn & återhämtning',       sub:'Grunden för allt annat'},
-  // Studier
-  {id:'s0',     cat:'studier', icon:'🗺️', title:'Utbildningskartan',         sub:'Vad finns i Studier-kategorin?'},
-  {id:'s1',     cat:'studier', icon:'🎓', title:'Vad är YH-utbildning?',     sub:'Yrkeshögskola — snabbaste vägen till jobb'},
-  {id:'s2',     cat:'studier', icon:'📚', title:'Komvux',                    sub:'Komplettera betyg som vuxen'},
-  {id:'s3',     cat:'studier', icon:'🇸🇪', title:'SFI — Svenska för invandrare', sub:'Lär dig svenska kostnadsfritt'},
-  {id:'s5',     cat:'studier', icon:'💰', title:'CSN & studiebidrag',        sub:'Finansiera dina studier'},
-  {id:'s6',     cat:'studier', icon:'📝', title:'Söka utbildning',           sub:'Steg-för-steg ansökan'},
-  {id:'s18',    cat:'studier', icon:'🧭', title:'SYV — Studie- och yrkesvägledning', sub:'Gratis professionell vägledning'}
-];
+// ACTIVE_MODULES byggs dynamiskt från den delade modulkatalogen
+// (training-modules.js → window.TRAINING_DATA). Då kan handläggaren tilldela
+// ALLA moduler som finns i deltagar-appen (~105), inte bara en handplockad delmängd.
+// Faller tillbaka på en liten hårdkodad lista om katalogen inte laddats.
+const _CAT_MAP = { INTRO:'intro', ARBETE:'arbete', HALSA:'hälsa', EKONOMI:'ekonomi', DIGITAL:'digital', STUDIER:'studier' };
+function buildActiveModules() {
+  const td = window.TRAINING_DATA;
+  if (!td) {
+    return [
+      {id:'m1', cat:'intro',  icon:'📋', title:'Regler & Rättigheter', sub:'Närvaro, frånvaro & skyldigheter'},
+      {id:'a_cv', cat:'arbete', icon:'📄', title:'CV-byggaren', sub:'Förstå varje del av ditt CV'}
+    ];
+  }
+  const out = [];
+  Object.keys(_CAT_MAP).forEach(arrName => {
+    const cat = _CAT_MAP[arrName];
+    (td[arrName] || []).forEach(m => {
+      if (!m || !m.id) return;
+      out.push({ id: m.id, cat, icon: m.icon || '📘', title: m.title || m.id, sub: m.sub || '' });
+    });
+  });
+  return out;
+}
+const ACTIVE_MODULES = buildActiveModules();
 function getAiQuotaKey(){
   const m = new Date();
   return `aiQuota_${admin?.id||'anon'}_${m.getFullYear()}-${m.getMonth()+1}`;
