@@ -1323,9 +1323,11 @@ function attachToOliverIfOrphan(u) {
   };
 }
 
-// Helper: lägg till fiktiva deltagare ovanpå backend-data
+// Helper: lägg till fiktiva deltagare ovanpå backend-data.
+// FORCE_SHOW_AS_USER-stubs körs ALLTID (även i prod) — de är riktiga
+// test-konton som behöver synas oavsett demo-läge. Demo-deltagare körs
+// bara när DEMO_MODE är på.
 function injectDemoUsers(realUsers) {
-  if (!DEMO_MODE) return realUsers;
   // Filtrera bort admin-mailar (cvmatchen@outlook.com etc.) — de syns inte som deltagare
   const filtered = (realUsers || []).filter(u => {
     const email = u.cv?.data?.email || u.cv?.email || u.email || '';
@@ -1484,8 +1486,10 @@ function injectDemoUsers(realUsers) {
 
   // Koppla föräldralösa riktiga deltagare till Oliver KA (om hen är inloggad)
   const tagged = filtered.map(attachToOliverIfOrphan);
-  // Lägg till stubs + Vlademars + Maritas fiktiva deltagare
-  return [...tagged, ...stubs, ...DEMO_DELTAGARE];
+  // Lägg till stubs (alltid) + Vlademars + Maritas fiktiva deltagare (bara i DEMO_MODE)
+  return DEMO_MODE
+    ? [...tagged, ...stubs, ...DEMO_DELTAGARE]
+    : [...tagged, ...stubs];
 }
 
 // Helper: lägg till fiktiva handläggare ovanpå backend-data
@@ -1839,9 +1843,13 @@ async function loadUsers(){
         return `<option value="${id}">${label}</option>`;
       }).join('');
 
-    // Förval: inloggad användare första gången
-    if(admin.id && !handlaggareSel.dataset.userSet){
-      handlaggareSel.value = admin.id;
+    // Förval: inloggad användare första gången — men ENDAST om hen faktiskt
+    // har tilldelade deltagare i listan. Annars (t.ex. superadmin utan egen
+    // tilldelad pool) blir listan tom på första laddning och man måste byta
+    // flikar för att se sina favoriter.
+    if (admin.id && !handlaggareSel.dataset.userSet) {
+      const myCount = allUsers.filter(u => getHandlaggareId(u) === String(admin.id)).length;
+      if (myCount > 0) handlaggareSel.value = String(admin.id);
     }
   }
 
@@ -1981,7 +1989,7 @@ function renderTable(users){
       ? '<span style="display:inline-block;font-size:9px;font-weight:700;background:rgba(62,180,137,0.15);color:#3eb489;padding:1px 6px;border-radius:4px;margin-left:6px;letter-spacing:0.3px;text-transform:uppercase;vertical-align:middle;" title="Ditt riktiga test-konto">⭐ Test</span>'
       : '';
     // Avatar: visa "?" för placeholders istället för slumpartade initialer från fallback-namn
-    const avatarText = isPlaceholder ? '?' : ini(name);
+    const avatarText = ini(name) || '·';
     const avatarStyle = isPlaceholder ? 'background:rgba(245,158,11,0.12);color:#d97706;' : '';
     return `<tr onclick="openDetail('${uid}')">
       <td style="text-align:center" onclick="event.stopPropagation()"><button class="star-btn${isStarred?' starred':''}" data-uid="${uid}" onclick="toggleFavorite('${uid}',event)" title="${isStarred?'Ta bort från Mina':'Lägg till i Mina'}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button></td>
@@ -4172,7 +4180,7 @@ function _legacyRenderMinaView_unused(){
               const placeholderBadge = isPlaceholder
                 ? '<span style="display:inline-block;font-size:9px;font-weight:700;background:rgba(245,158,11,0.12);color:#d97706;padding:1px 6px;border-radius:4px;margin-left:6px;letter-spacing:0.3px;text-transform:uppercase;vertical-align:middle;">Ej ifyllt</span>'
                 : '';
-              const avatarText = isPlaceholder ? '?' : ini(name);
+              const avatarText = ini(name) || '·';
               const avatarStyle = isPlaceholder ? 'background:rgba(245,158,11,0.12);color:#d97706;' : '';
               return `<tr onclick="openDetail('${uid}')">
                 <td style="text-align:center" onclick="event.stopPropagation()">
