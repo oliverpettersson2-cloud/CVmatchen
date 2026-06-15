@@ -73,11 +73,21 @@ export default async function handler(req, res) {
   let endpoint, headers, payload;
   if (useBedrock) {
     const region = process.env.AWS_REGION || 'eu-central-1';
-    // Bedrock kräver eu.-prefix för cross-region inference inom EU
-    // (det är så Frankfurt-konsolen listar modellerna)
-    const modelId = 'eu.anthropic.' + safeBody.model;
-    // Bedrock InvokeModel-endpoint. Body är samma Messages API-format,
-    // men model-fältet flyttas in i URL:en och anthropic_version krävs i body.
+    // Bedrock EU cross-region inference (CRIS) — håller all inferens inom EU.
+    // OBS: modell-ID:n på Bedrock skiljer sig från Anthropics direkta API —
+    // vissa har dat-suffix + version. Mappa exakt, gissa inte med prefix.
+    const BEDROCK_EU_MODELS = {
+      'claude-sonnet-4-6':            'eu.anthropic.claude-sonnet-4-6',
+      'claude-haiku-4-5-20251001':    'eu.anthropic.claude-haiku-4-5-20251001-v1:0',
+      'claude-opus-4-6':              'eu.anthropic.claude-opus-4-6-v1',
+      'claude-opus-4-8':              'eu.anthropic.claude-opus-4-8',
+      'claude-opus-4-7':              'eu.anthropic.claude-opus-4-7'
+    };
+    const modelId = BEDROCK_EU_MODELS[safeBody.model];
+    if (!modelId) {
+      console.error('[chat] Okänd Bedrock-modell:', safeBody.model);
+      return res.status(400).json({ error: 'Modellen stöds inte i EU-läget' });
+    }
     endpoint = `https://bedrock-runtime.${region}.amazonaws.com/model/${encodeURIComponent(modelId)}/invoke`;
     const { model, ...bodyWithoutModel } = safeBody;
     payload = { anthropic_version: 'bedrock-2023-05-31', ...bodyWithoutModel };
