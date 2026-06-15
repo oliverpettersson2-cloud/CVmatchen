@@ -37,6 +37,20 @@
       position: absolute; left: -9999px; top: auto;
     }
     .skip-link:focus { left: 24px; top: 8px; background: #1a73e8; color: #fff; padding: 8px 14px; border-radius: 6px; z-index: 999; }
+
+    /* Utskriftsoptimering — öppna sidan och välj "Spara som PDF" för ett rent
+       handout till IT/dataskydd. A4, inga sidbrytningar mitt i tabeller/boxar. */
+    @media print {
+      body { max-width: none; padding: 0; font-size: 11pt; line-height: 1.5; }
+      h1 { font-size: 22pt; }
+      h2 { font-size: 14pt; margin-top: 20px; }
+      h3 { font-size: 11pt; }
+      a { color: #1a1a1a; text-decoration: none; }
+      .skip-link { display: none; }
+      .box, table, tr, h2, h3 { break-inside: avoid; page-break-inside: avoid; }
+      h2, h3 { break-after: avoid; page-break-after: avoid; }
+      @page { margin: 18mm 16mm; }
+    }
   </style>
 </head>
 <body>
