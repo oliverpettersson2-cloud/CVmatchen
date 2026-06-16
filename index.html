@@ -12,8 +12,18 @@
     }
   </script>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>CVmatchen — AI-driven jobbmatchning</title>
+
+  <!-- PWA / iOS standalone: när användaren lägger till på hemskärmen öppnas
+       sidan i fullskärm utan Safari-adressfält. Kräver att man tar bort och
+       lägger till genvägen på nytt om den fanns där innan dessa taggar. -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CVmatchen">
+  <meta name="theme-color" content="#0c1429">
+  <link rel="manifest" href="/manifest.json">
   
   <!-- Intervjuträning-modul (lazy-initieras av Träning-hubben) -->
   <link rel="stylesheet" href="intervju.css">
