@@ -910,6 +910,8 @@ td{padding:10px 13px;vertical-align:middle}
 
         <div class="pan" id="p-uppgifter"><div id="tasksContent" class="loading">Laddar tilldelade uppgifter...</div></div>
 
+        <div class="pan" id="p-matchning"><div id="matchningContent" class="loading">Laddar matchningsverktyg...</div></div>
+
         <div class="pan" id="p-admins"><div id="adminsContent" class="loading">Laddar handläggare och admins...</div></div>
 
         <div class="pan" id="p-material"><div id="materialContent" class="loading">Laddar bibliotek...</div></div>
@@ -1127,10 +1129,11 @@ const API = '/api/supabase';
 const SL = {active:'Aktiv',recent:'Nyligen aktiv',new:'Ny',inactive:'Inaktiv'};
 
 const PAGE_INFO = {
-  mina:      {title:'Deltagare',  sub: () => roleSubtitle()},
-  uppgifter: {title:'Tilldelade uppgifter', sub: () => 'Alla uppgifter du tilldelat — aktiva, avklarade och försenade'},
-  admins:    {title:'Handläggare & admins', sub: () => 'Användare med admin-roll i systemet'},
-  material:  {title:'Sparat material & uppgifter',  sub: () => 'Delat bibliotek för hela enheten — uppgifter, PowerPoints och AI-uppdaterade versioner'}
+  mina:        {title:'Deltagare',  sub: () => roleSubtitle()},
+  uppgifter:   {title:'Tilldelade uppgifter', sub: () => 'Alla uppgifter du tilldelat — aktiva, avklarade och försenade'},
+  matchning:   {title:'Matchningsverktyg', sub: () => 'Matcha deltagare mot lediga tjänster och övervaka träffsäkerhet'},
+  admins:      {title:'Handläggare & admins', sub: () => 'Användare med admin-roll i systemet'},
+  material:    {title:'Sparat material & uppgifter',  sub: () => 'Delat bibliotek för hela enheten — uppgifter, PowerPoints och AI-uppdaterade versioner'}
 };
 
 let admin = null;
@@ -1747,6 +1750,7 @@ function buildNav(){
   const items=[
     {id:'mina',label:'Deltagare',icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'},
     {id:'uppgifter',label:'Tilldelade uppgifter',icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>'},
+    {id:'matchning',label:'Matchningsverktyg',icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>'},
     {id:'material',label:'Sparat material & uppgifter',icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>'}
   ];
   document.getElementById('sbNav').innerHTML=items.map((it,i)=>`<div class="sb-nav-item${i===0?' act':''}" data-id="${it.id}" onclick="switchTab('${it.id}')">${it.icon}<span>${it.label}</span></div>`).join('');
@@ -1763,6 +1767,7 @@ function switchTab(id){
   if(info){document.getElementById('pgTitle').textContent=info.title;document.getElementById('pgSub').textContent=info.sub();}
   if(id==='mina') renderMinaView();
   if(id==='uppgifter') renderTasksView();
+  if(id==='matchning') renderMatchningView();
   if(id==='admins') renderAdminsView();
   if(id==='material') renderMaterialView();
 }
@@ -6644,6 +6649,10 @@ function drawTasksView(wrap, tasks){
     ? tasks
     : tasks.filter(t => _taskState(t) === _tasksFilter);
 
+  // Berika med email + handläggare från allUsers (samma data som Deltagare-fliken visar)
+  const userById = {};
+  (allUsers || []).forEach(u => { const id = u.user_id || u.id; if (id) userById[id] = u; });
+
   const CHIP = (key, label, color) => {
     const active = _tasksFilter === key;
     return `<button onclick="_tasksFilter='${key}';drawTasksView(document.getElementById('tasksContent'),_tasksCache)" style="padding:7px 14px;border-radius:8px;border:1px solid ${active?color:'var(--bd)'};background:${active?color+'18':'#fff'};color:${active?color:'var(--tx)'};font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">${label} <span style="opacity:.7">${counts[key]}</span></button>`;
@@ -6654,6 +6663,28 @@ function drawTasksView(wrap, tasks){
     completed: { label: 'Avklarad', color: '#1a8a5a' },
     overdue:   { label: 'Försenad', color: '#d94444' }
   };
+
+  // Sortering — samma stil som Deltagare-fliken
+  if (!window._taskSortState) window._taskSortState = { key: 'deadline', dir: 1 };
+  const ss = window._taskSortState;
+  const sortVal = (t, k) => {
+    const u = userById[t.user_id] || {};
+    const cvd = u.cv?.data || u.cv || {};
+    switch(k){
+      case 'namn':     return (t.participant_name || cvName(cvd) || '').toLowerCase();
+      case 'email':    return (cvd.email || u.email || '').toLowerCase();
+      case 'uppgift':  return (t.title || '').toLowerCase();
+      case 'kategori': return (t.category || '').toLowerCase();
+      case 'deadline': return t.deadline || '9999-12-31';
+      case 'status':   return _taskState(t);
+      default: return '';
+    }
+  };
+  const sorted = [...filtered].sort((a,b) => {
+    const va = sortVal(a, ss.key), vb = sortVal(b, ss.key);
+    return (va > vb ? 1 : va < vb ? -1 : 0) * ss.dir;
+  });
+  const sortInd = (k) => ss.key === k ? (ss.dir === 1 ? ' ↑' : ' ↓') : '';
 
   let html = '<div style="padding:20px 24px;">';
   html += '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;">'
@@ -6671,39 +6702,89 @@ function drawTasksView(wrap, tasks){
     return;
   }
 
-  html += '<div style="display:grid;gap:8px;">';
-  filtered.forEach(t => {
+  // Tabell — samma stil som Deltagare-fliken
+  html += '<div class="tw"><table><thead><tr>'
+    + `<th onclick="_sortTasks('namn')" style="cursor:pointer">Namn${sortInd('namn')}</th>`
+    + `<th class="hm" onclick="_sortTasks('email')" style="cursor:pointer">E-post${sortInd('email')}</th>`
+    + `<th onclick="_sortTasks('uppgift')" style="cursor:pointer">Uppgift${sortInd('uppgift')}</th>`
+    + `<th class="hm" onclick="_sortTasks('kategori')" style="cursor:pointer">Kategori${sortInd('kategori')}</th>`
+    + `<th onclick="_sortTasks('deadline')" style="cursor:pointer">Deadline${sortInd('deadline')}</th>`
+    + `<th onclick="_sortTasks('status')" style="cursor:pointer">Status${sortInd('status')}</th>`
+    + '</tr></thead><tbody>';
+  sorted.forEach(t => {
     const st = _taskState(t);
     const meta = STATE_META[st];
-    const who = t.participant_name || '(namnlös deltagare)';
+    const u = userById[t.user_id] || {};
+    const cvd = u.cv?.data || u.cv || {};
+    const name = escapeHtml(t.participant_name || cvName(cvd) || 'Okänd');
+    const email = escapeHtml(cvd.email || u.email || '—');
     const dl = t.deadline ? new Date(t.deadline) : null;
-    let dlStr = '';
+    let dlStr = '<span style="color:var(--mu)">—</span>';
     if (dl) {
       const days = Math.ceil((dl - new Date()) / 86400000);
-      const dlColor = st === 'completed' ? 'var(--mu)' : (days < 0 ? '#d94444' : days <= 3 ? '#d97706' : 'var(--mu)');
+      const dlColor = st === 'completed' ? 'var(--mu)' : (days < 0 ? '#d94444' : days <= 3 ? '#d97706' : 'var(--tx)');
       const dlLabel = st === 'completed' ? dl.toISOString().slice(0,10)
         : days < 0 ? `Försenad ${Math.abs(days)} d (${dl.toISOString().slice(0,10)})`
-        : days === 0 ? 'Deadline idag'
+        : days === 0 ? 'Idag'
         : `${days} d kvar (${dl.toISOString().slice(0,10)})`;
-      dlStr = `<span style="font-size:11px;color:${dlColor};font-weight:600;">📅 ${dlLabel}</span>`;
-    } else {
-      dlStr = '<span style="font-size:11px;color:var(--mu);">Ingen deadline</span>';
+      dlStr = `<span style="color:${dlColor};font-weight:600;">${dlLabel}</span>`;
     }
-    html += `<div onclick="openDetail('${t.user_id}')" style="display:flex;align-items:center;gap:14px;padding:13px 15px;background:rgba(0,0,0,0.02);border:1px solid var(--bd);border-radius:10px;cursor:pointer;">
-      <div style="width:8px;height:8px;border-radius:50%;background:${meta.color};flex-shrink:0;"></div>
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:13px;font-weight:700;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(t.title || 'Uppgift')}</div>
-        <div style="font-size:11px;color:var(--mu);margin-top:2px;">👤 ${escapeHtml(who)}${t.category ? ' · ' + escapeHtml(t.category) : ''}</div>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;">
-        <span style="font-size:10px;font-weight:700;background:${meta.color}18;color:${meta.color};padding:2px 8px;border-radius:6px;">${meta.label}</span>
-        ${dlStr}
-      </div>
-    </div>`;
+    html += `<tr onclick="openDetail('${t.user_id}')" style="cursor:pointer">`
+      + `<td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${meta.color};margin-right:8px;vertical-align:middle"></span>${name}</td>`
+      + `<td class="hm" style="color:var(--mu);font-size:12px;">${email}</td>`
+      + `<td style="font-weight:600">${escapeHtml(t.title || 'Uppgift')}</td>`
+      + `<td class="hm" style="color:var(--mu);font-size:12px;">${escapeHtml(t.category || '—')}</td>`
+      + `<td style="font-size:12px;">${dlStr}</td>`
+      + `<td><span style="font-size:10px;font-weight:700;background:${meta.color}18;color:${meta.color};padding:2px 8px;border-radius:6px;">${meta.label}</span></td>`
+      + '</tr>';
   });
-  html += '</div></div>';
+  html += '</tbody></table></div>';
+  html += '</div>';
   wrap.innerHTML = html;
 }
+function renderMatchningView(){
+  const wrap = document.getElementById('matchningContent');
+  if(!wrap) return;
+  wrap.classList.remove('loading');
+  wrap.innerHTML = `
+    <div style="padding:40px 24px;max-width:720px;margin:0 auto;">
+      <div style="background:#fff;border:1px solid var(--bd);border-radius:12px;padding:32px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--tx)"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          <div style="font-size:18px;font-weight:700;color:var(--tx)">Matchningsverktyg</div>
+        </div>
+        <div style="color:var(--mu);font-size:13px;line-height:1.6;margin-bottom:18px;">
+          Här samlas verktyg för att matcha deltagare mot lediga tjänster och följa
+          träffsäkerhet över tid. Modulen rullas ut stegvis under piloten.
+        </div>
+        <div style="display:grid;gap:10px;">
+          <div style="padding:14px;border:1px solid var(--bd);border-radius:8px;background:rgba(0,0,0,0.02);">
+            <div style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:4px;">CV ↔ Annons-matchning</div>
+            <div style="font-size:12px;color:var(--mu);">Automatisk poängsättning av deltagarens CV mot valda annonser.</div>
+          </div>
+          <div style="padding:14px;border:1px solid var(--bd);border-radius:8px;background:rgba(0,0,0,0.02);">
+            <div style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:4px;">Sökta arbeten — översikt</div>
+            <div style="font-size:12px;color:var(--mu);">Se vad varje deltagare har sökt och status på ansökningarna.</div>
+          </div>
+          <div style="padding:14px;border:1px solid var(--bd);border-radius:8px;background:rgba(0,0,0,0.02);">
+            <div style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:4px;">Kompetensgap</div>
+            <div style="font-size:12px;color:var(--mu);">Identifiera vad som saknas mellan deltagarens profil och efterfrågade roller.</div>
+          </div>
+        </div>
+        <div style="margin-top:20px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;font-size:12px;color:#92400e;">
+          Kommer som fullt verktyg under pilotens andra fas.
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+window._sortTasks = function(key) {
+  if (!window._taskSortState) window._taskSortState = { key: 'deadline', dir: 1 };
+  if (window._taskSortState.key === key) window._taskSortState.dir *= -1;
+  else { window._taskSortState.key = key; window._taskSortState.dir = 1; }
+  drawTasksView(document.getElementById('tasksContent'), _tasksCache);
+};
 
 // Filter-state för Sparat material & uppgifter-fliken
 let materialFilter = { q: '', cat: '', lang: '' };
