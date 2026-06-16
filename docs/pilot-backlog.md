@@ -62,3 +62,5 @@ Komplexitet: trivial / liten / medel / större / krångligt.
 | 28 | Deltagar-status-övergångar odokumenterade | api/supabase.js | Trivial | ⏳ |
 | 29 | Body-size-gräns i chat.js (efficiency) | api/chat.js | Trivial | ⏳ |
 | 30 | DEMO_MODE-indikator-banner när på | handlaggare.html | Trivial | ⏳ |
+| 31 | "Senast aktiv" visar `cv.updated_at` istället för faktisk inloggning — returnera `last_sign_in_at` från `auth.users` i `admin_list_users` och använd den | api/supabase.js + handlaggare.html:4251 | Liten | ⏳ |
+| 32 | `oliver.pettersson@helsingborg.se` syns i deltagar-listan trots att kontot är en handläggare — filtrera bort handläggar-/admin-konton från `admin_list_users` (eller exkludera roller ≠ deltagare i frontend) | api/supabase.js + handlaggare.html | Liten | ⏳ |
