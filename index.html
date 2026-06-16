@@ -14709,6 +14709,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
         localStorage.setItem(MKEY, JSON.stringify(ml));
         if (typeof _sbSync === 'function') _sbSync('matched_cvs', ml);
       } catch(e){}
+      if (typeof showToast === 'function') showToast('✅ Arbetet sparat under "Sökta arbeten"', 'success');
       _forceOpen('matched');
     };
 
