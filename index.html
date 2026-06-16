@@ -9203,7 +9203,11 @@ function dfTasks(){return[]}
 async function loadAssignedTasks(){
   var uid = window.authUserId;
   var tok = window.authAccessToken;
-  if (!uid || !tok) { _assignedTasksCache = []; return; }
+  if (!uid || !tok) {
+    _assignedTasksCache = [];
+    console.warn('[my_tasks] saknar uid/token — inloggad?', { hasUid: !!uid, hasTok: !!tok });
+    return;
+  }
   try {
     var r = await fetch('/api/supabase', {
       method: 'POST',
@@ -9211,9 +9215,19 @@ async function loadAssignedTasks(){
       body: JSON.stringify({ action: 'my_tasks', accessToken: tok, userId: uid })
     });
     var data = await r.json().catch(function(){return {};});
+    if (!r.ok) {
+      console.warn('[my_tasks] HTTP ' + r.status, data && data.error);
+      _assignedTasksCache = [];
+      // Vid 401 — token är utgången. Logga ut tyst så användaren får logga in igen.
+      if (r.status === 401) {
+        console.warn('[my_tasks] 401 — token utgången, ny inloggning krävs');
+      }
+      return;
+    }
     _assignedTasksCache = Array.isArray(data.data) ? data.data : [];
+    console.log('[my_tasks] hämtade ' + _assignedTasksCache.length + ' uppgifter för uid=' + uid.slice(0,8) + '…');
   } catch(e) {
-    console.error('Kunde inte hämta uppgifter:', e);
+    console.error('[my_tasks] fetch-fel:', e);
     _assignedTasksCache = [];
   }
 }
@@ -10858,9 +10872,13 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
       var assigned = (typeof _assignedTasksCache !== 'undefined' && _assignedTasksCache) ? _assignedTasksCache : [];
       var open = assigned.filter(function(t){ return t.status !== 'completed'; }).length;
       var done = assigned.filter(function(t){ return t.status === 'completed'; }).length;
-      taskMeta.textContent = assigned.length
-        ? (open + ' kvar · ' + done + ' klara')
-        : 'Inga uppgifter än';
+      if (assigned.length) {
+        taskMeta.textContent = open + ' kvar · ' + done + ' klara';
+      } else if (!window.authUserId || !window.authAccessToken) {
+        taskMeta.textContent = '⚠️ Logga in för att se uppgifter';
+      } else {
+        taskMeta.textContent = 'Inga uppgifter än';
+      }
     }
   }
 
