@@ -22,7 +22,7 @@ Det är hela din konkurrensfördel. Ingen kan matcha det. Led med det.
 
 ## ❌ Ta INTE med
 - Powerpoint-deck (hon somnar)
-- Prislista (för tidigt — det är pilot, inte köp)
+- Stor prislista (säg bara pilotpriset: 5 000 kr/mån i 3 mån = 15 000 kr totalt)
 - Tekniska diagram (om hon inte frågar)
 - Framtida features (sälj det som finns, inte drömmar)
 
@@ -35,11 +35,10 @@ Det är hela din konkurrensfördel. Ingen kan matcha det. Led med det.
 2. **Led med säkerhet oombedd.** *"Innan vi börjar — allt ligger i EU, här är hur."*
    Avväpnar största invändningen direkt.
 3. **Demo:** deltagarvy → handläggarvy. Visa, prata inte.
-4. **Positionera som pilot:** *"Testa med en enhet i 90 dagar, ingen risk."*
+4. **Positionera som pilot:** *"Testa med en enhet i 3 månader för 5 000 kr/mån. Sedan diskuterar vi direktupphandling."*
 5. **Gör henne till hjälte:** innovationsledare vill visa vinster uppåt.
    Ge henne mätbara resultat hon kan presentera för sin chef.
-6. **Avsluta konkret:** *"Ska vi sätta upp en pilot med Arbetsmarknadsenheten?
-   Jag fixar inloggningar denna vecka."*
+6. **Avsluta konkret:** *"Ska vi sätta upp en 3-månaders pilot med Arbetsmarknadsenheten för 5 000 kr/mån? Jag fixar inloggningar denna vecka. Efter pilot diskuterar vi direktupphandling för bredare införande."*
 
 ---
 

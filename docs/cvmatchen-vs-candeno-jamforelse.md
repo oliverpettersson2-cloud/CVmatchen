@@ -9,7 +9,7 @@
 
 | Område | Candeno | CVmatchen | Vinnare |
 |---|---|---|---|
-| **Pris (1 års licens)** | 671 730 kr + moms (Landskrona) | Pilot kostnadsfri eller bråkdel | 🟢 **CVmatchen** |
+| **Pris** | 671 730 kr + moms/år (Landskrona) | **5 000 kr/mån i 3 mån pilot** (15 000 kr totalt), sedan direktupphandling | 🟢 **CVmatchen** |
 | **Datalagring** | Microsoft + Intercom (USA-baserade, DPF-certifierade) + Scannet (Danmark) | 100% EU: Vercel Stockholm, Supabase Frankfurt/Irland, AWS Bedrock Frankfurt | 🟢 **CVmatchen** |
 | **AI-funktioner** | Inte tydligt specificerat i bilagan | Claude (Sonnet 4.6 / Haiku 4.5) — CV-coach, intervjuträning, jobbmatchning, översättning | 🟢 **CVmatchen** |
 | **Microsoft EntraID/SSO** | Ja | Ja (multitenant OAuth, redan i drift) | 🟰 Lika |
@@ -18,7 +18,7 @@
 | **Support-språk** | Danska, engelska, svenska (danskt bolag) | Svenska (PathfinderAI, byggt av SYV i Helsingborg) | 🟢 **CVmatchen** |
 | **Drift / arkitektur** | SaaS (webbaserat) | SaaS (webbaserat) | 🟰 Lika |
 | **Audit & spårbarhet** | Deloitte ISAE 3000 / SOC 2 | Backlog — ej tredjepartsrevision än | 🟡 Candeno |
-| **Pilot/proof-of-value** | Köp först | Kostnadsfri pilot 90 dagar | 🟢 **CVmatchen** |
+| **Pilot/proof-of-value** | Köp först | 3 månaders pilot för 5 000 kr/mån | 🟢 **CVmatchen** |
 
 **Skarp slutsats:** CVmatchen matchar Candeno på allt tekniskt + säkerhet, slår dem på **datalokalitet (100% EU vs USA-via-DPF)**, **AI-djup**, **kommunalt fokus** och **pris**. Vår enda svaghet: ingen tredjepartsrevision än (Candeno har Deloitte). Det löser vi med pilot + ISO 27001-arbete under år 1.
 
@@ -250,7 +250,7 @@ Detta är **samma krav Candeno fick godkänt på** för 671 730 kr. Vi går igen
 
 ### 4.1 Pris
 Candeno: **671 730 kr/år** i Landskrona. För Helsingborg (större) blir det troligen 1–2 miljoner.
-CVmatchen: **kostnadsfri pilot 90 dagar**, sen markant lägre licensmodell. Direktupphandlingsbart.
+CVmatchen: **5 000 kr/månad i 3 månaders pilot** (15 000 kr totalt). Därefter diskuterar vi direktupphandling. Direktupphandlingsbart under tröskelvärdet.
 
 ### 4.2 Datalokalitet
 **Vi är den enda lösningen som garanterar 100% EU.** Candeno skickar data till Microsoft + Intercom i USA. Det är inte olagligt (DPF), men det är en risk juridiskt. Vi har eliminerat den.
@@ -263,7 +263,7 @@ CVmatchen: **kostnadsfri pilot 90 dagar**, sen markant lägre licensmodell. Dire
 Candeno nämner inte AI i bilagan alls. CVmatchen har Claude (Anthropics nyaste modeller) inbyggt i CV-bygge, intervjuträning, jobbmatchning, översättning, personligt brev.
 
 ### 4.5 Pilot före köp
-Candeno: köp först, hoppas det funkar. CVmatchen: testa 90 dagar med en enhet, ingen risk, ingen kostnad.
+Candeno: köp först, hoppas det funkar. CVmatchen: testa 3 månader med en enhet för 5 000 kr/mån — minimal risk, direktupphandlingsbart utan procedur.
 
 ### 4.6 Transparens
 Candeno hänvisar till Deloitte-rapport som du inte får se. CVmatchen: koden är inspekterbar för IT, säkerhetsgranskning genomförd och dokumenterad.
@@ -278,7 +278,7 @@ Deloitte ISAE 3000 / SOC 2 — det är tungt och vi har inte det än.
 
 ### 5.2 Storlek
 Candeno är ett etablerat bolag med flera kommuner. PathfinderAI är start-up.
-**Bemötande:** "Det är därför vi erbjuder kostnadsfri pilot — ni bär ingen risk. Och det är därför vi kan röra oss snabbare än en stor leverantör när ni vill ha en ändring."
+**Bemötande:** "Det är därför vi erbjuder en pilot på 5 000 kr/mån i 3 månader — minimal risk för er. Och det är därför vi kan röra oss snabbare än en stor leverantör när ni vill ha en ändring."
 
 ### 5.3 Etablerad supportorganisation
 Candeno har Account Managers, freshdesk, dokumenterade SLA.
@@ -322,7 +322,7 @@ Använd dessa direkt om Isabella ber om svar på samma kravbilaga.
 
 ## 8. Avsluta med konkret nästa steg
 
-> *"Föreslår att vi sätter upp 90-dagars pilot med Arbetsmarknadsenheten. Jag fixar inloggningar denna vecka, ni utvärderar i augusti, vi beslutar om utökning i september. Kostnad för pilot: noll."*
+> *"Föreslår att vi sätter upp en 3-månaders pilot med Arbetsmarknadsenheten för 5 000 kr/månad. Jag fixar inloggningar denna vecka, ni utvärderar löpande, och efter pilot diskuterar vi direktupphandling för bredare införande. Totalt 15 000 kr för hela piloten — väl under direktupphandlingsgränsen."*
 
 Det är svårt för henne att säga nej till.
 
