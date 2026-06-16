@@ -497,7 +497,7 @@
   padding: 10px 8px;
   resize: none;
   outline: none;
-  min-height: 22px;
+  min-height: 48px;
   max-height: 140px;
   line-height: 1.5;
   /* iOS: se till att textarean tar emot touch */
@@ -511,7 +511,8 @@
   touch-action: manipulation;
 }
 #trainView-intervju .iv-input-text::placeholder {
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 500;
 }
 #trainView-intervju .iv-icon-btn {
   width: 40px;

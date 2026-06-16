@@ -1100,7 +1100,7 @@
       '  <div class="iv-interim" id="ivInterim" style="display:none;padding:0 12px 4px;font-size:13px;color:rgba(255,255,255,0.4)"></div>',
       '  <div class="iv-input-bar" id="ivInputBar">',
       '    <button class="iv-icon-btn iv-icon-btn--mic" id="ivMicBtn" title="Spela in svar">🎤</button>',
-      '    <textarea class="iv-input-text" id="ivUserInput" rows="1" placeholder="Skriv ditt svar..."></textarea>',
+      '    <textarea class="iv-input-text" id="ivUserInput" rows="2" placeholder="Skriv ditt svar..."></textarea>',
       '    <button class="iv-icon-btn iv-icon-btn--send" id="ivSendBtn" title="Skicka">➤</button>',
       '  </div>',
       '  <div class="iv-actions-row">',
@@ -1386,7 +1386,7 @@
     if (mode === 'speak') {
       // Röst-läge: mic primärt, textarea som fallback för redigering
       if (mic) mic.style.display = 'flex';
-      if (textarea) textarea.placeholder = 'Tryck 🎤 för att prata (eller skriv)';
+      if (textarea) textarea.placeholder = 'Skriv svar — eller tryck 🎤';
     } else {
       // Type-läge: dölj mic-knappen
       if (mic) mic.style.display = 'none';
@@ -2189,6 +2189,22 @@
 
     function handleSend() {
       if (!userInput) return;
+      // Om mikrofonen är aktiv — stoppa först, ta med transkriberad text, skicka sen.
+      if (state.ai && state.ai.isListening) {
+        stt.stop();
+        setTimeout(function() {
+          var spoken = (stt.finalText || '').trim();
+          var existing = userInput.value.trim();
+          var combined = existing && spoken ? (existing + ' ' + spoken) : (existing || spoken);
+          var box = $('#ivInterim');
+          if (box) { box.style.display = 'none'; box.textContent = ''; }
+          if (!combined) return;
+          userInput.value = '';
+          userInput.style.height = 'auto';
+          submitUserAnswer(combined);
+        }, 350);
+        return;
+      }
       var text = userInput.value.trim();
       if (!text) return;
       userInput.value = '';
