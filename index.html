@@ -6491,7 +6491,11 @@
         '- Skriv ALLTID i första person (jag/mig/min — ALDRIG "han/hon/de" eller tredjeperson)',
         '- Varje alternativ ska bestå av TVÅ stycken separerade med \n\n — TOTALT minst 120 ord per alternativ',
         '- Stycke 1 (3-4 meningar): presentera dig, din bakgrund och dina styrkor',
-        '- Stycke 2 (3-4 meningar): vad du bidrar med, vad som driver dig — avsluta ALLTID med exakt: "Jag ser fram emot att berätta mer om mig själv på en intervju, bli en del av ert team eller få höra mer om ert företag och jobbmöjligheterna."',
+        '- Stycke 2 (3-4 meningar): vad du bidrar med, vad som driver dig. Avsluta varje alternativ med EN kort framåtblickande mening — men använd OLIKA avslutningar för de tre alternativen (välj en vinkel per text, blanda inte ihop dem):',
+        '   • Alt 1 avslutas med fokus på att vilja berätta mer om sig själv på en intervju.',
+        '   • Alt 2 avslutas med fokus på att vilja bli en del av teamet/arbetsplatsen.',
+        '   • Alt 3 avslutas med fokus på att vilja höra mer om företaget och möjligheterna.',
+        '   Skriv avslutningarna med egna ord — upprepa INTE samma formulering, och klistra ALDRIG in alla tre vinklarna i samma text.',
         firstName ? '- Alt 1 ska börja med "' + firstName + ' heter jag" eller liknande varm personlig inledning' : '- Alt 1: varm, personlig inledning i jagform',
         '- Alt 2: börja med en konkret styrka eller passion, fortfarande i jagform',
         '- Alt 3: fokus på samarbete och vad du bidrar med, jagform',
@@ -7042,6 +7046,15 @@ ${styleTexts}
           window._matchedCvDirty = false;
           updateMatchedSaveBar();
           showToast('✅ Sparat i Mina matchningar', 'success');
+          // Dölj baren efter sparning så den inte ligger kvar och skräpar.
+          // Den dyker upp igen automatiskt så fort användaren gör en ny ändring
+          // (saveData() sätter _matchedCvDirty=true → updateMatchedSaveBar()).
+          setTimeout(function() {
+            if (!window._matchedCvDirty) {
+              const bar = document.getElementById('_matchedSaveBar');
+              if (bar) bar.style.display = 'none';
+            }
+          }, 1200);
         }
       } catch(e) {
         showToast('⚠️ Kunde inte spara — försök igen', 'error');
@@ -8964,6 +8977,15 @@ ${styleTexts}
             <div class="train-hub-sub">Förbered dig för arbetslivet — välj ett område att träna på.</div>
           </div>
           <div class="train-hub-grid">
+            <div class="train-tile" onclick="trainShowTasks()" style="position:relative;border-color:rgba(240,192,64,0.35);background:linear-gradient(180deg, rgba(240,192,64,0.08) 0%, rgba(240,192,64,0.03) 100%);">
+              <div class="train-tile-glow" style="background:radial-gradient(circle at top right, rgba(240,192,64,0.18), transparent 60%);"></div>
+              <div>
+                <div class="train-tile-icon">📋</div>
+                <div class="train-tile-name">Uppgifter från handläggare</div>
+                <div class="train-tile-desc">Uppgifter din handläggare tilldelat dig — gör klart och markera som slutförda.</div>
+              </div>
+              <div class="train-tile-meta" id="trainTaskMeta">Inga uppgifter än</div>
+            </div>
             <div class="train-tile" onclick="trainSwitchView('ovn')">
               <div class="train-tile-glow"></div>
               <div>
@@ -10783,7 +10805,28 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
         ? pct + '% klarat — fortsätt där du slutade'
         : 'Lektioner, övningar och quiz';
     }
+    // Räknare för tilldelade uppgifter på hub-rutan
+    var taskMeta = document.getElementById('trainTaskMeta');
+    if (taskMeta) {
+      var assigned = (typeof _assignedTasksCache !== 'undefined' && _assignedTasksCache) ? _assignedTasksCache : [];
+      var open = assigned.filter(function(t){ return t.status !== 'completed'; }).length;
+      var done = assigned.filter(function(t){ return t.status === 'completed'; }).length;
+      taskMeta.textContent = assigned.length
+        ? (open + ' kvar · ' + done + ' klara')
+        : 'Inga uppgifter än';
+    }
   }
+
+  // Öppna tilldelade uppgifter från Träna-hubben (mobil). Initierar Övningar-
+  // appen (som äger task-vyn) och hoppar direkt till uppgiftslistan.
+  window.trainShowTasks = function() {
+    trainSwitchView('ovn');
+    setTimeout(function() {
+      if (window.D && typeof window.D.showTasks === 'function') {
+        try { window.D.showTasks(); } catch(e) { console.warn('showTasks fail:', e); }
+      }
+    }, 60);
+  };
 
   window.trainSwitchView = function(view) {
     var views = ['hub','ovn','intervju'];
@@ -10912,6 +10955,8 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
       // Hämta uppgifter från handläggaren (för korrekt badge på "Uppgifter"-tile)
       if (typeof window.loadAssignedTasks === 'function') {
         window.loadAssignedTasks().then(function(){
+          // Uppdatera räknaren på "Uppgifter från handläggare"-rutan när datan kommit
+          try { refreshHubMeta(); } catch(e) {}
           if (window.D && typeof window.D.initHome === 'function' && document.getElementById('trainView-ovn').classList.contains('train-view--active')) {
             try { window.D.initHome(); } catch(e) {}
           }
@@ -10980,9 +11025,19 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
 
           <!-- DIAGNOS-KNAPP (för felsökning av tomma fält) -->
           <button onclick="if(typeof diagShowStorage==='function') diagShowStorage();" style="width:100%;margin-top:10px;padding:8px;background:rgba(167,139,250,0.1);border:1px dashed rgba(167,139,250,0.4);border-radius:8px;color:#a78bfa;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">🔍 Visa diagnos (vid felsökning)</button>
+
+          <!-- Juridik samlat här under Personlig information -->
+          <div style="border-top:1px solid rgba(255,255,255,0.08);margin-top:14px;padding-top:12px;display:flex;flex-direction:column;gap:8px;">
+            <div onclick="showPrivacyPolicy()" style="display:flex;align-items:center;gap:8px;cursor:pointer;color:rgba(255,255,255,0.7);font-size:12px;">
+              <span>📄</span><span style="flex:1;">Integritetspolicy / GDPR</span><span style="color:rgba(255,255,255,0.3);">›</span>
+            </div>
+            <div onclick="showTermsModal()" style="display:flex;align-items:center;gap:8px;cursor:pointer;color:rgba(255,255,255,0.7);font-size:12px;">
+              <span>📋</span><span style="flex:1;">Allmänna villkor</span><span style="color:rgba(255,255,255,0.3);">›</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Logga ut — röd, överst -->
+        <!-- Logga ut — röd -->
         <div onclick="authShowUserMenu()" style="display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;cursor:pointer;background:rgba(220,38,38,0.06);border:1px solid rgba(220,38,38,0.2);margin-bottom:8px;">
           <div style="font-size:20px;flex-shrink:0;">🚪</div>
           <div style="flex:1;">
@@ -10990,26 +11045,6 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
             <div style="font-size:11px;color:rgba(255, 255, 255, 0.72);">Logga ut från ditt konto</div>
           </div>
           <span style="font-size:14px;color:rgba(220,38,38,0.25);">›</span>
-        </div>
-
-        <!-- Integritetspolicy -->
-        <div onclick="showPrivacyPolicy()" style="display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;cursor:pointer;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);margin-bottom:8px;">
-          <div style="font-size:20px;flex-shrink:0;">📄</div>
-          <div style="flex:1;">
-            <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.8);">Integritetspolicy / GDPR</div>
-            <div style="font-size:11px;color:rgba(255, 255, 255, 0.72);">Hur CVmatchen hanterar dina uppgifter</div>
-          </div>
-          <span style="font-size:14px;color:rgba(255, 255, 255, 0.72);">›</span>
-        </div>
-
-        <!-- Allmänna villkor -->
-        <div onclick="showTermsModal()" style="display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;cursor:pointer;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);margin-bottom:8px;">
-          <div style="font-size:20px;flex-shrink:0;">📋</div>
-          <div style="flex:1;">
-            <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.8);">Allmänna villkor</div>
-            <div style="font-size:11px;color:rgba(255, 255, 255, 0.72);">Användarvillkor för CVmatchen</div>
-          </div>
-          <span style="font-size:14px;color:rgba(255, 255, 255, 0.72);">›</span>
         </div>
 
         <!-- Radera konto — lila -->
