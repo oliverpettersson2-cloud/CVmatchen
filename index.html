@@ -5348,18 +5348,59 @@
 
     function openLicensesModal() {
       const selector = document.getElementById('licensesSelector');
-      selector.innerHTML = ALL_LICENSES.map((license, idx) => `
-        <div style="margin: 8px 0;">
-          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); transition: all 0.2s; user-select: none;" 
-            onmouseover="this.style.background='rgba(255,255,255,0.08)'; this.style.borderColor='rgba(255,255,255,0.3)'" 
-            onmouseout="this.style.background='rgba(255,255,255,0.04)'; this.style.borderColor='rgba(255,255,255,0.15)'">
-            <input type="checkbox" ${cvData.licenses.includes(license) ? 'checked' : ''} onchange="toggleLicense('${license}')" style="cursor: pointer; width: 16px; height: 16px;">
-            <span style="font-size: 13px; flex: 1;">${license}</span>
-          </label>
-        </div>
-      `).join('');
+      // Standard-listan + visa alla redan tillagda "Övrigt"-licenser (fritext) som ikryssade rader
+      const customLicenses = (cvData.licenses || []).filter(function(l){ return ALL_LICENSES.indexOf(l) === -1; });
+      let html = ALL_LICENSES.map(function(license){
+        return '<div style="margin:8px 0;">'
+          + '<label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.04);user-select:none;">'
+          + '<input type="checkbox" ' + (cvData.licenses.includes(license) ? 'checked' : '') + ' onchange="toggleLicense(\'' + license.replace(/'/g, "\\'") + '\')" style="cursor:pointer;width:16px;height:16px;">'
+          + '<span style="font-size:13px;flex:1;">' + cvEsc(license) + '</span>'
+          + '</label>'
+          + '</div>';
+      }).join('');
+      // Egna tillagda (fritext) — listas som borttagbara chips
+      if (customLicenses.length) {
+        html += '<div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.1);">'
+          + '<div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Dina egna</div>'
+          + customLicenses.map(function(l){
+              return '<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);border-radius:6px;margin-bottom:6px;">'
+                + '<span style="flex:1;font-size:13px;color:#fff;">' + cvEsc(l) + '</span>'
+                + '<button onclick="toggleLicense(\'' + l.replace(/'/g, "\\'") + '\'); openLicensesModal();" style="background:none;border:none;color:#ff8080;cursor:pointer;font-size:16px;">×</button>'
+                + '</div>';
+            }).join('')
+          + '</div>';
+      }
+      // "Övrigt" — fritext-fält
+      html += '<div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.1);">'
+        + '<div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">+ Övrigt (skriv in egen)</div>'
+        + '<div style="display:flex;gap:6px;">'
+        + '<input type="text" id="customLicenseInput" placeholder="T.ex. Brandskyddsutbildning, Heta arbeten…" '
+        + 'onkeydown="if(event.key===\'Enter\'){event.preventDefault();addCustomLicense();}" '
+        + 'style="flex:1;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:13px;font-family:inherit;outline:none;">'
+        + '<button onclick="addCustomLicense()" style="padding:9px 14px;background:rgba(124,58,237,0.2);border:1.5px solid rgba(124,58,237,0.5);color:#c4b5fd;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">Lägg till</button>'
+        + '</div>'
+        + '<div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:6px;">T.ex. utbildningar, certifikat eller behörigheter som inte finns i listan ovan.</div>'
+        + '</div>';
+      selector.innerHTML = html;
       document.getElementById('licensesModal').classList.add('active');
     }
+
+    function addCustomLicense() {
+      const inp = document.getElementById('customLicenseInput');
+      if (!inp) return;
+      const val = (inp.value || '').trim();
+      if (!val) return;
+      if (!cvData.licenses) cvData.licenses = [];
+      if (cvData.licenses.indexOf(val) === -1) {
+        cvData.licenses.push(val);
+        saveData();
+        if (typeof renderLicenses === 'function') renderLicenses();
+        if (typeof updatePreview === 'function') updatePreview();
+      }
+      inp.value = '';
+      openLicensesModal(); // re-render så den nya raden syns direkt
+    }
+    window.addCustomLicense = addCustomLicense;
 
     async function aiMatchSkills() {
       const titleRaw = document.getElementById('title').value.trim();
@@ -6308,7 +6349,7 @@
         : '';
 
       const prompt = [
-        'Skriv 3 korta, konkreta arbetsuppgiftsmeningar på svenska för:',
+        'Skriv 3 korta arbetsuppgifter på svenska för en CV-punktlista:',
         'Titel: ' + title,
         company  ? 'Arbetsgivare: ' + company   : '',
         location ? 'Ort: ' + location            : '',
@@ -6316,11 +6357,17 @@
         uniquenessInstruction,
         forbiddenList,
         '',
-        'Regler:',
-        '- Varje mening ska vara unik och specifik för DENNA arbetsplats/period',
-        '- Börja varje mening med ett starkt verb (t.ex. Ansvarade, Ledde, Utvecklade, Samordnade)',
-        '- Inga generiska fraser som "Arbetade i team" eller "Bidrog till verksamheten"',
-        '- Svenska, professionell ton',
+        'Regler — VIKTIGT:',
+        '- Max 12–18 ord per mening. Helst kortare. EN handling per mening.',
+        '- Skriv som en vanlig person berättar för en kompis vad hen gjorde — inte som en jobbannons.',
+        '- Börja varje mening med ett enkelt verb i dåtid (t.ex. Jobbade, Skötte, Tog hand om, Hjälpte, Körde, Plockade, Stod i, Lärde upp).',
+        '- Använd vardagliga ord. Inga konsultord som "ansvarade för", "implementerade", "optimerade", "säkerställde", "koordinerade", "facilitarede", "drev processer".',
+        '- Inga klyschor: "i team", "bidrog till verksamheten", "med fokus på", "för att säkerställa".',
+        '- Inga siffror du hittar på (t.ex. "40–60 gäster per skift"). Skriv bara siffror om de uppenbart följer av titeln.',
+        '- Inga bisatser. Inga "vilket gjorde att...". Punkt efter handlingen.',
+        '',
+        'Bra exempel för "Servitör": "Tog hand om gäster i baren och vid borden." / "Plockade beställningar och serverade mat och dryck." / "Stod i kassan och stängde restaurangen på kvällen."',
+        'Dåligt exempel: "Ansvarade för bordsservice och gästrelationer på Speakers Corner under högtrafik, med fokus på effektiv matsedelshantering."',
         '',
         'Svara BARA med JSON: {"arbetsuppgifter": ["mening1", "mening2", "mening3"]}'
       ].filter(Boolean).join('\n');
@@ -12013,18 +12060,36 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
       list.innerHTML = '<div style="color:rgba(255, 255, 255, 0.72);font-size:13px;padding:12px;text-align:center;">Inga jobb tillagda ännu</div>';
       return;
     }
-    list.innerHTML = cvData.jobs.map((job, i) => `
-      <div class="mob-item-card">
-        <div class="mob-item-text">
-          <strong>${job.title}</strong>
-          <small>${job.company}${job.startYear ? ' · ' + job.startYear : ''}</small>
-        </div>
-        <div class="mob-item-actions">
-          <button class="mob-icon-btn" onclick="openJobModal(${i})" aria-label="Redigera">✏️</button>
-          <button class="mob-icon-btn" onclick="removeJob(${i}); mobRenderJobs();" aria-label="Ta bort" style="color:#ff8080;">✕</button>
-        </div>
-      </div>
-    `).join('');
+    // Sortera kronologiskt (senaste först) — matchar desktop-vyn så CV:t blir konsekvent
+    const sorted = cvData.jobs.map(function(j, i){ return { job: j, origIdx: i }; })
+      .sort(function(a, b){
+        var aEnd = parseInt(a.job.endYear, 10) || (a.job.current ? 9999 : (parseInt(a.job.startYear, 10) || 0));
+        var bEnd = parseInt(b.job.endYear, 10) || (b.job.current ? 9999 : (parseInt(b.job.startYear, 10) || 0));
+        if (bEnd !== aEnd) return bEnd - aEnd;
+        var aStart = parseInt(a.job.startYear, 10) || 0;
+        var bStart = parseInt(b.job.startYear, 10) || 0;
+        return bStart - aStart;
+      });
+    list.innerHTML = sorted.map(function(item){
+      var job = item.job, i = item.origIdx;
+      // Period: startår – slutår (eller "nu" om aktuellt)
+      var start = job.startYear || '';
+      var end = job.current ? 'nu' : (job.endYear || '');
+      var period = '';
+      if (start && end) period = start + ' – ' + end;
+      else if (start) period = start + ' – ';
+      else if (end) period = '– ' + end;
+      return '<div class="mob-item-card">'
+        + '<div class="mob-item-text">'
+        + '<strong>' + cvEsc(job.title) + '</strong>'
+        + '<small>' + cvEsc(job.company) + (period ? ' · ' + cvEsc(period) : '') + '</small>'
+        + '</div>'
+        + '<div class="mob-item-actions">'
+        + '<button class="mob-icon-btn" onclick="openJobModal(' + i + ')" aria-label="Redigera">✏️</button>'
+        + '<button class="mob-icon-btn" onclick="removeJob(' + i + '); mobRenderJobs();" aria-label="Ta bort" style="color:#ff8080;">✕</button>'
+        + '</div>'
+        + '</div>';
+    }).join('');
   }
 
   function mobRenderEdu() {
@@ -12034,18 +12099,30 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
       list.innerHTML = '<div style="color:rgba(255, 255, 255, 0.72);font-size:13px;padding:12px;text-align:center;">Ingen utbildning tillagd ännu</div>';
       return;
     }
-    list.innerHTML = cvData.education.map((edu, i) => `
-      <div class="mob-item-card">
-        <div class="mob-item-text">
-          <strong>${edu.degree}</strong>
-          <small>${edu.schoolName || edu.school}${edu.startYear ? ' · ' + edu.startYear : ''}</small>
-        </div>
-        <div class="mob-item-actions">
-          <button class="mob-icon-btn" onclick="openEduModal(${i})" aria-label="Redigera">✏️</button>
-          <button class="mob-icon-btn" onclick="removeEdu(${i}); mobRenderEdu();" aria-label="Ta bort" style="color:#ff8080;">✕</button>
-        </div>
-      </div>
-    `).join('');
+    // Sortera kronologiskt (senaste först)
+    const sortedEdu = cvData.education.map(function(e, i){ return { edu: e, origIdx: i }; })
+      .sort(function(a, b){
+        var aEnd = parseInt(a.edu.endYear, 10) || (a.edu.current ? 9999 : (parseInt(a.edu.startYear, 10) || 0));
+        var bEnd = parseInt(b.edu.endYear, 10) || (b.edu.current ? 9999 : (parseInt(b.edu.startYear, 10) || 0));
+        if (bEnd !== aEnd) return bEnd - aEnd;
+        return (parseInt(b.edu.startYear, 10) || 0) - (parseInt(a.edu.startYear, 10) || 0);
+      });
+    list.innerHTML = sortedEdu.map(function(item){
+      var edu = item.edu, i = item.origIdx;
+      var start = edu.startYear || '';
+      var end = edu.current ? 'nu' : (edu.endYear || '');
+      var period = (start && end) ? (start + ' – ' + end) : (start || end || '');
+      return '<div class="mob-item-card">'
+        + '<div class="mob-item-text">'
+        + '<strong>' + cvEsc(edu.degree) + '</strong>'
+        + '<small>' + cvEsc(edu.schoolName || edu.school) + (period ? ' · ' + cvEsc(period) : '') + '</small>'
+        + '</div>'
+        + '<div class="mob-item-actions">'
+        + '<button class="mob-icon-btn" onclick="openEduModal(' + i + ')" aria-label="Redigera">✏️</button>'
+        + '<button class="mob-icon-btn" onclick="removeEdu(' + i + '); mobRenderEdu();" aria-label="Ta bort" style="color:#ff8080;">✕</button>'
+        + '</div>'
+        + '</div>';
+    }).join('');
   }
 
   function mobRenderRefs() {
