@@ -9665,9 +9665,14 @@ var D={
     h+='<div class="nav-row">';
     if(idx>0)h+='<button class="nav-btn" onclick="D.showLesson('+(idx-1)+')">← Föregående</button>';
     var lblNext=(idx<m.lessons.length-1?'Nästa lektion →':'Gå till övning →');
-    h+='<button id="mobLessonNext" class="cta-btn" disabled style="background:'+m.color+';opacity:.4;cursor:not-allowed;" onclick="D.lessonNext('+idx+')">⏳ '+lblNext+'</button>';
+    // DEMO-FLAGGA: hoppa över 5-15s lås på Nästa-knappen i träningsmoduler.
+    // Sätt till false efter pilot-demo 2026-06-17. Synkad med desktop-app.js + intervju.js.
+    var DEMO_SKIP_COUNTDOWN=true;
+    var _locked=!DEMO_SKIP_COUNTDOWN;
+    h+='<button id="mobLessonNext" class="cta-btn" '+(_locked?'disabled':'')+' style="background:'+m.color+';'+(_locked?'opacity:.4;cursor:not-allowed;':'cursor:pointer;')+'" onclick="D.lessonNext('+idx+')">'+(_locked?'⏳ ':'')+lblNext+'</button>';
     h+='</div>';
     document.getElementById('ovnModview').innerHTML=h;
+    if(DEMO_SKIP_COUNTDOWN){return;}
     // Lås Nästa-knappen: 5 sek för text, 15 sek om video finns (tvingar läsning/visning)
     var hasVideo=(les.yt && les.yt.indexOf('dQw4w9WgXcQ')===-1) || (les.intro==='video' && m.video);
     var lockMs=hasVideo?15000:5000, lockSec=hasVideo?15:5;

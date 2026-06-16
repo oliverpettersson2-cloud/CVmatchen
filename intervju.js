@@ -16,6 +16,11 @@
 (function() {
   'use strict';
 
+  // DEMO-FLAGGA — sätt till false efter pilot-demo för att återställa
+  // nedräkningar på tips-skärmen (3-7s per tips). Hittas också i index.html
+  // för "Regler & rättigheter"-övningen. ATT TA BORT EFTER DEMO 2026-06-17.
+  var DEMO_SKIP_COUNTDOWN = true;
+
   // ══════════════════════════════════════════════════════════════
   // KONFIGURATION
   // ══════════════════════════════════════════════════════════════
@@ -1242,6 +1247,18 @@
       nextBtn.style.color = 'rgba(255,255,255,0.4)';
 
       nextBtn.textContent = 'Läser... ' + secondsLeft + 's';
+
+      // DEMO: hoppa över nedräkning så hela tips-blocket kan klickas igenom
+      if (DEMO_SKIP_COUNTDOWN) {
+        clearTipTimers();
+        nextBtn.disabled = false;
+        nextBtn.style.opacity = '1';
+        nextBtn.style.cursor = 'pointer';
+        nextBtn.style.background = '';
+        nextBtn.style.color = '';
+        nextBtn.textContent = isLast ? 'Starta intervjun →' : 'Nästa tips →';
+        return;
+      }
 
       _tipsTimer = setInterval(function() {
         secondsLeft--;

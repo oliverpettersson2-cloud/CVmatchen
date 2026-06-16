@@ -6,6 +6,11 @@
 (function() {
   'use strict';
 
+  // DEMO-FLAGGA — sätter till false efter pilot-demo för att återställa
+  // 5-15s lås på "Nästa lektion"-knappen i träningsmoduler (t.ex. Regler & rättigheter).
+  // ATT TA BORT EFTER DEMO 2026-06-17.
+  var DEMO_SKIP_COUNTDOWN = true;
+
   // ============================================================
   // KONSTANTER
   // ============================================================
@@ -6382,25 +6387,31 @@
       const nextStep = (i < lessons.length - 1)
         ? "trainGoStep('lesson'," + (i + 1) + ")"
         : (ex ? "trainGoStep('ex',0)" : (quiz.length ? "trainGoStep('quiz',0)" : "trainGoStep('done',0)"));
-      html += '<button id="trainNextBtn" disabled onclick="' + nextStep + '" style="background:' + (mod.color || '#60a5fa') + '; color:#fff; border:none; padding:10px 22px; border-radius:8px; font-weight:700; cursor:not-allowed; font-family:inherit; opacity:0.4;">⏳ ' + nextLabel + '</button>';
+      const _btnLocked = !DEMO_SKIP_COUNTDOWN;
+      const _btnStyle = _btnLocked
+        ? 'background:' + (mod.color || '#60a5fa') + '; color:#fff; border:none; padding:10px 22px; border-radius:8px; font-weight:700; cursor:not-allowed; font-family:inherit; opacity:0.4;'
+        : 'background:' + (mod.color || '#60a5fa') + '; color:#fff; border:none; padding:10px 22px; border-radius:8px; font-weight:700; cursor:pointer; font-family:inherit;';
+      html += '<button id="trainNextBtn" ' + (_btnLocked ? 'disabled' : '') + ' onclick="' + nextStep + '" style="' + _btnStyle + '">' + (_btnLocked ? '⏳ ' : '') + nextLabel + '</button>';
       html += '</div>';
-      // Lås Nästa-knappen: 5 sek för textlektion, 15 sek om videon finns (tvingar att se videon)
-      const hasVideo = (yt && yt.indexOf('dQw4w9WgXcQ') === -1) || (l.intro === 'video' && mod.video);
-      const lockMs = hasVideo ? 15000 : 5000;
-      const lockSec = hasVideo ? 15 : 5;
-      // Visa nedräkning i knapptexten
-      let remain = lockSec;
-      const tickInt = setInterval(function() {
-        remain--;
-        const b = document.getElementById('trainNextBtn');
-        if (!b || remain <= 0) { clearInterval(tickInt); return; }
-        b.textContent = '⏳ ' + nextLabel + ' (' + remain + 's)';
-      }, 1000);
-      setTimeout(function() {
-        clearInterval(tickInt);
-        const b = document.getElementById('trainNextBtn');
-        if (b) { b.disabled = false; b.style.cursor = 'pointer'; b.style.opacity = '1'; b.textContent = nextLabel; }
-      }, lockMs);
+      if (!DEMO_SKIP_COUNTDOWN) {
+        // Lås Nästa-knappen: 5 sek för textlektion, 15 sek om videon finns (tvingar att se videon)
+        const hasVideo = (yt && yt.indexOf('dQw4w9WgXcQ') === -1) || (l.intro === 'video' && mod.video);
+        const lockMs = hasVideo ? 15000 : 5000;
+        const lockSec = hasVideo ? 15 : 5;
+        // Visa nedräkning i knapptexten
+        let remain = lockSec;
+        const tickInt = setInterval(function() {
+          remain--;
+          const b = document.getElementById('trainNextBtn');
+          if (!b || remain <= 0) { clearInterval(tickInt); return; }
+          b.textContent = '⏳ ' + nextLabel + ' (' + remain + 's)';
+        }, 1000);
+        setTimeout(function() {
+          clearInterval(tickInt);
+          const b = document.getElementById('trainNextBtn');
+          if (b) { b.disabled = false; b.style.cursor = 'pointer'; b.style.opacity = '1'; b.textContent = nextLabel; }
+        }, lockMs);
+      }
 
       // Markera lektion som läst
       if (!trainingProgress[mod.id]) trainingProgress[mod.id] = { lessonsRead: 0, quizCorrect: 0 };
