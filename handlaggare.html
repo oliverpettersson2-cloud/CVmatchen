@@ -3395,12 +3395,6 @@ function renderCreateTaskStep2() {
     <input type="date" id="_ctDeadline" value="${ddStr}" aria-label="Deadline" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;font-size:14px;font-family:inherit;color:var(--tx);">
   </div>`;
 
-  // Meddelande
-  html += `<div>
-    <label style="display:block;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--mu);margin-bottom:6px;">Personligt meddelande (valfritt)</label>
-    <textarea id="_ctMessage" rows="3" placeholder="Hej! Jag har skickat denna uppgift som hjälp för dig att komma vidare i din process..." aria-label="Personligt meddelande (valfritt)" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;font-size:13px;font-family:inherit;color:var(--tx);resize:vertical;"></textarea>
-  </div>`;
-
   html += '</div>';
 
   // Knappar
@@ -3441,7 +3435,6 @@ async function confirmCreateTask() {
   if (!_ctSelectedType || !currentUserId) return;
   const t = _ctSelectedType;
   const deadline = document.getElementById('_ctDeadline')?.value;
-  const message = document.getElementById('_ctMessage')?.value || '';
   const n = t.countable ? _ctCount : null;
   let title, params, customDesc = '';
   if (t.isCustom) {
@@ -3460,7 +3453,7 @@ async function confirmCreateTask() {
     const result = await post('assign_task', {
       targetUserId: currentUserId,
       title,
-      description: message || customDesc || t.desc,
+      description: customDesc || t.desc,
       category: t.category,
       deadline: deadline ? new Date(deadline + 'T23:59:59').toISOString() : null,
       tParams: { ...params, task_type: t.id, count: n },
