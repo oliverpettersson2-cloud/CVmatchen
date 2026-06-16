@@ -5938,18 +5938,17 @@
             </div>
           </div>
 
-          <!-- Intervjuträning — Under uppdatering -->
-          <div class="ov-card train-cat-card" onclick="trainShowInterviewMaintenance()"
-               style="border-color:rgba(245,158,11,0.4);background:linear-gradient(135deg,rgba(245,158,11,0.10),rgba(245,158,11,0.03));padding:22px 20px;display:flex;flex-direction:column;gap:14px;min-height:170px;position:relative;opacity:0.85;cursor:not-allowed;">
-            <div style="position:absolute;top:14px;right:14px;background:#f59e0b;color:#1a1a1a;font-size:9px;font-weight:900;padding:3px 9px;border-radius:10px;letter-spacing:0.6px;text-transform:uppercase;z-index:2;">Under uppdatering</div>
+          <!-- Intervjuträning -->
+          <div class="ov-card train-cat-card" onclick="switchView('intervju')"
+               style="border-color:rgba(167,139,250,0.4);background:linear-gradient(135deg,rgba(167,139,250,0.10),rgba(167,139,250,0.03));padding:22px 20px;display:flex;flex-direction:column;gap:14px;min-height:170px;cursor:pointer;">
             <div style="display:flex;align-items:flex-start;gap:14px;">
-              <div class="ov-card-icon" style="background:rgba(245,158,11,0.2);color:#f59e0b;font-size:26px;flex-shrink:0;">🎤</div>
+              <div class="ov-card-icon" style="background:rgba(167,139,250,0.2);color:#a78bfa;font-size:26px;flex-shrink:0;">🎤</div>
               <div>
                 <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:2px;">Intervjuträning</div>
-                <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.45;">Öva på vanliga intervjufrågor med exempelsvar.</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.45;">Öva på vanliga intervjufrågor och få AI-feedback.</div>
               </div>
             </div>
-            <div style="margin-top:auto;font-size:12px;color:#f59e0b;font-weight:700;font-style:italic;">Återkommer snart</div>
+            <div style="margin-top:auto;font-size:12px;color:#a78bfa;font-weight:700;">AI-driven · ny session</div>
           </div>
 
           <!-- Uppgifter från handläggare -->
