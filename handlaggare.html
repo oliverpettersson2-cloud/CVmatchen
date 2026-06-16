@@ -1580,7 +1580,12 @@ function post(action, data) {
       // För soft actions: returnera error-objekt istället för att kasta så
       // demo-fallbacks aktiveras utan console-spam.
       if (SOFT_ACTIONS.has(action)) {
-        return { error: 'HTTP ' + r.status, _soft: true };
+        return r.text().then(txt => {
+          let bodyMsg = txt;
+          try { const j = JSON.parse(txt); bodyMsg = j.error || j.message || txt; } catch {}
+          console.warn('[' + action + '] HTTP ' + r.status + ':', bodyMsg);
+          return { error: 'HTTP ' + r.status + ' — ' + (bodyMsg || 'okänt fel'), _soft: true, _status: r.status };
+        });
       }
       throw new Error('HTTP ' + r.status);
     }
@@ -3140,8 +3145,8 @@ async function confirmAssignModule(moduleId) {
       filters: { adminId: admin.id }
     });
     if (result?.error) {
-      // Backend-endpoint saknas eller annat fel — visa ändå framgång i UI för demo
-      showOk(`✅ Övningen tilldelad (lokalt — backend-endpoint krävs för persistering)`);
+      console.error('[assign_task] backend-fel:', result);
+      showErr(`Kunde inte tilldela övningen — backend svarade ${result.error}. Kolla console för detaljer.`);
     } else {
       showOk(`✅ Övningen "${m.title}" tilldelad`);
     }
@@ -3460,10 +3465,12 @@ async function confirmCreateTask() {
       filters: { adminId: admin.id }
     });
     if (result?.error) {
-      showOk(`✅ Uppgiften "${title}" skickad (lokalt — backend-endpoint krävs för persistering)`);
-    } else {
-      showOk(`✅ Uppgiften "${title}" skickad`);
+      console.error('[assign_task] backend-fel:', result);
+      showErr(`Kunde inte skicka uppgiften "${title}" — backend svarade ${result.error}. Kolla console.`);
+      if (btn) { btn.disabled = false; btn.textContent = '📌 Skicka uppgift'; }
+      return;
     }
+    showOk(`✅ Uppgiften "${title}" skickad`);
     closeCreateTaskModal();
     _tasksCache = null; // Tilldelade uppgifter-fliken hämtar färskt nästa gång
     // Lägg till uppgiften lokalt så UI uppdateras direkt
