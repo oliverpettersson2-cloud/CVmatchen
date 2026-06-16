@@ -10891,6 +10891,21 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
         try { window.D.showTasks(); } catch(e) { console.warn('showTasks fail:', e); }
       }
     }, 60);
+    // Synlig diagnos så användaren ser status direkt — utan utvecklarverktyg
+    if (typeof window.loadAssignedTasks === 'function') {
+      window.loadAssignedTasks().then(function() {
+        try { refreshHubMeta(); } catch(e) {}
+        var n = (typeof _assignedTasksCache !== 'undefined' && _assignedTasksCache) ? _assignedTasksCache.length : 0;
+        if (n > 0) {
+          if (typeof showToast === 'function') showToast('✅ ' + n + ' uppgift' + (n === 1 ? '' : 'er') + ' hämtad' + (n === 1 ? '' : 'e'), 'success');
+        } else if (!window.authUserId || !window.authAccessToken) {
+          if (typeof showToast === 'function') showToast('⚠️ Du är inte inloggad — logga in för att se dina uppgifter', 'error');
+        } else {
+          // Inloggad men 0 uppgifter — visa det tydligt
+          if (typeof showToast === 'function') showToast('ℹ️ Inga uppgifter tilldelade än för ' + (window.authCurrentEmail || 'detta konto'), 'info');
+        }
+      });
+    }
   };
 
   window.trainSwitchView = function(view) {
