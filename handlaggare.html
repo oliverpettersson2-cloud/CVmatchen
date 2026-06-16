@@ -6746,37 +6746,144 @@ function renderMatchningView(){
   const wrap = document.getElementById('matchningContent');
   if(!wrap) return;
   wrap.classList.remove('loading');
+  const mina = (allUsers || []).filter(u => isFavorite(u.user_id || u.id));
+  const haveCV = mina.filter(u => {
+    const cvd = u.cv?.data || u.cv || {};
+    return cvd.name || cvd.title || (cvd.experience||cvd.workExperience||[]).length || (cvd.skills||cvd.competencies||[]).length;
+  });
   wrap.innerHTML = `
-    <div style="padding:40px 24px;max-width:720px;margin:0 auto;">
-      <div style="background:#fff;border:1px solid var(--bd);border-radius:12px;padding:32px;">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--tx)"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-          <div style="font-size:18px;font-weight:700;color:var(--tx)">Matchningsverktyg</div>
+    <div style="padding:24px;max-width:920px;margin:0 auto;">
+      <div style="background:#fff;border:1px solid var(--bd);border-radius:12px;padding:24px;margin-bottom:18px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--tx)"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          <div style="font-size:17px;font-weight:700;color:var(--tx)">Matchningsverktyg</div>
         </div>
-        <div style="color:var(--mu);font-size:13px;line-height:1.6;margin-bottom:18px;">
-          Här samlas verktyg för att matcha deltagare mot lediga tjänster och följa
-          träffsäkerhet över tid. Modulen rullas ut stegvis under piloten.
+        <div style="color:var(--mu);font-size:13px;line-height:1.55;margin-bottom:16px;">
+          Beskriv tjänsten med fri text — AI:n går igenom CV:n för dina <b>${mina.length}</b> deltagare
+          (${haveCV.length} med ifyllt CV) och rangordnar de bästa matchningarna med motivering.
         </div>
-        <div style="display:grid;gap:10px;">
-          <div style="padding:14px;border:1px solid var(--bd);border-radius:8px;background:rgba(0,0,0,0.02);">
-            <div style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:4px;">CV ↔ Annons-matchning</div>
-            <div style="font-size:12px;color:var(--mu);">Automatisk poängsättning av deltagarens CV mot valda annonser.</div>
-          </div>
-          <div style="padding:14px;border:1px solid var(--bd);border-radius:8px;background:rgba(0,0,0,0.02);">
-            <div style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:4px;">Sökta arbeten — översikt</div>
-            <div style="font-size:12px;color:var(--mu);">Se vad varje deltagare har sökt och status på ansökningarna.</div>
-          </div>
-          <div style="padding:14px;border:1px solid var(--bd);border-radius:8px;background:rgba(0,0,0,0.02);">
-            <div style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:4px;">Kompetensgap</div>
-            <div style="font-size:12px;color:var(--mu);">Identifiera vad som saknas mellan deltagarens profil och efterfrågade roller.</div>
-          </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <input id="matchQuery" type="text" placeholder='t.ex. "lagerarbetare med B-körkort" eller "barnskötare, gärna med erfarenhet av förskola"' style="flex:1;min-width:260px;padding:11px 14px;border:1px solid var(--bd);border-radius:8px;font-size:14px;font-family:inherit;" onkeydown="if(event.key==='Enter')runMatchning()" />
+          <button class="btn btn-primary" onclick="runMatchning()" style="padding:11px 18px;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            Hitta matchningar
+          </button>
         </div>
-        <div style="margin-top:20px;padding:10px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;font-size:12px;color:#92400e;">
-          Kommer som fullt verktyg under pilotens andra fas.
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">
+          ${['Lagerarbetare med B-körkort','Barnskötare till förskola','Vårdbiträde / undersköterska','Butikssäljare deltid','Restaurangbiträde'].map(ex =>
+            `<button onclick="document.getElementById('matchQuery').value=this.textContent;runMatchning()" style="padding:5px 10px;border:1px solid var(--bd);background:#fff;border-radius:14px;font-size:11px;color:var(--mu);cursor:pointer;font-family:inherit;">${ex}</button>`
+          ).join('')}
         </div>
       </div>
+      <div id="matchResults"></div>
     </div>
   `;
+}
+
+function _cvSnippet(u){
+  const cvd = u.cv?.data || u.cv || {};
+  const exp = (cvd.experience || cvd.workExperience || cvd.work || []).slice(0,4)
+    .map(e => `${e.title||e.role||''} @ ${e.company||e.employer||''} (${e.startDate||e.from||''}–${e.endDate||e.to||'nu'})`)
+    .filter(s => s.replace(/[@()–\s-]/g,''));
+  const edu = (cvd.education || cvd.studies || []).slice(0,3)
+    .map(e => `${e.degree||e.program||''} ${e.school||e.institution||''}`.trim())
+    .filter(Boolean);
+  const skills = (cvd.skills || cvd.competencies || []).map(s => typeof s === 'string' ? s : s.name||s.label||'').filter(Boolean);
+  const licenses = (cvd.licenses || []).map(l => typeof l === 'string' ? l : l.name||l.type||'').filter(Boolean);
+  const certs = (cvd.certifications || cvd.certificates || []).map(c => typeof c === 'string' ? c : c.name||c.title||'').filter(Boolean);
+  return {
+    id: u.user_id || u.id,
+    namn: cvName(cvd) || displayName(u).name,
+    titel: cvd.title || '',
+    sammanfattning: (cvd.summary || '').slice(0, 280),
+    erfarenhet: exp,
+    utbildning: edu,
+    kompetenser: skills.slice(0, 20),
+    korkort_licenser: licenses,
+    certifikat: certs.slice(0, 10)
+  };
+}
+
+async function runMatchning(){
+  const q = (document.getElementById('matchQuery')?.value || '').trim();
+  const out = document.getElementById('matchResults');
+  if(!q){ out.innerHTML = '<div style="padding:14px;color:var(--mu);font-size:13px;">Skriv en beskrivning av tjänsten först.</div>'; return; }
+  const mina = (allUsers || []).filter(u => isFavorite(u.user_id || u.id));
+  const candidates = mina.map(_cvSnippet).filter(c => c.titel || c.erfarenhet.length || c.kompetenser.length || c.sammanfattning);
+  if(candidates.length === 0){
+    out.innerHTML = '<div style="padding:18px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;font-size:13px;color:#92400e;">Inga deltagare med ifyllt CV i din grupp ännu.</div>';
+    return;
+  }
+  out.innerHTML = `<div style="padding:20px;color:var(--mu);font-size:13px;display:flex;align-items:center;gap:10px;"><div class="spinner" style="width:16px;height:16px;border:2px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin 0.8s linear infinite;"></div>Söker bland ${candidates.length} CV…</div><style>@keyframes spin{to{transform:rotate(360deg)}}</style>`;
+
+  const systemPrompt = `Du är en rekryterings-assistent som hjälper en arbetsmarknadshandläggare hitta lämpliga kandidater.
+Du får en fri beskrivning av en tjänst + en JSON-lista med CV-sammanfattningar för deltagare.
+Rangordna de mest relevanta kandidaterna. Var sträng — endast de som faktiskt matchar.
+
+Svara ENDAST med giltig JSON i detta exakta format:
+{
+  "matches": [
+    {
+      "id": "<deltagar-id från input>",
+      "score": <0-100, hur väl personen matchar>,
+      "motivering": "<1-2 meningar på svenska om varför, vad som matchar och eventuella luckor>",
+      "tag": "<kort etikett t.ex. 'Stark match', 'Möjlig match', 'Saknar körkort'>"
+    }
+  ]
+}
+
+Inkludera max 10 kandidater, sorterade efter score (högst först). Ta bara med matchningar med score >= 40.`;
+
+  const userPrompt = `TJÄNST: ${q}\n\nKANDIDATER:\n${JSON.stringify(candidates, null, 1)}`;
+
+  try{
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 2500,
+        system: systemPrompt,
+        messages: [{role:'user', content: userPrompt}]
+      })
+    });
+    if(!resp.ok){ out.innerHTML = `<div style="padding:14px;color:var(--rd);font-size:13px;">AI-anrop misslyckades (${resp.status}).</div>`; return; }
+    const data = await resp.json();
+    const raw = (data.content || []).map(b => b.text || '').join('').replace(/```json|```/g,'').trim();
+    let parsed;
+    try{ parsed = JSON.parse(raw); } catch(e){
+      out.innerHTML = `<div style="padding:14px;color:var(--rd);font-size:13px;">Kunde inte tolka AI-svaret.</div>`; return;
+    }
+    const matches = (parsed.matches || []).filter(m => m.id);
+    if(matches.length === 0){
+      out.innerHTML = `<div style="padding:18px;background:#fff;border:1px solid var(--bd);border-radius:8px;font-size:13px;color:var(--mu);">Inga starka matchningar bland dina deltagare. Prova en bredare beskrivning eller stjärnmärk fler deltagare.</div>`;
+      return;
+    }
+    const userById = {};
+    (allUsers||[]).forEach(u => { const id = u.user_id||u.id; if(id) userById[id]=u; });
+    out.innerHTML = `<div style="margin-bottom:10px;font-size:12px;color:var(--mu);">${matches.length} matchningar för "<b>${escapeHtml(q)}</b>"</div>`
+      + '<div style="display:grid;gap:10px;">' + matches.map(m => {
+        const u = userById[m.id]; if(!u) return '';
+        const cvd = u.cv?.data || u.cv || {};
+        const name = escapeHtml(cvName(cvd) || displayName(u).name);
+        const email = escapeHtml(cvd.email || u.email || '');
+        const score = Math.max(0, Math.min(100, parseInt(m.score)||0));
+        const scoreColor = score >= 75 ? '#16a34a' : score >= 55 ? '#d97706' : '#6b7280';
+        return `<div onclick="openDetail('${m.id}')" style="background:#fff;border:1px solid var(--bd);border-radius:10px;padding:14px 16px;cursor:pointer;display:flex;gap:14px;align-items:flex-start;">
+          <div style="flex-shrink:0;width:48px;height:48px;border-radius:50%;background:${scoreColor}18;color:${scoreColor};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;">${score}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:3px;">
+              <div style="font-size:14px;font-weight:700;color:var(--tx);">${name}</div>
+              ${m.tag ? `<span style="font-size:10px;font-weight:700;background:${scoreColor}18;color:${scoreColor};padding:2px 8px;border-radius:6px;">${escapeHtml(m.tag)}</span>` : ''}
+            </div>
+            ${email ? `<div style="font-size:11px;color:var(--mu);margin-bottom:6px;">${email}</div>` : ''}
+            <div style="font-size:12px;line-height:1.5;color:var(--tx2);">${escapeHtml(m.motivering || '')}</div>
+          </div>
+        </div>`;
+      }).join('') + '</div>';
+  }catch(e){
+    out.innerHTML = `<div style="padding:14px;color:var(--rd);font-size:13px;">Fel: ${escapeHtml(e.message)}</div>`;
+  }
 }
 
 window._sortTasks = function(key) {
