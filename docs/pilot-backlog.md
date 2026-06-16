@@ -7,6 +7,16 @@ Komplexitet: trivial / liten / medel / större / krångligt.
 
 ---
 
+## 📌 STRATEGISKT — affär & finansiering
+
+| # | Vad | När | Status |
+|---|---|---|---|
+| **S1** | **Visionsfonden — Helsingborg.** Sök upp till 100 000 kr för att utveckla CVmatchen för helsingborgare. Krav: 18+, projekt i/för Helsingborg, kopplat till Helsingborg 2035-visionen. Sökbart 2 ggr/år (vår + höst). **Nästa öppning: september 2026.** Förstärks om AMF-piloten är igång då. https://helsingborg.se/kommun-och-politik/helsingborg-2035/visionsfonden/ | Sept 2026 | ⏳ |
+| **S2** | **Vinnova Innovativa Startups.** Steg 1: upp till 500 000 kr, Steg 2: upp till 900 000 kr. Kräver svenskt AB (max 10 år, max 10 anställda, ≤10 MSEK omsättning) + internationell potential. Konkurrensutsatt. https://www.vinnova.se/e/innovativa-startups/innovativa-startups-2026 | Snart | ⏳ |
+| **S3** | **Wrappa CVmatchen som app med Capacitor.** Återanvänder befintlig kod 100%, publicerbar i App Store + Google Play. Tidsåtgång: ~1 veckas jobb + 1–3 dagar app store-granskning. Kostnad: Apple Developer 99 USD/år + Google Play 25 USD engångskostnad. Möjliggör push-notiser (påminna deltagare om uppgifter — stort värde för kommunen). | Efter pilot-start | ⏳ |
+
+---
+
 ## 🔴 BLOCKERS — gå INTE live utan dessa
 
 | # | Vad | Var | Komplexitet | Status |
