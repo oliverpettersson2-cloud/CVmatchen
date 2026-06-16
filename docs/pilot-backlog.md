@@ -14,6 +14,7 @@ Komplexitet: trivial / liten / medel / större / krångligt.
 | **S1** | **Visionsfonden — Helsingborg.** Sök upp till 100 000 kr för att utveckla CVmatchen för helsingborgare. Krav: 18+, projekt i/för Helsingborg, kopplat till Helsingborg 2035-visionen. Sökbart 2 ggr/år (vår + höst). **Nästa öppning: september 2026.** Förstärks om AMF-piloten är igång då. https://helsingborg.se/kommun-och-politik/helsingborg-2035/visionsfonden/ | Sept 2026 | ⏳ |
 | **S2** | **Vinnova Innovativa Startups.** Steg 1: upp till 500 000 kr, Steg 2: upp till 900 000 kr. Kräver svenskt AB (max 10 år, max 10 anställda, ≤10 MSEK omsättning) + internationell potential. Konkurrensutsatt. https://www.vinnova.se/e/innovativa-startups/innovativa-startups-2026 | Snart | ⏳ |
 | **S3** | **Wrappa CVmatchen som app med Capacitor.** Återanvänder befintlig kod 100%, publicerbar i App Store + Google Play. Tidsåtgång: ~1 veckas jobb + 1–3 dagar app store-granskning. Kostnad: Apple Developer 99 USD/år + Google Play 25 USD engångskostnad. Möjliggör push-notiser (påminna deltagare om uppgifter — stort värde för kommunen). | Efter pilot-start | ⏳ |
+| **S4** | **AI-SYV-chatten som kort-baserade pratbubblor.** Idag returnerar AI:n långa textsvar med "Fråga 1, Fråga 2, Fråga 3" i samma bubbla. Bygg om till strukturerad output: en fråga åt gången som eget kort med klickbara svarsalternativ (Grundskola/Gymnasie/Högskola etc). Mindre brödtext, tydligare labels, mobil-vänligt. Kräver: ny system-prompt som ger JSON, ny rendering, svarsmatchning. Komplexitet: medel. | Efter pilot-start | ⏳ |
 
 ---
 
