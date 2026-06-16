@@ -3123,6 +3123,10 @@ function closeAssignModuleModal() {
 async function confirmAssignModule(moduleId) {
   const m = ACTIVE_MODULES.find(x => x.id === moduleId);
   if (!m || !currentUserId) return;
+  if (_isStubUser(currentUserId)) {
+    showErr('Den här deltagaren är en demo-profil (finns inte i databasen). Bjud in en riktig deltagare för att tilldela övningar skarpt.');
+    return;
+  }
   const deadline = document.getElementById('_amDeadline')?.value;
   const message = document.getElementById('_amMessage')?.value || '';
   const btn = document.getElementById('_amConfirmBtn');
@@ -3436,8 +3440,14 @@ function closeCreateTaskModal() {
   _ctCount = null;
 }
 
+function _isStubUser(uid){ return typeof uid === 'string' && /^(force-|demo-)/.test(uid); }
+
 async function confirmCreateTask() {
   if (!_ctSelectedType || !currentUserId) return;
+  if (_isStubUser(currentUserId)) {
+    showErr('Den här deltagaren är en demo-profil (finns inte i databasen). Bjud in en riktig deltagare för att testa tilldelning skarpt.');
+    return;
+  }
   const t = _ctSelectedType;
   const deadline = document.getElementById('_ctDeadline')?.value;
   const n = t.countable ? _ctCount : null;
