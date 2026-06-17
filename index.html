@@ -10905,8 +10905,15 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
       var assigned = (typeof _assignedTasksCache !== 'undefined' && _assignedTasksCache) ? _assignedTasksCache : [];
       var open = assigned.filter(function(t){ return t.status !== 'completed'; }).length;
       var done = assigned.filter(function(t){ return t.status === 'completed'; }).length;
-      if (assigned.length) {
-        taskMeta.textContent = open + ' kvar · ' + done + ' klara';
+      // Återställ stil
+      taskMeta.style.color = '';
+      taskMeta.style.fontWeight = '';
+      if (open > 0) {
+        // Röd text + fet för att matcha Övningar-pyramidens "Uppgifter"-tile
+        taskMeta.innerHTML = '<span style="color:#ef4444;font-weight:800;">' + open + ' att göra</span>'
+          + (done > 0 ? ' <span style="color:rgba(255,255,255,0.5);font-weight:500;">· ' + done + ' klara</span>' : '');
+      } else if (assigned.length) {
+        taskMeta.innerHTML = '<span style="color:rgba(255,255,255,0.6);">Allt klart · ' + done + ' avklarade</span>';
       } else if (!window.authUserId || !window.authAccessToken) {
         taskMeta.textContent = '⚠️ Logga in för att se uppgifter';
       } else {
