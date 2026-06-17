@@ -64,6 +64,9 @@
       padding: 0;
     }
 
+    /* iOS: matchar safe-area-färgen under den fasta bottennavben — annars
+       lyser den beige body-bg:n igenom som ett ljust streck. */
+    html { background: #1a1a2e; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg);
@@ -11137,6 +11140,28 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
   } else {
     window.addEventListener('load', _initialHubRefresh);
   }
+
+  // Brute-force-safety: tick var 1.5s och uppdatera hub-tile direkt
+  // utifrån _assignedTasksCache. Eliminerar timing-buggar där badgen
+  // inte hänger med — kostar inget eftersom det bara läser cachen.
+  setInterval(function(){
+    try {
+      var tile = document.getElementById('trainTaskMeta');
+      var badge = document.getElementById('trainTaskBadge');
+      if (!tile) return;
+      var cache = (typeof _assignedTasksCache !== 'undefined' && _assignedTasksCache) ? _assignedTasksCache : [];
+      var open = cache.filter(function(t){ return t.status !== 'completed'; }).length;
+      var done = cache.filter(function(t){ return t.status === 'completed'; }).length;
+      if (open > 0) {
+        tile.innerHTML = '<span style="color:#ef4444;font-weight:800;">' + open + ' att göra</span>'
+          + (done > 0 ? ' <span style="color:rgba(255,255,255,0.5);font-weight:500;">· ' + done + ' klara</span>' : '');
+        if (badge) { badge.textContent = open; badge.style.display = 'flex'; }
+      } else if (cache.length) {
+        tile.innerHTML = '<span style="color:rgba(255,255,255,0.6);">Allt klart · ' + done + ' avklarade</span>';
+        if (badge) badge.style.display = 'none';
+      }
+    } catch(_){}
+  }, 1500);
 })();
 </script>
 
