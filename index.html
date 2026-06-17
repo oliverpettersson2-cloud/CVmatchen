@@ -6511,9 +6511,11 @@
     async function aiAutofillProfileSummary() {
       const apiKey = getApiKey();
 
-      const titleInput = document.getElementById('title');
-      if (!titleInput) return;
-      const title = titleInput.value.trim();
+      // Hämta titel från flera möjliga källor — i mobile finns bara mob-title,
+      // i desktop bara title. Fall även tillbaka på cvData om DOM-elementet är tomt.
+      const titleDesktop = (document.getElementById('title') || {}).value || '';
+      const titleMobile = (document.getElementById('mob-title') || {}).value || '';
+      const title = (titleDesktop || titleMobile || cvData.title || '').trim();
 
       // Om profiltext redan finns — generera nya alternativ direkt utan att kräva titel
       const existingSummary = (cvData.summary || '').trim();
