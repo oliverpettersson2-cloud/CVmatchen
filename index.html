@@ -9197,6 +9197,10 @@ function getTasks(){
     };
   });
   var local = getLocalTasks();
+  // Synk: hub-badgen ska alltid spegla samma räknare som inner-pyramiden
+  if (typeof refreshHubMeta === 'function') {
+    setTimeout(function(){ try { refreshHubMeta(); } catch(_){} }, 0);
+  }
   // Tilldelade först, sen lokala
   return assigned.concat(local);
 }
