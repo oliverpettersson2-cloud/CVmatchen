@@ -9236,6 +9236,10 @@ async function loadAssignedTasks(){
     }
     _assignedTasksCache = Array.isArray(data.data) ? data.data : [];
     console.log('[my_tasks] hämtade ' + _assignedTasksCache.length + ' uppgifter för uid=' + uid.slice(0,8) + '…');
+    // Säkerställ att hub-badgen alltid speglar aktuell cache
+    if (typeof refreshHubMeta === 'function') {
+      try { refreshHubMeta(); } catch(_){}
+    }
   } catch(e) {
     console.error('[my_tasks] fetch-fel:', e);
     _assignedTasksCache = [];
@@ -11089,15 +11093,23 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
 
   // Försök uppdatera direkt efter att allt laddats. Hämtar även task-cachen
   // så badge-räknaren stämmer redan vid första rendering av Träna-hubben.
+  // Auth restoras asynkront — poll upp till 8 sek tills authUserId finns.
   function _initialHubRefresh() {
-    setTimeout(function(){
-      refreshHubMeta();
-      if (typeof loadAssignedTasks === 'function') {
+    setTimeout(function(){ try { refreshHubMeta(); } catch(_){} }, 200);
+    if (typeof loadAssignedTasks !== 'function') return;
+    var attempts = 0;
+    var maxAttempts = 16; // 16 * 500ms = 8 sek
+    var iv = setInterval(function(){
+      attempts++;
+      if (window.authUserId && window.authAccessToken) {
+        clearInterval(iv);
         loadAssignedTasks().then(function(){
           try { refreshHubMeta(); } catch(_){}
         });
+      } else if (attempts >= maxAttempts) {
+        clearInterval(iv);
       }
-    }, 200);
+    }, 500);
   }
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
     _initialHubRefresh();
