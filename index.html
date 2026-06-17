@@ -9036,6 +9036,7 @@ ${styleTexts}
           <div class="train-hub-grid">
             <div class="train-tile" onclick="trainShowTasks()" style="position:relative;border-color:rgba(240,192,64,0.35);background:linear-gradient(180deg, rgba(240,192,64,0.08) 0%, rgba(240,192,64,0.03) 100%);">
               <div class="train-tile-glow" style="background:radial-gradient(circle at top right, rgba(240,192,64,0.18), transparent 60%);"></div>
+              <span id="trainTaskBadge" style="display:none;position:absolute;top:12px;right:12px;background:#ef4444;color:#fff;font-size:10px;font-weight:900;min-width:20px;height:20px;border-radius:10px;padding:0 6px;display:none;align-items:center;justify-content:center;letter-spacing:0.2px;box-shadow:0 2px 6px rgba(239,68,68,0.45);z-index:2;">0</span>
               <div>
                 <div class="train-tile-icon">📋</div>
                 <div class="train-tile-name">Uppgifter från handläggare</div>
@@ -9043,7 +9044,7 @@ ${styleTexts}
               </div>
               <div class="train-tile-meta" id="trainTaskMeta">Inga uppgifter än</div>
             </div>
-            <div class="train-tile" onclick="trainSwitchView('ovn')">
+            <div class="train-tile" onclick="trainOpenOvn()">
               <div class="train-tile-glow"></div>
               <div>
                 <div class="train-tile-icon">📚</div>
@@ -10882,6 +10883,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
     }
     // Räknare för tilldelade uppgifter på hub-rutan
     var taskMeta = document.getElementById('trainTaskMeta');
+    var taskBadge = document.getElementById('trainTaskBadge');
     if (taskMeta) {
       var assigned = (typeof _assignedTasksCache !== 'undefined' && _assignedTasksCache) ? _assignedTasksCache : [];
       var open = assigned.filter(function(t){ return t.status !== 'completed'; }).length;
@@ -10893,8 +10895,26 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
       } else {
         taskMeta.textContent = 'Inga uppgifter än';
       }
+      if (taskBadge) {
+        if (open > 0) {
+          taskBadge.textContent = open;
+          taskBadge.style.display = 'flex';
+        } else {
+          taskBadge.style.display = 'none';
+        }
+      }
     }
   }
+
+  // Öppna Övningar-hub: säkerställ att vi inte fastnar i förra task-vyn.
+  window.trainOpenOvn = function() {
+    trainSwitchView('ovn');
+    setTimeout(function() {
+      if (window.D && typeof window.D.goHome === 'function') {
+        try { window.D.goHome(); } catch(e) {}
+      }
+    }, 30);
+  };
 
   // Öppna tilldelade uppgifter från Träna-hubben (mobil). Initierar Övningar-
   // appen (som äger task-vyn) och hoppar direkt till uppgiftslistan.
