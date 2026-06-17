@@ -1071,6 +1071,7 @@
       '    <button class="iv-btn iv-btn--ghost" id="ivTipsBackBtn" style="flex:1">← Tillbaka</button>',
       '    <button class="iv-btn" id="ivTipsNextBtn" disabled style="flex:2;opacity:0.4;cursor:not-allowed;">Läser...</button>',
       '  </div>',
+      '  <button type="button" id="ivTipsSkipBtn" style="margin-top:14px;background:none;border:none;color:rgba(255,255,255,0.5);font-size:12px;text-decoration:underline;cursor:pointer;font-family:inherit;padding:6px;">Hoppa över tips → till intervjun</button>',
       '</div>',
 
       // ─── METOD-VÄLJARE ─────────────────────
@@ -2172,6 +2173,14 @@
     var tipsNext = $('#ivTipsNextBtn');
     if (tipsNext) tipsNext.addEventListener('click', function(){
       if (typeof nextTipOrStart === 'function') nextTipOrStart();
+    });
+    // Escape-knapp: hoppa direkt till metod-väljaren utan att läsa fler tips.
+    // Användbart om appen återgår från viloläge och tips-flödet fastnar.
+    var tipsSkip = $('#ivTipsSkipBtn');
+    if (tipsSkip) tipsSkip.addEventListener('click', function(){
+      if (typeof clearTipTimers === 'function') clearTipTimers();
+      state.currentTipIdx = 0;
+      goToScreen('method');
     });
 
     // ─── METOD-VÄLJARE ──────────────────

@@ -3100,11 +3100,6 @@ function openAssignModuleModal(moduleId) {
           <label style="display:block;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--mu);margin-bottom:6px;">Deadline</label>
           <input type="date" id="_amDeadline" value="${ddStr}" aria-label="Deadline" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;font-size:14px;font-family:inherit;color:var(--tx);">
         </div>
-
-        <div>
-          <label style="display:block;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--mu);margin-bottom:6px;">Personligt meddelande (valfritt)</label>
-          <textarea id="_amMessage" rows="3" placeholder="Hej! Jag har tilldelat dig denna övning. Hör av dig om du har frågor..." aria-label="Personligt meddelande (valfritt)" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;font-size:13px;font-family:inherit;color:var(--tx);resize:vertical;"></textarea>
-        </div>
       </div>
 
       <div style="display:flex;gap:10px;margin-top:22px;padding-top:18px;border-top:1px solid var(--bd);">
@@ -3121,18 +3116,22 @@ function closeAssignModuleModal() {
 }
 
 async function confirmAssignModule(moduleId) {
+  console.log('[assign_module] klick:', moduleId, 'currentUserId=', currentUserId);
   const m = ACTIVE_MODULES.find(x => x.id === moduleId);
-  if (!m || !currentUserId) return;
+  if (!m) { showErr('Kunde inte hitta modulen.'); return; }
+  if (!currentUserId) { showErr('Ingen deltagare vald.'); return; }
+  const btn = document.getElementById('_amConfirmBtn');
   if (_isStubUser(currentUserId)) {
+    if (btn) { btn.disabled = true; btn.textContent = 'Hittar konto...'; }
     const realUid = await _resolveStubToRealUid(currentUserId);
     if (!realUid) {
+      if (btn) { btn.disabled = false; btn.textContent = '📌 Tilldela övning'; }
       showErr('Kunde inte hitta riktigt konto för deltagaren. Be hen logga in på mobilen först (eller bjud in via "Bjud in deltagare").');
       return;
     }
   }
   const deadline = document.getElementById('_amDeadline')?.value;
-  const message = document.getElementById('_amMessage')?.value || '';
-  const btn = document.getElementById('_amConfirmBtn');
+  const message = '';
   if (btn) { btn.disabled = true; btn.textContent = 'Skickar...'; }
 
   try {
