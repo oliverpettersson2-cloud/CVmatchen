@@ -3124,8 +3124,11 @@ async function confirmAssignModule(moduleId) {
   const m = ACTIVE_MODULES.find(x => x.id === moduleId);
   if (!m || !currentUserId) return;
   if (_isStubUser(currentUserId)) {
-    showErr('Den här deltagaren är en demo-profil (finns inte i databasen). Bjud in en riktig deltagare för att tilldela övningar skarpt.');
-    return;
+    const realUid = await _resolveStubToRealUid(currentUserId);
+    if (!realUid) {
+      showErr('Kunde inte hitta riktigt konto för deltagaren. Be hen logga in på mobilen först (eller bjud in via "Bjud in deltagare").');
+      return;
+    }
   }
   const deadline = document.getElementById('_amDeadline')?.value;
   const message = document.getElementById('_amMessage')?.value || '';
@@ -3442,11 +3445,42 @@ function closeCreateTaskModal() {
 
 function _isStubUser(uid){ return typeof uid === 'string' && /^(force-|demo-)/.test(uid); }
 
+// Cache: force-stub-id → riktig auth-UUID (slås upp via admin_resolve_participant_by_email).
+window._stubUidResolve = window._stubUidResolve || {};
+
+// Resolve stub-id → riktig auth-UUID via backend. Skapar user_assignments-rad
+// kopplad till admins kommun/enhet om den saknas. Returnerar null vid fel.
+async function _resolveStubToRealUid(stubId){
+  if (!_isStubUser(stubId)) return stubId;
+  if (window._stubUidResolve[stubId]) return window._stubUidResolve[stubId];
+  // Hitta email för stubben
+  const u = (allUsers || []).find(x => (x.user_id || x.id) === stubId);
+  const email = u?.cv?.data?.email || u?.cv?.email || u?.email || '';
+  if (!email) return null;
+  try {
+    const r = await post('admin_resolve_participant_by_email', { email });
+    if (r?.user_id) {
+      window._stubUidResolve[stubId] = r.user_id;
+      // Uppdatera även allUsers så framtida anrop använder riktig UUID
+      if (u) { u.user_id = r.user_id; u.id = r.user_id; }
+      if (currentUserId === stubId) currentUserId = r.user_id;
+      return r.user_id;
+    }
+  } catch (e) {
+    console.warn('[resolveStub] kunde inte slå upp', email, e);
+  }
+  return null;
+}
+
 async function confirmCreateTask() {
   if (!_ctSelectedType || !currentUserId) return;
   if (_isStubUser(currentUserId)) {
-    showErr('Den här deltagaren är en demo-profil (finns inte i databasen). Bjud in en riktig deltagare för att testa tilldelning skarpt.');
-    return;
+    const realUid = await _resolveStubToRealUid(currentUserId);
+    if (!realUid) {
+      showErr('Kunde inte hitta riktigt konto för deltagaren. Be hen logga in på mobilen först (eller bjud in via "Bjud in deltagare").');
+      return;
+    }
+    // Forsätt med riktig UUID
   }
   const t = _ctSelectedType;
   const deadline = document.getElementById('_ctDeadline')?.value;

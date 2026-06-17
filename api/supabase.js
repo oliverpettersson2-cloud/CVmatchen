@@ -546,6 +546,51 @@ export default async function handler(req, res) {
       return res.status(200).json({ data: users });
     }
 
+    if (action === 'admin_resolve_participant_by_email') {
+      // Tar e-post → returnerar deltagarens riktiga auth-UUID + skapar
+      // user_assignments-rad om den saknas (kopplad till admins kommun/enhet).
+      // Används av handläggar-vyn för att slå upp riktiga UUID:n för
+      // FORCE_SHOW_AS_USER-stubar (mailar som även är admins men ska gå
+      // att tilldela uppgifter till för pilot-testning).
+      const { admin } = await requireAdmin(res, accessToken, action);
+      if (!admin) return;
+      const lookupEmail = (email || '').toString().trim().toLowerCase();
+      if (!lookupEmail || !lookupEmail.includes('@')) {
+        return res.status(400).json({ error: 'invalid_email' });
+      }
+      // 1) Slå upp auth.users via Admin API
+      const authRes = await makeRequest(
+        `${SUPABASE_URL}/auth/v1/admin/users?email=${encodeURIComponent(lookupEmail)}`,
+        { method: 'GET', headers: serviceHeaders() }
+      );
+      const authUsers = Array.isArray(authRes.data?.users) ? authRes.data.users : (Array.isArray(authRes.data) ? authRes.data : []);
+      const authUser = authUsers.find(u => (u.email || '').toLowerCase() === lookupEmail);
+      if (!authUser?.id) return res.status(404).json({ error: 'no_auth_user' });
+      const realUid = authUser.id;
+      // 2) Kolla om user_assignments redan finns
+      const uaRes = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${encodeURIComponent(realUid)}&select=user_id,kommun_id,enhet_id&limit=1`,
+        { method: 'GET', headers: serviceHeaders() }
+      );
+      const existing = Array.isArray(uaRes.data) ? uaRes.data : [];
+      if (existing.length) {
+        return res.status(200).json({ user_id: realUid, created: false, assignment: existing[0] });
+      }
+      // 3) Skapa raden — använd admins kommun/enhet
+      await makeRequest(
+        `${SUPABASE_URL}/rest/v1/user_assignments`,
+        { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'resolution=ignore-duplicates,return=minimal' } },
+        {
+          user_id: realUid,
+          kommun_id: admin.kommun_id || null,
+          enhet_id: admin.enhet_id || null,
+          status: 'active',
+          created_at: new Date().toISOString()
+        }
+      );
+      return res.status(200).json({ user_id: realUid, created: true });
+    }
+
     if (action === 'admin_get_diary_stats') {
       // Returnerar { applied_count, last_applied_at } för en deltagare.
       // Verifierar att admin har behörighet att se den specifika user_id:n.
