@@ -10891,6 +10891,16 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
     // Räknare för tilldelade uppgifter på hub-rutan
     var taskMeta = document.getElementById('trainTaskMeta');
     var taskBadge = document.getElementById('trainTaskBadge');
+    // Auto-trigger load om cachen är tom men användaren är inloggad
+    if ((!_assignedTasksCache || _assignedTasksCache.length === 0)
+        && window.authUserId && window.authAccessToken
+        && typeof loadAssignedTasks === 'function'
+        && !window._hubTaskLoadInflight) {
+      window._hubTaskLoadInflight = true;
+      loadAssignedTasks().then(function(){
+        window._hubTaskLoadInflight = false;
+      }).catch(function(){ window._hubTaskLoadInflight = false; });
+    }
     if (taskMeta) {
       var assigned = (typeof _assignedTasksCache !== 'undefined' && _assignedTasksCache) ? _assignedTasksCache : [];
       var open = assigned.filter(function(t){ return t.status !== 'completed'; }).length;
