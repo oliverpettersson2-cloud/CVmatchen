@@ -9036,7 +9036,7 @@ ${styleTexts}
           <div class="train-hub-grid">
             <div class="train-tile" onclick="trainShowTasks()" style="position:relative;border-color:rgba(240,192,64,0.35);background:linear-gradient(180deg, rgba(240,192,64,0.08) 0%, rgba(240,192,64,0.03) 100%);">
               <div class="train-tile-glow" style="background:radial-gradient(circle at top right, rgba(240,192,64,0.18), transparent 60%);"></div>
-              <span id="trainTaskBadge" style="display:none;position:absolute;top:12px;right:12px;background:#ef4444;color:#fff;font-size:10px;font-weight:900;min-width:20px;height:20px;border-radius:10px;padding:0 6px;display:none;align-items:center;justify-content:center;letter-spacing:0.2px;box-shadow:0 2px 6px rgba(239,68,68,0.45);z-index:2;">0</span>
+              <span id="trainTaskBadge" style="display:none;position:absolute;top:12px;right:12px;background:#ef4444;color:#fff;font-size:10px;font-weight:900;min-width:20px;height:20px;border-radius:10px;padding:0 6px;align-items:center;justify-content:center;letter-spacing:0.2px;box-shadow:0 2px 6px rgba(239,68,68,0.45);z-index:2;">0</span>
               <div>
                 <div class="train-tile-icon">📋</div>
                 <div class="train-tile-name">Uppgifter från handläggare</div>
@@ -9271,6 +9271,7 @@ window.addEventListener('storage', function(e){
   if (e.key === 'cvm_tasks_dirty' && typeof loadAssignedTasks === 'function') {
     loadAssignedTasks().then(function(){
       if (typeof renderAssignedTasks === 'function') try { renderAssignedTasks(); } catch(_){}
+      if (typeof refreshHubMeta === 'function') try { refreshHubMeta(); } catch(_){}
     });
   }
 });
@@ -9280,10 +9281,12 @@ document.addEventListener('visibilitychange', function(){
   else if (typeof loadAssignedTasks === 'function') {
     loadAssignedTasks().then(function(){
       if (typeof renderAssignedTasks === 'function') try { renderAssignedTasks(); } catch(_){}
+      if (typeof refreshHubMeta === 'function') try { refreshHubMeta(); } catch(_){}
     });
     startTasksPolling(function(){
       loadAssignedTasks().then(function(){
         if (typeof renderAssignedTasks === 'function') try { renderAssignedTasks(); } catch(_){}
+        if (typeof refreshHubMeta === 'function') try { refreshHubMeta(); } catch(_){}
       });
     });
   }
@@ -11084,11 +11087,22 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
     }
   };
 
-  // Försök uppdatera direkt efter att allt laddats
+  // Försök uppdatera direkt efter att allt laddats. Hämtar även task-cachen
+  // så badge-räknaren stämmer redan vid första rendering av Träna-hubben.
+  function _initialHubRefresh() {
+    setTimeout(function(){
+      refreshHubMeta();
+      if (typeof loadAssignedTasks === 'function') {
+        loadAssignedTasks().then(function(){
+          try { refreshHubMeta(); } catch(_){}
+        });
+      }
+    }, 200);
+  }
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    setTimeout(refreshHubMeta, 200);
+    _initialHubRefresh();
   } else {
-    window.addEventListener('load', function(){ setTimeout(refreshHubMeta, 200); });
+    window.addEventListener('load', _initialHubRefresh);
   }
 })();
 </script>
