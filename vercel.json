@@ -12,8 +12,31 @@
     "api/pdf.js": {
       "memory": 1024,
       "maxDuration": 10
+    },
+    "api/marketing/plan.js": {
+      "memory": 512,
+      "maxDuration": 30
+    },
+    "api/marketing/publish.js": {
+      "memory": 256,
+      "maxDuration": 10
+    },
+    "api/marketing/measure.js": {
+      "memory": 256,
+      "maxDuration": 10
+    },
+    "api/marketing/learn.js": {
+      "memory": 512,
+      "maxDuration": 60
+    },
+    "api/cron/daily.js": {
+      "memory": 512,
+      "maxDuration": 60
     }
   },
+  "crons": [
+    { "path": "/api/cron/daily", "schedule": "30 6 * * *" }
+  ],
   "rewrites": [
     { "source": "/app", "destination": "/app.html" },
     { "source": "/admin", "destination": "/handlaggare.html" }
