@@ -64,10 +64,11 @@ export default async function handler(req, res) {
   };
 
   // ── Bedrock vs Anthropic direct ──────────────────────────────────────────
-  // Om AWS_BEARER_TOKEN_BEDROCK finns → använd Bedrock i EU-region (eu-central-1
+  // Om AWS_BEARER_TOKEN_BEDROCK (eller alias WS_BEARER_TOKEN_BEDROCK pga
+  // tidigare typo i Vercel) finns → använd Bedrock i EU-region (eu-central-1
   // = Frankfurt). All data håller sig då inom EU → GDPR-rent för kommunpiloter.
   // Annars: fall tillbaka på direktanrop mot api.anthropic.com (USA) som idag.
-  const bedrockToken = process.env.AWS_BEARER_TOKEN_BEDROCK;
+  const bedrockToken = process.env.AWS_BEARER_TOKEN_BEDROCK || process.env.WS_BEARER_TOKEN_BEDROCK;
   const useBedrock = !!bedrockToken;
 
   let endpoint, headers, payload;
