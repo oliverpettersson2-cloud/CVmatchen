@@ -64,3 +64,5 @@ Komplexitet: trivial / liten / medel / större / krångligt.
 | 30 | DEMO_MODE-indikator-banner när på | handlaggare.html | Trivial | ⏳ |
 | 31 | "Senast aktiv" visar `cv.updated_at` istället för faktisk inloggning — returnera `last_sign_in_at` från `auth.users` i `admin_list_users` och använd den | api/supabase.js + handlaggare.html:4251 | Liten | ⏳ |
 | 32 | `oliver.pettersson@helsingborg.se` syns i deltagar-listan trots att kontot är en handläggare — filtrera bort handläggar-/admin-konton från `admin_list_users` (eller exkludera roller ≠ deltagare i frontend) | api/supabase.js + handlaggare.html | Liten | ⏳ |
+| 33 | Döp om `WS_BEARER_TOKEN_BEDROCK` → `AWS_BEARER_TOKEN_BEDROCK` i Vercel (kräver delete + re-add med samma värde), redeploy. Sen ta bort fallback-aliaset i `api/chat.js` så endast `AWS_BEARER_TOKEN_BEDROCK` läses. | Vercel env vars + api/chat.js:70 | Trivial | ⏳ |
+| 34 | Rotera `SUPABASE_SERVICE_KEY` (Supabase → Settings → API → Reset) + `ANTHROPIC_API_KEY` (console.anthropic.com → revoke + create). Båda flaggade "Needs Attention" i Vercel = nyckel troligen exponerad. Uppdatera Vercel env + redeploy. | Vercel env vars | Liten | ⏳ |
