@@ -2677,6 +2677,15 @@
           aria-label="Telefonnummer (valfritt)"
           inputmode="tel" style="margin-bottom:6px;">
 
+        <label id="onbConsentLabel" style="display:flex;align-items:flex-start;gap:10px;text-align:left;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;margin-bottom:12px;cursor:pointer;">
+          <input id="onbConsent" type="checkbox" aria-required="true" style="margin-top:3px;flex-shrink:0;cursor:pointer;"
+            onchange="document.getElementById('onbErr').textContent=''">
+          <span style="font-size:12px;color:rgba(255,255,255,0.8);line-height:1.5;">
+            Jag godkänner att mitt CV och mina uppgifter analyseras av AI för att skapa profiltext och jobbmatchningar.
+            <button type="button" onclick="event.preventDefault();showPrivacyPolicy()" style="background:none;border:none;color:#3eb489;text-decoration:underline;cursor:pointer;font:inherit;padding:0;">Så hanteras dina uppgifter</button>.
+          </span>
+        </label>
+
         <div id="onbErr" style="color:#ff8fa3;font-size:12px;min-height:18px;margin-bottom:10px;"></div>
         <button class="auth-btn" onclick="authCompleteOnboarding()">Skapa mitt CV →</button>
       </div>
@@ -7667,12 +7676,21 @@ ${styleTexts}
 
       if (!firstName) { errEl.textContent = 'Förnamn krävs.'; return; }
       if (!lastName)  { errEl.textContent = 'Efternamn krävs.'; return; }
+      const onbConsent = document.getElementById('onbConsent');
+      if (!onbConsent || !onbConsent.checked) {
+        errEl.textContent = 'Du måste godkänna AI-analys för att fortsätta.';
+        return;
+      }
 
       // Spara ALLT i cvData → direkt in i CV-byggaren
       cvData.name  = (firstName + ' ' + lastName).trim();
       if (phone) cvData.phone = phone;
       if (email) cvData.email = email;
       saveData();
+
+      // Registrera AI-samtycke (GDPR): lokalt + best-effort server-logg (ai_consent)
+      try { localStorage.setItem('cvm_ai_consent_v1', new Date().toISOString()); } catch (e) {}
+      logEvent('ai_consent', { version: 'v1', source: 'onboarding' });
 
       // Desktop CV-fält
       const f = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };

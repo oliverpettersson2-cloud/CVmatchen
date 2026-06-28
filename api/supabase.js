@@ -23,7 +23,7 @@ const ALLOWED_EVENTS = new Set([
   // Matchning
   'cv_matched', 'cv_saved_from_match',
   // AI
-  'ai_skill_match', 'ai_cv_analysis', 'syv_chat',
+  'ai_skill_match', 'ai_cv_analysis', 'syv_chat', 'ai_consent',
   // Utbildning
   'edu_saved', 'edu_removed',
   // Sök
