@@ -24,7 +24,7 @@ create table if not exists public.pending_invites (
   email                 text not null,
   kommun_id             bigint null,
   enhet_id              bigint null,
-  invited_by_admin_id   uuid null references public.admins(id) on delete set null,
+  invited_by_admin_id   bigint null references public.admins(id) on delete set null,
   role                  text not null check (role in ('admin','handlaggare','invanare')),
   token                 text not null,
   expires_at            timestamptz not null,
