@@ -1,12 +1,59 @@
 import * as Sentry from '@sentry/node';
 Sentry.init({ dsn: process.env.SENTRY_DSN, environment: process.env.VERCEL_ENV || 'development' });
 
+// Aktuell policyversion. Bumpa när integritetspolicyn ändras materiellt
+// — då tvingas användare samtycka på nytt innan AI-anrop tillåts.
+// Måste matcha CURRENT_POLICY_VERSION i index.html/desktop-app.js.
+const CURRENT_POLICY_VERSION = '2026-06-10';
+
 // In-memory rate limiter. Per-instans (Vercel-container) — inte global,
 // så effektiv gräns är N_containers × LIMIT. Stoppar ändå en enskild
 // angripare som hamrar. För hård global gräns: byt till Upstash Redis.
 const RATE_WINDOW_MS = 60_000;
 const RATE_LIMIT = 20;          // anrop per IP per minut
 const rateBuckets = new Map();  // ip -> [timestamps]
+
+// Cachar samtyckesstatus per-instans i 15 min för att undvika DB-hit på
+// varje AI-anrop. Nyckel: userId. Värde: { hasConsent: bool, cachedAt: ms }.
+const CONSENT_CACHE_MS = 15 * 60 * 1000;
+const consentCache = new Map();
+
+async function hasValidConsent(supabaseUrl, serviceKey, accessToken, userId) {
+  const cached = consentCache.get(userId);
+  if (cached && Date.now() - cached.cachedAt < CONSENT_CACHE_MS) {
+    return cached.hasConsent;
+  }
+  try {
+    // Verifiera att accessToken tillhör userId
+    const userResp = await fetch(`${supabaseUrl}/auth/v1/user`, {
+      headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${accessToken}` }
+    });
+    if (!userResp.ok) return false;
+    const userData = await userResp.json();
+    if (!userData || userData.id !== userId) return false;
+
+    // Slå upp samtycke via service-role
+    const consentResp = await fetch(
+      `${supabaseUrl}/rest/v1/user_consents?user_id=eq.${encodeURIComponent(userId)}&policy_version=eq.${encodeURIComponent(CURRENT_POLICY_VERSION)}&select=granted_at&limit=1`,
+      { headers: { 'apikey': serviceKey, 'Authorization': `Bearer ${serviceKey}` } }
+    );
+    if (!consentResp.ok) return false;
+    const rows = await consentResp.json();
+    const has = Array.isArray(rows) && rows.length > 0;
+    consentCache.set(userId, { hasConsent: has, cachedAt: Date.now() });
+    if (consentCache.size > 5000) {
+      // Städa gamla poster
+      const cutoff = Date.now() - CONSENT_CACHE_MS;
+      for (const [k, v] of consentCache) {
+        if (v.cachedAt < cutoff) consentCache.delete(k);
+      }
+    }
+    return has;
+  } catch (e) {
+    console.error('[chat] consent check failed:', e.message);
+    return false;
+  }
+}
 
 function rateLimited(ip) {
   const now = Date.now();
@@ -57,10 +104,34 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Ogiltig model' });
   }
 
+  // Samtycke: AI-anrop tillåts bara om användaren aktivt samtyckt till
+  // nuvarande policy-version. Body måste innehålla accessToken + userId
+  // (UUID). Cachas per-instans i 15 min för att undvika DB-hit varje anrop.
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
+  const uuidRe = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (supabaseUrl && serviceKey) {
+    const accessToken = body.accessToken;
+    const userId = body.userId;
+    if (typeof accessToken !== 'string' || !uuidRe.test(String(userId || ''))) {
+      return res.status(401).json({ error: 'Inloggning krävs för AI-tjänsten' });
+    }
+    const ok = await hasValidConsent(supabaseUrl, serviceKey, accessToken, userId);
+    if (!ok) {
+      return res.status(403).json({
+        error: 'AI_CONSENT_REQUIRED',
+        message: 'Du måste godkänna AI-behandling innan du kan använda AI-funktioner.'
+      });
+    }
+  }
+
+  // Ta bort auth-fält innan vi vidarebefordrar till Anthropic
+  const { accessToken: _at, userId: _uid, ...forwardBody } = body;
+
   // Klampa max_tokens — bryter aldrig en legitim förfrågan, blockerar abuse
   const safeBody = {
-    ...body,
-    max_tokens: Math.min(Number(body.max_tokens) || 1024, MAX_OUTPUT_TOKENS)
+    ...forwardBody,
+    max_tokens: Math.min(Number(forwardBody.max_tokens) || 1024, MAX_OUTPUT_TOKENS)
   };
 
   try {

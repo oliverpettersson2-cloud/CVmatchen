@@ -484,6 +484,55 @@ export default async function handler(req, res) {
     // LOG_EVENT — aktivitetsloggning
     // Anropas som: { action: 'log_event', accessToken, userId, event_type, metadata }
     // ═══════════════════════════════════════════════════════════════
+
+    // ═══════════════════════════════════════════════════════════════
+    // AI-SAMTYCKE
+    // ---------------------------------------------------------------
+    // record_consent: sparar tidsstämplat samtycke till given policy-
+    // version. Verifierar att accessToken tillhör userId.
+    // check_consent: returnerar om användaren samtyckt till given
+    // policy-version. Används för att gate:a UI + AI-anrop.
+    // ═══════════════════════════════════════════════════════════════
+    if (action === 'record_consent') {
+      if (!isUuid(userId)) return res.status(400).json({ error: 'invalid userId' });
+      const auth = await requireUser(res, accessToken, userId); if (!auth.ok) return;
+      const policyVersion = req.body?.policy_version;
+      if (typeof policyVersion !== 'string' || policyVersion.length === 0 || policyVersion.length > 32) {
+        return res.status(400).json({ error: 'invalid policy_version' });
+      }
+      const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim()
+        || req.headers['x-real-ip'] || null;
+      const ua = (req.headers['user-agent'] || '').slice(0, 512);
+      const insertRes = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/user_consents`,
+        { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'resolution=ignore-duplicates,return=minimal' } },
+        { user_id: userId, policy_version: policyVersion, ip, user_agent: ua }
+      );
+      if (insertRes.status >= 400 && insertRes.status !== 409) {
+        console.error('[record_consent] insert failed:', maskPII(insertRes.data));
+        return res.status(500).json({ error: 'Kunde inte spara samtycket' });
+      }
+      return res.status(200).json({ ok: true });
+    }
+
+    if (action === 'check_consent') {
+      if (!isUuid(userId)) return res.status(400).json({ error: 'invalid userId' });
+      const auth = await requireUser(res, accessToken, userId); if (!auth.ok) return;
+      const policyVersion = req.body?.policy_version;
+      if (typeof policyVersion !== 'string' || policyVersion.length === 0 || policyVersion.length > 32) {
+        return res.status(400).json({ error: 'invalid policy_version' });
+      }
+      const consentRes = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/user_consents?user_id=eq.${encodeURIComponent(userId)}&policy_version=eq.${encodeURIComponent(policyVersion)}&select=granted_at&limit=1`,
+        { method: 'GET', headers: serviceHeaders() }
+      );
+      const rows = Array.isArray(consentRes.data) ? consentRes.data : [];
+      return res.status(200).json({
+        hasConsent: rows.length > 0,
+        grantedAt: rows[0]?.granted_at || null
+      });
+    }
+
     if (action === 'log_event') {
       // 1) Validera parametrar
       if (!accessToken || !userId || !event_type) {

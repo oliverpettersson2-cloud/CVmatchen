@@ -3,6 +3,117 @@
    Delar localStorage med mobilversionen så data synkas.
    ============================================================ */
 
+// ═══════════════════════════════════════════════════════════════
+// AI-SAMTYCKE (samma logik som mobilen). Måste matcha api/chat.js
+// och index.html:s CURRENT_POLICY_VERSION.
+// ═══════════════════════════════════════════════════════════════
+window.CURRENT_POLICY_VERSION = '2026-06-10';
+window.AI_CONSENT_KEY = 'ai_consent_' + window.CURRENT_POLICY_VERSION;
+
+(function() {
+  const origFetch = window.fetch.bind(window);
+  window.fetch = function(url, opts) {
+    try {
+      if (typeof url === 'string' && url.indexOf('/api/chat') === 0 && opts && opts.body && window.authAccessToken && window.authUserId) {
+        const body = JSON.parse(opts.body);
+        body.accessToken = window.authAccessToken;
+        body.userId = window.authUserId;
+        opts = { ...opts, body: JSON.stringify(body) };
+      }
+    } catch (e) {}
+    return origFetch(url, opts);
+  };
+})();
+
+window.ensureAiConsent = async function(onGranted) {
+  const uid = window.authUserId;
+  const at = window.authAccessToken;
+  if (!uid || !at) { if (onGranted) onGranted(); return; }
+  try {
+    const local = localStorage.getItem(window.AI_CONSENT_KEY + '::' + uid);
+    if (local === 'granted') { if (onGranted) onGranted(); return; }
+  } catch (e) {}
+  try {
+    const r = await fetch('/api/supabase', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'check_consent', accessToken: at, userId: uid, policy_version: window.CURRENT_POLICY_VERSION })
+    });
+    const data = await r.json();
+    if (data && data.hasConsent) {
+      try { localStorage.setItem(window.AI_CONSENT_KEY + '::' + uid, 'granted'); } catch(e) {}
+      if (onGranted) onGranted();
+      return;
+    }
+  } catch (e) {}
+  window._showConsentModalDesktop(onGranted);
+};
+
+window._showConsentModalDesktop = function(onGranted) {
+  if (document.getElementById('aiConsentModal')) return;
+  const overlay = document.createElement('div');
+  overlay.id = 'aiConsentModal';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-labelledby', 'aiConsentTitle');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:100000;display:flex;align-items:center;justify-content:center;padding:16px;';
+  const box = document.createElement('div');
+  box.style.cssText = 'background:#1a1a2e;border:1.5px solid rgba(62,180,137,0.4);border-radius:16px;padding:28px;max-width:560px;width:100%;color:#fff;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.5);';
+  box.innerHTML = ''
+    + '<div id="aiConsentTitle" style="font-size:22px;font-weight:900;margin-bottom:14px;">AI-behandling av dina uppgifter</div>'
+    + '<div style="font-size:14px;line-height:1.6;color:rgba(255,255,255,0.85);margin-bottom:16px;">'
+    + 'CVmatchen använder AI (Claude via AWS Bedrock EU) för att hjälpa dig skriva CV, matcha mot jobb, träna på intervjuer och få studievägledning. '
+    + 'Din CV-data skickas till AI-tjänsten enbart när du aktivt använder en AI-funktion — inga uppgifter tränar modellen.'
+    + '</div>'
+    + '<div style="font-size:13px;line-height:1.6;color:rgba(255,255,255,0.72);margin-bottom:20px;">'
+    + 'All data lagras inom EU. Du kan när som helst radera ditt konto och alla uppgifter under Profil.'
+    + '</div>'
+    + '<label style="display:flex;align-items:flex-start;gap:10px;margin-bottom:22px;cursor:pointer;">'
+    + '<input type="checkbox" id="aiConsentCheckbox" style="margin-top:3px;width:18px;height:18px;flex-shrink:0;cursor:pointer;">'
+    + '<span style="font-size:14px;line-height:1.5;color:#fff;">Jag har läst och godkänner att CVmatchen använder AI för att behandla min CV-data enligt integritetspolicyn.</span>'
+    + '</label>'
+    + '<button id="aiConsentAccept" disabled style="width:100%;padding:14px;background:rgba(62,180,137,0.3);border:1px solid rgba(62,180,137,0.5);color:rgba(255,255,255,0.5);font-size:15px;font-weight:800;border-radius:10px;cursor:not-allowed;font-family:inherit;">Godkänn och fortsätt</button>'
+    + '<div style="text-align:center;margin-top:12px;"><button id="aiConsentDecline" style="background:none;border:none;color:rgba(255,255,255,0.55);font-size:12px;text-decoration:underline;cursor:pointer;font-family:inherit;">Nej tack, jag vill inte använda AI-funktioner</button></div>';
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+
+  const cb = box.querySelector('#aiConsentCheckbox');
+  const btn = box.querySelector('#aiConsentAccept');
+  cb.addEventListener('change', () => {
+    btn.disabled = !cb.checked;
+    btn.style.background = cb.checked ? 'linear-gradient(135deg,#10b981,#059669)' : 'rgba(62,180,137,0.3)';
+    btn.style.color = cb.checked ? '#fff' : 'rgba(255,255,255,0.5)';
+    btn.style.cursor = cb.checked ? 'pointer' : 'not-allowed';
+  });
+  box.querySelector('#aiConsentDecline').addEventListener('click', () => {
+    overlay.remove();
+  });
+  btn.addEventListener('click', async () => {
+    if (!cb.checked) return;
+    btn.disabled = true;
+    btn.textContent = 'Sparar...';
+    try {
+      const r = await fetch('/api/supabase', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'record_consent',
+          accessToken: window.authAccessToken,
+          userId: window.authUserId,
+          policy_version: window.CURRENT_POLICY_VERSION
+        })
+      });
+      if (!r.ok) throw new Error('save_failed');
+      try { localStorage.setItem(window.AI_CONSENT_KEY + '::' + window.authUserId, 'granted'); } catch(e) {}
+      overlay.remove();
+      if (onGranted) onGranted();
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = 'Godkänn och fortsätt';
+    }
+  });
+};
+
 (function() {
   'use strict';
 
@@ -679,6 +790,8 @@
     }));
     window.authUserId = userId || null;
     window.authAccessToken = accessToken || null;
+    // Kontrollera AI-samtycke direkt efter login — modal visas om saknas
+    if (typeof window.ensureAiConsent === 'function') { window.ensureAiConsent(); }
     authCurrentEmail = email;
     logEvent('login');
 
