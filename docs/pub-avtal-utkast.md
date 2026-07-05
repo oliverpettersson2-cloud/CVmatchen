@@ -5,8 +5,14 @@ Mellan **Helsingborgs stad, Arbetsmarknadsförvaltningen** (org.nr 212000-1157)
 
 och
 
-**PathfinderAI AB** (org.nr **[FYLLS I]**) genom tjänsten **CVmatchen**
-("Personuppgiftsbiträde", PUB)
+**PathfinderAI** (enskild firma, innehavare Oliver Pettersson, org.nr
+**[FYLLS I]**) genom tjänsten **CVmatchen** ("Personuppgiftsbiträde", PUB)
+
+> **Not om företagsform:** PathfinderAI drivs i dag som enskild firma.
+> Registrering av aktiebolag (PathfinderAI AB) planeras inför ett skarpt
+> avtal — bland annat för att stärka ansvars- och kontinuitetsfrågan
+> gentemot kommunen (se punkt 12 och avsnitt om kontinuitet). Avtalspart
+> justeras till aktiebolaget om/när det är registrerat.
 
 Avtalsdatum: **[FYLLS I]**
 Avtalsperiod: **[FYLLS I — kopplat till pilotavtalets period]**
@@ -20,11 +26,11 @@ Version: 1.0 — utkast 2026-06-17
 
 ## 1. Bakgrund och syfte
 
-Helsingborgs stad har anlitat PathfinderAI AB för att leverera tjänsten
+Helsingborgs stad har anlitat PathfinderAI för att leverera tjänsten
 CVmatchen — en webbaserad plattform där arbetssökande skapar CV, matchar
 mot lediga tjänster och får handledning från arbetsmarknadshandläggare.
 
-För att tjänsten ska fungera måste PathfinderAI AB behandla personuppgifter
+För att tjänsten ska fungera måste PathfinderAI behandla personuppgifter
 för Helsingborgs stads räkning. Detta avtal reglerar villkoren för den
 behandlingen i enlighet med GDPR (Förordning EU 2016/679) artikel 28.
 
@@ -32,7 +38,7 @@ behandlingen i enlighet med GDPR (Förordning EU 2016/679) artikel 28.
 
 ## 2. Föremål för behandlingen
 
-PathfinderAI AB behandlar personuppgifter enbart för att leverera CVmatchen
+PathfinderAI behandlar personuppgifter enbart för att leverera CVmatchen
 till Helsingborgs stad och dess deltagare. Behandlingens art, syfte,
 varaktighet och kategorier framgår av **Bilaga A — Specifikation av
 behandlingen**.
@@ -190,10 +196,10 @@ Namn: ____________________________________
 Befattning: _______________________________
 Datum: ___________ Underskrift: ____________
 
-För **PathfinderAI AB**:
+För **PathfinderAI**:
 
 Namn: Oliver Pettersson
-Befattning: Grundare och VD
+Befattning: Innehavare / grundare
 Datum: ___________ Underskrift: ____________
 
 ---

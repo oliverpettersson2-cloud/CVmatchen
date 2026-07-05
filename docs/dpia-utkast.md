@@ -4,7 +4,8 @@
 
 Behandling: **CVmatchen** — AI-stödd CV- och jobbmatchningsplattform
 Personuppgiftsansvarig: **Helsingborgs stad, Arbetsmarknadsförvaltningen**
-Personuppgiftsbiträde: **PathfinderAI AB** (org.nr [FYLLS I])
+Personuppgiftsbiträde: **PathfinderAI** (enskild firma; registrering av
+aktiebolag planeras inför skarpt avtal)
 Version: 1.0 — utkast 2026-06-18
 Framtagen av: Oliver Pettersson (PathfinderAI) för granskning av kommunens
 dataskyddsombud (DSO/DPO)

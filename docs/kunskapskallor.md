@@ -1,7 +1,7 @@
 # Kunskapskällor — CVmatchens träningsmoduler
 
 Version: 2026-06-17
-Författare: Oliver Pettersson, PathfinderAI AB
+Författare: Oliver Pettersson, PathfinderAI (enskild firma)
 
 Detta dokument redovisar de källor och ramverk som ligger till grund för
 innehållet i CVmatchens träningsmoduler. Syftet är transparens mot
@@ -193,7 +193,7 @@ universitet.
 
 Oliver Pettersson, oliver.pettersson2@gmail.com
 Studie- och yrkesvägledare (Lunds universitet)
-Grundare PathfinderAI AB
+Grundare PathfinderAI
 
 Synpunkter på källredovisningen tas tacksamt emot — särskilt från
 fackpersoner inom respektive område.

@@ -1,7 +1,7 @@
 # Teknisk specifikation — CVmatchen
 
 Version: 2026-06-17
-Författare: Oliver Pettersson, PathfinderAI AB
+Författare: Oliver Pettersson, PathfinderAI (enskild firma)
 Avsedd för: Arbetsmarknadsförvaltningen Helsingborg + tekniska/IT-säkerhetsansvariga
 
 ---
@@ -298,7 +298,7 @@ process behövs.
 
 ## 10. Deployment & CI/CD
 
-- **Hosting**: Vercel Pro (PathfinderAI AB:s konto)
+- **Hosting**: Vercel Pro (PathfinderAI:s konto)
 - **Branch**: `main` → automatisk deploy till `cvmatchen.com`
 - **Rollback**: instant via Vercel-dashboarden (förra deploymentens URL kvar)
 - **Miljövariabler**: krypterade i Vercel (Supabase-nycklar, Bedrock-token,
@@ -339,7 +339,7 @@ För Helsingborgs pilot (~10 deltagare, 2 handläggare) finns 100x marginal.
 ## Kontakt
 
 Oliver Pettersson — Studie- och yrkesvägledare, grundare
-PathfinderAI AB
+PathfinderAI
 oliver.pettersson2@gmail.com
 
 För säkerhets-/IT-frågor: samma mejl, märk ärendet "TEKNISK".
