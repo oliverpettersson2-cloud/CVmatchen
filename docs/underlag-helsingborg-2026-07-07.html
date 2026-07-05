@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Underlag inför möte — CVmatchen × Helsingborg</title>
+<style>
+  :root{ --ink:#1a1f2b; --muted:#5b6473; --line:#e4e7ec; --bg:#fbfcfd;
+         --blue:#1a56db; --bluebg:#eef3fe; --red:#b42318; --redbg:#fef3f2;
+         --green:#067647; --greenbg:#ecfdf3; --amber:#b54708; --amberbg:#fffaeb; }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+       color:var(--ink); background:var(--bg); line-height:1.6; margin:0;}
+  .wrap{max-width:880px; margin:0 auto; padding:48px 28px 96px;}
+  h1{font-size:30px; line-height:1.2; margin:0 0 6px;}
+  h2{font-size:22px; margin:44px 0 6px; padding-top:22px; border-top:2px solid var(--line);}
+  h3{font-size:17px; margin:26px 0 4px; color:var(--ink);}
+  h4{font-size:15px; margin:18px 0 2px; color:var(--muted); text-transform:uppercase; letter-spacing:.03em;}
+  p,li{font-size:15.5px;}
+  .meta{color:var(--muted); font-size:14px; margin:2px 0;}
+  .lead{background:#fff; border:1px solid var(--line); border-left:4px solid var(--blue);
+        border-radius:8px; padding:14px 18px; margin:18px 0; font-size:14.5px;}
+  .kort{background:var(--bluebg); border-radius:8px; padding:10px 16px; margin:10px 0 14px; font-weight:600;}
+  .part{display:inline-block; font-size:13px; font-weight:700; letter-spacing:.04em;
+        text-transform:uppercase; color:#fff; background:var(--ink); padding:5px 14px;
+        border-radius:999px; margin:38px 0 4px;}
+  table{border-collapse:collapse; width:100%; margin:14px 0; font-size:14px;}
+  th,td{border:1px solid var(--line); padding:8px 11px; text-align:left; vertical-align:top;}
+  th{background:#f3f5f8;}
+  code{background:#f3f5f8; padding:1px 6px; border-radius:5px; font-size:13px;}
+  .tag{font-weight:700; font-size:12px; padding:1px 7px; border-radius:5px; white-space:nowrap;}
+  .ok{color:var(--green);}
+  .green{color:var(--green); font-weight:700;}
+  ul{margin:8px 0 8px 2px; padding-left:22px;}
+  li{margin:5px 0;}
+  .note{background:var(--amberbg); border:1px solid #fde68a; border-radius:8px; padding:10px 16px; margin:12px 0; font-size:14px;}
+  .diagram{background:#0f1729; color:#dfe6f2; border-radius:10px; padding:18px 20px; margin:16px 0;
+           font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; line-height:1.5;
+           white-space:pre; overflow-x:auto;}
+  .toc{background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 22px; margin:22px 0;}
+  .toc a{color:var(--blue); text-decoration:none;}
+  .toc li{margin:6px 0; font-weight:600;}
+  .toc small{font-weight:400; color:var(--muted);}
+  .pagebreak{page-break-before:always;}
+  footer{margin-top:48px; padding-top:16px; border-top:1px solid var(--line); color:var(--muted); font-size:13px;}
+  @media print{ body{background:#fff;} .wrap{padding:0 0 20px;} h2{page-break-after:avoid;} table,.diagram{page-break-inside:avoid;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Underlag inför möte — CVmatchen</h1>
+<p class="meta"><strong>Till:</strong> Isabella Seiger, Innovationsledare, Arbetsmarknadsförvaltningen Helsingborg</p>
+<p class="meta"><strong>Från:</strong> Oliver Pettersson — SYV, grundare PathfinderAI</p>
+<p class="meta"><strong>Datum:</strong> 2026-07-07</p>
+
+<div class="lead">
+Detta dokument samlar det tekniska och juridiska underlaget för CVmatchen inför fördjupad genomgång. Det innehåller fyra delar:
+<strong>1.</strong> Teknisk specifikation, <strong>2.</strong> Personuppgiftsbiträdesavtal (utkast), <strong>3.</strong> Konsekvensbedömning/DPIA (utkast), <strong>4.</strong> Kunskapskällor bakom träningsmodulerna.
+<br><br>
+Utkasten till PUB och DPIA är förberedda av leverantören som underlag — de ägs och slutförs av kommunen (dataskyddsombud och jurist) innan skarp drift.
+</div>
+
+<div class="toc">
+<strong>Innehåll</strong>
+<ol>
+<li><a href="#del1">Teknisk specifikation</a> <small>— arkitektur, säkerhet, GDPR, drift</small></li>
+<li><a href="#del2">PUB-avtal (utkast)</a> <small>— personuppgiftsbiträdesavtal enligt art. 28</small></li>
+<li><a href="#del3">DPIA (utkast)</a> <small>— konsekvensbedömning enligt art. 35</small></li>
+<li><a href="#del4">Kunskapskällor</a> <small>— evidens bakom träningsinnehållet</small></li>
+</ol>
+</div>
+
+<!-- ============ DEL 1 ============ -->
+<span class="part" id="del1">Del 1 — Teknisk specifikation</span>
+
+<h2 style="border:0;padding-top:8px;">Översikt</h2>
+<p>CVmatchen är en webbaserad SaaS-tjänst (Progressive Web App) som hjälper arbetssökande att skapa CV, matcha mot lediga tjänster och få handledning från arbetsmarknadshandläggare. Hela teknikstacken ligger inom EU/EES för GDPR-efterlevnad.</p>
+
+<h3>Arkitektur — var data ligger</h3>
+<div class="diagram">KLIENT (webbläsare / hemskärms-PWA)
+   |  HTTPS (TLS 1.3)
+   v
+APPLIKATIONSLAGER — Vercel Edge (Stockholm, arn1)
+   • Statiska sidor + serverless functions (/api)
+   |                         |
+   v                         v
+DATABAS                   AI-INFERENS
+Supabase Postgres         AWS Bedrock
+Frankfurt (EU)            Frankfurt (eu-central-1, EU)
+Row-Level Security        eu.anthropic.claude-*  (EU-only)
+   ^
+   |
+AUTH: OTP (invånare) · Microsoft OAuth (handläggare)
+   |
+   v
+MEJL: Resend (EU) — inbjudningar, engångskoder</div>
+
+<table>
+<tr><th>Lager</th><th>Leverantör</th><th>Region</th></tr>
+<tr><td>Statiska sidor + logik</td><td>Vercel</td><td>Stockholm (arn1)</td></tr>
+<tr><td>Databas (all persondata)</td><td>Supabase Postgres 17</td><td>Frankfurt (eu-central-1)</td></tr>
+<tr><td>AI-inferens</td><td>AWS Bedrock (Claude)</td><td>Frankfurt (eu-central-1)</td></tr>
+<tr><td>Transaktionsmejl</td><td>Resend</td><td>EU</td></tr>
+<tr><td>Felövervakning</td><td>Sentry</td><td>EU</td></tr>
+<tr><td>Inloggning personal</td><td>Microsoft EntraID</td><td>EU</td></tr>
+</table>
+<p class="green">Ingen data lämnar EU/EES. Ingen tredjelandsöverföring → ingen SCC/TIA-process krävs.</p>
+
+<h3>Klient (frontend)</h3>
+<ul>
+<li><strong>Vanilla JavaScript</strong> — inga ramverk. Snabb laddning, liten angreppsyta, lång livslängd.</li>
+<li><strong>Systemfonter</strong> — inga Google Fonts, ingen extern spårning.</li>
+<li><strong>PWA</strong> — installeras på hemskärm utan App Store; offline-fallback via localStorage, synkar mot databasen.</li>
+<li><strong>XSS-skydd</strong> — all användardata escapas; DOM-XSS-revision genomförd juni 2026.</li>
+</ul>
+
+<h3>Applikationslager (Vercel Serverless, Stockholm)</h3>
+<ul>
+<li><code>/api/supabase.js</code> — CRUD + auth. Alla admin-anrop går genom <code>requireAdmin()</code> som HMAC-verifierar handläggarens sessionstoken, slår upp färska behörigheter och kontrollerar att begärd kommun/enhet/deltagare ligger inom handläggarens tenant.</li>
+<li><code>/api/chat.js</code> — AI-proxy mot AWS Bedrock (EU). Inga prompts lagras permanent.</li>
+<li><code>/api/pdf.js</code> — PDF-generering (wkhtmltopdf + pandoc).</li>
+<li><code>/api/v1/auth/microsoft/*</code> — OAuth-flöde med CSRF-skydd och invite-token för handläggare.</li>
+</ul>
+
+<h3>Databas (Supabase / PostgreSQL 17, Frankfurt)</h3>
+<ul>
+<li><strong>Row-Level Security (RLS)</strong> på alla tabeller med personuppgifter. Deltagare ser bara sin egen data; handläggare bara deltagare inom sin kommun/enhet.</li>
+<li><strong>Service-nycklar</strong> används enbart serverside efter verifierad admin-behörighet — aldrig i klienten.</li>
+<li><strong>Backup:</strong> dagliga säkerhetskopior, 7 dagars retention, point-in-time recovery.</li>
+</ul>
+
+<h3>AI-lager (AWS Bedrock, Frankfurt)</h3>
+<ul>
+<li>Claude-modeller via Bedrock med modell-ID:n <code>eu.anthropic.*</code> — cross-region inference som håller all inferens inom EU.</li>
+<li>CV-data <strong>lagras inte</strong> hos AI-leverantören och <strong>används inte för modellträning</strong>.</li>
+<li>Intervjuträning: claude-sonnet-4-6 · CV-AI/matchning: claude-haiku-4-5 / sonnet-4-6.</li>
+<li class="green">Bedrock-EU aktivt i drift sedan 2026-06-18.</li>
+</ul>
+
+<h3>Autentisering</h3>
+<ul>
+<li><strong>Invånare:</strong> e-post + engångskod (OTP, 6 siffror, 5 min giltighet) via Supabase Auth.</li>
+<li><strong>Handläggare:</strong> Microsoft EntraID OAuth + invite-token vid första inloggning. HMAC-signerad sessionstoken (24h).</li>
+<li><strong>Inbjudningar:</strong> handläggare skapar invite → mejl via Resend → deltagaren loggar in med OTP → kommun/enhet kopplas på automatiskt.</li>
+</ul>
+
+<h3>Säkerhetsåtgärder i drift</h3>
+<ul>
+<li>TLS 1.3 (HSTS preload), CSP, X-Frame-Options, X-Content-Type-Options.</li>
+<li>HMAC-SHA256 för sessionstokens (constant-time-jämförelse).</li>
+<li>Multi-tenant-isolation med deny-by-default; avvisade åtkomstförsök loggas.</li>
+<li>Rate-limiting på AI-anrop, PII-maskering i loggar, Sentry-felövervakning, egna 404/500-sidor.</li>
+</ul>
+
+<h3>Drift, skalbarhet och vidareutveckling</h3>
+<ul>
+<li><strong>Deploy:</strong> automatisk från <code>main</code>-branch till cvmatchen.com. Instant rollback via Vercel.</li>
+<li><strong>Skalbarhet:</strong> nuvarande arkitektur klarar 5 000+ samtidiga användare utan kodändring. För Helsingborgs pilot (~10 deltagare) finns 100× marginal.</li>
+<li><strong>Färdplan:</strong> WCAG-granskning (extern), App Store/Google Play via Capacitor, penetrationstest, källredovisning per modul.</li>
+</ul>
+
+<!-- ============ DEL 2 ============ -->
+<span class="part pagebreak" id="del2">Del 2 — PUB-avtal (utkast)</span>
+
+<h2 style="border:0;padding-top:8px;">Personuppgiftsbiträdesavtal</h2>
+<p class="meta">Mellan <strong>Helsingborgs stad, Arbetsmarknadsförvaltningen</strong> (Personuppgiftsansvarig)
+och <strong>PathfinderAI AB</strong> (Personuppgiftsbiträde), genom tjänsten CVmatchen.</p>
+<div class="note">Utkastet följer strukturen i SKR:s mallavtal och GDPR art. 28. Använd kommunens egen mall om sådan finns — texten nedan är förslag på innehåll, anpassad för CVmatchens behandling. Bör granskas av kommunens dataskyddsombud och jurist innan undertecknande.</div>
+
+<h3>Kärnbestämmelser</h3>
+<ul>
+<li><strong>Instruktioner:</strong> biträdet behandlar personuppgifter enbart enligt PUA:s dokumenterade instruktioner och detta avtal.</li>
+<li><strong>Säkerhet:</strong> biträdet vidtar lämpliga tekniska och organisatoriska åtgärder (Bilaga B).</li>
+<li><strong>Underbiträden:</strong> generellt förhandsgodkännande med 30 dagars underrättelse vid förändring; PUA har invändningsrätt (Bilaga C).</li>
+<li><strong>Tredjelandsöverföring:</strong> ingen överföring utanför EU/EES sker; kräver annars PUA:s uttryckliga skriftliga samtycke.</li>
+<li><strong>Tystnadsplikt</strong> för all personal som behandlar uppgifterna.</li>
+<li><strong>Bistånd:</strong> biträdet hjälper PUA att uppfylla registrerades rättigheter samt skyldigheter enligt art. 32–36.</li>
+<li><strong>Incident:</strong> anmälan till PUA utan onödigt dröjsmål, senast inom <strong>24 timmar</strong> från upptäckt.</li>
+<li><strong>Granskning:</strong> PUA har revisionsrätt (dokumentation, på plats-revision, tredjepartsrapport).</li>
+<li><strong>Avslut:</strong> radering eller återlämning av all data i öppet format, med skriftlig bekräftelse.</li>
+</ul>
+
+<h4>Bilaga A — Behandlingen</h4>
+<p>Ändamål: CV-skapande, jobbmatchning, intervjuträning och uppföljning inom kommunal arbetsmarknadsverksamhet. Varaktighet: pilot 3 månader, därefter förlängning vid direktupphandling.</p>
+<p><strong>Kategorier av uppgifter:</strong> identitet (namn), kontakt (e-post, telefon), CV-innehåll (erfarenhet, utbildning, kompetenser, körkort, certifikat), aktivitetsdata, AI-konversationer (pseudonymiserade). <strong>Inga särskilda kategorier</strong> (art. 9) behandlas avsiktligt; fritext varnas mot att innehålla sådant.</p>
+
+<h4>Bilaga B — Säkerhetsåtgärder</h4>
+<p><strong>Tekniska:</strong> TLS 1.3, OTP + OAuth + HMAC-tokens, Row-Level Security, kryptering at rest (AES-256), daglig backup + PITR, Sentry-övervakning, audit-logg.
+<strong>Organisatoriska:</strong> privat repo med branch-protection, inga produktionsdata i utveckling, tystnadsplikt, incidentrutin med 24h-frist.</p>
+
+<h4>Bilaga C — Underbiträden</h4>
+<table>
+<tr><th>Underbiträde</th><th>Tjänst</th><th>Behandlingsregion</th></tr>
+<tr><td>Vercel</td><td>Hosting + serverless</td><td>Stockholm (EU)</td></tr>
+<tr><td>Supabase</td><td>Databas + auth</td><td>Frankfurt (EU)</td></tr>
+<tr><td>AWS Bedrock</td><td>AI-inferens</td><td>Frankfurt (EU)</td></tr>
+<tr><td>Resend</td><td>Transaktionsmejl</td><td>EU</td></tr>
+<tr><td>Sentry</td><td>Felövervakning (ej PII)</td><td>EU</td></tr>
+<tr><td>Microsoft</td><td>Inloggning personal</td><td>EU</td></tr>
+</table>
+<p class="meta">Samtliga behandlar data inom EU/EES. Respektive leverantörs DPA finns och kan tillhandahållas på begäran.</p>
+
+<!-- ============ DEL 3 ============ -->
+<span class="part pagebreak" id="del3">Del 3 — DPIA (utkast)</span>
+
+<h2 style="border:0;padding-top:8px;">Konsekvensbedömning avseende dataskydd</h2>
+<div class="note">En DPIA ska ägas och slutföras av kommunen (dataskyddsombudet). Detta är ett leverantörsförberett underlag. Behandlingen får inte tas i drift med skarpa personuppgifter förrän DPIA:n är slutförd och godkänd.</div>
+
+<h3>Behövs en DPIA? — Ja</h3>
+<p>Behandlingen träffar flera riskkriterier: profilering (AI-matchning), <strong>sårbar målgrupp</strong> (arbetssökande i beroendeförhållande), <strong>potentiellt känsliga uppgifter</strong> i fritext (art. 9), och <strong>innovativ teknik</strong> (generativ AI). DPIA krävs.</p>
+
+<h3>Automatiserat beslutsfattande (art. 22) — nej</h3>
+<div class="kort">AI:n föreslår — människan beslutar. Ingen myndighetsbedömning fattas av AI:n.</div>
+<p>Matchningar, profiltexter och intervjufeedback är förslag som deltagaren och handläggaren godkänner. Aktivitetsloggen är ett underlag bland flera i handläggarens helhetsbedömning — en miss i systemet kan aldrig ensam leda till indraget eller minskat försörjningsstöd.</p>
+
+<h3>Riskanalys (urval)</h3>
+<table>
+<tr><th>Risk</th><th>Nivå</th><th>Skydd</th><th>Restrisk</th></tr>
+<tr><td>Obehörig åtkomst</td><td>Medel</td><td>RLS, tenant-isolation, TLS, kryptering</td><td>Låg–Medel</td></tr>
+<tr><td>Cross-tenant-läcka</td><td>Medel</td><td>Serverside verifyAdmin, deny-by-default</td><td>Låg</td></tr>
+<tr><td>Känsliga uppgifter i fritext (R3)</td><td>Hög</td><td>AI-samtycke + <span class="green">varningstext (åtgärdad)</span> + människa-i-loopen</td><td>Medel</td></tr>
+<tr><td>AI-text felaktig</td><td>Medel</td><td>Deltagaren granskar/godkänner allt</td><td>Låg</td></tr>
+<tr><td>AI-data lämnar EU</td><td>Låg–Medel</td><td>Bedrock EU, ingen lagring/träning</td><td>Låg</td></tr>
+<tr><td>Aktivitetslogg → försörjningsstöd</td><td>Medel</td><td>Loggen är underlag, ej beslut</td><td>Låg–Medel</td></tr>
+<tr><td>Leverantörsberoende</td><td>Medel</td><td>Escrow, dataportabilitet, SLA</td><td>Låg–Medel</td></tr>
+</table>
+
+<h3>Åtgärder innan skarp drift</h3>
+<table>
+<tr><th>Åtgärd</th><th>Ansvarig</th><th>Status</th></tr>
+<tr><td>Varningstext vid CV-fritextfält</td><td>PathfinderAI</td><td class="green">✅ Klar</td></tr>
+<tr><td>AI-samtyckesflöde i drift</td><td>PathfinderAI</td><td class="green">✅ Klar</td></tr>
+<tr><td>Bedrock-EU aktivt</td><td>PathfinderAI</td><td class="green">✅ Klar</td></tr>
+<tr><td>Handläggarrutin: logg = underlag, ej beslut</td><td>Kommunen</td><td>⏳</td></tr>
+<tr><td>PUB-avtal undertecknat</td><td>Båda</td><td>⏳</td></tr>
+<tr><td>Fastställ laglig grund för art. 9-data</td><td>Dataskyddsombud</td><td>⏳</td></tr>
+<tr><td>Fastställ lagringstid</td><td>Dataskyddsombud</td><td>⏳</td></tr>
+<tr><td>Extern WCAG-granskning</td><td>PathfinderAI</td><td>⏳ (tidigt i pilot)</td></tr>
+<tr><td>DPIA slutförd och godkänd</td><td>Dataskyddsombud</td><td>⏳</td></tr>
+</table>
+
+<!-- ============ DEL 4 ============ -->
+<span class="part pagebreak" id="del4">Del 4 — Kunskapskällor</span>
+
+<h2 style="border:0;padding-top:8px;">Evidens bakom träningsmodulerna</h2>
+<div class="note">Innehållet bygger på etablerade myndighets- och forskningskällor, men är ännu inte formellt peer-reviewat eller utvärderat i kontrollerad studie. Vi föreslår en gemensam effektutvärdering under pilotperioden.</div>
+
+<table>
+<tr><th>Kategori</th><th>Primära källor</th></tr>
+<tr><td><strong>Arbete</strong> — CV, jobbsökning, intervju</td><td>Arbetsförmedlingen (yrkesguider, lönestatistik), Saco, Unionen, OECD Skills Outlook. Intervju: STAR-metoden (beteendeintervjuforskning, HBR).</td></tr>
+<tr><td><strong>Studier</strong></td><td>Skolverket, UHR, CSN, Studieinfo.se, Yrkeshögskolan.se, Folkbildningsrådet.</td></tr>
+<tr><td><strong>Hälsa</strong></td><td>Folkhälsomyndigheten, 1177 Vårdguiden, WHO, FYSS (Socialstyrelsen), NASP (suicidprevention).</td></tr>
+<tr><td><strong>Ekonomi</strong></td><td>Konsumentverket / Hallå Konsument, Skatteverket, Finansinspektionen (Gilla Din Ekonomi), Pensionsmyndigheten, Kronofogden.</td></tr>
+<tr><td><strong>Digitalt</strong></td><td>EU DigComp 2.2, Internetstiftelsen, MSB, DIGG.</td></tr>
+<tr><td><strong>Intervjuträning (AI)</strong></td><td>STAR-metoden + Behavioral Event Interview (kompetensbaserad rekrytering); branschfrågor från Arbetsförmedlingens yrkesguider.</td></tr>
+</table>
+
+<h3>Kvalitetssäkring</h3>
+<ul>
+<li>Lag- och regelförändringar (skatt, studiemedel) gås igenom kvartalsvis mot källmyndigheternas senaste utgåvor.</li>
+<li>CVmatchen ger inte juridisk, medicinsk eller finansiell rådgivning — modulerna hänvisar vidare till relevanta myndigheter (1177, Konsumentverket m.fl.).</li>
+<li>AI-genererade förslag är förslag — deltagaren fattar alltid det slutgiltiga beslutet.</li>
+</ul>
+
+<h3>Föreslagen effektutvärdering under piloten</h3>
+<ul>
+<li>Andel deltagare som slutfört minst en modul efter 4 veckor.</li>
+<li>Upplevd förbättring i beredskap för arbetsmarknaden (pre/post-enkät).</li>
+<li>Antal genomförda intervjuövningar per deltagare.</li>
+</ul>
+<p>Resultatet kan ligga till grund för Visionsfondens-ansökan hösten 2026 och eventuell forskningssamverkan med Lunds eller Malmö universitet.</p>
+
+<footer>
+CVmatchen — PathfinderAI · Oliver Pettersson, oliver.pettersson2@gmail.com<br>
+Detta underlag samlar teknisk specifikation, PUB-utkast, DPIA-utkast och källredovisning. Utkasten till PUB och DPIA ägs och slutförs av Helsingborgs stad (dataskyddsombud och jurist) innan skarp drift.<br>
+Version 2026-07-07.
+</footer>
+
+</div>
+</body>
+</html>
