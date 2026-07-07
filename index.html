@@ -6459,7 +6459,7 @@
         } catch(haikuErr) {
           // Fallback till Sonnet om Haiku misslyckas
           console.warn('[ai-autofill] Haiku failed, trying Sonnet:', haikuErr.message);
-          tasks = await tryModel('claude-sonnet-4-6');
+          tasks = await tryModel('claude-sonnet-5');
         }
 
         if (tasks.length >= 1) document.getElementById('jobDesc1').value = tasks[0] || '';
@@ -6597,7 +6597,7 @@
             'anthropic-version': '2023-06-01',
           },
           body: JSON.stringify({
-            model: 'claude-sonnet-4-6',
+            model: 'claude-sonnet-5',
             max_tokens: 1200,
             system: PATHFINDER_SYSTEM_PROMPT,
             messages: [{ role: 'user', content: prompt }]
@@ -13691,7 +13691,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
+          model: 'claude-sonnet-5',
           max_tokens: 1500,
           system: 'Du ar en CV-expert. Svara ALLTID med giltig JSON och inget annat. Inga markdown-backticks, inga forklaringar utanfor JSON.',
           messages: [{ role: 'user', content: prompt }]
@@ -14451,7 +14451,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
+          model: 'claude-sonnet-5',
           max_tokens: 1500,
           system: 'Du ar en CV-expert. Svara ALLTID med giltig JSON och inget annat.',
           messages: [{ role: 'user', content: prompt }]

@@ -1660,9 +1660,9 @@
 
     try {
       let tasks;
-      let modelUsed = 'claude-sonnet-4-6';
+      let modelUsed = 'claude-sonnet-5';
       try {
-        tasks = await tryModel('claude-sonnet-4-6');
+        tasks = await tryModel('claude-sonnet-5');
       } catch(sonnetErr) {
         // Fallback till Haiku 4.5 om Sonnet misslyckas (rate-limit, modell ej tillgänglig osv)
         console.warn('[ai-autofill] Sonnet failed, trying Haiku:', sonnetErr.message);
@@ -3553,7 +3553,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
+          model: 'claude-sonnet-5',
           max_tokens: 1800,
           system: 'Du är en svensk CV-coach som hjälper jobbsökare att skriva profiltexter som INTE låter AI-genererade. Din specialitet: mänsklig, konkret, berättande svenska — inte corporate buzzwords. Du undviker ord som "driven", "resultatorienterad", "direkt överförbar", "lugnt och metodiskt", "teamplayer". Istället refererar du till konkreta saker personen gjort, som en vän som hjälper till med brev. Svara ALLTID med giltig JSON och inget annat.',
           messages: [{ role: 'user', content: prompt }]
@@ -3960,7 +3960,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
+          model: 'claude-sonnet-5',
           max_tokens: 300,
           system: 'Du är en CV-expert. Svara ALLTID med giltig JSON och inget annat. Basera kompetenser på användarens faktiska arbetslivserfarenhet.',
           messages: [{ role: 'user', content: userContent }]
@@ -4234,7 +4234,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
+          model: 'claude-sonnet-5',
           max_tokens: 800,
           system: 'Du är en svensk CV-coach som skriver profiltexter som INTE låter AI-genererade. Mänsklig, konkret, berättande svenska — inte corporate buzzwords. Du undviker ord som "driven", "resultatorienterad", "direkt överförbar", "lugnt och metodiskt", "teamplayer". Istället refererar du till konkreta saker personen gjort, som en vän som hjälper till. Alltid i FÖRSTA PERSON. Alltid i TVÅ stycken separerade med dubbel radbrytning.',
           messages: [{ role: 'user', content: userContent }]
@@ -4337,7 +4337,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
+          model: 'claude-sonnet-5',
           max_tokens: 1200,
           system: 'Du är en svensk CV-coach som skriver profiltexter som INTE låter AI-genererade. Mänsklig, konkret, berättande svenska — inte corporate buzzwords. Alltid i FÖRSTA PERSON.',
           messages: [{ role: 'user', content: prompt }]

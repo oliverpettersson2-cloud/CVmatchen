@@ -69,7 +69,13 @@ export default async function handler(req, res) {
   // = Frankfurt). All data håller sig då inom EU → GDPR-rent för kommunpiloter.
   // Annars: fall tillbaka på direktanrop mot api.anthropic.com (USA) som idag.
   const bedrockToken = process.env.AWS_BEARER_TOKEN_BEDROCK || process.env.WS_BEARER_TOKEN_BEDROCK;
-  const useBedrock = !!bedrockToken;
+  // Bedrock är opt-in via miljövariabeln USE_BEDROCK (1/true/yes/on). Utan
+  // flaggan används direktanrop mot api.anthropic.com även om en Bedrock-token
+  // finns kvar i miljön. Så kör vi på direkt-API:t nu och kan återaktivera
+  // Bedrock senare med en flaggväxling — efter att modell-ID:na mappats mot
+  // ett aktiverat AWS-konto (Model access i eu-central-1).
+  const bedrockEnabled = /^(1|true|yes|on)$/i.test(process.env.USE_BEDROCK || '');
+  const useBedrock = !!bedrockToken && bedrockEnabled;
 
   let endpoint, headers, payload;
   if (useBedrock) {
@@ -78,7 +84,7 @@ export default async function handler(req, res) {
     // OBS: modell-ID:n på Bedrock skiljer sig från Anthropics direkta API —
     // vissa har dat-suffix + version. Mappa exakt, gissa inte med prefix.
     const BEDROCK_EU_MODELS = {
-      'claude-sonnet-4-6':            'eu.anthropic.claude-sonnet-4-6',
+      'claude-sonnet-5':            'eu.anthropic.claude-sonnet-5',
       'claude-haiku-4-5-20251001':    'eu.anthropic.claude-haiku-4-5-20251001-v1:0',
       'claude-opus-4-6':              'eu.anthropic.claude-opus-4-6-v1',
       'claude-opus-4-8':              'eu.anthropic.claude-opus-4-8',
