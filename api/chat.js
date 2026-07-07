@@ -122,11 +122,27 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch(endpoint, {
+    let response = await fetch(endpoint, {
       method: 'POST',
       headers,
       body: JSON.stringify(payload)
     });
+
+    // Bedrock-fallback: om den valda EU-modellen inte finns/är otillgänglig
+    // (404/400 = fel modell-ID eller modell ej aktiverad i regionen), försök
+    // igen med Haiku 4.5 vars EU-inferens-ID är bekräftat. Håller kvar all
+    // inferens inom EU (byter bara modell, inte region/leverantör).
+    const HAIKU_EU = 'eu.anthropic.claude-haiku-4-5-20251001-v1:0';
+    if (useBedrock && !response.ok && (response.status === 404 || response.status === 400)
+        && endpoint.indexOf(encodeURIComponent(HAIKU_EU)) === -1) {
+      console.warn('[chat] Bedrock', response.status, 'på', safeBody.model, '→ fallback till Haiku 4.5 (EU)');
+      const fbEndpoint = `https://bedrock-runtime.${process.env.AWS_REGION || 'eu-central-1'}.amazonaws.com/model/${encodeURIComponent(HAIKU_EU)}/invoke`;
+      response = await fetch(fbEndpoint, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload)
+      });
+    }
 
     const data = await response.json();
 

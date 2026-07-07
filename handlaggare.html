@@ -6898,7 +6898,7 @@ Max 5 kluster. Sortera efter antal_deltagare (störst först).`;
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        model: 'claude-sonnet-5',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 3000,
         system: systemPrompt,
         messages: [{role:'user', content: userPrompt}]
@@ -7009,7 +7009,7 @@ Inkludera max 10 kandidater, sorterade efter score (högst först). Ta bara med 
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        model: 'claude-sonnet-5',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 2500,
         system: systemPrompt,
         messages: [{role:'user', content: userPrompt}]
