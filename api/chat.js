@@ -60,7 +60,13 @@ export default async function handler(req, res) {
   // Klampa max_tokens — bryter aldrig en legitim förfrågan, blockerar abuse
   const safeBody = {
     ...body,
-    max_tokens: Math.min(Number(body.max_tokens) || 1024, MAX_OUTPUT_TOKENS)
+    max_tokens: Math.min(Number(body.max_tokens) || 1024, MAX_OUTPUT_TOKENS),
+    // Sonnet 5 kör adaptivt tänkande som standard när `thinking` utelämnas.
+    // Då läggs ett tomt thinking-block först i svaret, vilket bryter frontendens
+    // content[0].text-parsers ("AI svarade i fel format"). Appens anrop är enkla
+    // one-shot-generatorer som inte behöver tänkande — stäng av det om anroparen
+    // inte uttryckligen bett om det. Ger samma svarsform som sonnet-4-6 hade.
+    thinking: body.thinking || { type: 'disabled' }
   };
 
   // ── Bedrock vs Anthropic direct ──────────────────────────────────────────
