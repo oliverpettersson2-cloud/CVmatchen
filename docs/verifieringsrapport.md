@@ -71,10 +71,14 @@ viewport, rubrikstruktur, alt-texter, formuläretiketter, knapptext.
 **Tolkning:**
 - **Grunden är god:** språkattribut, viewport, rubriknivåer och alt-texter
   är på plats i alla vyer.
-- **Flaggat för manuell kontroll:** ett fåtal formulärfält utan
-  `aria-label` (kan ha `<label for>` som heuristiken inte fångar) samt
-  ikon-knappar utan textalternativ. Dessa ska verifieras och vid behov
-  förses med `aria-label`. Antalet är litet och åtgärdas snabbt.
+- **Åtgärdat 2026-07-07:** samtliga flaggade interaktiva kontroller
+  (ikon-knappar för favorit/foto, sök- och inbjudningsfält, filuppladdning)
+  har försetts med `aria-label`. Efter fix: **0 synliga kontroller utan
+  textalternativ**. Kvar är en enda `display:none`-legacyknapp som aldrig
+  når skärmläsare (borttags i städning, backlog #36).
+- **Kvarstår för extern audit:** uppmätt färgkontrast, skärmläsartest
+  (NVDA/VoiceOver) och tangentbordsgenomgång — kräver riktig
+  hjälpmedelsmiljö, se nedan.
 
 ---
 
@@ -96,10 +100,16 @@ håller, och ger en ärlig bild av var kvarvarande arbete finns.
 
 ## Åtgärdslista från denna granskning
 
-| # | Åtgärd | Prioritet |
-|---|--------|-----------|
-| 1 | Uppgradera puppeteer-core (åtgärdar 23 dep-sårbarheter) + testa PDF-export | Medel |
-| 2 | Verifiera + `aria-label` på flaggade ikon-knappar och fält | Medel |
-| 3 | Boka oberoende pentest (finansieras via Visionsfonden) | Hög (före skarp drift) |
-| 4 | Boka extern WCAG-audit (t.ex. Funka) | Hög (lagkrav DOS-lagen) |
-| 5 | Kör lasttest (k6) mot skalningspåståendet | Medel |
+| # | Åtgärd | Status |
+|---|--------|--------|
+| 1 | `aria-label` på flaggade ikon-knappar och fält | ✅ Klart 2026-07-07 |
+| 2 | Lasttest-script framtaget (`tests/load-test.js`, k6) | ✅ Klart — kör mot preview |
+| 3 | Uppgradera puppeteer-core + `@sparticuz/chromium` (23 dep-sårbarheter) + testa PDF | ⏳ Backlog #35 (kräver PDF-test före prod) |
+| 4 | Boka oberoende pentest (finansieras via Visionsfonden) | ⏳ Hög — före skarp drift |
+| 5 | Boka extern WCAG-audit (t.ex. Funka) | ⏳ Hög — lagkrav DOS-lagen |
+
+### Lasttest — så bevisas skalningen
+Ett körklart k6-script finns i `tests/load-test.js`. Det trappar upp till
+500 samtidiga virtuella användare mot publika sidor (ingen persondata) och
+mäter svarstid + felandel. Grön tröskel (p95 < 1,5 s, fel < 1 %) ger konkret
+bevis för kapacitetspåståendet. Körs mot en preview-miljö, ej skarp prod.

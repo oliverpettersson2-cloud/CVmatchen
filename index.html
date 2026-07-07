@@ -8443,9 +8443,9 @@ ${styleTexts}
         <div class="mob-section-title">Profilbild</div>
         <div class="mob-toggle-row">
           <span class="mob-toggle-label">Visa profilbild</span>
-          <button class="mob-toggle mob-toggle--on" id="mobPhotoToggle" onclick="mobTogglePhoto()"></button>
+          <button class="mob-toggle mob-toggle--on" id="mobPhotoToggle" onclick="mobTogglePhoto()" aria-label="Visa eller dölj foto på CV:t"></button>
         </div>
-        <input type="file" id="mobPhotoUpload" accept="image/*" onchange="mobUploadPhoto()" style="display:none;">
+        <input type="file" id="mobPhotoUpload" accept="image/*" onchange="mobUploadPhoto()" style="display:none;" aria-label="Ladda upp profilfoto">
         <button class="mob-btn-primary mob-btn-green" onclick="document.getElementById(&#39;mobPhotoUpload&#39;).click()">
           🖼️ Välj foto från bilder
         </button>

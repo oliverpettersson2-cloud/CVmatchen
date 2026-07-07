@@ -993,11 +993,11 @@ td{padding:10px 13px;vertical-align:middle}
 
     <div class="modal-field">
       <label class="modal-label">E-postadress *</label>
-      <input type="email" class="modal-input" id="adminInviteEmail" placeholder="namn@kommun.se">
+      <input type="email" class="modal-input" id="adminInviteEmail" placeholder="namn@kommun.se" aria-label="E-postadress">
     </div>
     <div class="modal-field">
       <label class="modal-label">Namn (valfritt)</label>
-      <input type="text" class="modal-input" id="adminInviteName" placeholder="Förnamn Efternamn" style="padding-left:12px">
+      <input type="text" class="modal-input" id="adminInviteName" placeholder="Förnamn Efternamn" style="padding-left:12px" aria-label="Namn (valfritt)">
     </div>
     <div class="modal-field">
       <label class="modal-label">Roll *</label>
@@ -1015,7 +1015,7 @@ td{padding:10px 13px;vertical-align:middle}
     <div id="adminInviteResult" style="display:none;margin:14px 0;padding:12px;background:rgba(62,180,137,0.08);border:1px solid #3eb489;border-radius:8px;">
       <div style="font-size:12px;font-weight:700;color:#3eb489;margin-bottom:6px;">Inbjudan skapad — kopiera länken</div>
       <div style="display:flex;gap:6px;">
-        <input type="text" id="adminInviteLink" readonly style="flex:1;padding:8px;font-size:11px;border:1px solid var(--bd);border-radius:6px;background:#fff;">
+        <input type="text" id="adminInviteLink" readonly aria-label="Inbjudningslänk" style="flex:1;padding:8px;font-size:11px;border:1px solid var(--bd);border-radius:6px;background:#fff;">
         <button class="btn" onclick="copyAdminInviteLink()" id="adminInviteCopyBtn">Kopiera</button>
       </div>
     </div>
@@ -2058,7 +2058,7 @@ function renderTable(users){
     const avatarText = ini(name) || '·';
     const avatarStyle = isPlaceholder ? 'background:rgba(245,158,11,0.12);color:#d97706;' : '';
     return `<tr onclick="openDetail('${uid}')">
-      <td style="text-align:center" onclick="event.stopPropagation()"><button class="star-btn${isStarred?' starred':''}" data-uid="${uid}" onclick="toggleFavorite('${uid}',event)" title="${isStarred?'Ta bort från Mina':'Lägg till i Mina'}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button></td>
+      <td style="text-align:center" onclick="event.stopPropagation()"><button class="star-btn${isStarred?' starred':''}" data-uid="${uid}" onclick="toggleFavorite('${uid}',event)" aria-label="${isStarred?'Ta bort från Mina deltagare':'Lägg till i Mina deltagare'}" title="${isStarred?'Ta bort från Mina':'Lägg till i Mina'}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button></td>
       <td><div class="uc"><div class="ua" style="${avatarStyle}">${escapeHtml(avatarText)}</div><div style="min-width:0;flex:1;"><div class="un" style="${nameStyle}">${escapeHtml(name)}${placeholderBadge}${testBadge}</div><div class="ue">${escapeHtml(email)}</div>${uid?`<div style="font-size:10px;color:rgba(0,0,0,0.32);font-family:ui-monospace,'SF Mono','Menlo',monospace;letter-spacing:0.2px;margin-top:1px;cursor:pointer;" onclick="event.stopPropagation();navigator.clipboard?.writeText('${uid}');this.textContent='✓ Kopierat!';setTimeout(()=>this.textContent='ID: ${uid.substring(0,12)}${uid.length>12?'…':''}',1500);" title="Kopiera fullständigt ID: ${uid}">ID: ${uid.substring(0,12)}${uid.length>12?'…':''}</div>`:''}</div></div></td>
       <td class="hm dc">${handlaggareCell}</td>
       <td class="hm dc">${escapeHtml(u.enheter?.name||u.enhet_name||'')}</td>
@@ -4850,7 +4850,7 @@ function renderWizStep2(){
     <label class="wz-upload${wiz.file?' has-file':''}" onclick="document.getElementById('wzFile').click()">
       ${fileInfo}
     </label>
-    <input type="file" id="wzFile" accept=".pptx" style="display:none" onchange="wizardFileChosen(event)">
+    <input type="file" id="wzFile" accept=".pptx" style="display:none" onchange="wizardFileChosen(event)" aria-label="Ladda upp PowerPoint-fil">
     ${matchHTML}
     ${aiSection}
     ${!wiz.file ? `
@@ -6813,7 +6813,7 @@ function renderMatchningView(){
         (${haveCV.length} med ifyllt CV) och rangordnar de bästa matchningarna med motivering.
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <input id="matchQuery" type="text" placeholder='t.ex. "lagerarbetare med B-körkort" eller "barnskötare, gärna med erfarenhet av förskola"' style="flex:1;min-width:260px;padding:11px 14px;border:1px solid var(--bd);border-radius:8px;font-size:14px;font-family:inherit;" onkeydown="if(event.key==='Enter')runMatchning()" />
+        <input id="matchQuery" type="text" aria-label="Beskriv tjänsten att matcha deltagare mot" placeholder='t.ex. "lagerarbetare med B-körkort" eller "barnskötare, gärna med erfarenhet av förskola"' style="flex:1;min-width:260px;padding:11px 14px;border:1px solid var(--bd);border-radius:8px;font-size:14px;font-family:inherit;" onkeydown="if(event.key==='Enter')runMatchning()" />
         <button class="btn btn-primary" onclick="runMatchning()" style="padding:11px 18px;">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
           Hitta matchningar

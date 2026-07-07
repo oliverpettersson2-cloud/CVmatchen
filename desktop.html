@@ -3363,7 +3363,7 @@
                   <img id="profilePhoto" style="display:none;" alt="Profilbild">
                 </div>
                 <div class="photo-actions">
-                  <input type="file" id="photoUpload" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)">
+                  <input type="file" id="photoUpload" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)" aria-label="Ladda upp profilfoto">
                   <button type="button" class="photo-btn" onclick="document.getElementById('photoUpload').click()">📷 Ladda upp bild</button>
                   <button type="button" class="photo-btn danger" id="removePhotoBtn" onclick="removeProfilePhoto()" disabled>🗑 Ta bort bild</button>
                   <div class="photo-hint">Rekommenderad: kvadratisk bild, minst 300×300 pixlar</div>
