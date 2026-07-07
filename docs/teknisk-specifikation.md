@@ -135,7 +135,7 @@ const BEDROCK_EU_MODELS = {
 ```
 
 #### `/api/pdf.js`
-Genererar PDF via `wkhtmltopdf` och `pandoc` (memory: 1024MB, timeout: 10s).
+Genererar PDF via headless Chromium (`puppeteer-core` + `@sparticuz/chromium`).
 Anropas från CV-export och rapport-export i admin-panelen.
 
 #### `/api/v1/auth/microsoft/callback.js`
