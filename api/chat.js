@@ -78,7 +78,7 @@ export default async function handler(req, res) {
     // OBS: modell-ID:n på Bedrock skiljer sig från Anthropics direkta API —
     // vissa har dat-suffix + version. Mappa exakt, gissa inte med prefix.
     const BEDROCK_EU_MODELS = {
-      'claude-sonnet-4-6':            'eu.anthropic.claude-sonnet-4-6',
+      'claude-sonnet-5':            'eu.anthropic.claude-sonnet-5',
       'claude-haiku-4-5-20251001':    'eu.anthropic.claude-haiku-4-5-20251001-v1:0',
       'claude-opus-4-6':              'eu.anthropic.claude-opus-4-6-v1',
       'claude-opus-4-8':              'eu.anthropic.claude-opus-4-8',

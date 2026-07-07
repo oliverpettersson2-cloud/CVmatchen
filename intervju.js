@@ -25,7 +25,7 @@
   // KONFIGURATION
   // ══════════════════════════════════════════════════════════════
   var CONFIG = {
-    claudeModel: 'claude-sonnet-4-6',  // Sonnet 4.6 för intervjun — bättre nyanserade följdfrågor, läser CV-kontext skarpare. ~5x dyrare än Haiku men ~10 kr/intervju är försumbart.
+    claudeModel: 'claude-sonnet-5',  // Sonnet 5 för intervjun — bättre nyanserade följdfrågor, läser CV-kontext skarpare. ~5x dyrare än Haiku men ~10 kr/intervju är försumbart.
     maxSpeechHistoryChars: 8000, // trunkera om historiken blir enorm
     defaultVoiceLang: 'sv-SE',
     ttsRate: 0.95,

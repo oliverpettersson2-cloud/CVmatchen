@@ -5617,7 +5617,7 @@ Skapa ${numTasks} uppgifter som ALLA kopplar lektionens ämne till deltagarens e
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
+        model: 'claude-sonnet-5',
         max_tokens: 4000,
         system: systemPrompt,
         messages: [{ role: 'user', content: userPrompt }]
@@ -6898,7 +6898,7 @@ Max 5 kluster. Sortera efter antal_deltagare (störst först).`;
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
+        model: 'claude-sonnet-5',
         max_tokens: 3000,
         system: systemPrompt,
         messages: [{role:'user', content: userPrompt}]
@@ -7009,7 +7009,7 @@ Inkludera max 10 kandidater, sorterade efter score (högst först). Ta bara med 
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
+        model: 'claude-sonnet-5',
         max_tokens: 2500,
         system: systemPrompt,
         messages: [{role:'user', content: userPrompt}]
