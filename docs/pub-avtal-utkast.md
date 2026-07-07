@@ -1,5 +1,10 @@
 # Personuppgiftsbiträdesavtal (PUB) — utkast
 
+> ⚠️ **UTKAST — visas som underlag, inte för underskrift.** Detta är ett
+> förberett förslag som visar vad leverantören tagit fram. Innehållet ska
+> granskas, ändras och färdigförhandlas av Helsingborgs stads
+> dataskyddsombud och jurist innan det blir ett bindande avtal.
+
 Mellan **Helsingborgs stad, Arbetsmarknadsförvaltningen** (org.nr 212000-1157)
 ("Personuppgiftsansvarig", PUA)
 
