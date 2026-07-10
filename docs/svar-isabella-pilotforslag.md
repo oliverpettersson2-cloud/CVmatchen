@@ -6,6 +6,17 @@ Datum: 2026-07-07
 
 ---
 
+> **Kort hälsning (för Teams):**
+> Hej Isabella! Tack igen för att du tog dig tid och för de ärliga
+> frågorna — de fick mig att skärpa både produkten och min egen förståelse
+> för vad som återstår. Här kommer svaren du bad om, plus ett bifogat
+> underlag om du eller ledningsgruppen vill gå på djupet. Jag har också
+> vågat ställa en liten, öppen fråga i slutet — inget krav, bara en tanke
+> jag gärna lämnar hos er att göra vad ni vill med. Ha en fin sommar så
+> länge!
+
+---
+
 Tack för de tydliga frågorna. Nedan svarar jag kort på var och en. Mer
 detaljerat underlag (teknisk specifikation, PUB- och DPIA-utkast,
 källredovisning och en verifieringsrapport) finns bifogat.
@@ -102,9 +113,18 @@ Tanken bakom frågan:
 - En smal pilot gör det enklare att göra rätt: tydlig omfattning, PUB och
   DPIA på plats, och en enkel effektuppföljning som ger er **konkret
   beslutsunderlag** (deltar/slutför/upplevd nytta) inför framtida vägval.
-- Jag är också öppen för att en sådan pilot **finansieras via
-  Visionsfonden** (utveckla CVmatchen för helsingborgare), så att den inte
-  belastar arenans egen budget.
+- Ekonomin ska inte vara ett hinder: jag erbjuder det till **självkostnad**
+  (enbart drift- och AI-kostnader, utan vinstpålägg) — eller så söker vi
+  **finansiering via Visionsfonden** (utveckla CVmatchen för helsingborgare),
+  så att arenans egen budget inte belastas.
+
+Och jag vill vara ärlig med varför jag frågar, för det känns rätt att säga
+det rakt ut: om en sådan pilot faller väl ut vore det något både
+verksamheten — och du i din roll — skulle kunna vara stolta över att ha
+vågat pröva. Skulle resultaten utebli har vi ändå förlorat väldigt lite: en
+liten, avgränsad insats till självkostnad, med lärdom på köpet. Nedsidan är
+liten, uppsidan kan bli fin, och oavsett hur det går har vi gjort något
+klokt tillsammans. Det är i den andan jag lämnar frågan hos er.
 
 Jag betonar att detta är just en **fråga**, inte ett erbjudande jag driver.
 Om ni ser en möjlighet hanteras form, omfattning, jäv och avtal helt enligt
