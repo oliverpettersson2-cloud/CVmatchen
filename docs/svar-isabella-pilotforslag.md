@@ -2,7 +2,7 @@
 
 Till: Isabella Seiger, Innovationsledare, Arbetsmarknadsförvaltningen Helsingborg
 Från: Oliver Pettersson — SYV, grundare PathfinderAI (enskild firma)
-Datum: 2026-07-07
+Datum: 2026-07-10
 
 ---
 
