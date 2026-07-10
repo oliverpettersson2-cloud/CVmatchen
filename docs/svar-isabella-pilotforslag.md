@@ -43,13 +43,13 @@ aldrig ensam påverka någons försörjningsstöd.
 ## 2. Jäv — anställd + produktägare + eget företag
 
 Situationen är öppet redovisad, och jag vill att den hanteras **formellt av
-kommunen — inte av mig.** Bisysslan är byggd på fritiden och godkänd
-skriftligt av min närmaste chef; det formaliseras med underskrivet beslut
-och diarieförs. Jag deltar inte i något beslut på kommunens sida som rör
-köp, prissättning, utvärdering eller budget (förvaltningslagens jävsregler),
-och upphandlingsenheten äger processen (LOU). Allt diarieförs. Att frågan
-tas upp i ledningsgrupp är rätt ordning — beslutet ligger hos ett organ jag
-inte är del av.
+kommunen — inte av mig.** Bisysslan är byggd på fritiden och är **prövad och
+godkänd av HR genom ett undertecknat beslut** (diarieförd enligt kommunens
+rutin). Jag deltar inte i något beslut på kommunens sida som rör köp,
+prissättning, utvärdering eller budget (förvaltningslagens jävsregler), och
+upphandlingsenheten äger processen (LOU). Allt diarieförs. Att frågan tas
+upp i ledningsgrupp är rätt ordning — beslutet ligger hos ett organ jag inte
+är del av.
 
 ## 3. Informationssäkerhet & IT-arkitektur
 
