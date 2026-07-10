@@ -6,17 +6,6 @@ Datum: 2026-07-07
 
 ---
 
-> **Kort hälsning (för Teams):**
-> Hej Isabella! Tack igen för att du tog dig tid och för de ärliga
-> frågorna — de fick mig att skärpa både produkten och min egen förståelse
-> för vad som återstår. Här kommer svaren du bad om, plus ett bifogat
-> underlag om du eller ledningsgruppen vill gå på djupet. Jag har också
-> vågat ställa en liten, öppen fråga i slutet — inget krav, bara en tanke
-> jag gärna lämnar hos er att göra vad ni vill med. Ha en fin sommar så
-> länge!
-
----
-
 Tack för de tydliga frågorna. Nedan svarar jag kort på var och en. Mer
 detaljerat underlag (teknisk specifikation, PUB- och DPIA-utkast,
 källredovisning och en verifieringsrapport) finns bifogat.
