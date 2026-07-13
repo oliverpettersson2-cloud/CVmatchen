@@ -10846,11 +10846,15 @@ var D={
     if(typeof logEvent==='function') logEvent('syv_chat', { qLen: txt.length });
     var ld=function(){var el=document.getElementById(ldId);if(el)el.remove();};
     var addReply=function(msg){msgs.insertAdjacentHTML('beforeend','<div style="background:rgba(255,255,255,.07);border-radius:12px 12px 12px 4px;padding:10px 13px;font-size:13px;color:rgba(255,255,255,.85);line-height:1.65;">'+msg+'</div>');msgs.scrollTop=msgs.scrollHeight;};
+    // Övnings-chatten delar AI-SYV:s persona-bas (aisyv.js) och lägger till egen
+    // arbetsmarknadsdata. Ingen KORT-rendering här → bara den format-neutrala basen.
+    var _syvBase=(window.createAiSyv&&window.createAiSyv.AISYV_BASE)||'Du ar en AI-SYV for Familjen Helsingborg. Svara PA SVENSKA.';
+    var _syvSystem=_syvBase+' ARBETSMARKNAD AF Q3 2025: Skane har Sveriges hogsta arbetsloshet. Helsingborg 11,3%, Landskrona 11,2%, Bjuv 10,2%, Astorp 10,7%, Klippan 7,7%, Hoganäs 5,4%, Ängelholm 5,2%, Sverige 8,8%, Skane 9,1%. Danmark ~2,6%, Helsingör ~2,6%, 20000 pendlar dagligen Oresund. Namng: SFI, Komvux, YH, AMU, Folkhogskola, Hogskola.';
     try{
       var res=await fetch('/api/chat',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:500,system:'Du ar en AI-SYV for Familjen Helsingborg. ARBETSMARKNAD AF Q3 2025: Skane har Sveriges hogsta arbetsloshet. Helsingborg 11,3%, Landskrona 11,2%, Bjuv 10,2%, Astorp 10,7%, Klippan 7,7%, Hoganäs 5,4%, Ängelholm 5,2%, Sverige 8,8%, Skane 9,1%. Danmark ~2,6%, Helsingör ~2,6%, 20000 pendlar dagligen Oresund. Svara pa svenska. Namng: SFI, Komvux, YH, AMU, Folkhogskola, Hogskola.',messages:D._syvHistory.slice(-8)})
+        body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:500,system:_syvSystem,messages:D._syvHistory.slice(-8)})
       });
       var data=await res.json();
       var reply=(data.content&&data.content[0]&&data.content[0].text)?data.content[0].text:'Inget svar.';
