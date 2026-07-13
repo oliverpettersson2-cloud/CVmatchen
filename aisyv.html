@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>AI-SYV · Lekplats</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0d1226;
+      color: #fff;
+      min-height: 100vh;
+    }
+    .wrap { display: flex; min-height: 100vh; }
+    /* ── Dev-panel ─────────────────────────────────────────── */
+    .dev {
+      width: 340px; flex-shrink: 0;
+      background: #11172f;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      padding: 20px 18px;
+      overflow-y: auto;
+      max-height: 100vh;
+    }
+    .dev h1 { font-size: 16px; margin: 0 0 4px; color: #38bdf8; }
+    .dev .sub { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 18px; line-height: 1.5; }
+    .dev .warn {
+      font-size: 11px; color: #f0c040; background: rgba(240,192,64,0.08);
+      border: 1px solid rgba(240,192,64,0.25); border-radius: 8px; padding: 8px 10px; margin-bottom: 18px; line-height: 1.5;
+    }
+    .dev h2 {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+      color: rgba(255,255,255,0.45); margin: 20px 0 8px;
+    }
+    .flag { display: flex; align-items: center; gap: 9px; padding: 7px 0; font-size: 13px; }
+    .flag input { width: 16px; height: 16px; accent-color: #3eb489; cursor: pointer; }
+    .flag code { font-size: 11px; color: rgba(255,255,255,0.55); }
+    .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+    .dev button {
+      background: rgba(62,180,137,0.12); border: 1.5px solid rgba(62,180,137,0.35);
+      border-radius: 9px; padding: 8px 12px; color: #3eb489; font-size: 12px; font-weight: 700;
+      cursor: pointer; font-family: inherit;
+    }
+    .dev button.alt { background: rgba(56,189,248,0.1); border-color: rgba(56,189,248,0.3); color: #38bdf8; }
+    .dev button:hover { filter: brightness(1.15); }
+    .promptbox {
+      margin-top: 8px; font-size: 11px; line-height: 1.55; color: rgba(255,255,255,0.75);
+      background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px;
+      padding: 10px; white-space: pre-wrap; word-break: break-word; max-height: 260px; overflow-y: auto; display: none;
+    }
+    .dev textarea {
+      width: 100%; height: 90px; margin-top: 6px; background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-size: 11px;
+      font-family: ui-monospace, monospace; padding: 8px; resize: vertical;
+    }
+
+    /* ── AI-SYV-ytan (efterliknar mobilens #mobPanel-aisyv) ── */
+    .stage { flex: 1; display: flex; justify-content: center; padding: 24px; }
+    .device {
+      width: 100%; max-width: 460px; height: calc(100vh - 48px);
+      background: #141a35; border: 1px solid rgba(255,255,255,0.08); border-radius: 22px;
+      overflow: hidden; display: flex; flex-direction: column; position: relative;
+    }
+
+    #edu-home { flex: 1; overflow-y: auto; padding: 20px 16px 40px; }
+    .edu-hero { font-size: 20px; font-weight: 900; margin: 4px 0 4px; }
+    .edu-hero-sub { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 20px; }
+    .edu-card {
+      display: flex; align-items: center; gap: 14px; width: 100%; text-align: left;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(62,180,137,0.22);
+      border-radius: 16px; padding: 16px; margin-bottom: 12px; cursor: pointer;
+      color: #fff; font-family: inherit; position: relative;
+    }
+    .edu-card:hover { border-color: rgba(62,180,137,0.5); }
+    .edu-card .ic {
+      width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center;
+      justify-content: center; font-size: 22px; flex-shrink: 0;
+      background: linear-gradient(135deg,#3eb489,#10b981);
+    }
+    .edu-card .ct { font-size: 15px; font-weight: 800; }
+    .edu-card .cs { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+    .edu-saved-count-badge {
+      display: none; position: absolute; top: 12px; right: 14px; min-width: 20px; height: 20px;
+      border-radius: 10px; background: #ef4444; color: #fff; font-size: 11px; font-weight: 800;
+      align-items: center; justify-content: center; padding: 0 6px;
+    }
+
+    /* Chatt */
+    #edu-chat { display: none; flex: 1; flex-direction: column; height: 100%; }
+    .edu-chat-head {
+      display: flex; align-items: center; gap: 10px; padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08); flex-shrink: 0;
+    }
+    .edu-chat-head button {
+      background: none; border: none; color: #3eb489; font-size: 20px; cursor: pointer; padding: 0;
+    }
+    #edu-chat-title { font-size: 15px; font-weight: 800; }
+    #edu-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .edu-input-row {
+      display: flex; gap: 8px; align-items: flex-end; padding: 12px 14px;
+      border-top: 1px solid rgba(255,255,255,0.08); flex-shrink: 0;
+    }
+    #edu-input {
+      flex: 1; background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,255,255,0.12);
+      border-radius: 14px; padding: 11px 14px; color: #fff; font-size: 15px; font-family: inherit;
+      resize: none; outline: none; max-height: 100px; line-height: 1.5;
+    }
+    #edu-send {
+      width: 46px; height: 46px; background: linear-gradient(135deg,#3eb489,#10b981); border: none;
+      border-radius: 13px; color: #fff; font-size: 20px; cursor: pointer; flex-shrink: 0;
+    }
+    .edu-chat-locked { opacity: 0.75; }
+
+    /* Framtidsyrken */
+    #edu-framtidsyrken { display: none; flex: 1; overflow-y: auto; }
+    .edu-framtid-head {
+      display: flex; align-items: center; gap: 10px; padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .edu-framtid-head button { background: none; border: none; color: #3eb489; font-size: 20px; cursor: pointer; }
+    #edu-framtidsyrken-list { padding: 16px; }
+
+    /* Modal */
+    #edu-link-modal {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9999;
+      align-items: center; justify-content: center; padding: 24px;
+    }
+    .edu-modal-card {
+      background: #1b2140; border: 1px solid rgba(255,255,255,0.1); border-radius: 18px;
+      padding: 22px; max-width: 360px; width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- ═══ Dev-panel ═══ -->
+    <aside class="dev">
+      <h1>🤖 AI-SYV · Lekplats</h1>
+      <div class="sub">Isolerad yta som laddar <code>/aisyv.js</code> mot befintlig backend
+        (<code>/api/chat</code>, <code>/api/utbildningar</code>). Bygg och testa AI-SYV utan att röra mobil/desktop-apparna.</div>
+      <div class="warn">⚠️ Kräver att <code>/api/chat</code> och <code>/api/utbildningar</code> svarar — funkar bäst på Vercel-preview, inte via <code>file://</code>.</div>
+
+      <h2>Config-flaggor</h2>
+      <label class="flag"><input type="checkbox" id="f-scoped"> <span>scopedStorage <code>(mobil)</code></span></label>
+      <label class="flag"><input type="checkbox" id="f-dual"> <span>dualKeyRead <code>(mobil)</code></span></label>
+      <label class="flag"><input type="checkbox" id="f-lock"> <span>sendLock <code>(desktop)</code></span></label>
+      <div class="btnrow" style="margin-top:10px;">
+        <button onclick="applyFlags()">↻ Ladda om med flaggor</button>
+        <button class="alt" onclick="preset('mobil')">Mobil-preset</button>
+        <button class="alt" onclick="preset('desktop')">Desktop-preset</button>
+      </div>
+
+      <h2>Starta vy</h2>
+      <div class="btnrow">
+        <button onclick="window.showChat && showChat('search')">AI-SYV (search)</button>
+        <button onclick="window.showChat && showChat('region')">Region</button>
+        <button onclick="window.showChat && showChat('cv-match')">CV-match</button>
+        <button onclick="window.showChat && showChat('saved')">Sparade</button>
+        <button onclick="window.showHome && showHome()">Hem</button>
+      </div>
+
+      <h2>Systemprompt</h2>
+      <div class="btnrow">
+        <button onclick="togglePrompt('base')">Visa BASE</button>
+        <button onclick="togglePrompt('full')">Visa full prompt</button>
+      </div>
+      <div class="promptbox" id="promptbox"></div>
+
+      <h2>Test-CV (för CV-match)</h2>
+      <textarea id="cvjson" placeholder='{"name":"Test","title":"Undersköterska","skills":["Vård"]}'></textarea>
+      <div class="btnrow" style="margin-top:6px;">
+        <button onclick="setTestCV()">💾 Spara test-CV</button>
+        <button onclick="clearTestCV()">🗑 Rensa</button>
+      </div>
+    </aside>
+
+    <!-- ═══ AI-SYV-ytan ═══ -->
+    <main class="stage">
+      <div class="device">
+
+        <!-- Hem -->
+        <div id="edu-home">
+          <div class="edu-hero">Utbilda dig</div>
+          <div class="edu-hero-sub">Din AI-SYV — studie- och yrkesvägledning</div>
+
+          <button class="edu-card" data-view="search">
+            <span class="ic">🤖</span>
+            <span><span class="ct">Din AI-SYV</span><span class="cs">Fråga om utbildningar, löner, behörighet</span></span>
+          </button>
+          <button class="edu-card" data-view="region">
+            <span class="ic">🗺️</span>
+            <span><span class="ct">Familjen Helsingborg</span><span class="cs">Hitta lokala utbildningar</span></span>
+          </button>
+          <button class="edu-card" data-view="cv-match">
+            <span class="ic">🎯</span>
+            <span><span class="ct">Matcha mitt CV</span><span class="cs">Förslag utifrån din bakgrund</span></span>
+          </button>
+          <button class="edu-card" data-view="framtidsyrken">
+            <span class="ic">🚀</span>
+            <span><span class="ct">30 framtidsyrken</span><span class="cs">Bläddra bland yrken</span></span>
+          </button>
+          <button class="edu-card" data-view="saved">
+            <span class="edu-saved-count-badge"></span>
+            <span class="ic">🔖</span>
+            <span><span class="ct">Sparade utbildningar</span><span class="cs">Dina bokmärken</span></span>
+          </button>
+        </div>
+
+        <!-- Chatt -->
+        <div id="edu-chat">
+          <div class="edu-chat-head">
+            <button id="edu-back" aria-label="Tillbaka">←</button>
+            <div id="edu-chat-title">Din AI-SYV</div>
+          </div>
+          <div id="edu-messages"></div>
+          <div class="edu-input-row">
+            <textarea id="edu-input" rows="1" placeholder="Skriv din fråga..." aria-label="Skriv din fråga"></textarea>
+            <button id="edu-send" aria-label="Skicka">➤</button>
+          </div>
+        </div>
+
+        <!-- Framtidsyrken -->
+        <div id="edu-framtidsyrken">
+          <div class="edu-framtid-head">
+            <button id="edu-back-framtid" aria-label="Tillbaka">←</button>
+            <div style="font-size:15px;font-weight:800;">30 framtidsyrken</div>
+          </div>
+          <div id="edu-framtidsyrken-list"></div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Länk-modal (samma kontrakt som appen) -->
+  <div id="edu-link-modal" role="dialog" aria-modal="true" aria-labelledby="edu-link-modal-title" onclick="if(event.target===this)this.style.display='none';">
+    <div class="edu-modal-card">
+      <div id="edu-link-modal-title" style="font-size:18px;font-weight:900;margin-bottom:6px;">Du lämnar lekplatsen</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:14px;" id="edu-modal-site"></div>
+      <div style="font-size:15px;font-weight:900;color:#3eb489;margin-bottom:16px;" id="edu-modal-namn"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <button onclick="document.getElementById('edu-link-modal').style.display='none';" style="padding:12px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.15);border-radius:12px;color:rgba(255,255,255,0.7);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">Stanna kvar</button>
+        <button id="edu-modal-go" style="padding:12px;background:#3eb489;border:none;border-radius:12px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">Gå till sidan →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Lekplatsens dev-glue (körs FÖRE aisyv.js så flaggorna är redo) ═══ -->
+  <script>
+    // Läs config-flaggor ur URL: ?scoped=1&dual=1&lock=1
+    var _p = new URLSearchParams(location.search);
+    var CFG = {
+      scopedStorage: _p.get('scoped') === '1',
+      dualKeyRead:   _p.get('dual')   === '1',
+      sendLock:      _p.get('lock')   === '1'
+    };
+    // Spegla i kryssrutorna
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('f-scoped').checked = CFG.scopedStorage;
+      document.getElementById('f-dual').checked   = CFG.dualKeyRead;
+      document.getElementById('f-lock').checked   = CFG.sendLock;
+    });
+
+    function applyFlags() {
+      var q = new URLSearchParams();
+      if (document.getElementById('f-scoped').checked) q.set('scoped', '1');
+      if (document.getElementById('f-dual').checked)   q.set('dual', '1');
+      if (document.getElementById('f-lock').checked)   q.set('lock', '1');
+      location.search = q.toString();
+    }
+    function preset(kind) {
+      if (kind === 'mobil')   location.search = 'scoped=1&dual=1';
+      if (kind === 'desktop') location.search = 'lock=1';
+    }
+    function togglePrompt(which) {
+      var box = document.getElementById('promptbox');
+      var fn = window.createAiSyv || {};
+      var txt = which === 'base' ? (fn.AISYV_BASE || '(saknas)') : (fn.AISYV_SYSTEM_PROMPT || '(saknas)');
+      if (box.style.display === 'block' && box.dataset.which === which) { box.style.display = 'none'; return; }
+      box.textContent = txt; box.dataset.which = which; box.style.display = 'block';
+    }
+    function setTestCV() {
+      var raw = document.getElementById('cvjson').value.trim();
+      try { JSON.parse(raw); localStorage.setItem('cvData', raw); alert('Test-CV sparat i localStorage (cvData).'); }
+      catch (e) { alert('Ogiltig JSON: ' + e.message); }
+    }
+    function clearTestCV() { localStorage.removeItem('cvData'); document.getElementById('cvjson').value = ''; alert('Test-CV rensat.'); }
+  </script>
+
+  <!-- Ladda den delade modulen och starta den med lekplatsens flaggor -->
+  <script src="/aisyv.js"></script>
+  <script>
+    createAiSyv(CFG);
+  </script>
+</body>
+</html>
