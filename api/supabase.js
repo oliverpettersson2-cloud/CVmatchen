@@ -791,7 +791,7 @@ export default async function handler(req, res) {
       if (!admin) return;
       const targetUserId = req.body?.targetUserId;
       if (!targetUserId) return res.status(400).json({ error: 'targetUserId krävs' });
-      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','tasks','task_sessions','interview_messages','interview_sessions','saved_questions'];
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
       for (const t of TABLES) {
         await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${targetUserId}`, { method: 'DELETE', headers: serviceHeaders() });
       }
@@ -808,7 +808,7 @@ export default async function handler(req, res) {
       // GDPR: deltagare raderar sitt eget konto.
       const jwt = await verifyJwtUser(accessToken);
       if (!jwt) return res.status(401).json({ error: 'invalid_token' });
-      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','tasks','task_sessions','interview_messages','interview_sessions','saved_questions'];
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
       for (const t of TABLES) {
         await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${jwt.id}`, { method: 'DELETE', headers: serviceHeaders() });
       }

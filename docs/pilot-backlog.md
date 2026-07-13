@@ -28,7 +28,7 @@ Komplexitet: trivial / liten / medel / större / krångligt.
 | 4 | DOM-XSS via URL-parameter (`ms_info`) | index.html:7331 | Trivial | ✅ (input-sanering) |
 | 5 | Host-header-injection i OAuth-callback | api/v1/auth/microsoft/callback.js:70 | Liten | ✅ |
 | 6 | `save_ai_consent` kan tilldela godtycklig kommun via manipulerat token | api/supabase.js:312 | Liten | ✅ |
-| 7 | Ingen GDPR-radering av deltagare — `delete_user`-endpoint saknas | api/supabase.js | Medel | ⏳ |
+| 7 | GDPR-radering av deltagare — `admin_delete_user` + `user_delete_self` finns, kaskaderar 12 tabeller + auth + invites. **Klart.** `admin_activity_log` nu inkluderad i kaskaden; `ai_consent` är kolumner på user_assignments (redan täckt). Radering är vattentät. | api/supabase.js:787,807 | Liten | ✅ (finslip ⏳) |
 | 8 | Mejl-leverans EJ verifierad — testa i prod att Supabase→Resend skickar | (manuell) | Liten | ⏳ |
 | 9 | Accept-invite-token-flöde — token är dekorativ idag | api/v1/auth/microsoft/callback.js | Medel | ⏳ |
 | 10 | End-to-end-test av hela invite-kedjan | (manuell) | Liten | ⏳ |

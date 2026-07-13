@@ -52,7 +52,7 @@ Information (integritetspolicy + AI-samtycke), tillgång/portabilitet
 ## 7. Åtgärder före start (måste vara klara)
 | # | Åtgärd | Ansvarig | Status |
 |---|--------|----------|--------|
-| 1 | GDPR-radering av deltagare (`delete_user`) i drift | PathfinderAI | ⏳ |
+| 1 | GDPR-radering av deltagare (`admin_delete_user` + `user_delete_self`, kaskad 13 tabeller + auth) | PathfinderAI | ✅ |
 | 2 | PUB-avtal signerat (två parter) | Kommun + PathfinderAI | ⏳ |
 | 3 | Beslut att köra piloten fattat + diariefört av kommunen (ej Oliver) | Kommun | ⏳ |
 | 4 | Fastställ laglig grund för ev. art. 9-data | DSO | ⏳ |
