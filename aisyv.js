@@ -32,7 +32,7 @@
 
   // Full systemprompt för de stora chattarna = bas + KORT-regler + utbildningsdata.
   // (bas + resten ger exakt samma sträng som tidigare — ingen beteendeförändring.)
-  var AISYV_SYSTEM_PROMPT = AISYV_BASE + " REGLER: 1) Nar du foreslar utbildningar - skriv BARA KORT-kort, ingen fritext om utbildningarna. 2) KORT-format (en per rad): KORT:namn|skola|typ|ort|langd|krav| (lamna url-faltet ALLTID tomt - appen genererar ratt lankar automatiskt baserat pa typ). 3) En kort mening FORE korten ar ok (t.ex. 'Har ar tre YH-utbildningar:'). 4) Avsluta med 2-3 snabbsvar: >>Alternativ 5) Inga markdown-symboler. Exempel pa svar: 'Har ar YH-utbildningar i Helsingborg:\nKORT:Systemutvecklare .NET|Medieinstitutet|YH|Helsingborg|2 ar|Gymnasieexamen|\nKORT:Logistiker|NTI-skolan|YH|Helsingborg|2 ar|Gymnasieexamen|\n>>Visa fler\n>>Tillbaka till start'. 6) VIKTIGT: Om utbildningen INTE finns i Familjen Helsingborg (t.ex. universitetsprogram som lakarprogram, SYV, psykolog, jurist) - visa ALLTID bade: (a) det nationella programmet med orten tydligt namngiven, OCH (b) 1-2 lokala alternativ fran Familjen Helsingborg som bygger liknande kompetenser (t.ex. for SYV: Service Management, Strategisk kommunikation, Pedagogik). Skriv en kort mening som forklarar att de lokala alternativen ar relaterade men inte samma yrke. Hitta ALDRIG pa utbildningar - om du ar osaker pa en specifik skola/url, anvand antagning.se som url. KANDA NATIONELLA PROGRAM (anvand dessa nar relevant): KORT:Studie- och yrkesvagledarprogrammet|Malmo Universitet|Hogskola|Malmo|3 ar (180 hp)|Grundlaggande behorighet|https://www.mau.se/utbildning/program/studie--och-yrkesvagledarprogrammet/; KORT:Studie- och yrkesvagledare|Stockholms Universitet|Hogskola|Stockholm|3 ar (180 hp)|Grundlaggande behorighet|https://www.su.se; KORT:Studie- och yrkesvagledare|Umea Universitet|Hogskola|Umea|3 ar (180 hp)|Grundlaggande behorighet|https://www.umu.se";
+  var AISYV_SYSTEM_PROMPT = AISYV_BASE + " REGLER: 1) Nar du foreslar utbildningar - skriv BARA KORT-kort, ingen fritext om utbildningarna. 2) KORT-format (en per rad): KORT:namn|skola|typ|ort|langd|krav| (lamna url-faltet ALLTID tomt - appen genererar ratt lankar automatiskt baserat pa typ). 3) En kort mening FORE korten ar ok (t.ex. 'Har ar tre YH-utbildningar:'). 4) Avsluta ALLTID med EXAKT 3 snabbsvar, var och en pa egen rad som borjar med >>. De ska vara konkreta svarsalternativ pa din egen fraga eller naturliga nasta steg, formulerade i anvandarens rost (t.ex. '>>Ja, visa fler'), sa anvandaren kan valja genom att trycka istallet for att skriva sjalv. Aldrig fler eller farre an 3. 5) Inga markdown-symboler. Exempel pa svar: 'Har ar YH-utbildningar i Helsingborg:\nKORT:Systemutvecklare .NET|Medieinstitutet|YH|Helsingborg|2 ar|Gymnasieexamen|\nKORT:Logistiker|NTI-skolan|YH|Helsingborg|2 ar|Gymnasieexamen|\n>>Visa fler\n>>Andra yrken\n>>Tillbaka till start'. 6) VIKTIGT: Om utbildningen INTE finns i Familjen Helsingborg (t.ex. universitetsprogram som lakarprogram, SYV, psykolog, jurist) - visa ALLTID bade: (a) det nationella programmet med orten tydligt namngiven, OCH (b) 1-2 lokala alternativ fran Familjen Helsingborg som bygger liknande kompetenser (t.ex. for SYV: Service Management, Strategisk kommunikation, Pedagogik). Skriv en kort mening som forklarar att de lokala alternativen ar relaterade men inte samma yrke. Hitta ALDRIG pa utbildningar - om du ar osaker pa en specifik skola/url, anvand antagning.se som url. KANDA NATIONELLA PROGRAM (anvand dessa nar relevant): KORT:Studie- och yrkesvagledarprogrammet|Malmo Universitet|Hogskola|Malmo|3 ar (180 hp)|Grundlaggande behorighet|https://www.mau.se/utbildning/program/studie--och-yrkesvagledarprogrammet/; KORT:Studie- och yrkesvagledare|Stockholms Universitet|Hogskola|Stockholm|3 ar (180 hp)|Grundlaggande behorighet|https://www.su.se; KORT:Studie- och yrkesvagledare|Umea Universitet|Hogskola|Umea|3 ar (180 hp)|Grundlaggande behorighet|https://www.umu.se";
 
   // 30 Framtidsyrken
   var FRAMTIDSYRKEN = [
@@ -173,12 +173,41 @@
     window.showChat = showChat;
     window.showHome = showHome;
 
-    // Global delegation for edu-link-btn (data-attribute approach, no inline onclick)
+    // Global delegation: Läs-mer-länkar öppnar modal, Spara-knappar togglar bokmärke.
     document.addEventListener('click', function(e) {
-      var btn = e.target.closest('.edu-link-btn');
-      if (!btn) return;
-      showEduModal(btn.dataset.namn || '', btn.dataset.url || '');
+      var link = e.target.closest('.edu-link-btn');
+      if (link) { showEduModal(link.dataset.namn || '', link.dataset.url || ''); return; }
+      var save = e.target.closest('.edu-save-btn');
+      if (save) { toggleSaveBtn(save); }
     });
+
+    // Toggla bokmärke från en Spara-knapp (event-delegerat). Uppdaterar knappens
+    // utseende + badge. Matchning på namn+ort, samma nyckel som makeEduCard använder.
+    function toggleSaveBtn(btn) {
+      var prog = {
+        namn: btn.dataset.namn || '', ort: btn.dataset.ort || '', skola: btn.dataset.skola || '',
+        typ: btn.dataset.typ || '', krav: btn.dataset.krav || '', langd: btn.dataset.langd || '',
+        url: btn.dataset.url || ''
+      };
+      var arr = getSaved();
+      var idx = arr.findIndex(function(s){ return s.namn === prog.namn && s.ort === prog.ort; });
+      if (idx !== -1) {
+        arr.splice(idx, 1);
+        setSaved(arr);
+        btn.textContent = '+ Spara';
+        btn.style.background = 'rgba(62,180,137,0.12)';
+        btn.style.border = '1.5px solid rgba(62,180,137,0.35)';
+        btn.style.color = '#3eb489';
+      } else {
+        prog.sparad = new Date().toLocaleDateString('sv-SE');
+        arr.push(prog);
+        setSaved(arr);
+        btn.textContent = '🔖 Sparad';
+        btn.style.background = 'rgba(240,192,64,0.2)';
+        btn.style.border = '1.5px solid rgba(240,192,64,0.5)';
+        btn.style.color = '#f0c040';
+      }
+    }
 
     // CV-kontext
     function getCVContext() {
@@ -321,14 +350,18 @@
         bubble.appendChild(makeEduCard(prog));
       });
 
-      // Snabbsvar
+      // Snabbsvar — förvalda svarsalternativ som fulla textrutor (slipper skriva).
       if (parsed.quickReplies.length) {
         var qDiv = document.createElement('div');
-        qDiv.style.cssText = 'margin-top:12px;display:flex;flex-wrap:wrap;gap:7px;';
+        qDiv.style.cssText = 'margin-top:12px;display:flex;flex-direction:column;gap:8px;';
         parsed.quickReplies.forEach(function(qr) {
           var btn = document.createElement('button');
-          btn.textContent = qr;
-          btn.style.cssText = 'background:rgba(62,180,137,0.12);border:1.5px solid rgba(62,180,137,0.35);border-radius:20px;padding:7px 14px;color:#3eb489;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;text-align:left;';
+          btn.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;background:rgba(62,180,137,0.10);border:1.5px solid rgba(62,180,137,0.35);border-radius:14px;padding:13px 15px;color:#eafaf3;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;line-height:1.35;';
+          var lbl = document.createElement('span'); lbl.textContent = qr; lbl.style.cssText = 'flex:1;';
+          var arw = document.createElement('span'); arw.textContent = '›'; arw.style.cssText = 'color:#3eb489;font-size:19px;font-weight:900;flex-shrink:0;';
+          btn.appendChild(lbl); btn.appendChild(arw);
+          btn.addEventListener('mouseenter', function(){ btn.style.background = 'rgba(62,180,137,0.18)'; });
+          btn.addEventListener('mouseleave', function(){ btn.style.background = 'rgba(62,180,137,0.10)'; });
           btn.addEventListener('click', function() {
             if (qr.toLowerCase().includes('tillbaka')) showHome();
             else sendMessage(qr);
@@ -337,6 +370,9 @@
         });
         bubble.appendChild(qDiv);
       }
+
+      // Bredda bubblan när den innehåller kort eller svarsboxar — större tappmål.
+      if (parsed.cards.length || parsed.quickReplies.length) bubble.style.maxWidth = '92%';
 
       wrapper.appendChild(av);
       wrapper.appendChild(bubble);
@@ -456,7 +492,7 @@
           setTimeout(function(){ sendMessage(prompt); }, 400);
         } else {
           var openers = {
-            'region': 'Hej! Jag hjalper dig hitta utbildningar i Familjen Helsingborg.\n\nVilken typ letar du efter?\n\n>>SFI\n>>Komvux / Yrkesutbildning\n>>Yrkeshogskola (YH)\n>>Hogskola\n>>Jag vet inte - hjalp mig!',
+            'region': 'Hej! Jag hjalper dig hitta utbildningar i Familjen Helsingborg.\n\nVilken typ letar du efter?\n\n>>Yrkesutbildning / Komvux\n>>Yrkeshogskola (YH)\n>>Jag vet inte - hjalp mig!',
             'search': 'Hej! Fraga mig vad som helst om utbildningar och studier.\n\n>>Vad tjänar man som sjuksköterska?\n>>Vilka YH-utbildningar finns i Helsingborg?\n>>Hur söker man till Komvux?'
           };
           setTimeout(function(){ addBot(openers[viewKey]||'Hur kan jag hjälpa dig?'); }, 200);
