@@ -10831,9 +10831,9 @@ var D={
     if(inp&&btn){inp.value=btn.getAttribute('data-q')||'';D.sendSyvMsg();}
   },
 
-  sendSyvMsg:async function(){
+  sendSyvMsg:async function(preset){
     var inp=document.getElementById('syv-inp');
-    var txt=inp?inp.value.trim():'';if(!txt)return;
+    var txt=(preset!=null&&preset!=='')?String(preset):(inp?inp.value.trim():'');if(!txt)return;
     if(inp){inp.value='';inp.style.height='auto';}
     var msgs=document.getElementById('syv-msgs');if(!msgs)return;
     if(!D._syvHistory)D._syvHistory=[];
@@ -10848,8 +10848,8 @@ var D={
     var addReply=function(msg){msgs.insertAdjacentHTML('beforeend','<div style="background:rgba(255,255,255,.07);border-radius:12px 12px 12px 4px;padding:10px 13px;font-size:13px;color:rgba(255,255,255,.85);line-height:1.65;">'+msg+'</div>');msgs.scrollTop=msgs.scrollHeight;};
     // Övnings-chatten delar AI-SYV:s persona-bas (aisyv.js) och lägger till egen
     // arbetsmarknadsdata. Ingen KORT-rendering här → bara den format-neutrala basen.
-    var _syvBase=(window.createAiSyv&&window.createAiSyv.AISYV_BASE)||'Du ar en AI-SYV for Familjen Helsingborg. Svara PA SVENSKA.';
-    var _syvSystem=_syvBase+' ARBETSMARKNAD AF Q3 2025: Skane har Sveriges hogsta arbetsloshet. Helsingborg 11,3%, Landskrona 11,2%, Bjuv 10,2%, Astorp 10,7%, Klippan 7,7%, Hoganäs 5,4%, Ängelholm 5,2%, Sverige 8,8%, Skane 9,1%. Danmark ~2,6%, Helsingör ~2,6%, 20000 pendlar dagligen Oresund. Namng: SFI, Komvux, YH, AMU, Folkhogskola, Hogskola.';
+    var _syvBase=(window.createAiSyv&&window.createAiSyv.AISYV_BASE)||'Du är en AI-SYV för Familjen Helsingborg. Svara PÅ SVENSKA med korrekt svenska inklusive å, ä och ö.';
+    var _syvSystem=_syvBase+' ARBETSMARKNAD AF Q3 2025: Skåne har Sveriges högsta arbetslöshet. Helsingborg 11,3%, Landskrona 11,2%, Bjuv 10,2%, Åstorp 10,7%, Klippan 7,7%, Höganäs 5,4%, Ängelholm 5,2%, Sverige 8,8%, Skåne 9,1%. Danmark ~2,6%, Helsingör ~2,6%, 20000 pendlar dagligen över Öresund. Håll svaret till en–två korta meningar och avsluta ALLTID med exakt 3 snabbsvar på egna rader som börjar med >>, formulerade i användarens röst så man kan välja utan att skriva. Nämn: SFI, Komvux, YH, AMU, Folkhögskola, Högskola.';
     try{
       var res=await fetch('/api/chat',{
         method:'POST',
@@ -10859,7 +10859,20 @@ var D={
       var data=await res.json();
       var reply=(data.content&&data.content[0]&&data.content[0].text)?data.content[0].text:'Inget svar.';
       D._syvHistory.push({role:'assistant',content:reply});
-      ld();addReply(reply.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'));
+      ld();
+      // Dela upp svaret: >>-rader blir tappbara svarsboxar (delad hjälpare), resten blir text.
+      var _qr=[],_body=[];
+      reply.split('\n').forEach(function(l){var t=l.trim();if(t.indexOf('>>')===0)_qr.push(t.slice(2).trim());else _body.push(l);});
+      var _txt=_body.join('\n').trim();
+      if(_txt)addReply(_txt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'));
+      if(_qr.length&&window.createAiSyv&&window.createAiSyv.buildChoiceBoxes){
+        var _box=window.createAiSyv.buildChoiceBoxes(_qr,{
+          onPick:function(t){D.sendSyvMsg(t);},
+          onOther:function(){var i=document.getElementById('syv-inp');if(i)i.focus();}
+        });
+        _box.style.marginTop='4px';
+        msgs.appendChild(_box);msgs.scrollTop=msgs.scrollHeight;
+      }
     }catch(e){ld();addReply('⚠️ Kunde inte nå AI just nu. Försök igen.');}
   }};
 
