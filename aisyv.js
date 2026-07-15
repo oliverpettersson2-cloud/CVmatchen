@@ -368,6 +368,17 @@
           });
           qDiv.appendChild(btn);
         });
+        // "Övrigt" — bryt ut ur de förvalda svaren och skriv en egen fråga i rutan.
+        var other = document.createElement('button');
+        other.style.cssText = 'display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:transparent;border:1.5px dashed rgba(255,255,255,0.22);border-radius:14px;padding:12px 15px;color:rgba(255,255,255,0.62);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;';
+        other.textContent = '✏️ Övrigt – skriv en egen fråga';
+        other.addEventListener('mouseenter', function(){ other.style.background = 'rgba(255,255,255,0.04)'; });
+        other.addEventListener('mouseleave', function(){ other.style.background = 'transparent'; });
+        other.addEventListener('click', function() {
+          var i = document.getElementById('edu-input');
+          if (i) { i.focus(); i.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        });
+        qDiv.appendChild(other);
         bubble.appendChild(qDiv);
       }
 
