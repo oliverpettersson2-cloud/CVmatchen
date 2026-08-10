@@ -74,6 +74,18 @@
     { namn:'Hotell, turism & event', skola:'EC Utbildning', typ:'YH', ort:'Helsingborg', langd:'2 år', krav:'Gymnasieexamen', url:'' }
   ];
 
+  // HTML-escape — måste användas på ALL text från LLM:en och /api/utbildningar
+  // innan den sätts via innerHTML (annars XSS via t.ex. <img onerror=...>).
+  function escapeHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  // Navigationsalternativ (t.ex. "Tillbaka") ska alltid vara enkel-tryck och
+  // aldrig kunna markeras ihop med innehåll i fler-val.
+  function isNavReply(t) { return /tillbaka|visa fler|börja om|starta om/i.test(t || ''); }
+
   // Bygg svarsboxar (förvalda svar som tappbara textrutor + en "Övrigt"-box).
   // Delas av de stora chattarna OCH övnings-chatten (exAiChat i index.html).
   //   opts.maxSelect : 1 (default) = ett klick skickar direkt (navigering).
@@ -95,7 +107,7 @@
     function updateVisual() {
       boxes.forEach(function(b, i) {
         var on = selected.indexOf(i) !== -1;
-        var capped = !on && selected.length >= maxSelect;
+        var capped = !on && !isNavReply(b.text) && selected.length >= maxSelect;
         b.btn.style.background = on ? SEL_BG : BASE_BG;
         b.btn.style.borderColor = on ? 'rgba(62,180,137,0.95)' : 'rgba(62,180,137,0.35)';
         b.btn.style.opacity = capped ? '0.45' : '1';
@@ -120,7 +132,9 @@
       boxes.push({ btn: btn, mark: mark, text: qr });
 
       btn.addEventListener('click', function() {
-        if (maxSelect <= 1) { if (opts.onPick) opts.onPick(qr); return; }
+        // Enkel-tryck vid maxSelect<=1 ELLER för navigationsalternativ (Tillbaka m.fl.)
+        // — nav får aldrig markeras ihop med innehåll och skickas alltid direkt.
+        if (maxSelect <= 1 || isNavReply(qr)) { if (opts.onPick) opts.onPick(qr); return; }
         var pos = selected.indexOf(idx);
         if (pos !== -1) selected.splice(pos, 1);
         else { if (selected.length >= maxSelect) return; selected.push(idx); }
@@ -327,10 +341,17 @@
           cards.push({ namn: parts[0]||'', skola: parts[1]||'', typ: parts[2]||'', ort: parts[3]||'', langd: parts[4]||'', krav: parts[5]||'', url: parts[6]||'' });
         } else if (t.startsWith('LANK:')) {
           var url = t.slice(5).trim();
-          mainLines.push('<a href="' + url + '" target="_blank" rel="noopener" style="display:inline-block;margin-top:4px;background:rgba(62,180,137,0.12);border:1px solid rgba(62,180,137,0.3);border-radius:20px;padding:5px 12px;color:#3eb489;font-size:13px;font-weight:700;text-decoration:none;">🔗 ' + url.replace(/^https?:\/\//, '').replace(/\/$/, '') + '</a>');
+          // Tillåt bara http(s) — blockera javascript:/data: och escapa som attribut.
+          if (/^https?:\/\//i.test(url)) {
+            var safeUrl = escapeHtml(url);
+            var label = escapeHtml(url.replace(/^https?:\/\//, '').replace(/\/$/, ''));
+            mainLines.push('<a href="' + safeUrl + '" target="_blank" rel="noopener" style="display:inline-block;margin-top:4px;background:rgba(62,180,137,0.12);border:1px solid rgba(62,180,137,0.3);border-radius:20px;padding:5px 12px;color:#3eb489;font-size:13px;font-weight:700;text-decoration:none;">🔗 ' + label + '</a>');
+          } else {
+            mainLines.push(escapeHtml(url)); // icke-http: visa som text, ingen aktiv länk
+          }
         } else {
-          // Rensa markdown
-          var cleaned = line
+          // Escapa FÖRST, inför sedan endast kontrollerad markdown (<strong>/<em>).
+          var cleaned = escapeHtml(line)
             .replace(/^#{1,3}\s*/g, '')
             .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
             .replace(/\*([^*]+)\*/g, '<em>$1</em>')
@@ -388,23 +409,29 @@
       var typeColors = { 'YH':'#a78bfa','Komvux':'#38bdf8','Yrkesvux':'#3eb489','Yrkesutbildning':'#3eb489','SFI':'#f0c040','Kombi SFI+Yrke':'#f0c040','Högskola':'#f87171','AF-utbildning':'#fb923c' };
       var tc = typeColors[prog.typ] || '#3eb489';
 
+      // Escapa ALLA fält (namn/skola/etc. kommer från LLM/utbildningsdata) — XSS-skydd.
+      var eNamn = escapeHtml(prog.namn||''), eOrt = escapeHtml(prog.ort||''), eSkola = escapeHtml(prog.skola||'');
+      var eTyp = escapeHtml(prog.typ||''), eKrav = escapeHtml(prog.krav||''), eLangd = escapeHtml(prog.langd||'');
+      var eUrl = escapeHtml(linkUrl);
+      var eOrtLangd = escapeHtml([prog.ort, prog.langd].filter(Boolean).join(' · '));
+
       div.innerHTML =
         '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">' +
           '<div style="flex:1;min-width:0;">' +
             // Typ-badge
-            '<span style="background:' + tc + '22;border:1px solid ' + tc + '55;border-radius:6px;padding:2px 7px;font-size:10px;font-weight:800;color:' + tc + ';letter-spacing:0.5px;">' + (prog.typ||'') + '</span>' +
+            '<span style="background:' + tc + '22;border:1px solid ' + tc + '55;border-radius:6px;padding:2px 7px;font-size:10px;font-weight:800;color:' + tc + ';letter-spacing:0.5px;">' + eTyp + '</span>' +
             // Namn
-            '<div style="font-size:15px;font-weight:900;color:#fff;margin:5px 0 2px;line-height:1.3;">' + (prog.namn||'') + '</div>' +
+            '<div style="font-size:15px;font-weight:900;color:#fff;margin:5px 0 2px;line-height:1.3;">' + eNamn + '</div>' +
             // Ort + längd
-            '<div style="font-size:12px;color:rgba(255, 255, 255, 0.72);margin-bottom:6px;">' + [prog.ort, prog.langd].filter(Boolean).join(' · ') + '</div>' +
+            '<div style="font-size:12px;color:rgba(255, 255, 255, 0.72);margin-bottom:6px;">' + eOrtLangd + '</div>' +
             // Krav
-            (prog.krav ? '<span style="background:rgba(240,192,64,0.12);border:1px solid rgba(240,192,64,0.3);border-radius:8px;padding:3px 8px;font-size:11px;color:#f0c040;font-weight:700;">Krav: ' + prog.krav + '</span>' : '') +
+            (prog.krav ? '<span style="background:rgba(240,192,64,0.12);border:1px solid rgba(240,192,64,0.3);border-radius:8px;padding:3px 8px;font-size:11px;color:#f0c040;font-weight:700;">Krav: ' + eKrav + '</span>' : '') +
           '</div>' +
           // Spara-knapp
-          '<button class="edu-save-btn" data-namn="' + (prog.namn||'').replace(/"/g,'&quot;') + '" data-ort="' + (prog.ort||'').replace(/"/g,'&quot;') + '" data-skola="' + (prog.skola||'').replace(/"/g,'&quot;') + '" data-typ="' + (prog.typ||'').replace(/"/g,'&quot;') + '" data-krav="' + (prog.krav||'').replace(/"/g,'&quot;') + '" data-langd="' + (prog.langd||'').replace(/"/g,'&quot;') + '" data-url="' + linkUrl.replace(/"/g,'&quot;') + '" style="flex-shrink:0;align-self:flex-start;background:' + (isSav?'rgba(240,192,64,0.2)':'rgba(62,180,137,0.12)') + ';border:1.5px solid ' + (isSav?'rgba(240,192,64,0.5)':'rgba(62,180,137,0.35)') + ';border-radius:20px;padding:7px 13px;color:' + (isSav?'#f0c040':'#3eb489') + ';font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;white-space:nowrap;">' + (isSav?'🔖 Sparad':'+ Spara') + '</button>' +
+          '<button class="edu-save-btn" data-namn="' + eNamn + '" data-ort="' + eOrt + '" data-skola="' + eSkola + '" data-typ="' + eTyp + '" data-krav="' + eKrav + '" data-langd="' + eLangd + '" data-url="' + eUrl + '" style="flex-shrink:0;align-self:flex-start;background:' + (isSav?'rgba(240,192,64,0.2)':'rgba(62,180,137,0.12)') + ';border:1.5px solid ' + (isSav?'rgba(240,192,64,0.5)':'rgba(62,180,137,0.35)') + ';border-radius:20px;padding:7px 13px;color:' + (isSav?'#f0c040':'#3eb489') + ';font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;white-space:nowrap;">' + (isSav?'🔖 Sparad':'+ Spara') + '</button>' +
         '</div>' +
         // Läs mer-länk
-        '<button class="edu-link-btn" data-namn="' + (prog.namn||'').replace(/"/g,'&quot;') + '" data-url="' + linkUrl.replace(/"/g,'&quot;') + '" style="background:none;border:none;display:inline-flex;align-items:center;gap:4px;margin-top:10px;font-size:12px;color:#3eb489;text-decoration:none;font-weight:700;cursor:pointer;font-family:inherit;padding:0;">🔗 Sök utbildningen</button>';
+        '<button class="edu-link-btn" data-namn="' + eNamn + '" data-url="' + eUrl + '" style="background:none;border:none;display:inline-flex;align-items:center;gap:4px;margin-top:10px;font-size:12px;color:#3eb489;text-decoration:none;font-weight:700;cursor:pointer;font-family:inherit;padding:0;">🔗 Sök utbildningen</button>';
       return div;
     }
 
@@ -605,13 +632,16 @@
       saved.forEach(function(prog, i) {
         var card = document.createElement('div');
         card.style.cssText = 'background:rgba(255,255,255,0.04);border:1px solid rgba(62,180,137,0.2);border-radius:12px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;';
+        var sNamn = escapeHtml(prog.namn||''), sUrl = escapeHtml(getEduUrl(prog));
+        var sMeta = escapeHtml([prog.typ,prog.ort,prog.skola].filter(Boolean).join(' · '));
+        var sKrav = escapeHtml(prog.krav||''), sSparad = escapeHtml(prog.sparad||'');
         card.innerHTML =
           '<div style="flex:1;">' +
-            '<div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:2px;">' + prog.namn + '</div>' +
-            '<div style="font-size:12px;color:rgba(255, 255, 255, 0.72);margin-bottom:6px;">' + [prog.typ,prog.ort,prog.skola].filter(Boolean).join(' · ') + '</div>' +
-            (prog.krav ? '<span style="background:rgba(240,192,64,0.12);border:1px solid rgba(240,192,64,0.25);border-radius:8px;padding:2px 7px;font-size:11px;color:#f0c040;font-weight:600;">Krav: ' + prog.krav + '</span>' : '') +
-            '<br><button class="edu-link-btn" data-namn="' + (prog.namn||'').replace(/"/g,'&quot;') + '" data-url="' + getEduUrl(prog).replace(/"/g,'&quot;') + '" style="background:none;border:none;display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-size:12px;color:#3eb489;font-weight:600;cursor:pointer;font-family:inherit;padding:0;">🔗 Sök utbildningen</button>' +
-            '<div style="font-size:10px;color:rgba(255, 255, 255, 0.72);margin-top:4px;">Sparad ' + (prog.sparad||'') + '</div>' +
+            '<div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:2px;">' + sNamn + '</div>' +
+            '<div style="font-size:12px;color:rgba(255, 255, 255, 0.72);margin-bottom:6px;">' + sMeta + '</div>' +
+            (prog.krav ? '<span style="background:rgba(240,192,64,0.12);border:1px solid rgba(240,192,64,0.25);border-radius:8px;padding:2px 7px;font-size:11px;color:#f0c040;font-weight:600;">Krav: ' + sKrav + '</span>' : '') +
+            '<br><button class="edu-link-btn" data-namn="' + sNamn + '" data-url="' + sUrl + '" style="background:none;border:none;display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-size:12px;color:#3eb489;font-weight:600;cursor:pointer;font-family:inherit;padding:0;">🔗 Sök utbildningen</button>' +
+            '<div style="font-size:10px;color:rgba(255, 255, 255, 0.72);margin-top:4px;">Sparad ' + sSparad + '</div>' +
           '</div>';
         var rmBtn = document.createElement('button');
         rmBtn.textContent = '✕';
