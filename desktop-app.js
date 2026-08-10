@@ -3418,7 +3418,7 @@
       '<div style="background:#1e2440;border:1.5px solid rgba(108,92,231,0.35);border-radius:24px;padding:40px 36px;max-width:420px;width:calc(100% - 40px);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.6);">' +
         '<div style="font-size:68px;margin-bottom:20px;animation:matchaHourglassSpin 2.5s linear infinite;display:inline-block;">⏳</div>' +
         '<div style="font-size:17px;font-weight:800;color:#fff;margin-bottom:10px;">AI skriver 3 profiltexter</div>' +
-        '<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:8px;">riktade mot <strong style="color:#f0c040;">' + (role || 'ditt jobb') + '</strong></div>' +
+        '<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:8px;">riktade mot <strong style="color:#f0c040;">' + escape(role || 'ditt jobb') + '</strong></div>' +
         '<div style="font-size:11px;color:rgba(255,255,255,0.35);line-height:1.6;">Det tar oftast 10-20 sekunder.<br>Stäng inte fönstret.</div>' +
       '</div>';
     document.body.appendChild(o);
@@ -3453,7 +3453,7 @@
 
         // 1. Läs annonsen först (grön) - bara om URL finns
         (annonsUrl
-          ? '<a href="' + escape(annonsUrl) + '" target="_blank" rel="noopener" ' +
+          ? '<a href="' + safeUrl(annonsUrl) + '" target="_blank" rel="noopener" ' +
             'style="display:block;width:100%;padding:15px;background:linear-gradient(135deg,#3eb489,#10b981);border:none;color:#fff;font-size:15px;font-weight:800;border-radius:12px;cursor:pointer;font-family:inherit;text-align:center;text-decoration:none;margin-bottom:10px;box-sizing:border-box;">' +
             '🔗 Läs annonsen först</a>'
           : '') +
@@ -6447,7 +6447,7 @@
         html += '<div style="margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.08);">';
         html += '<div style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.55); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px;">🔗 Länkar</div>';
         ex.links.forEach(lk => {
-          html += '<a href="' + escapeAttr(lk.u || '#') + '" target="_blank" rel="noopener noreferrer" style="display:block; padding:10px 12px; margin-bottom:8px; background:rgba(96,165,250,0.08); border:1px solid rgba(96,165,250,0.25); border-radius:8px; color:#60a5fa; text-decoration:none; font-size:14px;">'
+          html += '<a href="' + safeUrl(lk.u) + '" target="_blank" rel="noopener noreferrer" style="display:block; padding:10px 12px; margin-bottom:8px; background:rgba(96,165,250,0.08); border:1px solid rgba(96,165,250,0.25); border-radius:8px; color:#60a5fa; text-decoration:none; font-size:14px;">'
               + '<div style="font-weight:600;">' + escape(lk.t || lk.u || '') + '</div>'
               + (lk.d ? '<div style="font-size:12px; color:rgba(255,255,255,0.55); margin-top:3px; font-weight:400;">' + escape(lk.d) + '</div>' : '')
               + '</a>';
@@ -6640,6 +6640,11 @@
   function escapeAttr(s) {
     return String(s == null ? '' : s)
       .replace(/'/g, "\\'").replace(/"/g, '&quot;');
+  }
+  // Släpp bara igenom http(s)-URL:er (blockera javascript:/data:) och attribut-escapa.
+  function safeUrl(u) {
+    u = String(u == null ? '' : u);
+    return /^https?:\/\//i.test(u) ? escape(u) : '#';
   }
 
   // ============================================================
