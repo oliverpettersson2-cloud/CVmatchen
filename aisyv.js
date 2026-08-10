@@ -721,6 +721,7 @@
       // Ladda data i bakgrunden direkt
       loadEduData();
       updateSavedBadge();
+      _lastSavedEduCount = getSaved().length;  // så första riktiga sparningen loggas
 
       document.querySelectorAll('.edu-card').forEach(function(card) {
         card.addEventListener('click', function() {
@@ -739,6 +740,12 @@
       var backBtmBtn = document.getElementById('edu-back-bottom');
       if (backBtmBtn) backBtmBtn.addEventListener('click', showHome);
 
+      // Börja om — rensar historiken och visar öppnaren för aktuell vy igen.
+      var restartBtn = document.getElementById('edu-restart');
+      if (restartBtn) restartBtn.addEventListener('click', function() {
+        if (eduCurrentView) showChat(eduCurrentView);
+      });
+
       var sendBtn = document.getElementById('edu-send');
       if (sendBtn) sendBtn.addEventListener('click', function() {
         var inp = document.getElementById('edu-input');
@@ -756,21 +763,8 @@
         });
       }
 
-      // Spara via event delegation — chatt + framtidsyrken
-      function wireSaveDelegate(container) {
-        if (!container) return;
-        container.addEventListener('click', function(e) {
-          var btn = e.target.closest('.edu-save-btn, .edu-link-btn');
-          if (btn && btn.classList.contains('edu-link-btn')) {
-            var url = btn.dataset.url;
-            var namn = btn.dataset.namn;
-            if (url) showEduModal(namn, url);
-          }
-        });
-      }
-
-      wireSaveDelegate(document.getElementById('edu-messages'));
-      wireSaveDelegate(document.getElementById('edu-framtidsyrken-list'));
+      // Klick på .edu-link-btn (öppna modal) och .edu-save-btn (spara) hanteras
+      // av den globala delegaten högre upp — ingen extra container-lyssnare behövs.
     }
 
     // Kör init när sidan laddat. Om DOM redan är klar (modulen laddades sent),
