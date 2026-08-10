@@ -16,7 +16,8 @@
   },
   "rewrites": [
     { "source": "/app", "destination": "/app.html" },
-    { "source": "/admin", "destination": "/handlaggare.html" }
+    { "source": "/admin", "destination": "/handlaggare.html" },
+    { "source": "/aisyv", "destination": "/aisyv.html" }
   ],
   "headers": [
     {
@@ -82,6 +83,18 @@
     },
     {
       "source": "/training-modules.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/aisyv.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/aisyv.html",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
       ]
