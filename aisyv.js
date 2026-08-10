@@ -86,6 +86,16 @@
   // aldrig kunna markeras ihop med innehåll i fler-val.
   function isNavReply(t) { return /tillbaka|visa fler|börja om|starta om/i.test(t || ''); }
 
+  // Injicera fokus-stil en gång (WCAG 2.4.7/1.4.11 — tydlig tangentbordsfokus).
+  var _aisyvStyled = false;
+  function ensureAisyvStyles() {
+    if (_aisyvStyled || typeof document === 'undefined' || !document.head) return;
+    _aisyvStyled = true;
+    var st = document.createElement('style');
+    st.textContent = '.aisyv-choice:focus-visible,.aisyv-send:focus-visible{outline:3px solid #eafaf3;outline-offset:2px;}';
+    document.head.appendChild(st);
+  }
+
   // Bygg svarsboxar (förvalda svar som tappbara textrutor + en "Övrigt"-box).
   // Delas av de stora chattarna OCH övnings-chatten (exAiChat i index.html).
   //   opts.maxSelect : 1 (default) = ett klick skickar direkt (navigering).
@@ -94,9 +104,11 @@
   //   opts.onOther()    : körs när användaren vill skriva eget (fokusera rutan).
   function buildChoiceBoxes(replies, opts) {
     opts = opts || {};
+    ensureAisyvStyles();
     var maxSelect = opts.maxSelect || 1;
     var list = replies || [];
     var qDiv = document.createElement('div');
+    qDiv.setAttribute('role', 'group');
     qDiv.style.cssText = 'margin-top:12px;display:flex;flex-direction:column;gap:8px;';
 
     var BASE_BG = 'rgba(62,180,137,0.10)', SEL_BG = 'rgba(62,180,137,0.30)';
@@ -107,30 +119,33 @@
     function updateVisual() {
       boxes.forEach(function(b, i) {
         var on = selected.indexOf(i) !== -1;
-        var capped = !on && !isNavReply(b.text) && selected.length >= maxSelect;
+        var checkable = maxSelect > 1 && !isNavReply(b.text);
+        var capped = !on && checkable && selected.length >= maxSelect;
         b.btn.style.background = on ? SEL_BG : BASE_BG;
         b.btn.style.borderColor = on ? 'rgba(62,180,137,0.95)' : 'rgba(62,180,137,0.35)';
         b.btn.style.opacity = capped ? '0.45' : '1';
-        // Markerbara alternativ visar en synlig kryssruta (☐/☑) så det är tydligt
-        // att man kan välja flera; navigationsalternativ visar pil (enkel-tryck).
-        var checkable = maxSelect > 1 && !isNavReply(b.text);
+        // Markerbara alternativ visar en synlig kryssruta (☐/☑) + aria-pressed;
+        // navigationsalternativ visar pil (enkel-tryck). Dekor-tecknen är aria-hidden.
         b.mark.textContent = checkable ? (on ? '☑' : '☐') : '›';
+        if (checkable) b.btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        b.btn.setAttribute('aria-disabled', capped ? 'true' : 'false');
       });
       if (footer) {
         var n = selected.length;
         footer._hint.textContent = n ? (n + ' av ' + maxSelect + ' valda') : ('Välj upp till ' + maxSelect + ' – tryck sedan Skicka');
         footer._send.textContent = n ? ('Skicka ' + n + ' →') : 'Skicka';
+        footer._send.disabled = !n;
         footer._send.style.opacity = n ? '1' : '0.5';
-        footer._send.style.pointerEvents = n ? 'auto' : 'none';
       }
     }
 
     list.forEach(function(qr, idx) {
       var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'aisyv-choice';
       btn.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;background:' + BASE_BG + ';border:1.5px solid rgba(62,180,137,0.35);border-radius:14px;padding:13px 15px;color:#eafaf3;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;line-height:1.35;transition:background .12s,border-color .12s,opacity .12s;';
       var lbl = document.createElement('span'); lbl.textContent = qr; lbl.style.cssText = 'flex:1;';
-      var mark = document.createElement('span'); mark.style.cssText = 'color:#3eb489;font-size:18px;font-weight:900;flex-shrink:0;width:16px;text-align:center;';
-      mark.textContent = maxSelect > 1 ? '' : '›';
+      var mark = document.createElement('span'); mark.setAttribute('aria-hidden', 'true'); mark.style.cssText = 'color:#3eb489;font-size:18px;font-weight:900;flex-shrink:0;width:16px;text-align:center;';
       btn.appendChild(lbl); btn.appendChild(mark);
       boxes.push({ btn: btn, mark: mark, text: qr });
 
@@ -146,12 +161,15 @@
       qDiv.appendChild(btn);
     });
 
-    // Fler-val: räknare + Skicka-knapp
+    // Fler-val: räknare (aria-live) + Skicka-knapp (äkta disabled)
     if (maxSelect > 1 && list.length) {
       footer = document.createElement('div');
       footer.style.cssText = 'display:flex;align-items:center;gap:10px;margin-top:2px;';
-      var hint = document.createElement('span'); hint.style.cssText = 'font-size:12px;color:rgba(255,255,255,0.55);flex:1;';
+      var hint = document.createElement('span');
+      hint.setAttribute('role', 'status'); hint.setAttribute('aria-live', 'polite');
+      hint.style.cssText = 'font-size:12px;color:rgba(255,255,255,0.55);flex:1;';
       var send = document.createElement('button');
+      send.type = 'button'; send.className = 'aisyv-send';
       send.style.cssText = 'background:linear-gradient(135deg,#3eb489,#10b981);border:none;border-radius:12px;padding:11px 18px;color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;flex-shrink:0;';
       send.addEventListener('click', function() {
         if (!selected.length) return;
@@ -168,6 +186,7 @@
     // "Övrigt" — skriv en egen fråga i rutan
     if (opts.onOther) {
       var other = document.createElement('button');
+      other.type = 'button'; other.className = 'aisyv-choice';
       other.style.cssText = 'display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:transparent;border:1.5px dashed rgba(255,255,255,0.22);border-radius:14px;padding:12px 15px;color:rgba(255,255,255,0.62);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;';
       other.textContent = '✏️ Övrigt – skriv en egen fråga';
       other.addEventListener('mouseenter', function(){ other.style.background = 'rgba(255,255,255,0.04)'; });
@@ -290,7 +309,8 @@
       var prog = {
         namn: btn.dataset.namn || '', ort: btn.dataset.ort || '', skola: btn.dataset.skola || '',
         typ: btn.dataset.typ || '', krav: btn.dataset.krav || '', langd: btn.dataset.langd || '',
-        url: btn.dataset.url || ''
+        url: btn.dataset.url || '',
+        kommun: btn.dataset.ort || ''  // alias så handläggarvyn (läser 'kommun') visar orten
       };
       var arr = getSaved();
       var idx = arr.findIndex(function(s){ return s.namn === prog.namn && s.ort === prog.ort; });
@@ -389,15 +409,19 @@
 
     // URL-generator baserat på utbildningstyp
     function getEduUrl(prog) {
+      // Använd en riktig direktlänk från datan om den finns (t.ex. mau.se för SYV).
+      if (prog.url && /^https?:\/\//i.test(prog.url)) return prog.url;
       var typ = (prog.typ || '').toLowerCase();
-      var q = encodeURIComponent([prog.namn, prog.typ, prog.ort].filter(Boolean).join(' '));
-      // YH — officiell ansökningsportal
-      if (typ === 'yh') return 'https://www.antagning.se/se/search/?q=' + encodeURIComponent(prog.namn || '');
-      // Högskola — antagning.se
-      if (typ === 'hogskola' || typ === 'högskola') return 'https://www.antagning.se/se/search/?q=' + encodeURIComponent(prog.namn || '');
+      // Rensa parenteser ur sök-query (t.ex. "Studie- och yrkesvägledare (SYV)").
+      var namn = (prog.namn || '').replace(/\s*\([^)]*\)/g, '').trim();
+      var q = encodeURIComponent([namn, prog.typ, prog.ort].filter(Boolean).join(' '));
+      // YH + Högskola — officiell ansökningsportal
+      if (typ === 'yh' || typ === 'hogskola' || typ === 'högskola') return 'https://www.antagning.se/se/search/?q=' + encodeURIComponent(namn);
       // AF-utbildning
-      if (typ === 'af-utbildning') return 'https://arbetsformedlingen.se/';
-      // Allt annat (Komvux, Yrkesvux, SFI) — Google-sökning på namn+typ+ort
+      if (typ === 'af-utbildning') return 'https://arbetsformedlingen.se/utbildning/hitta-utbildningar';
+      // Komvux/Yrkesvux/SFI m.fl. → kommunens vuxenutbildning (bättre landning än Google)
+      if (typ === 'komvux' || typ === 'yrkesvux' || typ === 'sfi' || typ === 'yrkesutbildning' || typ === 'kombi sfi+yrke') return 'https://www.skanevux.se/';
+      // Sista fallback
       return 'https://www.google.com/search?q=' + q;
     }
 
@@ -452,6 +476,7 @@
       wrapper.style.cssText = 'display:flex;align-items:flex-start;gap:10px;';
 
       var av = document.createElement('div');
+      av.setAttribute('aria-hidden', 'true');
       av.style.cssText = 'width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#3eb489,#10b981);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;margin-top:2px;';
       av.textContent = '🤖';
 
@@ -649,6 +674,8 @@
             '<div style="font-size:10px;color:rgba(255, 255, 255, 0.72);margin-top:4px;">Sparad ' + sSparad + '</div>' +
           '</div>';
         var rmBtn = document.createElement('button');
+        rmBtn.type = 'button';
+        rmBtn.setAttribute('aria-label', 'Ta bort utbildning');
         rmBtn.textContent = '✕';
         rmBtn.style.cssText = 'background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:5px 10px;color:#ef4444;font-size:13px;cursor:pointer;font-family:inherit;flex-shrink:0;';
         rmBtn.addEventListener('click', function() {

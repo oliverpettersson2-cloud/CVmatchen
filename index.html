@@ -10805,12 +10805,12 @@ var D={
     h+='<div style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:10px;">';
     h+='<div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#38bdf8,#0ea5e9);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🤖</div>';
     h+='<div><div style="font-size:13px;font-weight:900;color:#38bdf8;">Din AI-SYV</div><div style="font-size:10px;color:rgba(255, 255, 255, 0.72);">Studie- och yrkesvägledning · Alltid tillgänglig</div></div></div>';
-    h+='<div id="syv-msgs" style="height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px;display:flex;flex-direction:column;gap:8px;">';
+    h+='<div id="syv-msgs" role="log" aria-live="polite" aria-relevant="additions" aria-label="AI-SYV konversation" style="height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px;display:flex;flex-direction:column;gap:8px;">';
     h+='<div style="background:rgba(255,255,255,.07);border-radius:12px 12px 12px 4px;padding:10px 13px;font-size:13px;color:rgba(255,255,255,.85);line-height:1.65;">👋 Grattis till att du gått igenom Studier-kategoin!<br><br>Nu kan du fråga mig allt om din utbildningsväg — utbildningar i Helsingborg, behörighetskrav, löner och vad som passar just dig.<br><br><span style="font-size:11px;color:rgba(255, 255, 255, 0.72);">Tips: Berätta om din bakgrund för ett personligare svar.</span></div>';
     h+='</div>';
     h+='<div style="padding:8px;border-top:1px solid rgba(255,255,255,.07);display:flex;gap:6px;align-items:flex-end;">';
     h+='<textarea id="syv-inp" rows="1" aria-label="Skriv din fråga om utbildning" placeholder="Skriv din fråga om utbildning..." style="flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:8px 12px;color:#fff;font-size:13px;font-family:inherit;resize:none;outline:none;max-height:80px;line-height:1.5;"></textarea>';
-    h+='<button onclick="D.sendSyvMsg()" style="width:40px;height:40px;background:linear-gradient(135deg,#38bdf8,#0ea5e9);border:none;border-radius:10px;color:#fff;font-size:17px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;">➤</button>';
+    h+='<button onclick="D.sendSyvMsg()" aria-label="Skicka fråga" style="width:40px;height:40px;background:linear-gradient(135deg,#38bdf8,#0ea5e9);border:none;border-radius:10px;color:#fff;font-size:17px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;">➤</button>';
     h+='</div></div>';
     h+='<div style="margin-bottom:14px;"><div style="font-size:10px;font-weight:800;color:rgba(255, 255, 255, 0.72);letter-spacing:1px;margin-bottom:8px;">SNABBFRÅGOR</div>';
     ['Vilken YH-utbildning finns i Helsingborg?','Hur ansöker jag till Komvux?','Vad kan jag få i CSN?','Hur hittar jag en praktikplats?'].forEach(function(q){
@@ -11741,12 +11741,12 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
         </div>
 
         <!-- Meddelanden -->
-        <div id="edu-messages" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 140px;display:flex;flex-direction:column;gap:12px;"></div>
+        <div id="edu-messages" role="log" aria-live="polite" aria-relevant="additions" aria-label="AI-SYV konversation" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 140px;display:flex;flex-direction:column;gap:12px;"></div>
 
         <!-- Input (position absolute = alltid synlig) -->
         <div style="position:absolute;bottom:0;left:0;right:0;padding:10px 14px 16px;background:#12172a;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:8px;align-items:flex-end;z-index:10;">
           <textarea id="edu-input" rows="1" placeholder="Skriv din fråga..." aria-label="Skriv din fråga till AI-vägledaren" style="flex:1;background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.15);border-radius:14px;padding:11px 14px;color:#fff;font-size:15px;font-family:inherit;resize:none;outline:none;max-height:100px;overflow-y:auto;line-height:1.5;"></textarea>
-          <button id="edu-send" style="width:46px;height:46px;background:linear-gradient(135deg,#3eb489,#10b981);border:none;border-radius:13px;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-tap-highlight-color:transparent;">➤</button>
+          <button id="edu-send" aria-label="Skicka fråga" style="width:46px;height:46px;background:linear-gradient(135deg,#3eb489,#10b981);border:none;border-radius:13px;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-tap-highlight-color:transparent;">➤</button>
         </div>
         <div style="padding:4px 14px 10px;">
           <button id="edu-back-bottom" style="width:100%;padding:10px;background:rgba(239,68,68,0.12);border:1.5px solid rgba(239,68,68,0.35);border-radius:10px;color:#ef4444;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">← Tillbaka</button>

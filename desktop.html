@@ -3684,7 +3684,7 @@
         </div>
 
         <!-- Meddelanden -->
-        <div id="edu-messages" style="flex:1;overflow-y:auto;padding:20px 4px 20px;display:flex;flex-direction:column;gap:14px;"></div>
+        <div id="edu-messages" role="log" aria-live="polite" aria-relevant="additions" aria-label="AI-SYV konversation" style="flex:1;overflow-y:auto;padding:20px 4px 20px;display:flex;flex-direction:column;gap:14px;"></div>
 
         <!-- Input -->
         <div style="flex-shrink:0;padding:12px 4px;background:var(--deep);border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:10px;align-items:flex-end;">
@@ -4095,8 +4095,9 @@
      ============================================================ -->
  <script src="/aisyv.js"></script>
  <script>
-   // Desktop: rå localStorage (enkelnyckel-läsning), isSending-lås + setChatLocked.
-   createAiSyv({ scopedStorage: false, dualKeyRead: false, sendLock: true });
+   // Desktop: rå localStorage, isSending-lås + setChatLocked. dualKeyRead:true så
+   // backend-synkade sparningar (skrivs till pf_saved_edu) syns i "Sparade".
+   createAiSyv({ scopedStorage: false, dualKeyRead: true, sendLock: true });
  </script>
 
 
