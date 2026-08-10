@@ -28,10 +28,10 @@
   // AI-SYV-ytor: de stora chattarna (mobil/desktop) OCH övnings-chatten i
   // index.html (exAiChat). Håll den format-NEUTRAL — inga KORT-regler här, så
   // att ytor utan KORT-rendering kan återanvända basen utan att få kort-syntax.
-  var AISYV_BASE = "Du är en AI-SYV för Familjen Helsingborg. Svara PÅ SVENSKA med korrekt svenska inklusive å, ä och ö.";
+  var AISYV_BASE = "Du är en AI-SYV för Familjen Helsingborg. Svara på SAMMA språk som användaren skriver på; när du svarar på svenska, använd korrekt och enkel klarspråks-svenska (å/ä/ö, korta ord och meningar, förklara facktermer som CSN, behörighet, YH och SFI första gången). Var varm, uppmuntrande och dömfri. Vid stora eller livsavgörande beslut, uppmuntra användaren att också boka en riktig studie- och yrkesvägledare i kommunen (det är kostnadsfritt). Om användaren uttrycker psykisk ohälsa, kris eller desperation: bemöt varsamt, hänvisa till 1177 eller vårdcentral, och visa inte utbildningskort då.";
 
   // Full systemprompt för de stora chattarna = bas + KORT-regler + utbildningsdata.
-  var AISYV_SYSTEM_PROMPT = AISYV_BASE + " REGLER: 1) Håll din egen text till EN kort mening (max ca 15 ord) så frågan blir tydlig - skriv aldrig långa stycken brödtext. 2) När du föreslår utbildningar - skriv BARA KORT-kort, ingen fritext om utbildningarna. 3) KORT-format (en per rad): KORT:namn|skola|typ|ort|längd|krav| (lämna url-fältet ALLTID tomt - appen genererar rätt länkar automatiskt baserat på typ). 4) En kort mening FÖRE korten är ok (t.ex. 'Här är tre YH-utbildningar:'). 5) Avsluta ALLTID med 3-6 svarsalternativ, var och en på egen rad som börjar med >>. Ge 4-6 alternativ när frågan gäller intressen, områden eller yrken (så användaren kan markera FLERA), och 3 vid ja/nej-liknande frågor. Formulera dem i användarens röst (t.ex. '>>Teknik/IT', '>>Ja, visa fler') så man kan välja genom att trycka istället för att skriva. Användaren kan markera upp till 3 alternativ och skicka dem ihop. 6) Inga markdown-symboler. Exempel på svar: 'Här är YH-utbildningar i Helsingborg:\nKORT:Systemutvecklare .NET|Medieinstitutet|YH|Helsingborg|2 år|Gymnasieexamen|\nKORT:Logistiker|NTI-skolan|YH|Helsingborg|2 år|Gymnasieexamen|\n>>Visa fler\n>>Andra yrken\n>>Tillbaka till start'. 7) VIKTIGT: Om utbildningen INTE finns i Familjen Helsingborg (t.ex. universitetsprogram som läkarprogram, SYV, psykolog, jurist) - visa ALLTID både: (a) det nationella programmet med orten tydligt namngiven, OCH (b) 1-2 lokala alternativ från Familjen Helsingborg som bygger liknande kompetenser (t.ex. för SYV: Service Management, Strategisk kommunikation, Pedagogik). Skriv en kort mening som förklarar att de lokala alternativen är relaterade men inte samma yrke. Hitta ALDRIG på utbildningar - om du är osäker på en specifik skola/url, använd antagning.se som url. KÄNDA NATIONELLA PROGRAM (använd dessa när relevant): KORT:Studie- och yrkesvägledarprogrammet|Malmö Universitet|Högskola|Malmö|3 år (180 hp)|Grundläggande behörighet|https://www.mau.se/utbildning/program/studie--och-yrkesvagledarprogrammet/; KORT:Studie- och yrkesvägledare|Stockholms Universitet|Högskola|Stockholm|3 år (180 hp)|Grundläggande behörighet|https://www.su.se; KORT:Studie- och yrkesvägledare|Umeå Universitet|Högskola|Umeå|3 år (180 hp)|Grundläggande behörighet|https://www.umu.se";
+  var AISYV_SYSTEM_PROMPT = AISYV_BASE + " REGLER: 1) Håll din egen text till EN kort mening (max ca 15 ord) så frågan blir tydlig - skriv aldrig långa stycken brödtext. 2) När du föreslår utbildningar - skriv BARA KORT-kort, ingen fritext om utbildningarna. 3) KORT-format (en per rad): KORT:namn|skola|typ|ort|längd|krav| (lämna url-fältet ALLTID tomt - appen genererar rätt länkar automatiskt baserat på typ). 4) En kort mening FÖRE korten är ok (t.ex. 'Här är tre YH-utbildningar:'). 5) Avsluta ALLTID med 3-6 svarsalternativ, var och en på egen rad som börjar med >>. Ge 4-6 alternativ när frågan gäller intressen, områden eller yrken (så användaren kan markera FLERA), och 3 vid ja/nej-liknande frågor. Formulera dem i användarens röst (t.ex. '>>Teknik/IT', '>>Ja, visa fler') så man kan välja genom att trycka istället för att skriva. Användaren kan markera upp till 3 alternativ och skicka dem ihop. 6) Inga markdown-symboler. Exempel på svar: 'Här är YH-utbildningar i Helsingborg:\nKORT:Systemutvecklare .NET|Medieinstitutet|YH|Helsingborg|2 år|Gymnasieexamen|\nKORT:Logistiker|NTI-skolan|YH|Helsingborg|2 år|Gymnasieexamen|\n>>Visa fler\n>>Andra yrken\n>>Tillbaka till start'. 7) VIKTIGT: Om utbildningen INTE finns i Familjen Helsingborg (t.ex. universitetsprogram som läkarprogram, SYV, psykolog, jurist) - visa ALLTID både: (a) det nationella programmet med orten tydligt namngiven, OCH (b) 1-2 lokala alternativ från Familjen Helsingborg som bygger liknande kompetenser (t.ex. för SYV: Service Management, Strategisk kommunikation, Pedagogik). Skriv en kort mening som förklarar att de lokala alternativen är relaterade men inte samma yrke. Hitta ALDRIG på utbildningar, löner, CSN-belopp eller exakta behörighetskrav - om du är osäker på en skola/url, använd antagning.se; om du är osäker på lön/CSN/behörighet, säg det ungefär och hänvisa till csn.se, arbetsformedlingen.se eller en riktig SYV. KÄNDA NATIONELLA PROGRAM (använd dessa när relevant): KORT:Studie- och yrkesvägledarprogrammet|Malmö Universitet|Högskola|Malmö|3 år (180 hp)|Grundläggande behörighet|https://www.mau.se/utbildning/program/studie--och-yrkesvagledarprogrammet/; KORT:Studie- och yrkesvägledare|Stockholms Universitet|Högskola|Stockholm|3 år (180 hp)|Grundläggande behörighet|https://www.su.se; KORT:Studie- och yrkesvägledare|Umeå Universitet|Högskola|Umeå|3 år (180 hp)|Grundläggande behörighet|https://www.umu.se";
 
   // 30 Framtidsyrken
   var FRAMTIDSYRKEN = [
@@ -111,11 +111,14 @@
         b.btn.style.background = on ? SEL_BG : BASE_BG;
         b.btn.style.borderColor = on ? 'rgba(62,180,137,0.95)' : 'rgba(62,180,137,0.35)';
         b.btn.style.opacity = capped ? '0.45' : '1';
-        b.mark.textContent = on ? '✓' : '';
+        // Markerbara alternativ visar en synlig kryssruta (☐/☑) så det är tydligt
+        // att man kan välja flera; navigationsalternativ visar pil (enkel-tryck).
+        var checkable = maxSelect > 1 && !isNavReply(b.text);
+        b.mark.textContent = checkable ? (on ? '☑' : '☐') : '›';
       });
       if (footer) {
         var n = selected.length;
-        footer._hint.textContent = n ? (n + ' av ' + maxSelect + ' valda') : ('Välj upp till ' + maxSelect);
+        footer._hint.textContent = n ? (n + ' av ' + maxSelect + ' valda') : ('Välj upp till ' + maxSelect + ' – tryck sedan Skicka');
         footer._send.textContent = n ? ('Skicka ' + n + ' →') : 'Skicka';
         footer._send.style.opacity = n ? '1' : '0.5';
         footer._send.style.pointerEvents = n ? 'auto' : 'none';
@@ -594,9 +597,11 @@
 
       loadEduData().then(function() {
         if (viewKey === 'cv-match') {
-          var cvCtx = getCVContext();
-          var prompt = cvCtx
-            ? 'Baserat på mitt CV, vilka utbildningar i Familjen Helsingborg passar mig bäst? Ge 2-3 förslag med KORT-format.' + cvCtx
+          // CV-kontexten läggs bara i systemprompten (via sendMessage för cv-match),
+          // aldrig i den synliga användarbubblan och aldrig dubbelt.
+          var hasCV = !!getCVContext();
+          var prompt = hasCV
+            ? 'Matcha utbildningar i Familjen Helsingborg mot mitt CV. Ge 2-3 förslag med KORT-format.'
             : 'Jag vill hitta utbildningar. Ställ mig frågor om vad jag vill göra och min bakgrund.';
           addBot('Analyserar din bakgrund...');
           setTimeout(function(){ sendMessage(prompt); }, 400);
