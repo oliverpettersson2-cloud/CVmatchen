@@ -5197,6 +5197,12 @@
         .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
         .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
     }
+    // Släpp bara igenom http(s)-URL:er (blockera javascript:/data:) och attribut-escapa.
+    function safeUrl(u) {
+      u = String(u == null ? '' : u);
+      return /^https?:\/\//i.test(u) ? cvEsc(u) : '#';
+    }
+    window.cvEsc = cvEsc; window.safeUrl = safeUrl;
 
     function renderSkills() {
       const grid = document.getElementById('skillsGrid');
@@ -5227,7 +5233,7 @@
           <div style="display: inline-block; background: #f0ede6; border-radius: 6px; padding: 6px 12px; margin: 4px; font-size: 12px; font-weight: 600; color: var(--deep); cursor: pointer; transition: all 0.2s;" 
             onmouseover="this.style.background='#e8e5de'" 
             onmouseout="this.style.background='#f0ede6'">
-            ✓ ${license}
+            ✓ ${cvEsc(license)}
             <span style="opacity: 0.6; cursor: pointer; margin-left: 6px;" onclick="removeLicense(${i})">×</span>
           </div>
         `).join('');
@@ -5941,14 +5947,14 @@
       if (cvData.jobs && cvData.jobs.length > 0) {
         document.getElementById('previewJobs').innerHTML = cvData.jobs.map(j => {
           let bulletPoints = '';
-          if (j.desc1) bulletPoints += `<li style="margin-bottom: 4px;">${j.desc1}</li>`;
-          if (j.desc2) bulletPoints += `<li style="margin-bottom: 4px;">${j.desc2}</li>`;
-          if (j.desc3) bulletPoints += `<li style="margin-bottom: 4px;">${j.desc3}</li>`;
-          
+          if (j.desc1) bulletPoints += `<li style="margin-bottom: 4px;">${cvEsc(j.desc1)}</li>`;
+          if (j.desc2) bulletPoints += `<li style="margin-bottom: 4px;">${cvEsc(j.desc2)}</li>`;
+          if (j.desc3) bulletPoints += `<li style="margin-bottom: 4px;">${cvEsc(j.desc3)}</li>`;
+
           return `
             <div class="cv-entry">
-              <div class="cv-entry-title">${j.title}</div>
-              <div class="cv-entry-subtitle">${j.company}${j.location ? ' – ' + j.location : ''} · ${j.startMonth} ${j.startYear}${j.endMonth ? ' – ' + j.endMonth + ' ' + j.endYear : ''}</div>
+              <div class="cv-entry-title">${cvEsc(j.title)}</div>
+              <div class="cv-entry-subtitle">${cvEsc(j.company)}${j.location ? ' – ' + cvEsc(j.location) : ''} · ${cvEsc(j.startMonth)} ${cvEsc(j.startYear)}${j.endMonth ? ' – ' + cvEsc(j.endMonth) + ' ' + cvEsc(j.endYear) : ''}</div>
               ${bulletPoints ? `<ul style="margin: 8px 0 0 0; padding-left: 16px; font-size: 12px; color: #555; line-height: 1.6;">${bulletPoints}</ul>` : ''}
             </div>
           `;
@@ -5963,8 +5969,8 @@
       if (cvData.education && cvData.education.length > 0) {
         document.getElementById('previewEdu').innerHTML = cvData.education.map(e => `
           <div class="cv-entry">
-            <div class="cv-entry-title">${e.degree}</div>
-            <div class="cv-entry-subtitle">${e.schoolName || e.school} · ${e.startYear}${e.endYear ? ' - ' + e.endYear : ''}</div>
+            <div class="cv-entry-title">${cvEsc(e.degree)}</div>
+            <div class="cv-entry-subtitle">${cvEsc(e.schoolName || e.school)} · ${cvEsc(e.startYear)}${e.endYear ? ' - ' + cvEsc(e.endYear) : ''}</div>
           </div>
         `).join('');
         eduSection.style.display = 'block';
@@ -5977,8 +5983,8 @@
       if (cvData.certifications && cvData.certifications.length > 0) {
         document.getElementById('previewCerts').innerHTML = cvData.certifications.map(c => `
           <div class="cv-entry">
-            <div class="cv-entry-title">${c.name}</div>
-            <div class="cv-entry-subtitle">${c.issuer} · ${c.date}</div>
+            <div class="cv-entry-title">${cvEsc(c.name)}</div>
+            <div class="cv-entry-subtitle">${cvEsc(c.issuer)} · ${cvEsc(c.date)}</div>
           </div>
         `).join('');
         certSection.style.display = 'block';
@@ -5998,9 +6004,9 @@
         if (cvData.references && cvData.references.length > 0) {
           refHtml += cvData.references.map(r => `
             <div class="cv-entry">
-              <div class="cv-entry-title">${r.name}</div>
-              <div class="cv-entry-subtitle">${r.title}</div>
-              <div style="font-size: 12px; color: #666; margin-top: 4px;">${r.email} · ${r.phone}</div>
+              <div class="cv-entry-title">${cvEsc(r.name)}</div>
+              <div class="cv-entry-subtitle">${cvEsc(r.title)}</div>
+              <div style="font-size: 12px; color: #666; margin-top: 4px;">${cvEsc(r.email)} · ${cvEsc(r.phone)}</div>
             </div>
           `).join('');
         }
@@ -10729,7 +10735,7 @@ var D={
       });
       var data=await res.json();
       var reply=(data.content&&data.content[0]&&data.content[0].text)?data.content[0].text:'';
-      if(r&&reply)r.innerHTML='<div style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:12px;padding:14px 16px;font-size:13px;color:rgba(255,255,255,.85);line-height:1.75;">'+reply.replace(/\n/g,'<br>')+'</div>';
+      if(r&&reply)r.innerHTML='<div style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:12px;padding:14px 16px;font-size:13px;color:rgba(255,255,255,.85);line-height:1.75;">'+cvEsc(reply).replace(/\n/g,'<br>')+'</div>';
     }catch(e){if(r)r.innerHTML='<span style="color:#f87171;font-size:12px;">⚠️ Kunde inte nå AI.</span>';}
   },
 
@@ -10777,7 +10783,7 @@ var D={
       });
       var data=await res.json();
       var reply=(data.content&&data.content[0]&&data.content[0].text)?data.content[0].text:'';
-      if(r&&reply)r.innerHTML='<div style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:12px;padding:14px 16px;font-size:13px;color:rgba(255,255,255,.85);line-height:1.75;">'+reply.replace(/\n/g,'<br>')+'</div>';
+      if(r&&reply)r.innerHTML='<div style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:12px;padding:14px 16px;font-size:13px;color:rgba(255,255,255,.85);line-height:1.75;">'+cvEsc(reply).replace(/\n/g,'<br>')+'</div>';
       else if(r)r.innerHTML=D.getSurveyRecs(edu,lang,goal,time);
     }catch(e){if(r)r.innerHTML=D.getSurveyRecs(edu,lang,goal,time);}
   },
@@ -11845,7 +11851,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
         btn.innerHTML =
           '<div style="width:42px;height:42px;border-radius:12px;background:rgba(62,180,137,0.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">📄</div>' +
           '<div style="flex:1;min-width:0;">' +
-            '<div style="font-size:14px;font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + (cv.title || 'Namnlöst CV') + '</div>' +
+            '<div style="font-size:14px;font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + cvEsc(cv.title || 'Namnlöst CV') + '</div>' +
             '<div style="font-size:11px;color:rgba(255, 255, 255, 0.72);margin-top:2px;">' + (cv.data && cv.data.name ? cv.data.name + ' · ' : '') + date + '</div>' +
           '</div>' +
           '<span style="font-size:12px;font-weight:700;color:#3eb489;background:rgba(62,180,137,0.15);border:1px solid rgba(62,180,137,0.3);border-radius:8px;padding:5px 10px;white-space:nowrap;flex-shrink:0;">👁 Visa</span>';
@@ -12851,10 +12857,10 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
               <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;">
                 <div style="font-size:20px;flex-shrink:0;">${e.applied ? '✅' : '⏳'}</div>
                 <div style="flex:1;min-width:0;">
-                  <div style="font-size:13px;font-weight:700;color:#fff;line-height:1.3;">${e.jobTitle}</div>
-                  <div style="font-size:11px;color:rgba(255, 255, 255, 0.72);margin-top:2px;">${dStr}${e.company ? ' · ' + e.company : ''}${appliedStr ? ' · <span style="color:#3eb489;font-weight:700;">Sökt ' + appliedStr + '</span>' : ''}</div>
+                  <div style="font-size:13px;font-weight:700;color:#fff;line-height:1.3;">${cvEsc(e.jobTitle)}</div>
+                  <div style="font-size:11px;color:rgba(255, 255, 255, 0.72);margin-top:2px;">${dStr}${e.company ? ' · ' + cvEsc(e.company) : ''}${appliedStr ? ' · <span style="color:#3eb489;font-weight:700;">Sökt ' + appliedStr + '</span>' : ''}</div>
                 </div>
-                ${e.jobUrl ? `<a href="${e.jobUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:rgba(255, 255, 255, 0.72);font-size:13px;text-decoration:none;padding:5px 9px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;flex-shrink:0;">↗</a>` : ''}
+                ${e.jobUrl ? `<a href="${safeUrl(e.jobUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:rgba(255, 255, 255, 0.72);font-size:13px;text-decoration:none;padding:5px 9px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;flex-shrink:0;">↗</a>` : ''}
               </div>
               ${!e.applied ? `
               <div style="padding:0 14px 12px;">
@@ -13272,13 +13278,13 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
 
     card.innerHTML =
       '<div style="display:flex;align-items:center;gap:10px;">' +
-        '<div style="width:36px;height:36px;border-radius:9px;background:' + bg + ';display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:' + fg + ';flex-shrink:0;">' + initials + '</div>' +
+        '<div style="width:36px;height:36px;border-radius:9px;background:' + bg + ';display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:' + fg + ';flex-shrink:0;">' + cvEsc(initials) + '</div>' +
         '<div style="flex:1;min-width:0;">' +
-          '<div style="font-size:13px;font-weight:700;color:#fff;line-height:1.3;">' + title + (alreadyBadge ? ' ' + alreadyBadge : '') + '</div>' +
+          '<div style="font-size:13px;font-weight:700;color:#fff;line-height:1.3;">' + cvEsc(title) + (alreadyBadge ? ' ' + alreadyBadge : '') + '</div>' +
           '<div style="font-size:11px;color:rgba(255, 255, 255, 0.72);margin-top:1px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' +
-            '<span>' + company + '</span>' +
-            (muni ? '<span style="display:flex;align-items:center;gap:3px;"><span style="width:4px;height:4px;border-radius:50%;background:#3eb489;display:inline-block;"></span>' + muni + '</span>' : '') +
-            (hit.webpage_url ? '<a href="' + hit.webpage_url + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:#3eb489;font-weight:700;text-decoration:none;font-size:10px;margin-left:auto;padding:2px 7px;border:1px solid rgba(62,180,137,0.4);border-radius:6px;background:rgba(62,180,137,0.08);">Annons ↗</a>' : '') +
+            '<span>' + cvEsc(company) + '</span>' +
+            (muni ? '<span style="display:flex;align-items:center;gap:3px;"><span style="width:4px;height:4px;border-radius:50%;background:#3eb489;display:inline-block;"></span>' + cvEsc(muni) + '</span>' : '') +
+            (hit.webpage_url ? '<a href="' + safeUrl(hit.webpage_url) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:#3eb489;font-weight:700;text-decoration:none;font-size:10px;margin-left:auto;padding:2px 7px;border:1px solid rgba(62,180,137,0.4);border-radius:6px;background:rgba(62,180,137,0.08);">Annons ↗</a>' : '') +
           '</div>' +
         '</div>' +
       '</div>' +
@@ -13368,7 +13374,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
     // Läs annons-knapp (om URL finns)
     if (hit.webpage_url) {
       const readBtn = document.createElement('a');
-      readBtn.href = hit.webpage_url;
+      readBtn.href = safeUrl(hit.webpage_url);
       readBtn.target = '_blank';
       readBtn.rel = 'noopener';
       readBtn.onclick = (e) => e.stopPropagation();
@@ -13624,7 +13630,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
       card.innerHTML =
         (isActive ? '<div style="position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:#3eb489;"></div>' : '') +
         '<div style="font-size:13px;font-weight:900;font-family:Georgia,serif;line-height:1;"><span style="color:#f0c040;">CV</span><span style="color:#fff;">match</span></div>' +
-        '<div style="font-size:11px;font-weight:700;color:' + (isActive ? '#fff' : 'rgba(255,255,255,0.5)') + ';line-height:1.3;word-break:break-word;">' + cv.title + '</div>';
+        '<div style="font-size:11px;font-weight:700;color:' + (isActive ? '#fff' : 'rgba(255,255,255,0.5)') + ';line-height:1.3;word-break:break-word;">' + cvEsc(cv.title) + '</div>';
       card.onclick = () => { _matchaSelectedCVId = cv.id; matchaPopulateCvSelect(); matchaPreFillFromCV(); };
       container.appendChild(card);
     });
@@ -13642,7 +13648,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
         c3.innerHTML =
           (isActive ? '<div style="position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:#3eb489;"></div>' : '') +
           '<div style="font-size:13px;font-weight:900;font-family:Georgia,serif;line-height:1;"><span style="color:#f0c040;">CV</span><span style="color:#fff;">match</span></div>' +
-          '<div style="font-size:11px;font-weight:700;color:' + (isActive ? '#fff' : 'rgba(255,255,255,0.5)') + ';line-height:1.3;word-break:break-word;">' + cv.title + '</div>';
+          '<div style="font-size:11px;font-weight:700;color:' + (isActive ? '#fff' : 'rgba(255,255,255,0.5)') + ';line-height:1.3;word-break:break-word;">' + cvEsc(cv.title) + '</div>';
         c3.onclick = () => { _matchaSelectedCVId = cv.id; matchaPopulateCvSelect(); };
         container3.appendChild(c3);
       });
@@ -13750,7 +13756,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
         card.style.cssText = 'background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;margin-bottom:12px;';
         card.innerHTML =
           '<div style="font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255, 255, 255, 0.72);margin-bottom:8px;">' + (labels[i] || 'Alternativ ' + (i+1)) + '</div>' +
-          '<div style="font-size:14px;line-height:1.6;color:rgba(255,255,255,0.85);margin-bottom:12px;">' + alt + '</div>' +
+          '<div style="font-size:14px;line-height:1.6;color:rgba(255,255,255,0.85);margin-bottom:12px;">' + cvEsc(alt) + '</div>' +
           '<button class="mob-btn-primary mob-btn-green" style="width:100%;font-size:13px;" onclick="matchaApplyText(window._matchaAlts[' + i + '])">Använd detta alternativ</button>';
         altEl.appendChild(card);
       });
@@ -14279,7 +14285,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
     html += '<div style="text-align:center;margin-bottom:20px;">';
     html += '<div style="font-size:24px;margin-bottom:8px;">\u2728</div>';
     html += '<div style="font-size:17px;font-weight:900;color:#fff;margin-bottom:6px;">AI har skrivit 3 profiltexter \u00e5t dig!</div>';
-    html += '<div style="font-size:13px;color:rgba(255, 255, 255, 0.72);font-weight:600;margin-bottom:4px;">som matchar <span style="color:#f0c040;">' + role + '</span></div>';
+    html += '<div style="font-size:13px;color:rgba(255, 255, 255, 0.72);font-weight:600;margin-bottom:4px;">som matchar <span style="color:#f0c040;">' + cvEsc(role) + '</span></div>';
     html += '<div style="font-size:11px;color:rgba(255, 255, 255, 0.72);line-height:1.6;">Tryck p\u00e5 ett alternativ f\u00f6r att v\u00e4lja det</div>';
     html += '</div>';
 
@@ -14290,7 +14296,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
       html += '<span style="font-size:16px;">\ud83d\udccb</span>';
       html += '<span style="font-size:12px;font-weight:800;letter-spacing:0.5px;color:' + altAccents[ai] + ';">' + altLabels[ai] + '</span>';
       html += '</div>';
-      html += '<div style="font-size:13px;line-height:1.8;color:rgba(255,255,255,0.88);">' + alt + '</div>';
+      html += '<div style="font-size:13px;line-height:1.8;color:rgba(255,255,255,0.88);">' + cvEsc(alt) + '</div>';
       html += '</div>';
     });
 
@@ -14337,7 +14343,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
             '<div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:6px;">Profiltext sparad!</div>' +
             '<div style="background:rgba(62,180,137,0.12);border:1px solid rgba(62,180,137,0.3);border-radius:10px;padding:10px 14px;margin-bottom:14px;text-align:left;">' +
             '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:rgba(62,180,137,0.8);margin-bottom:4px;">Matchad mot</div>' +
-            '<div style="font-size:13px;font-weight:700;color:#fff;">' + _savedJobTitle + '</div>' +
+            '<div style="font-size:13px;font-weight:700;color:#fff;">' + cvEsc(_savedJobTitle) + '</div>' +
             '</div>' +
             '<div style="font-size:12px;color:rgba(255, 255, 255, 0.72);line-height:1.7;margin-bottom:20px;text-align:left;">' +
             'Profiltexten \u00e4r nu sparad i ditt matchade CV. <strong style="color:rgba(255,255,255,0.85);">Granska och redigera</strong> innan du delar \u2014 eller exportera direkt till PDF nedan.' +
@@ -15000,7 +15006,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
             html += '<div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;">' +
               '<div style="flex-shrink:0;width:40px;height:40px;border-radius:10px;background:rgba(62,180,137,0.12);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;font-family:Georgia,serif;">' +
               '<span style="color:#f0c040;">CV</span><span style="color:#fff;">match</span></div>' +
-              '<div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;color:#fff;">' + cv.title + '</div>' +
+              '<div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;color:#fff;">' + cvEsc(cv.title) + '</div>' +
               '<div style="font-size:11px;color:rgba(255, 255, 255, 0.72);">' + rd(cv.savedAt) + '</div></div>' +
               '<div style="display:flex;gap:6px;flex-shrink:0;">' +
               '<button onclick="if(typeof mobExportSavedCVPDF===\'function\') mobExportSavedCVPDF(\'' + cv.id + '\')" ' +
@@ -15047,7 +15053,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
               // Header label
               '<div style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:rgba(62,180,137,0.6);margin-bottom:6px;">Match ' + (idx+1) + ' av ' + matched.length + '</div>' +
               // Title + meta
-              '<div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:2px;">' + cv.title.replace('Matchat CV – ', '') + '</div>' +
+              '<div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:2px;">' + cvEsc(cv.title.replace('Matchat CV – ', '')) + '</div>' +
               '<div style="font-size:11px;color:rgba(255, 255, 255, 0.72);">' + (cv.company || '') + '</div>' +
               // Chips
               chipsHtml +
@@ -15088,9 +15094,9 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
           edu.forEach(function(u, i) {
             html += '<div style="background:rgba(240,192,64,0.06);border:1px solid rgba(240,192,64,0.18);border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;">' +
               '<div style="font-size:20px;flex-shrink:0;">🎓</div>' +
-              '<div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;">' + u.namn + '</div>' +
-              '<div style="font-size:11px;color:#f0c040;">' + u.typ + ' · ' + u.kommun + '</div>' +
-              (u.info ? '<div style="font-size:11px;color:rgba(255, 255, 255, 0.72);margin-top:2px;">' + u.info + '</div>' : '') +
+              '<div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;">' + cvEsc(u.namn) + '</div>' +
+              '<div style="font-size:11px;color:#f0c040;">' + cvEsc(u.typ) + ' · ' + cvEsc(u.kommun) + '</div>' +
+              (u.info ? '<div style="font-size:11px;color:rgba(255, 255, 255, 0.72);margin-top:2px;">' + cvEsc(u.info) + '</div>' : '') +
               '</div>' +
               '<button onclick="(function(){var l=JSON.parse(_scopedGet(\'pf_saved_edu\')||_scopedGet(\'cvmatchen_edu_saved\')||\'[]\');l.splice(' + i + ',1);var s=JSON.stringify(l);_scopedSet(\'pf_saved_edu\',s);_scopedSet(\'cvmatchen_edu_saved\',s);window._pt(\'edu\');})() " ' +
               'aria-label="Ta bort" style="background:none;border:none;color:rgba(255, 255, 255, 0.72);font-size:16px;cursor:pointer;padding:0;">✕</button>' +
