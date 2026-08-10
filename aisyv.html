@@ -259,8 +259,17 @@
       dualKeyRead:   _p.get('dual')   === '1',
       sendLock:      _p.get('lock')   === '1'
     };
-    // Spegla i kryssrutorna
+    // Dev-panelen (systemprompt-visare, flaggor, test-CV) visas BARA med ?dev=1.
+    // Utan den ser en besökare bara chatt-ytan — så prompt-interna inte exponeras
+    // publikt i produktion.
+    var DEV = _p.get('dev') === '1';
+    // Spegla i kryssrutorna + göm dev-panelen om inte dev-läge
     document.addEventListener('DOMContentLoaded', function () {
+      if (!DEV) {
+        var d = document.querySelector('.dev');
+        if (d) d.style.display = 'none';
+        return;
+      }
       document.getElementById('f-scoped').checked = CFG.scopedStorage;
       document.getElementById('f-dual').checked   = CFG.dualKeyRead;
       document.getElementById('f-lock').checked   = CFG.sendLock;

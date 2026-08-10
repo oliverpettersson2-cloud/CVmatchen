@@ -11,8 +11,9 @@
 
      scopedStorage : true  -> spara via _scopedGet/_scopedSet (user-scoped)   [mobil]
                      false -> spara via localStorage direkt                   [desktop]
-     dualKeyRead   : true  -> getSaved läser båda nycklarna och tar den längsta [mobil]
-                     false -> getSaved läser bara cvmatchen_edu_saved           [desktop]
+     dualKeyRead   : true  -> getSaved läser båda nycklarna och tar den längsta
+                              [mobil OCH desktop — desktop:s backend-synk skriver pf_saved_edu]
+                     false -> getSaved läser bara cvmatchen_edu_saved
      sendLock      : true  -> isSending-lås + setChatLocked under svar          [desktop]
                      false -> inget lås                                          [mobil]
 
@@ -84,7 +85,11 @@
 
   // Navigationsalternativ (t.ex. "Tillbaka") ska alltid vara enkel-tryck och
   // aldrig kunna markeras ihop med innehåll i fler-val.
-  function isNavReply(t) { return /tillbaka|visa fler|börja om|starta om/i.test(t || ''); }
+  // Hem-navigering (går tillbaka till start). Delad av nav-detektion + routning
+  // så de aldrig kan glida isär beroende på LLM:ens exakta ordval.
+  function isHomeReply(t) { return /tillbaka|till start|startsid|^\s*hem\s*$/i.test(t || ''); }
+  // Navigations-/åtgärdsalternativ som alltid ska vara enkel-tryck (aldrig kombineras).
+  function isNavReply(t) { return isHomeReply(t) || /visa fler|börja om|starta om/i.test(t || ''); }
 
   // Injicera fokus-stil en gång (WCAG 2.4.7/1.4.11 — tydlig tangentbordsfokus).
   var _aisyvStyled = false;
@@ -499,7 +504,7 @@
         bubble.appendChild(buildChoiceBoxes(parsed.quickReplies, {
           maxSelect: maxSelect,
           onPick: function(qr) {
-            if (qr.toLowerCase().includes('tillbaka')) showHome();
+            if (isHomeReply(qr)) showHome();
             else sendMessage(qr);
           },
           onOther: function() {
