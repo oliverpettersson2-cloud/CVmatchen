@@ -10849,7 +10849,7 @@ var D={
     // Övnings-chatten delar AI-SYV:s persona-bas (aisyv.js) och lägger till egen
     // arbetsmarknadsdata. Ingen KORT-rendering här → bara den format-neutrala basen.
     var _syvBase=(window.createAiSyv&&window.createAiSyv.AISYV_BASE)||'Du är en AI-SYV för Familjen Helsingborg. Svara PÅ SVENSKA med korrekt svenska inklusive å, ä och ö.';
-    var _syvSystem=_syvBase+' ARBETSMARKNAD AF Q3 2025: Skåne har Sveriges högsta arbetslöshet. Helsingborg 11,3%, Landskrona 11,2%, Bjuv 10,2%, Åstorp 10,7%, Klippan 7,7%, Höganäs 5,4%, Ängelholm 5,2%, Sverige 8,8%, Skåne 9,1%. Danmark ~2,6%, Helsingör ~2,6%, 20000 pendlar dagligen över Öresund. Håll svaret till en–två korta meningar och avsluta ALLTID med exakt 3 snabbsvar på egna rader som börjar med >>, formulerade i användarens röst så man kan välja utan att skriva. Nämn: SFI, Komvux, YH, AMU, Folkhögskola, Högskola.';
+    var _syvSystem=_syvBase+' ARBETSMARKNAD AF Q3 2025: Skåne har Sveriges högsta arbetslöshet. Helsingborg 11,3%, Landskrona 11,2%, Bjuv 10,2%, Åstorp 10,7%, Klippan 7,7%, Höganäs 5,4%, Ängelholm 5,2%, Sverige 8,8%, Skåne 9,1%. Danmark ~2,6%, Helsingör ~2,6%, 20000 pendlar dagligen över Öresund. Håll svaret till en–två korta meningar och avsluta ALLTID med 3-6 svarsalternativ på egna rader som börjar med >> (ge 4-6 när frågan gäller intressen/områden så flera kan väljas, annars 3), formulerade i användarens röst så man kan välja utan att skriva. Användaren kan markera upp till 3. Nämn: SFI, Komvux, YH, AMU, Folkhögskola, Högskola.';
     try{
       var res=await fetch('/api/chat',{
         method:'POST',
@@ -10867,6 +10867,7 @@ var D={
       if(_txt)addReply(_txt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'));
       if(_qr.length&&window.createAiSyv&&window.createAiSyv.buildChoiceBoxes){
         var _box=window.createAiSyv.buildChoiceBoxes(_qr,{
+          maxSelect:3,
           onPick:function(t){D.sendSyvMsg(t);},
           onOther:function(){var i=document.getElementById('syv-inp');if(i)i.focus();}
         });

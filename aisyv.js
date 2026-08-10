@@ -31,7 +31,7 @@
   var AISYV_BASE = "Du är en AI-SYV för Familjen Helsingborg. Svara PÅ SVENSKA med korrekt svenska inklusive å, ä och ö.";
 
   // Full systemprompt för de stora chattarna = bas + KORT-regler + utbildningsdata.
-  var AISYV_SYSTEM_PROMPT = AISYV_BASE + " REGLER: 1) Håll din egen text till EN kort mening (max ca 15 ord) så frågan blir tydlig - skriv aldrig långa stycken brödtext. 2) När du föreslår utbildningar - skriv BARA KORT-kort, ingen fritext om utbildningarna. 3) KORT-format (en per rad): KORT:namn|skola|typ|ort|längd|krav| (lämna url-fältet ALLTID tomt - appen genererar rätt länkar automatiskt baserat på typ). 4) En kort mening FÖRE korten är ok (t.ex. 'Här är tre YH-utbildningar:'). 5) Avsluta ALLTID med EXAKT 3 snabbsvar, var och en på egen rad som börjar med >>. De ska vara konkreta svarsalternativ på din egen fråga eller naturliga nästa steg, formulerade i användarens röst (t.ex. '>>Ja, visa fler'), så användaren kan välja genom att trycka istället för att skriva själv. Aldrig fler eller färre än 3. 6) Inga markdown-symboler. Exempel på svar: 'Här är YH-utbildningar i Helsingborg:\nKORT:Systemutvecklare .NET|Medieinstitutet|YH|Helsingborg|2 år|Gymnasieexamen|\nKORT:Logistiker|NTI-skolan|YH|Helsingborg|2 år|Gymnasieexamen|\n>>Visa fler\n>>Andra yrken\n>>Tillbaka till start'. 7) VIKTIGT: Om utbildningen INTE finns i Familjen Helsingborg (t.ex. universitetsprogram som läkarprogram, SYV, psykolog, jurist) - visa ALLTID både: (a) det nationella programmet med orten tydligt namngiven, OCH (b) 1-2 lokala alternativ från Familjen Helsingborg som bygger liknande kompetenser (t.ex. för SYV: Service Management, Strategisk kommunikation, Pedagogik). Skriv en kort mening som förklarar att de lokala alternativen är relaterade men inte samma yrke. Hitta ALDRIG på utbildningar - om du är osäker på en specifik skola/url, använd antagning.se som url. KÄNDA NATIONELLA PROGRAM (använd dessa när relevant): KORT:Studie- och yrkesvägledarprogrammet|Malmö Universitet|Högskola|Malmö|3 år (180 hp)|Grundläggande behörighet|https://www.mau.se/utbildning/program/studie--och-yrkesvagledarprogrammet/; KORT:Studie- och yrkesvägledare|Stockholms Universitet|Högskola|Stockholm|3 år (180 hp)|Grundläggande behörighet|https://www.su.se; KORT:Studie- och yrkesvägledare|Umeå Universitet|Högskola|Umeå|3 år (180 hp)|Grundläggande behörighet|https://www.umu.se";
+  var AISYV_SYSTEM_PROMPT = AISYV_BASE + " REGLER: 1) Håll din egen text till EN kort mening (max ca 15 ord) så frågan blir tydlig - skriv aldrig långa stycken brödtext. 2) När du föreslår utbildningar - skriv BARA KORT-kort, ingen fritext om utbildningarna. 3) KORT-format (en per rad): KORT:namn|skola|typ|ort|längd|krav| (lämna url-fältet ALLTID tomt - appen genererar rätt länkar automatiskt baserat på typ). 4) En kort mening FÖRE korten är ok (t.ex. 'Här är tre YH-utbildningar:'). 5) Avsluta ALLTID med 3-6 svarsalternativ, var och en på egen rad som börjar med >>. Ge 4-6 alternativ när frågan gäller intressen, områden eller yrken (så användaren kan markera FLERA), och 3 vid ja/nej-liknande frågor. Formulera dem i användarens röst (t.ex. '>>Teknik/IT', '>>Ja, visa fler') så man kan välja genom att trycka istället för att skriva. Användaren kan markera upp till 3 alternativ och skicka dem ihop. 6) Inga markdown-symboler. Exempel på svar: 'Här är YH-utbildningar i Helsingborg:\nKORT:Systemutvecklare .NET|Medieinstitutet|YH|Helsingborg|2 år|Gymnasieexamen|\nKORT:Logistiker|NTI-skolan|YH|Helsingborg|2 år|Gymnasieexamen|\n>>Visa fler\n>>Andra yrken\n>>Tillbaka till start'. 7) VIKTIGT: Om utbildningen INTE finns i Familjen Helsingborg (t.ex. universitetsprogram som läkarprogram, SYV, psykolog, jurist) - visa ALLTID både: (a) det nationella programmet med orten tydligt namngiven, OCH (b) 1-2 lokala alternativ från Familjen Helsingborg som bygger liknande kompetenser (t.ex. för SYV: Service Management, Strategisk kommunikation, Pedagogik). Skriv en kort mening som förklarar att de lokala alternativen är relaterade men inte samma yrke. Hitta ALDRIG på utbildningar - om du är osäker på en specifik skola/url, använd antagning.se som url. KÄNDA NATIONELLA PROGRAM (använd dessa när relevant): KORT:Studie- och yrkesvägledarprogrammet|Malmö Universitet|Högskola|Malmö|3 år (180 hp)|Grundläggande behörighet|https://www.mau.se/utbildning/program/studie--och-yrkesvagledarprogrammet/; KORT:Studie- och yrkesvägledare|Stockholms Universitet|Högskola|Stockholm|3 år (180 hp)|Grundläggande behörighet|https://www.su.se; KORT:Studie- och yrkesvägledare|Umeå Universitet|Högskola|Umeå|3 år (180 hp)|Grundläggande behörighet|https://www.umu.se";
 
   // 30 Framtidsyrken
   var FRAMTIDSYRKEN = [
@@ -75,24 +75,80 @@
   ];
 
   // Bygg svarsboxar (förvalda svar som tappbara textrutor + en "Övrigt"-box).
-  // Delas av de stora chattarna OCH övnings-chatten (exAiChat i index.html) så
-  // alla delar av AI-SYV ser likadana ut. opts.onPick(text) körs när ett svar
-  // väljs; opts.onOther() körs när användaren vill skriva eget (fokusera rutan).
+  // Delas av de stora chattarna OCH övnings-chatten (exAiChat i index.html).
+  //   opts.maxSelect : 1 (default) = ett klick skickar direkt (navigering).
+  //                    >1 = fler-val: markera upp till N, "Skicka N →" skickar ihop.
+  //   opts.onPick(text) : körs med valt svar (eller kommaseparerade val vid fler-val).
+  //   opts.onOther()    : körs när användaren vill skriva eget (fokusera rutan).
   function buildChoiceBoxes(replies, opts) {
     opts = opts || {};
+    var maxSelect = opts.maxSelect || 1;
+    var list = replies || [];
     var qDiv = document.createElement('div');
     qDiv.style.cssText = 'margin-top:12px;display:flex;flex-direction:column;gap:8px;';
-    (replies || []).forEach(function(qr) {
+
+    var BASE_BG = 'rgba(62,180,137,0.10)', SEL_BG = 'rgba(62,180,137,0.30)';
+    var selected = [];          // valda index (endast vid fler-val)
+    var boxes = [];             // { btn, mark, text }
+    var footer = null;
+
+    function updateVisual() {
+      boxes.forEach(function(b, i) {
+        var on = selected.indexOf(i) !== -1;
+        var capped = !on && selected.length >= maxSelect;
+        b.btn.style.background = on ? SEL_BG : BASE_BG;
+        b.btn.style.borderColor = on ? 'rgba(62,180,137,0.95)' : 'rgba(62,180,137,0.35)';
+        b.btn.style.opacity = capped ? '0.45' : '1';
+        b.mark.textContent = on ? '✓' : '';
+      });
+      if (footer) {
+        var n = selected.length;
+        footer._hint.textContent = n ? (n + ' av ' + maxSelect + ' valda') : ('Välj upp till ' + maxSelect);
+        footer._send.textContent = n ? ('Skicka ' + n + ' →') : 'Skicka';
+        footer._send.style.opacity = n ? '1' : '0.5';
+        footer._send.style.pointerEvents = n ? 'auto' : 'none';
+      }
+    }
+
+    list.forEach(function(qr, idx) {
       var btn = document.createElement('button');
-      btn.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;background:rgba(62,180,137,0.10);border:1.5px solid rgba(62,180,137,0.35);border-radius:14px;padding:13px 15px;color:#eafaf3;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;line-height:1.35;';
+      btn.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;background:' + BASE_BG + ';border:1.5px solid rgba(62,180,137,0.35);border-radius:14px;padding:13px 15px;color:#eafaf3;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;line-height:1.35;transition:background .12s,border-color .12s,opacity .12s;';
       var lbl = document.createElement('span'); lbl.textContent = qr; lbl.style.cssText = 'flex:1;';
-      var arw = document.createElement('span'); arw.textContent = '›'; arw.style.cssText = 'color:#3eb489;font-size:19px;font-weight:900;flex-shrink:0;';
-      btn.appendChild(lbl); btn.appendChild(arw);
-      btn.addEventListener('mouseenter', function(){ btn.style.background = 'rgba(62,180,137,0.18)'; });
-      btn.addEventListener('mouseleave', function(){ btn.style.background = 'rgba(62,180,137,0.10)'; });
-      btn.addEventListener('click', function(){ if (opts.onPick) opts.onPick(qr); });
+      var mark = document.createElement('span'); mark.style.cssText = 'color:#3eb489;font-size:18px;font-weight:900;flex-shrink:0;width:16px;text-align:center;';
+      mark.textContent = maxSelect > 1 ? '' : '›';
+      btn.appendChild(lbl); btn.appendChild(mark);
+      boxes.push({ btn: btn, mark: mark, text: qr });
+
+      btn.addEventListener('click', function() {
+        if (maxSelect <= 1) { if (opts.onPick) opts.onPick(qr); return; }
+        var pos = selected.indexOf(idx);
+        if (pos !== -1) selected.splice(pos, 1);
+        else { if (selected.length >= maxSelect) return; selected.push(idx); }
+        updateVisual();
+      });
       qDiv.appendChild(btn);
     });
+
+    // Fler-val: räknare + Skicka-knapp
+    if (maxSelect > 1 && list.length) {
+      footer = document.createElement('div');
+      footer.style.cssText = 'display:flex;align-items:center;gap:10px;margin-top:2px;';
+      var hint = document.createElement('span'); hint.style.cssText = 'font-size:12px;color:rgba(255,255,255,0.55);flex:1;';
+      var send = document.createElement('button');
+      send.style.cssText = 'background:linear-gradient(135deg,#3eb489,#10b981);border:none;border-radius:12px;padding:11px 18px;color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;flex-shrink:0;';
+      send.addEventListener('click', function() {
+        if (!selected.length) return;
+        var texts = selected.map(function(i){ return boxes[i].text; });
+        qDiv.style.pointerEvents = 'none'; qDiv.style.opacity = '0.7';   // lås efter skick
+        if (opts.onPick) opts.onPick(texts.join(', '));
+      });
+      footer._hint = hint; footer._send = send;
+      footer.appendChild(hint); footer.appendChild(send);
+      qDiv.appendChild(footer);
+    }
+    updateVisual();
+
+    // "Övrigt" — skriv en egen fråga i rutan
     if (opts.onOther) {
       var other = document.createElement('button');
       other.style.cssText = 'display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:transparent;border:1.5px dashed rgba(255,255,255,0.22);border-radius:14px;padding:12px 15px;color:rgba(255,255,255,0.62);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;';
@@ -352,8 +408,11 @@
       return div;
     }
 
-    // Lägg till bot-bubbla
-    function addBot(rawText) {
+    // Lägg till bot-bubbla. boxOpts.maxSelect styr svarsboxarna:
+    //   default 3 (AI-svar → markera upp till 3), 1 för navigerings-meddelanden.
+    function addBot(rawText, boxOpts) {
+      boxOpts = boxOpts || {};
+      var maxSelect = (boxOpts.maxSelect != null) ? boxOpts.maxSelect : 3;
       var msgs = document.getElementById('edu-messages');
       if (!msgs) return;
 
@@ -383,6 +442,7 @@
       // Snabbsvar — förvalda svarsalternativ som fulla textrutor (delad hjälpare).
       if (parsed.quickReplies.length) {
         bubble.appendChild(buildChoiceBoxes(parsed.quickReplies, {
+          maxSelect: maxSelect,
           onPick: function(qr) {
             if (qr.toLowerCase().includes('tillbaka')) showHome();
             else sendMessage(qr);
@@ -475,7 +535,7 @@
         var reply = (data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('').trim() || 'Något gick fel.';
         hideTyping(); addBot(reply);
       } catch(e) {
-        hideTyping(); addBot('Kunde inte ansluta.\n\n>>Försök igen\n>>Tillbaka till start');
+        hideTyping(); addBot('Kunde inte ansluta.\n\n>>Försök igen\n>>Tillbaka till start', { maxSelect: 1 });
       } finally {
         if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
         if (sendLock) { setChatLocked(false); isSending = false; }
@@ -518,7 +578,7 @@
             'region': 'Hej! Jag hjälper dig hitta utbildningar i Familjen Helsingborg.\n\nVilken typ letar du efter?\n\n>>Yrkesutbildning / Komvux\n>>Yrkeshögskola (YH)\n>>Jag vet inte - hjälp mig!',
             'search': 'Hej! Fråga mig vad som helst om utbildningar och studier.\n\n>>Vad tjänar man som sjuksköterska?\n>>Vilka YH-utbildningar finns i Helsingborg?\n>>Hur söker man till Komvux?'
           };
-          setTimeout(function(){ addBot(openers[viewKey]||'Hur kan jag hjälpa dig?'); }, 200);
+          setTimeout(function(){ addBot(openers[viewKey]||'Hur kan jag hjälpa dig?', { maxSelect: 1 }); }, 200);
         }
       });
     }
@@ -528,7 +588,7 @@
       if (!msgs) return;
       var saved = getSaved();
       if (!saved.length) {
-        addBot('Du har inga sparade utbildningar än.\n\nNär AI nämner en utbildning visas ett kort med en Spara-knapp!\n\n>>Utforska Familjen Helsingborg\n>>Fråga AI-SYV');
+        addBot('Du har inga sparade utbildningar än.\n\nNär AI nämner en utbildning visas ett kort med en Spara-knapp!\n\n>>Utforska Familjen Helsingborg\n>>Fråga AI-SYV', { maxSelect: 1 });
         return;
       }
       var wrapper = document.createElement('div');
