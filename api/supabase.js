@@ -458,11 +458,13 @@ export default async function handler(req, res) {
     }
 
     if (action === 'admin_login') {
-      const result = await makeRequest(`${SUPABASE_URL}/rest/v1/admins?email=eq.${encodeURIComponent(adminEmail || email)}&select=*,kommuner(name),enheter(name)&limit=1`, { method: 'GET', headers: serviceHeaders() });
-      const rows = Array.isArray(result.data) ? result.data : [];
-      if (!rows.length) return res.status(404).json({ error: 'Ej inbjuden till CVmatchen' });
-      await makeRequest(`${SUPABASE_URL}/rest/v1/admins?id=eq.${rows[0].id}`, { method: 'PATCH', headers: serviceHeaders() }, { last_login: new Date().toISOString() });
-      return res.status(200).json({ admin: rows[0] });
+      // BORTTAGEN (säkerhet): denna action returnerade hela admins-raden inkl.
+      // `invite_token` (en credential) HELT OAUTENTISERAT via service-role, och
+      // möjliggjorde e-postuppräkning av handläggare/admins samt en oautentiserad
+      // last_login-skrivning. Den anropas inte längre av frontend — admin-inloggning
+      // sker via Microsoft OAuth (api/v1/auth/microsoft*). Returnerar 410 så en ev.
+      // gammal cachead klient failar rent istället för att läcka data.
+      return res.status(410).json({ error: 'admin_login är borttagen — använd Microsoft-inloggning' });
     }
 
     if (action === 'admin_list_tasks') {
@@ -512,9 +514,9 @@ export default async function handler(req, res) {
       let url = `${SUPABASE_URL}/rest/v1/user_assignments?select=*&order=created_at.desc`;
       if (safeFilters.enhet_id) url += `&enhet_id=eq.${safeFilters.enhet_id}`;
       if (safeFilters.kommun_id) url += `&kommun_id=eq.${safeFilters.kommun_id}`;
-      if (safeFilters.status) url += `&status=eq.${safeFilters.status}`;
-      if (filters?.limit) url += `&limit=${filters.limit}`;
-      if (filters?.offset) url += `&offset=${filters.offset}`;
+      if (safeFilters.status) url += `&status=eq.${encodeURIComponent(safeFilters.status)}`;
+      const _lim = parseInt(filters?.limit, 10); if (Number.isFinite(_lim) && _lim > 0) url += `&limit=${_lim}`;
+      const _off = parseInt(filters?.offset, 10); if (Number.isFinite(_off) && _off >= 0) url += `&offset=${_off}`;
       const result = await makeRequest(url, { method: 'GET', headers: serviceHeaders() });
       const users = Array.isArray(result.data) ? result.data : [];
       const userIds = users.map(u => u.user_id).filter(Boolean);
@@ -662,7 +664,7 @@ export default async function handler(req, res) {
       );
       const rows = Array.isArray(dr.data) ? dr.data : [];
       const stats = {};
-      ids.forEach(u => { stats[u] = { applied_count: 0, last_applied_at: null }; });
+      allowedIds.forEach(u => { stats[u] = { applied_count: 0, last_applied_at: null }; });
       rows.forEach(r => {
         const arr = Array.isArray(r.data) ? r.data : [];
         const applied = arr.filter(e => e && e.applied === true);
@@ -883,8 +885,8 @@ export default async function handler(req, res) {
       const scopeEnhetId = isSuper ? filters?.enhet_id
         : (admin.enhet_id != null ? admin.enhet_id : filters?.enhet_id);
       let userUrl = `${SUPABASE_URL}/rest/v1/user_assignments?select=status,kommun_id,enhet_id,user_id`;
-      if (scopeKommunId) userUrl += `&kommun_id=eq.${scopeKommunId}`;
-      if (scopeEnhetId)  userUrl += `&enhet_id=eq.${scopeEnhetId}`;
+      if (scopeKommunId) userUrl += `&kommun_id=eq.${encodeURIComponent(scopeKommunId)}`;
+      if (scopeEnhetId)  userUrl += `&enhet_id=eq.${encodeURIComponent(scopeEnhetId)}`;
       const userRes = await makeRequest(userUrl, { method: 'GET', headers: serviceHeaders() });
       const users = Array.isArray(userRes.data) ? userRes.data : [];
       // Task-statistik scopas till denna kommuns deltagare. Superadmin utan
