@@ -5432,6 +5432,10 @@
     }
     window.addCustomLicense = addCustomLicense;
 
+    // Minns nyligen genererade kompetenser (över flera klick) så en ny generering
+    // ger ANDRA förslag — även om användaren tagit bort de nuvarande.
+    var _recentSkills = [];
+
     async function aiMatchSkills() {
       const titleRaw = document.getElementById('title').value.trim();
       const title = titleRaw.toLowerCase();
@@ -5440,31 +5444,51 @@
         showToast('⚠️ Skriv in en jobbtitel först!', 'error');
         return;
       }
-      showAiLoader('Matchar kompetenser...', 'AI söker rätt kompetenser för din titel');
 
-      // Snabb lokal matchning först
-      for (let [jobKey, skills] of Object.entries(SKILL_MATCHER)) {
-        const jobKeyLower = jobKey.toLowerCase();
-        const normalizedTitle = title.replace(/[&\-]/g, ' ').replace(/\s+/g, ' ').trim();
-        const normalizedKey = jobKeyLower.replace(/[&\-]/g, ' ').replace(/och/g, '').replace(/\s+/g, ' ').trim();
-        if (title.includes(jobKeyLower) || jobKeyLower.includes(title) ||
-            normalizedTitle.includes(normalizedKey) || normalizedKey.includes(normalizedTitle)) {
-          cvData.skills = skills;
-          saveData(); renderSkills(); updatePreview();
-          hideAiLoader();
-          logEvent('ai_skill_match', { title: titleRaw, source: 'local', count: skills.length });
-          showToast(`✨ ${skills.length} kompetenser matchade!`, 'success');
-          return;
+      const jobs = Array.isArray(cvData.jobs) ? cvData.jobs : [];
+      const existing = Array.isArray(cvData.skills) ? cvData.skills : [];
+
+      // Kall-start (inga jobb, inga kompetenser, aldrig genererat): snabb lokal
+      // titel-matchning som bra default. Har du jobb ELLER redan genererat → gå
+      // alltid till AI för kompetenser som speglar din FAKTISKA erfarenhet och
+      // som VARIERAR (annars trillar den tillbaka på exakt samma lista).
+      const coldStart = jobs.length === 0 && existing.length === 0 && _recentSkills.length === 0;
+      if (coldStart) {
+        for (let [jobKey, skills] of Object.entries(SKILL_MATCHER)) {
+          const jobKeyLower = jobKey.toLowerCase();
+          const normalizedTitle = title.replace(/[&\-]/g, ' ').replace(/\s+/g, ' ').trim();
+          const normalizedKey = jobKeyLower.replace(/[&\-]/g, ' ').replace(/och/g, '').replace(/\s+/g, ' ').trim();
+          if (title.includes(jobKeyLower) || jobKeyLower.includes(title) ||
+              normalizedTitle.includes(normalizedKey) || normalizedKey.includes(normalizedTitle)) {
+            cvData.skills = skills;
+            saveData(); renderSkills(); updatePreview();
+            _recentSkills = Array.from(new Set(_recentSkills.concat(skills))).slice(-30);
+            logEvent('ai_skill_match', { title: titleRaw, source: 'local', count: skills.length });
+            showToast(`✨ ${skills.length} kompetenser matchade!`, 'success');
+            return;
+          }
         }
       }
 
-      // Inget lokalt — fråga AI
+      showAiLoader('Matchar kompetenser...', 'AI väljer kompetenser från din erfarenhet');
+
       try {
+        const jobsCtx = jobs.map(j =>
+          (j.title || '') + (j.company ? ' på ' + j.company : '') +
+          ([j.desc1, j.desc2, j.desc3].filter(Boolean).length ? ': ' + [j.desc1, j.desc2, j.desc3].filter(Boolean).join('; ') : '')
+        ).filter(s => s.trim()).join('\n');
+        const eduCtx = (cvData.education || []).map(e => [e.degree, e.school].filter(Boolean).join(' – ')).filter(Boolean).join(', ');
+        const avoid = Array.from(new Set(existing.concat(_recentSkills))).join(', ');
+
         const prompt = [
-          'Generera 4 konkreta yrkeskompetenser på svenska för yrket: ' + titleRaw,
-          'Kompetenserna ska vara korta (1-3 ord), konkreta och relevanta för svensk arbetsmarknad.',
-          'Svara ENBART med JSON: {"kompetenser": ["k1", "k2", "k3", "k4", "k5", "k6"]}'
-        ].join('\n');
+          'Föreslå 6 konkreta, korta yrkeskompetenser (1-3 ord) på svenska för ett svenskt CV.',
+          'Yrkestitel: ' + titleRaw,
+          jobsCtx ? 'Arbetslivserfarenhet:\n' + jobsCtx : '',
+          eduCtx ? 'Utbildning: ' + eduCtx : '',
+          jobsCtx ? 'Basera kompetenserna på den FAKTISKA erfarenheten ovan, inte bara titeln.' : '',
+          avoid ? 'Ge ANDRA kompetenser än dessa – upprepa dem inte: ' + avoid : '',
+          'Svara ENBART med JSON: {"kompetenser": ["k1","k2","k3","k4","k5","k6"]}'
+        ].filter(Boolean).join('\n');
 
         const response = await fetch('/api/chat', {
           method: 'POST',
@@ -5472,6 +5496,7 @@
           body: JSON.stringify({
             model: 'claude-haiku-4-5-20251001',
             max_tokens: 300,
+            temperature: 1,
             system: PATHFINDER_SYSTEM_PROMPT,
             messages: [{ role: 'user', content: prompt }]
           })
@@ -5480,16 +5505,19 @@
         if (!response.ok) throw new Error('API-fel: ' + response.status);
         const data = await response.json();
         const raw = data.content[0].text.trim().replace(/```json|```/g, '').trim();
-        let parsed;
-        try { parsed = JSON.parse(raw); } catch(e) { parsed = { kompetenser: [] }; }
-        const skills = (parsed.kompetenser || []).slice(0, 4);
+        let parsed = null;
+        try { parsed = JSON.parse(raw); }
+        catch(e) { const m = raw.match(/\{[\s\S]*\}/); if (m) { try { parsed = JSON.parse(m[0]); } catch(e2) {} } }
+        if (!parsed) parsed = { kompetenser: [] };
+        const skills = (parsed.kompetenser || parsed.skills || []).map(s => String(s).trim()).filter(Boolean).slice(0, 6);
         if (skills.length < 1) throw new Error('Inga kompetenser returnerades');
 
         cvData.skills = skills;
+        _recentSkills = Array.from(new Set(_recentSkills.concat(skills))).slice(-30);
         saveData(); renderSkills(); updatePreview();
         hideAiLoader();
         logEvent('ai_skill_match', { title: titleRaw, source: 'ai', count: skills.length });
-        showToast(`✨ ${skills.length} AI-kompetenser för ${titleRaw}!`, 'success');
+        showToast(`✨ ${skills.length} kompetenser från din erfarenhet!`, 'success');
       } catch(err) {
         hideAiLoader();
         showToast('⚠️ Kunde inte hämta kompetenser: ' + err.message, 'error');
