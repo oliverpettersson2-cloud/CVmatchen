@@ -1088,6 +1088,29 @@ export default async function handler(req, res) {
       // Förväntar: accessToken, userId, branch, company?, roleTitle?, difficulty?, jobMatchId?
       const { branch, company, roleTitle, difficulty, jobMatchId } = req.body || {};
       if (!branch) return res.status(400).json({ error: 'branch krävs' });
+
+      // ── KOSTNADSTAK: max antal intervjuer per användare och dygn ──
+      // Räknas från svensk midnatt. Queryn är RLS-skopad (användarens egen
+      // token, inget user_id-filter från bodyn) → går inte att kringgå
+      // genom att skicka annat userId. Frontend visar samma gräns.
+      const DAILY_INTERVIEW_LIMIT = 3;
+      const nowD = new Date();
+      const hms = new Intl.DateTimeFormat('sv-SE', {
+        timeZone: 'Europe/Stockholm', hour: '2-digit', minute: '2-digit',
+        second: '2-digit', hourCycle: 'h23'
+      }).format(nowD).split(':').map(Number);
+      const midnightUTC = new Date(nowD.getTime() - ((hms[0] * 3600 + hms[1] * 60 + hms[2]) * 1000)).toISOString();
+      const todayRes = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/interview_sessions?started_at=gte.${encodeURIComponent(midnightUTC)}&select=id&limit=10`,
+        { method: 'GET', headers: authHeaders(accessToken) }
+      );
+      const todayCount = Array.isArray(todayRes.data) ? todayRes.data.length : 0;
+      if (todayCount >= DAILY_INTERVIEW_LIMIT) {
+        return res.status(429).json({
+          error: 'Du har nått dagens gräns på ' + DAILY_INTERVIEW_LIMIT + ' intervjuer. Kom tillbaka imorgon — då är räknaren nollställd!',
+          code: 'daily_limit'
+        });
+      }
       const result = await makeRequest(
         `${SUPABASE_URL}/rest/v1/interview_sessions`,
         { method: 'POST', headers: { ...authHeaders(accessToken), 'Prefer': 'return=representation' } },
@@ -1130,10 +1153,13 @@ export default async function handler(req, res) {
       // Förväntar: accessToken, sessionId, durationSeconds?, overallFeedback?, userRating?, userNotes?, status?
       const { sessionId, durationSeconds, overallFeedback, userRating, userNotes, status: sessStatus } = req.body || {};
       if (!sessionId) return res.status(400).json({ error: 'sessionId krävs' });
+      // Whitelist av status + numerisk duration — inga godtyckliga strängar in i DB
+      const safeStatus = ['completed', 'abandoned'].includes(sessStatus) ? sessStatus : 'completed';
+      const safeDuration = Number.isFinite(parseInt(durationSeconds, 10)) ? Math.max(0, parseInt(durationSeconds, 10)) : null;
       const updates = {
-        status: sessStatus || 'completed',
+        status: safeStatus,
         completed_at: new Date().toISOString(),
-        duration_seconds: durationSeconds || null,
+        duration_seconds: safeDuration,
         overall_feedback: overallFeedback || null,
         user_rating: userRating || null,
         user_notes: userNotes || null
@@ -1172,7 +1198,8 @@ export default async function handler(req, res) {
     if (action === 'list_interview_sessions') {
       // Hämta intervjuhistorik för användaren
       // Förväntar: accessToken, userId, limit?
-      const listLimit = (req.body && req.body.limit) || 20;
+      // Sanera limit — går rakt in i URL:en (samma mönster som övriga actions)
+      const listLimit = Math.min(Math.max(parseInt((req.body && req.body.limit), 10) || 20, 1), 50);
       const result = await makeRequest(
         `${SUPABASE_URL}/rest/v1/interview_sessions?user_id=eq.${userId}&select=*&order=started_at.desc&limit=${listLimit}`,
         { method: 'GET', headers: authHeaders(accessToken) }
