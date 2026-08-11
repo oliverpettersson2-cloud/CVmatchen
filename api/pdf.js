@@ -1,10 +1,11 @@
-// @sparticuz/chromium v120+ exporterar som ESM-default även i CJS —
-// plocka .default med fallback så koden tål båda formerna.
-const _chromiumMod = require('@sparticuz/chromium');
+// ESM: @sparticuz/chromium v120+ och puppeteer-core v23+ är ESM-only —
+// require() av dem kraschar i Vercels lambda-runtime (ERR_REQUIRE_ESM).
+// Hela filen är därför ESM, samma modell som api/chat.js.
+import _chromiumMod from '@sparticuz/chromium';
+import puppeteer from 'puppeteer-core';
+import path from 'path';
+import * as Sentry from '@sentry/node';
 const chromium = _chromiumMod.default || _chromiumMod;
-const puppeteer = require('puppeteer-core');
-const path = require('path');
-const Sentry = require('@sentry/node');
 Sentry.init({ dsn: process.env.SENTRY_DSN, environment: process.env.VERCEL_ENV || 'development' });
 
 const ALLOWED_ORIGINS = ['https://cvmatchen.com', 'https://www.cvmatchen.com'];
@@ -37,7 +38,7 @@ function originAllowed(origin) {
   } catch (_) { return false; }
 }
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   const origin = req.headers.origin;
   if (ALLOWED_ORIGINS.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
