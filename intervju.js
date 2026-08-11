@@ -309,7 +309,7 @@
         if (data && data.error) {
           // Tyst varning men kasta inte error → låt intervjun fortsätta lokalt
           console.warn('[Intervju] Backend-fel (icke-kritiskt):', data.error);
-          return { _failedSilently: true, error: data.error };
+          return { _failedSilently: true, error: data.error, code: data.code || null };
         }
         return data || {};
       } catch (e) {
@@ -334,7 +334,7 @@
       if (!resp.ok) {
         // Tyst — låt intervjun köra lokalt
         console.warn('[Intervju] Backend HTTP ' + resp.status + ' (icke-kritiskt)');
-        return { _failedSilently: true, error: data.error || ('HTTP ' + resp.status) };
+        return { _failedSilently: true, error: data.error || ('HTTP ' + resp.status), code: data.code || null };
       }
       return data;
     } catch (e) {
@@ -675,6 +675,11 @@
     }
   }
 
+  // Dagstak — måste matcha DAILY_INTERVIEW_LIMIT i api/supabase.js.
+  // Servern är den som faktiskt upprätthåller gränsen (RLS-skopad räkning);
+  // klienten visar den bara.
+  var DAILY_INTERVIEW_LIMIT = 3;
+
   async function createSession(input) {
     var auth = requireAuth();
     var r = await apiSupabase({
@@ -687,6 +692,13 @@
       difficulty: input.difficulty || 'medium',
       jobMatchId: input.jobMatchId || null
     });
+
+    // Dagstaket nått → AVBRYT (ingen lokal fallback — den skulle kringgå taket)
+    if (r && r.code === 'daily_limit') {
+      var limErr = new Error(r.error || 'Du har nått dagens gräns för intervjuer. Kom tillbaka imorgon!');
+      limErr.dailyLimit = true;
+      throw limErr;
+    }
 
     // Om backend failar tyst — skapa lokal session så intervjun ändå kan köra
     if (!r || r._failedSilently || !r.session) {
@@ -1112,7 +1124,8 @@
       '  </div>',
 
       '  <button class="iv-btn" id="ivStartSetupBtn" style="margin-top:8px">Fortsätt till tips →</button>',
-      '  <div id="ivHistory" style="margin-top:22px"></div>',
+      '  <div id="ivDailyCounter" style="margin-top:10px;text-align:center;font-size:12px;color:rgba(255,255,255,0.45);"></div>',
+      '  <div id="ivHistory" style="margin-top:18px"></div>',
       '</div>',
 
       // ─── TIPS (en i taget med timer) ─────────────────────────────
@@ -1338,6 +1351,23 @@
     if (!box) return;
     var sessions;
     try { sessions = await listSessions(5); } catch (e) { sessions = []; }
+
+    // Dagsräknare: hur många intervjuer har startats idag (svensk tid)?
+    var todayStr = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Stockholm' });
+    var todayCount = (sessions || []).filter(function(s) {
+      try {
+        return new Date(s.started_at || s.created_at).toLocaleDateString('sv-SE', { timeZone: 'Europe/Stockholm' }) === todayStr;
+      } catch (e) { return false; }
+    }).length;
+    var left = Math.max(0, DAILY_INTERVIEW_LIMIT - todayCount);
+    var counterEl = $('#ivDailyCounter');
+    if (counterEl) {
+      counterEl.innerHTML = left > 0
+        ? '🎟️ ' + left + ' av ' + DAILY_INTERVIEW_LIMIT + ' intervjuer kvar idag'
+        : '🎟️ Dagens intervjuer är slut — kom tillbaka imorgon!';
+      counterEl.style.color = left > 0 ? 'rgba(255,255,255,0.45)' : 'rgba(240,192,64,0.9)';
+    }
+
     if (!sessions || !sessions.length) { box.innerHTML = ''; return; }
 
     var items = sessions.map(function(s) {
@@ -1726,8 +1756,15 @@
     } catch (e) {
       ivDebug.log('✗ startInterview kraschade: ' + (e.message || e));
       if (e.stack) ivDebug.log('  stack: ' + e.stack.slice(0, 300));
-      showError('Kunde inte starta: ' + (e.message || e));
-      showScreen('tips');
+      if (e.dailyLimit) {
+        // Dagstaket nått → tillbaka till start där räknaren syns
+        showError(e.message);
+        showScreen('setup');
+        loadHistory();
+      } else {
+        showError('Kunde inte starta: ' + (e.message || e));
+        showScreen('tips');
+      }
     }
   }
 
