@@ -16,17 +16,19 @@
 (function() {
   'use strict';
 
-  // DEMO-FLAGGA — sätt till false efter pilot-demo för att återställa
-  // nedräkningar på tips-skärmen (3-7s per tips). Hittas också i index.html
-  // för "Regler & rättigheter"-övningen. ATT TA BORT EFTER DEMO 2026-06-17.
-  var DEMO_SKIP_COUNTDOWN = true;
-
   // ══════════════════════════════════════════════════════════════
   // KONFIGURATION
+  // Kostnadstak: varje AI-anrop är begränsat (max_tokens), historiken
+  // trunkeras, CV-kontexten kapas och intervjun har ett hårt tak på
+  // antal frågor. Tillsammans med skickalåset (inga dubbelanrop) och
+  // backendens rate limit kan en intervju inte springa iväg i kostnad.
   // ══════════════════════════════════════════════════════════════
   var CONFIG = {
-    claudeModel: 'claude-sonnet-5',  // Sonnet 5 för intervjun — bättre nyanserade följdfrågor, läser CV-kontext skarpare. ~5x dyrare än Haiku men ~10 kr/intervju är försumbart.
-    maxSpeechHistoryChars: 8000, // trunkera om historiken blir enorm
+    claudeModel: 'claude-sonnet-5',  // Sonnet 5 för intervjun — bättre nyanserade följdfrågor och läser CV-kontexten skarpare.
+    maxSpeechHistoryChars: 8000,   // trunkera historiken som skickas till AI (≈2-3k tokens)
+    maxInterviewerTurns: 15,       // hårt tak — intervjun tvingas avslutas efter 15 AI-frågor
+    maxCvContextChars: 600,        // CV-kontext i systemprompten kapas här
+    maxFeedbackTranscriptChars: 7000, // transkript som skickas till feedback-AI:n kapas här
     defaultVoiceLang: 'sv-SE',
     ttsRate: 0.95,
     ttsPitch: 1.0
@@ -559,6 +561,17 @@
       ? 'Rollen som diskuteras är: ' + s.roleTitle + '.'
       : 'Rollen är inte specificerad — fråga kandidaten tidigt vilken typ av roll hen söker.';
 
+    var cvContext = getCvContext();
+    var cvBlock = cvContext
+      ? [
+          '',
+          'KANDIDATENS BAKGRUND (från deras CV — använd detta!)',
+          cvContext,
+          '- Referera naturligt till deras verkliga erfarenhet ("Jag ser att du jobbat som..."). Det gör intervjun personlig och realistisk.',
+          '- Hitta ALDRIG på detaljer om deras bakgrund utöver det som står ovan.'
+        ].join('\n')
+      : '';
+
     return [
       'Du är en erfaren svensk rekryterare som genomför en jobbintervju på svenska.',
       '',
@@ -567,6 +580,7 @@
       '- ' + companyLine,
       '- ' + roleLine,
       '- Svårighetsgrad: ' + diffLine,
+      cvBlock,
       '',
       'DITT SPRÅK OCH TONFALL',
       '- Prata som en vanlig svensk människa i ett riktigt samtal. Du-tilltal direkt.',
@@ -747,24 +761,63 @@
     } catch (e) { /* tyst */ }
   }
 
-  async function saveQuestionRow(sessionId, messageId, text, userAnswer) {
-    var auth = requireAuth();
-    // Skippa backend för lokala sessioner
-    if (typeof sessionId === 'string' && sessionId.indexOf('local_') === 0) {
-      return null;
-    }
+  async function listSessions(limit) {
+    var auth = getAuth();
+    if (!auth.userId || !auth.accessToken) return [];
     var r = await apiSupabase({
-      action: 'save_interview_question',
+      action: 'list_interview_sessions',
       accessToken: auth.accessToken,
       userId: auth.userId,
-      sessionId: sessionId,
-      messageId: messageId,
-      questionText: text,
-      userAnswer: userAnswer || null,
-      difficulty: state.session ? state.session.difficulty : null
+      limit: limit || 5
     });
-    if (!r || r._failedSilently) return null;
-    return r.savedQuestion;
+    if (!r || r._failedSilently || !Array.isArray(r.sessions)) return [];
+    return r.sessions;
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // CV-KONTEXT — ger intervjuaren kandidatens verkliga bakgrund så
+  // frågorna blir personliga ("Jag ser att du jobbat på...").
+  // Läser samma user-skopade localStorage-nyckel som huvudappen
+  // (cvData::<userId>). Namn/e-post/telefon skickas ALDRIG med —
+  // bara titel, erfarenhet, kompetenser och utbildning.
+  // KOSTNADSTAK: kapas vid CONFIG.maxCvContextChars tecken.
+  // ══════════════════════════════════════════════════════════════
+  function getCvContext() {
+    try {
+      var uid = getAuth().userId;
+      var raw = null;
+      if (uid) raw = localStorage.getItem('cvData::' + uid);
+      if (!raw) raw = localStorage.getItem('cvData::anon') || localStorage.getItem('cvData');
+      if (!raw) return '';
+      var cv = JSON.parse(raw);
+      var parts = [];
+      if (cv.title) parts.push('Titel/inriktning: ' + cv.title);
+      if (Array.isArray(cv.jobs) && cv.jobs.length) {
+        var jobs = cv.jobs.slice(0, 4).map(function(j) {
+          var s = j.title || 'Okänd roll';
+          if (j.company) s += ' på ' + j.company;
+          var start = j.startYear || '';
+          var end = j.endYear || 'nu';
+          if (start) s += ' (' + start + '–' + end + ')';
+          return s;
+        });
+        parts.push('Erfarenhet: ' + jobs.join('; '));
+      }
+      if (Array.isArray(cv.skills) && cv.skills.length) {
+        parts.push('Kompetenser: ' + cv.skills.slice(0, 10).join(', '));
+      }
+      if (Array.isArray(cv.education) && cv.education.length) {
+        var edu = cv.education.slice(0, 2).map(function(e) {
+          return [e.degree, e.schoolName || e.school].filter(Boolean).join(', ');
+        }).filter(Boolean);
+        if (edu.length) parts.push('Utbildning: ' + edu.join('; '));
+      }
+      var text = parts.join('\n');
+      if (text.length > CONFIG.maxCvContextChars) {
+        text = text.slice(0, CONFIG.maxCvContextChars) + '…';
+      }
+      return text;
+    } catch (e) { return ''; }
   }
 
   // ══════════════════════════════════════════════════════════════
@@ -1059,17 +1112,18 @@
       '  </div>',
 
       '  <button class="iv-btn" id="ivStartSetupBtn" style="margin-top:8px">Fortsätt till tips →</button>',
+      '  <div id="ivHistory" style="margin-top:22px"></div>',
       '</div>',
 
       // ─── TIPS (en i taget med timer) ─────────────────────────────
       '<div class="iv-screen" id="ivScreenTips">',
       '  <div class="iv-title">Tips inför intervjun</div>',
-      '  <div class="iv-sub" id="ivTipsStepLabel">Läs igenom noga — varje tips har några sekunders lästid.</div>',
+      '  <div class="iv-sub" id="ivTipsStepLabel">Läs igenom i lugn och ro — bläddra i din egen takt.</div>',
       '  <div class="iv-tip-stepper" id="ivTipsStepper"></div>',
       '  <div class="iv-tips-progress" id="ivTipsProgress">1 av 10</div>',
       '  <div style="display:flex;gap:8px">',
       '    <button class="iv-btn iv-btn--ghost" id="ivTipsBackBtn" style="flex:1">← Tillbaka</button>',
-      '    <button class="iv-btn" id="ivTipsNextBtn" disabled style="flex:2;opacity:0.4;cursor:not-allowed;">Läser...</button>',
+      '    <button class="iv-btn" id="ivTipsNextBtn" style="flex:2">Nästa tips →</button>',
       '  </div>',
       '  <button type="button" id="ivTipsSkipBtn" style="margin-top:14px;background:none;border:none;color:rgba(255,255,255,0.5);font-size:12px;text-decoration:underline;cursor:pointer;font-family:inherit;padding:6px;">Hoppa över tips → till intervjun</button>',
       '</div>',
@@ -1100,14 +1154,14 @@
       '    <button type="button" class="iv-method-switch" id="ivMethodSwitchBtn" title="Byt svarsmetod">',
       '      <span id="ivMethodIcon">✍️</span>',
       '    </button>',
-      '    <div class="iv-status-pill" id="ivStatusPill">Väntar</div>',
+      '    <div class="iv-status-pill" id="ivStatusPill" role="status" aria-live="polite">Väntar</div>',
       '  </div>',
-      '  <div class="iv-messages" id="ivMessages"></div>',
+      '  <div class="iv-messages" id="ivMessages" role="log" aria-live="polite" aria-label="Intervjukonversation"></div>',
       '  <div class="iv-interim" id="ivInterim" style="display:none;padding:0 12px 4px;font-size:13px;color:rgba(255,255,255,0.4)"></div>',
       '  <div class="iv-input-bar" id="ivInputBar">',
-      '    <button class="iv-icon-btn iv-icon-btn--mic" id="ivMicBtn" title="Spela in svar">🎤</button>',
-      '    <textarea class="iv-input-text" id="ivUserInput" rows="2" placeholder="Skriv ditt svar..."></textarea>',
-      '    <button class="iv-icon-btn iv-icon-btn--send" id="ivSendBtn" title="Skicka">➤</button>',
+      '    <button class="iv-icon-btn iv-icon-btn--mic" id="ivMicBtn" title="Spela in svar" aria-label="Spela in svar med mikrofon" aria-pressed="false">🎤</button>',
+      '    <textarea class="iv-input-text" id="ivUserInput" rows="2" placeholder="Skriv ditt svar..." aria-label="Ditt svar"></textarea>',
+      '    <button class="iv-icon-btn iv-icon-btn--send" id="ivSendBtn" title="Skicka" aria-label="Skicka svar">➤</button>',
       '  </div>',
       '  <div class="iv-actions-row">',
       '    <button class="iv-btn iv-btn--ghost" id="ivEndBtn" style="flex:1">Avsluta intervjun</button>',
@@ -1136,7 +1190,8 @@
       '    <button class="iv-btn" id="ivPracticePdfBtn" style="width:100%;background:linear-gradient(135deg,#f0c040,#d4a836);color:#1a1a2e;font-weight:900;">📄 Ladda ner som PDF</button>',
       '  </div>',
 
-      '  <div style="display:flex;gap:8px;margin-top:24px">',
+      '  <button class="iv-btn iv-btn--ghost" id="ivFbAgainBtn" style="width:100%;margin-top:24px;border:1.5px solid rgba(167,139,250,0.4);color:#a78bfa;">🔁 Öva igen med samma inställningar</button>',
+      '  <div style="display:flex;gap:8px;margin-top:10px">',
       '    <button class="iv-btn iv-btn--ghost" id="ivFbBackBtn" style="flex:1">Tillbaka</button>',
       '    <button class="iv-btn" id="ivFbSaveBtn" style="flex:1">Spara &amp; stäng</button>',
       '  </div>',
@@ -1173,14 +1228,10 @@
   function goToScreen(name) { showScreen(name); }
 
   // ══════════════════════════════════════════════════════════════
-  // TIPS: visas 1 och 1, tvångsläsning innan "Nästa" blir klickbar
-  // (5s för korta tips, upp till 10s för långa som STAR-metoden)
+  // TIPS: visas 1 och 1. Nedräkningen ("tvångsläsning") är borttagen —
+  // återkommande användare ska kunna bläddra i egen takt.
   // ══════════════════════════════════════════════════════════════
-  var _tipsTimer = null;
-
-  function clearTipTimers() {
-    if (_tipsTimer) { clearInterval(_tipsTimer); _tipsTimer = null; }
-  }
+  function clearTipTimers() { /* nedräkning borttagen — no-op för bakåtkompat */ }
 
   function renderTips() {
     // Initiera state om första gången
@@ -1191,9 +1242,6 @@
 
     var t = TIPS[state.currentTipIdx];
     if (!t) return;
-
-    // Rensa gamla timers om användaren navigerar bakåt/framåt
-    clearTipTimers();
 
     // Rendera nuvarande tips
     // Rendera texten med radbrytningar (\n → <br>) så strukturerade tips
@@ -1232,50 +1280,12 @@
     var nextBtn = $('#ivTipsNextBtn');
     if (nextBtn) {
       var isLast = state.currentTipIdx === TIPS.length - 1;
-      // Börja nedräkning — knappen grå tills timern är klar.
-      // Snabbare än tidigare eftersom många användare gör intervjuträning
-      // flera gånger. 3s för korta tips, upp till 7s för STAR-exemplet.
-      var textLen = (t.d || '').length;
-      var secondsLeft = 3;
-      if (textLen > 300) secondsLeft = 7;       // långa tips (STAR etc.)
-      else if (textLen > 150) secondsLeft = 5;  // medellånga
-      // korta tips → 3s (default)
-
-      nextBtn.disabled = true;
-      nextBtn.style.opacity = '0.4';
-      nextBtn.style.cursor = 'not-allowed';
-      nextBtn.style.background = 'rgba(255,255,255,0.08)';
-      nextBtn.style.color = 'rgba(255,255,255,0.4)';
-
-      nextBtn.textContent = 'Läser... ' + secondsLeft + 's';
-
-      // DEMO: hoppa över nedräkning så hela tips-blocket kan klickas igenom
-      if (DEMO_SKIP_COUNTDOWN) {
-        clearTipTimers();
-        nextBtn.disabled = false;
-        nextBtn.style.opacity = '1';
-        nextBtn.style.cursor = 'pointer';
-        nextBtn.style.background = '';
-        nextBtn.style.color = '';
-        nextBtn.textContent = isLast ? 'Starta intervjun →' : 'Nästa tips →';
-        return;
-      }
-
-      _tipsTimer = setInterval(function() {
-        secondsLeft--;
-        if (secondsLeft > 0) {
-          nextBtn.textContent = 'Läser... ' + secondsLeft + 's';
-        } else {
-          // Klar
-          clearTipTimers();
-          nextBtn.disabled = false;
-          nextBtn.style.opacity = '1';
-          nextBtn.style.cursor = 'pointer';
-          nextBtn.style.background = '';
-          nextBtn.style.color = '';
-          nextBtn.textContent = isLast ? 'Starta intervjun →' : 'Nästa tips →';
-        }
-      }, 1000);
+      nextBtn.disabled = false;
+      nextBtn.style.opacity = '1';
+      nextBtn.style.cursor = 'pointer';
+      nextBtn.style.background = '';
+      nextBtn.style.color = '';
+      nextBtn.textContent = isLast ? 'Starta intervjun →' : 'Nästa tips →';
     }
   }
 
@@ -1311,9 +1321,67 @@
     else if (state.ai.isThinking) { pill.textContent = 'Tänker'; pill.classList.add('iv-status-pill--thinking'); }
     else { pill.textContent = 'Väntar'; }
 
-    // Toggle mic-knapp visuellt
+    // Toggle mic-knapp visuellt + för skärmläsare
     var mic = $('#ivMicBtn');
-    if (mic) mic.classList.toggle('iv-icon-btn--recording', state.ai.isListening);
+    if (mic) {
+      mic.classList.toggle('iv-icon-btn--recording', state.ai.isListening);
+      mic.setAttribute('aria-pressed', state.ai.isListening ? 'true' : 'false');
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // HISTORIK: tidigare intervjuer + sparad feedback på setup-skärmen.
+  // Bara ett DB-anrop — ingen AI-kostnad.
+  // ══════════════════════════════════════════════════════════════
+  async function loadHistory() {
+    var box = $('#ivHistory');
+    if (!box) return;
+    var sessions;
+    try { sessions = await listSessions(5); } catch (e) { sessions = []; }
+    if (!sessions || !sessions.length) { box.innerHTML = ''; return; }
+
+    var items = sessions.map(function(s) {
+      var isDone = s.status === 'completed';
+      var icon = isDone ? '✅' : '⏸️';
+      var when = '';
+      try {
+        when = new Date(s.started_at || s.created_at).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' });
+      } catch (e) {}
+      var title = escapeHtml(s.branch || 'Intervju');
+      var sub = [when, s.role_title ? escapeHtml(s.role_title) : null, isDone ? null : 'avbruten']
+        .filter(Boolean).join(' · ');
+      var fbHtml = '';
+      if (isDone && s.overall_feedback) {
+        fbHtml = '<div class="iv-history-fb" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.08);font-size:12.5px;color:rgba(255,255,255,0.75);line-height:1.7;">'
+          + escapeHtml(s.overall_feedback).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')
+          + '</div>';
+      }
+      return '<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 12px;margin-bottom:6px;">'
+        + '<button type="button" class="iv-history-toggle" style="all:unset;cursor:' + (fbHtml ? 'pointer' : 'default') + ';display:flex;align-items:center;gap:8px;width:100%;box-sizing:border-box;" ' + (fbHtml ? 'aria-expanded="false"' : 'disabled') + '>'
+        + '<span style="font-size:15px;">' + icon + '</span>'
+        + '<span style="flex:1;min-width:0;"><span style="display:block;font-size:12.5px;font-weight:700;color:#fff;">' + title + '</span>'
+        + '<span style="display:block;font-size:11px;color:rgba(255,255,255,0.45);">' + sub + '</span></span>'
+        + (fbHtml ? '<span style="font-size:11px;color:#a78bfa;font-weight:700;">Visa feedback ▾</span>' : '')
+        + '</button>'
+        + fbHtml
+        + '</div>';
+    }).join('');
+
+    box.innerHTML =
+      '<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,0.4);margin-bottom:8px;">Dina senaste intervjuer</div>'
+      + items;
+
+    box.querySelectorAll('.iv-history-toggle').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var fb = btn.parentElement.querySelector('.iv-history-fb');
+        if (!fb) return;
+        var open = fb.style.display !== 'none';
+        fb.style.display = open ? 'none' : 'block';
+        btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+        var lbl = btn.querySelector('span:last-child');
+        if (lbl) lbl.textContent = open ? 'Visa feedback ▾' : 'Dölj feedback ▴';
+      });
+    });
   }
 
   function renderSessionInfo() {
@@ -1323,34 +1391,6 @@
     if (state.session.company) parts.push(escapeHtml(state.session.company));
     if (state.session.role_title) parts.push(escapeHtml(state.session.role_title));
     info.innerHTML = parts.join(' · ');
-  }
-
-  // ══════════════════════════════════════════════════════════════
-  // SNABBVAL (OPTIONS): Parsa + rendera 3 klickbara svar
-  // ══════════════════════════════════════════════════════════════
-  function parseOptions(rawText) {
-    // Hitta [OPTIONS]...[/OPTIONS]-blocket och extrahera 1-3 numrerade rader.
-    var match = rawText.match(/\[OPTIONS\]([\s\S]*?)\[\/OPTIONS\]/);
-    if (!match) return { cleanText: rawText.trim(), options: [] };
-    var block = match[1];
-    var cleanText = rawText.replace(/\[OPTIONS\][\s\S]*?\[\/OPTIONS\]/, '').trim();
-    // Matcha rader som börjar med "1.", "2.", "3." (tål ledande whitespace)
-    var lines = block.split('\n').map(function(l) { return l.trim(); }).filter(Boolean);
-    var options = [];
-    lines.forEach(function(line) {
-      var m = line.match(/^\d+[\.\)]\s*(.+)$/);
-      if (m && m[1]) options.push(m[1].trim());
-    });
-    // Begränsa till max 3
-    return { cleanText: cleanText, options: options.slice(0, 3) };
-  }
-
-  function clearAllQuickOptions() {
-    // Ta bort ev. gamla snabbvals-containers när en ny intervjuarsturn kommer
-    var msgs = $('#ivMessages');
-    if (!msgs) return;
-    var old = msgs.querySelectorAll('.iv-quick-options');
-    old.forEach(function(el) { el.remove(); });
   }
 
   // ══════════════════════════════════════════════════════════════
@@ -1374,10 +1414,15 @@
     ].join('');
     msgs.appendChild(wrap);
     msgs.scrollTop = msgs.scrollHeight;
+    // Lås skicka-knappen medan AI:n tänker (skickalås, se submitUserAnswer)
+    var sendBtn = $('#ivSendBtn');
+    if (sendBtn) { sendBtn.disabled = true; sendBtn.style.opacity = '0.4'; }
   }
   function hideThinking() {
     var el = $('#ivThinkingIndicator');
     if (el) el.remove();
+    var sendBtn = $('#ivSendBtn');
+    if (sendBtn) { sendBtn.disabled = false; sendBtn.style.opacity = '1'; }
   }
 
   // ══════════════════════════════════════════════════════════════
@@ -1448,32 +1493,12 @@
     });
     var closeBtn = $('#ivMethodDialogClose');
     if (closeBtn) closeBtn.addEventListener('click', function() { dialog.remove(); });
-  }
-
-  function renderQuickOptions(options) {
-    var msgs = $('#ivMessages');
-    if (!msgs || !options || !options.length) return;
-    var container = document.createElement('div');
-    container.className = 'iv-quick-options';
-    var label = document.createElement('div');
-    label.className = 'iv-quick-options-label';
-    label.textContent = 'Snabbsvar — eller skriv eget:';
-    container.appendChild(label);
-    options.forEach(function(opt) {
-      var btn = document.createElement('button');
-      btn.className = 'iv-quick-option';
-      btn.type = 'button';
-      btn.textContent = opt;
-      btn.addEventListener('click', function() {
-        // Ta bort alla snabbvals så de inte kan tryckas igen
-        clearAllQuickOptions();
-        // Skicka som användarens svar (samma flöde som manuell text)
-        submitUserAnswer(opt);
-      });
-      container.appendChild(btn);
-    });
-    msgs.appendChild(container);
-    msgs.scrollTop = msgs.scrollHeight;
+    dialog.tabIndex = -1;
+    dialog.addEventListener('keydown', function(e) { if (e.key === 'Escape') dialog.remove(); });
+    dialog.setAttribute('role', 'dialog');
+    dialog.setAttribute('aria-modal', 'true');
+    dialog.setAttribute('aria-label', 'Byt svarsmetod');
+    if (closeBtn) closeBtn.focus();
   }
 
   function appendMessage(msg) {
@@ -1509,13 +1534,44 @@
   // ══════════════════════════════════════════════════════════════
   // LOGIC: INTERVJU-LOOP
   // ══════════════════════════════════════════════════════════════
+  // KOSTNADSTAK: trunkera historiken som skickas till AI:n. Behåller de
+  // senaste meddelandena (droppar äldsta först) och säkerställer att
+  // listan fortfarande börjar med user (Anthropic-krav).
+  function truncateHistory(msgs) {
+    var total = msgs.reduce(function(sum, m) { return sum + m.content.length; }, 0);
+    while (msgs.length > 2 && total > CONFIG.maxSpeechHistoryChars) {
+      total -= msgs[0].content.length;
+      msgs.shift();
+    }
+    while (msgs.length > 0 && msgs[0].role !== 'user') msgs.shift();
+    return msgs;
+  }
+
   async function askInterviewerNext() {
     ivDebug.log('  → askInterviewerNext()');
+
+    // KOSTNADSTAK: hårt tak på antal AI-frågor per intervju. Nås taket
+    // avslutas intervjun med en lokal avslutningsreplik — inget AI-anrop.
+    var interviewerCount = state.messages.filter(function(m) { return m.role === 'interviewer'; }).length;
+    if (interviewerCount >= CONFIG.maxInterviewerTurns) {
+      ivDebug.log('    ⛔ Max antal frågor (' + CONFIG.maxInterviewerTurns + ') nått — avslutar');
+      var closing = {
+        id: 'local_msg_' + Date.now(),
+        role: 'interviewer',
+        content: 'Tack — nu har vi täckt allt vi behöver! Det var en riktigt bra intervju. Vi går vidare till din feedback.'
+      };
+      state.messages.push(closing);
+      appendMessage(closing);
+      try { await tts.speak(closing.content); } catch (e) {}
+      endInterview();
+      return;
+    }
+
     state.ai.isThinking = true;
     updateStatusPill();
     showThinking();
     try {
-      var messages = toClaudeMessages(state.messages);
+      var messages = truncateHistory(toClaudeMessages(state.messages));
       ivDebug.log('    meddelanden: ' + messages.length);
       var prompt = buildInterviewerPrompt({
         branch: state.session.branch,
@@ -1587,6 +1643,12 @@
 
   async function submitUserAnswer(text) {
     if (!text || !text.trim() || !state.session) return;
+    // SKICKALÅS: blockera nya svar medan AI:n tänker — förhindrar
+    // dubbelanrop (hoprörd konversation + onödig AI-kostnad).
+    if (state.ai.isThinking) {
+      ivDebug.log('  ⛔ submitUserAnswer blockerad — AI tänker redan');
+      return;
+    }
     text = text.trim();
 
     try {
@@ -1734,9 +1796,10 @@
     hideLockedEndModal();
     var overlay = document.createElement('div');
     overlay.id = '_ivLockedModal';
+    overlay.tabIndex = -1;
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,12,28,0.92);backdrop-filter:blur(8px);z-index:99998;display:flex;align-items:center;justify-content:center;padding:20px;';
     overlay.innerHTML =
-      '<div style="background:#1e2440;border:1.5px solid rgba(167,139,250,0.4);border-radius:20px;padding:32px 28px;width:100%;max-width:460px;box-shadow:0 20px 60px rgba(0,0,0,0.6);">' +
+      '<div role="dialog" aria-modal="true" style="background:#1e2440;border:1.5px solid rgba(167,139,250,0.4);border-radius:20px;padding:32px 28px;width:100%;max-width:460px;box-shadow:0 20px 60px rgba(0,0,0,0.6);">' +
         '<div style="font-size:52px;text-align:center;margin-bottom:16px;">🔒</div>' +
         '<div style="font-size:20px;font-weight:900;color:#fff;text-align:center;margin-bottom:12px;">Intervjun är för kort ännu</div>' +
         '<div style="font-size:14px;color:rgba(255,255,255,0.65);text-align:center;line-height:1.7;margin-bottom:20px;">Öva lite till innan du får feedback — AI behöver tillräckligt med material för att kunna ge dig konstruktiva råd.</div>' +
@@ -1755,11 +1818,13 @@
       '</div>';
     document.body.appendChild(overlay);
     overlay.addEventListener('click', function(e) { if (e.target === overlay) hideLockedEndModal(); });
+    overlay.addEventListener('keydown', function(e) { if (e.key === 'Escape') hideLockedEndModal(); });
 
     document.getElementById('_ivLockedContinue').onclick = hideLockedEndModal;
+    document.getElementById('_ivLockedContinue').focus();
     document.getElementById('_ivLockedAbort').onclick = function() {
       hideLockedEndModal();
-      if (confirm('Avbryt intervjun helt utan feedback? Dina svar sparas inte.')) {
+      if (confirm('Avbryt intervjun utan feedback? Intervjun markeras som avbruten.')) {
         // Abandon session utan feedback
         if (state.session && state.session.id) {
           try { abandonSession(state.session.id); } catch(e) {}
@@ -1780,9 +1845,10 @@
     hideEndConfirmModal();
     var overlay = document.createElement('div');
     overlay.id = '_ivEndConfirmModal';
+    overlay.tabIndex = -1;
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,12,28,0.92);backdrop-filter:blur(8px);z-index:99998;display:flex;align-items:center;justify-content:center;padding:20px;';
     overlay.innerHTML =
-      '<div style="background:#1e2440;border:1.5px solid rgba(62,180,137,0.4);border-radius:20px;padding:32px 28px;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,0.6);">' +
+      '<div role="dialog" aria-modal="true" style="background:#1e2440;border:1.5px solid rgba(62,180,137,0.4);border-radius:20px;padding:32px 28px;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,0.6);">' +
         '<div style="font-size:52px;text-align:center;margin-bottom:14px;">🎉</div>' +
         '<div style="font-size:20px;font-weight:900;color:#fff;text-align:center;margin-bottom:12px;">Avsluta intervjun?</div>' +
         '<div style="font-size:13px;color:rgba(255,255,255,0.6);text-align:center;line-height:1.7;margin-bottom:22px;">AI-coachen analyserar dina svar och ger personlig feedback. Detta kan ta 10-20 sekunder.</div>' +
@@ -1793,11 +1859,13 @@
       '</div>';
     document.body.appendChild(overlay);
     overlay.addEventListener('click', function(e) { if (e.target === overlay) hideEndConfirmModal(); });
+    overlay.addEventListener('keydown', function(e) { if (e.key === 'Escape') hideEndConfirmModal(); });
     document.getElementById('_ivEndCancel').onclick = hideEndConfirmModal;
     document.getElementById('_ivEndGo').onclick = function() {
       hideEndConfirmModal();
       endInterview();
     };
+    document.getElementById('_ivEndGo').focus();
   }
 
   function hideEndConfirmModal() {
@@ -1817,11 +1885,12 @@
       '<div style="font-size:14px;color:rgba(255,255,255,0.55);max-width:400px;line-height:1.7;">' + escapeHtml(subtitle || 'Ett ögonblick — detta tar vanligtvis 10-20 sekunder.') + '</div>' +
       '<div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:16px;letter-spacing:0.5px;">🔒 Klicka inte bort sidan under tiden</div>';
 
-    // CSS-animation för spinner
+    // CSS-animation för spinner (respekterar prefers-reduced-motion)
     if (!document.getElementById('_ivSpinStyle')) {
       var s = document.createElement('style');
       s.id = '_ivSpinStyle';
-      s.textContent = '@keyframes _ivSpin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }';
+      s.textContent = '@keyframes _ivSpin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }'
+        + '@media (prefers-reduced-motion: reduce) { #_ivLoadingOverlay * { animation: none !important; } }';
       document.head.appendChild(s);
     }
 
@@ -1997,6 +2066,11 @@
     var transcriptText = state.messages.map(function(m){
       return (m.role === 'interviewer' ? 'Intervjuare' : 'Kandidat') + ': ' + m.content;
     }).join('\n\n');
+    // KOSTNADSTAK: kapa transkriptet — behåll slutet (senaste svaren väger tyngst)
+    if (transcriptText.length > CONFIG.maxFeedbackTranscriptChars) {
+      transcriptText = '[Äldre delar av intervjun utelämnade av utrymmesskäl]\n\n'
+        + transcriptText.slice(-CONFIG.maxFeedbackTranscriptChars);
+    }
 
     // Skriv meta
     var meta = $('#ivFeedbackMeta');
@@ -2033,7 +2107,7 @@
       var feedback = await callClaude(
         [{ role: 'user', content: 'Ge feedback enligt instruktionerna.' }],
         prompt,
-        { maxOutputTokens: 800, temperature: 0.6 }
+        { maxOutputTokens: 1000, temperature: 0.6 }
       );
 
       if (fbBox) {
@@ -2041,9 +2115,14 @@
         fbBox.innerHTML = escapeHtml(feedback).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
       }
 
-      // Spara i databasen (utan rating/notes ännu, sparas vid "Spara & stäng")
+      // Kom ihåg den riktiga feedbacken så "Spara & stäng" aldrig råkar
+      // spara ett felmeddelande från rutan istället.
+      state.lastFeedback = feedback;
+      state.feedbackSaved = false;
       await completeSession(state.session.id, feedback);
+      state.feedbackSaved = true;
     } catch (e) {
+      state.lastFeedback = null;
       if (fbBox) fbBox.textContent = 'Kunde inte generera feedback: ' + (e.message || e);
     } finally {
       // Alltid ta bort overlay — även om AI failar
@@ -2120,8 +2199,11 @@
         state.setup.branch = v;
         var custom = $('#ivCustomBranch');
         if (custom) {
-          custom.style.display = (v === 'Annat') ? 'block' : 'none';
-          if (v !== 'Annat') custom.value = '';
+          // "📚 Annat / Eget val" → visa fritextfältet för egen bransch
+          var isCustom = v.indexOf('Annat') !== -1;
+          custom.style.display = isCustom ? 'block' : 'none';
+          if (!isCustom) custom.value = '';
+          else setTimeout(function(){ custom.focus(); }, 50);
         }
       });
     }
@@ -2152,11 +2234,15 @@
 
     var startSetupBtn = $('#ivStartSetupBtn');
     if (startSetupBtn) startSetupBtn.addEventListener('click', function(){
-      var b = (state.setup.branch || '').trim();
-      if (!b) { showError('Välj bransch först.'); return; }
-      if (state.setup.branch === 'Annat' && customBranch) {
-        state.setup.branch = (customBranch.value || '').trim();
-        if (!state.setup.branch) { showError('Skriv in din bransch.'); return; }
+      var selVal = branchSel ? branchSel.value : '';
+      if (!selVal && !(state.setup.branch || '').trim()) { showError('Välj bransch först.'); return; }
+      // "Annat / Eget val" → använd fritexten som bransch
+      if (selVal.indexOf('Annat') !== -1) {
+        var customVal = customBranch ? (customBranch.value || '').trim() : '';
+        if (!customVal) { showError('Skriv in din bransch i fältet.'); return; }
+        state.setup.branch = customVal;
+      } else if (selVal) {
+        state.setup.branch = selVal;
       }
       renderTips();
       showScreen('tips');
@@ -2327,14 +2413,34 @@
 
     var fbSave = $('#ivFbSaveBtn');
     if (fbSave) fbSave.addEventListener('click', async function(){
-      if (state.session) {
+      // Spara bara om det finns riktig feedback som ännu inte sparats —
+      // aldrig ruttext (som kan vara ett felmeddelande).
+      if (state.session && state.lastFeedback && !state.feedbackSaved) {
         try {
-          var fb = $('#ivFeedbackText') ? $('#ivFeedbackText').textContent : null;
-          await completeSession(state.session.id, fb);
+          await completeSession(state.session.id, state.lastFeedback);
+          state.feedbackSaved = true;
         } catch(e) {}
       }
       resetToSetup();
       if (window.trainSwitchView) window.trainSwitchView('hub');
+    });
+
+    // Öva igen med samma inställningar — hoppa direkt till metod-väljaren
+    var fbAgain = $('#ivFbAgainBtn');
+    if (fbAgain) fbAgain.addEventListener('click', function(){
+      state.session = null;
+      state.messages = [];
+      state.lastFeedback = null;
+      state.feedbackSaved = false;
+      showScreen('method');
+      // Förmarkera tidigare vald metod så starta-knappen är redo direkt
+      if (state.inputMode) {
+        var startBtn = $('#ivMethodStartBtn');
+        if (startBtn) { startBtn.disabled = false; startBtn.style.opacity = '1'; }
+        root.querySelectorAll('.iv-method-card').forEach(function(c) {
+          c.classList.toggle('iv-method-card--active', c.getAttribute('data-method') === state.inputMode);
+        });
+      }
     });
 
     root.dataset.ivBound = '1';
@@ -2345,7 +2451,10 @@
     state.messages = [];
     state.savedMessageIds = {};
     state.rating = null;
+    state.lastFeedback = null;
+    state.feedbackSaved = false;
     showScreen('setup');
+    loadHistory();
   }
 
   // ══════════════════════════════════════════════════════════════
@@ -2362,24 +2471,28 @@
     tts.init();
     stt.init();
 
-    // Prefill från matchat jobb
-    if (opts.prefill) {
-      if (opts.prefill.branch && $('#ivBranch')) {
-        $('#ivBranch').value = opts.prefill.branch;
-        state.setup.branch = opts.prefill.branch;
+    // Prefill från matchat jobb / jobbdagboken. window._ivPrefill sätts av
+    // "Intervjuträna"-kortet i jobbdagboken (engångs — rensas efter läsning).
+    var prefill = opts.prefill || window._ivPrefill || null;
+    window._ivPrefill = null;
+    if (prefill) {
+      if (prefill.branch && $('#ivBranch')) {
+        $('#ivBranch').value = prefill.branch;
+        if ($('#ivBranch').value === prefill.branch) state.setup.branch = prefill.branch;
       }
-      if (opts.prefill.company && $('#ivCompany')) {
-        $('#ivCompany').value = opts.prefill.company;
-        state.setup.company = opts.prefill.company;
+      if (prefill.company && $('#ivCompany')) {
+        $('#ivCompany').value = prefill.company;
+        state.setup.company = prefill.company;
       }
-      if (opts.prefill.roleTitle && $('#ivRole')) {
-        $('#ivRole').value = opts.prefill.roleTitle;
-        state.setup.roleTitle = opts.prefill.roleTitle;
+      if (prefill.roleTitle && $('#ivRole')) {
+        $('#ivRole').value = prefill.roleTitle;
+        state.setup.roleTitle = prefill.roleTitle;
       }
-      state.setup.jobMatchId = opts.prefill.jobMatchId || null;
+      state.setup.jobMatchId = prefill.jobMatchId || null;
     }
 
     showScreen('setup');
+    loadHistory();
   };
 
   // Cleanup om användaren lämnar intervju-viewen mitt i en session

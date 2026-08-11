@@ -1130,10 +1130,13 @@ export default async function handler(req, res) {
       // Förväntar: accessToken, sessionId, durationSeconds?, overallFeedback?, userRating?, userNotes?, status?
       const { sessionId, durationSeconds, overallFeedback, userRating, userNotes, status: sessStatus } = req.body || {};
       if (!sessionId) return res.status(400).json({ error: 'sessionId krävs' });
+      // Whitelist av status + numerisk duration — inga godtyckliga strängar in i DB
+      const safeStatus = ['completed', 'abandoned'].includes(sessStatus) ? sessStatus : 'completed';
+      const safeDuration = Number.isFinite(parseInt(durationSeconds, 10)) ? Math.max(0, parseInt(durationSeconds, 10)) : null;
       const updates = {
-        status: sessStatus || 'completed',
+        status: safeStatus,
         completed_at: new Date().toISOString(),
-        duration_seconds: durationSeconds || null,
+        duration_seconds: safeDuration,
         overall_feedback: overallFeedback || null,
         user_rating: userRating || null,
         user_notes: userNotes || null
@@ -1172,7 +1175,8 @@ export default async function handler(req, res) {
     if (action === 'list_interview_sessions') {
       // Hämta intervjuhistorik för användaren
       // Förväntar: accessToken, userId, limit?
-      const listLimit = (req.body && req.body.limit) || 20;
+      // Sanera limit — går rakt in i URL:en (samma mönster som övriga actions)
+      const listLimit = Math.min(Math.max(parseInt((req.body && req.body.limit), 10) || 20, 1), 50);
       const result = await makeRequest(
         `${SUPABASE_URL}/rest/v1/interview_sessions?user_id=eq.${userId}&select=*&order=started_at.desc&limit=${listLimit}`,
         { method: 'GET', headers: authHeaders(accessToken) }
