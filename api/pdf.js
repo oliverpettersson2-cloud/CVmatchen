@@ -1,10 +1,41 @@
-const chromium = require('@sparticuz/chromium');
+// @sparticuz/chromium v120+ exporterar som ESM-default även i CJS —
+// plocka .default med fallback så koden tål båda formerna.
+const _chromiumMod = require('@sparticuz/chromium');
+const chromium = _chromiumMod.default || _chromiumMod;
 const puppeteer = require('puppeteer-core');
 const path = require('path');
 const Sentry = require('@sentry/node');
 Sentry.init({ dsn: process.env.SENTRY_DSN, environment: process.env.VERCEL_ENV || 'development' });
 
 const ALLOWED_ORIGINS = ['https://cvmatchen.com', 'https://www.cvmatchen.com'];
+
+// KOSTNADSSKYDD: varje anrop startar en Chromium-instans (dyraste lambdan).
+// Rate limit per IP (per-instans, samma mönster som chat.js) + origin-spärr.
+const RATE_WINDOW_MS = 60_000;
+const RATE_LIMIT = 6;           // PDF:er per IP per minut — legitimt är 1-2
+const rateBuckets = new Map();
+function rateLimited(ip) {
+  const now = Date.now();
+  const hits = (rateBuckets.get(ip) || []).filter(t => now - t < RATE_WINDOW_MS);
+  hits.push(now);
+  rateBuckets.set(ip, hits);
+  if (rateBuckets.size > 5000) {
+    for (const [k, v] of rateBuckets) {
+      if (!v.length || now - v[v.length - 1] > RATE_WINDOW_MS) rateBuckets.delete(k);
+    }
+  }
+  return hits.length > RATE_LIMIT;
+}
+function originAllowed(origin) {
+  if (!origin) return true; // curl/appar — fångas av rate limit
+  try {
+    const host = new URL(origin).hostname;
+    return host === 'cvmatchen.com'
+      || host.endsWith('.cvmatchen.com')
+      || host.endsWith('.vercel.app')
+      || host === 'localhost' || host === '127.0.0.1';
+  } catch (_) { return false; }
+}
 
 module.exports = async (req, res) => {
   const origin = req.headers.origin;
@@ -16,6 +47,15 @@ module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  if (!originAllowed(origin)) {
+    return res.status(403).json({ error: 'Otillåten origin' });
+  }
+  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim()
+    || req.socket?.remoteAddress || 'unknown';
+  if (rateLimited(ip)) {
+    return res.status(429).json({ error: 'För många PDF-förfrågningar — vänta en stund' });
+  }
 
   const { html, filename = 'CV.pdf' } = req.body || {};
   if (!html || typeof html !== 'string') {

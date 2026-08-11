@@ -6,7 +6,10 @@ Sentry.init({ dsn: process.env.SENTRY_DSN, environment: process.env.VERCEL_ENV |
 // angripare som hamrar. För hård global gräns: byt till Upstash Redis.
 const RATE_WINDOW_MS = 60_000;
 const RATE_LIMIT = 20;          // anrop per IP per minut
+const DAY_WINDOW_MS = 86_400_000;
+const DAY_LIMIT = 300;          // anrop per IP per dygn — en hel intervju är ~17
 const rateBuckets = new Map();  // ip -> [timestamps]
+const dayBuckets = new Map();   // ip -> { count, resetAt }
 
 function rateLimited(ip) {
   const now = Date.now();
@@ -22,6 +25,37 @@ function rateLimited(ip) {
   return hits.length > RATE_LIMIT;
 }
 
+function dayLimited(ip) {
+  const now = Date.now();
+  let b = dayBuckets.get(ip);
+  if (!b || now >= b.resetAt) { b = { count: 0, resetAt: now + DAY_WINDOW_MS }; }
+  b.count++;
+  dayBuckets.set(ip, b);
+  if (dayBuckets.size > 20000) {
+    for (const [k, v] of dayBuckets) { if (now >= v.resetAt) dayBuckets.delete(k); }
+  }
+  return b.count > DAY_LIMIT;
+}
+
+// KOSTNADSSKYDD: bara modellerna appen faktiskt använder. Tidigare
+// accepterades vilken claude-* som helst → en utomstående kunde köra
+// dyrare modeller på vår API-nyckel.
+const ALLOWED_MODELS = new Set(['claude-sonnet-5', 'claude-haiku-4-5-20251001']);
+
+// KOSTNADSSKYDD: blockera anrop från främmande webbplatser. Webbläsare
+// skickar alltid Origin på POST — saknas headern (curl/appar) släpps
+// anropet vidare till rate limits + modell-whitelist som fångar missbruk.
+function originAllowed(origin) {
+  if (!origin) return true;
+  try {
+    const host = new URL(origin).hostname;
+    return host === 'cvmatchen.com'
+      || host.endsWith('.cvmatchen.com')
+      || host.endsWith('.vercel.app')   // preview-deploys
+      || host === 'localhost' || host === '127.0.0.1';
+  } catch (_) { return false; }
+}
+
 const MAX_OUTPUT_TOKENS = 8192;       // tak — appens högsta legitima är 4000
 const MAX_BODY_BYTES = 200_000;       // skydd mot gigantiska prompts
 
@@ -35,11 +69,19 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'API key not configured' });
   }
 
-  // Rate limiting per IP
+  // Origin-spärr — främmande webbplatser får inte låna vår AI-proxy
+  if (!originAllowed(req.headers.origin)) {
+    return res.status(403).json({ error: 'Otillåten origin' });
+  }
+
+  // Rate limiting per IP (minut + dygn)
   const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim()
     || req.socket?.remoteAddress || 'unknown';
   if (rateLimited(ip)) {
     return res.status(429).json({ error: 'För många förfrågningar — försök igen om en stund' });
+  }
+  if (dayLimited(ip)) {
+    return res.status(429).json({ error: 'Dagsgränsen för AI-anrop är nådd — försök igen imorgon' });
   }
 
   const body = req.body || {};
@@ -49,11 +91,11 @@ export default async function handler(req, res) {
     return res.status(413).json({ error: 'Förfrågan för stor' });
   }
 
-  // Validering: messages krävs, model måste vara en Claude-modell
+  // Validering: messages krävs, model måste vara whitelistad
   if (!Array.isArray(body.messages) || body.messages.length === 0) {
     return res.status(400).json({ error: 'messages krävs' });
   }
-  if (typeof body.model !== 'string' || !body.model.startsWith('claude-')) {
+  if (typeof body.model !== 'string' || !ALLOWED_MODELS.has(body.model)) {
     return res.status(400).json({ error: 'Ogiltig model' });
   }
 
