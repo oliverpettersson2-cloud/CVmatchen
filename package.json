@@ -2,10 +2,13 @@
   "name": "pathfinder-cv",
   "version": "1.0.0",
   "description": "AI-powered CV builder for the Swedish job market",
+  "engines": {
+    "node": "22.x"
+  },
   "dependencies": {
-    "@sentry/node": "^8.0.0",
+    "@sentry/node": "^10.0.0",
     "@supabase/supabase-js": "^2.39.0",
-    "@sparticuz/chromium": "119.0.2",
-    "puppeteer-core": "21.3.8"
+    "@sparticuz/chromium": "149.0.0",
+    "puppeteer-core": "25.1.0"
   }
 }
