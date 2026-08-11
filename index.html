@@ -1583,12 +1583,16 @@
 
     .code-inputs {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       justify-content: center;
       margin: 20px 0;
+      max-width: 100%;
     }
     .code-digit {
-      width: 48px;
+      flex: 1 1 0;
+      min-width: 0;
+      width: auto;
+      max-width: 48px;
       height: 56px;
       background: rgba(255,255,255,0.07);
       border: 1.5px solid rgba(255,255,255,0.12);
@@ -1606,6 +1610,10 @@
       box-shadow: 0 0 0 3px rgba(62,180,137,0.15);
     }
     .code-digit.filled { border-color: rgba(62,180,137,0.5); }
+
+    /* Datum-picker-knappar (Månad/År): säkerställ läsbar text även när
+       inline-färgen nollställs (JS satte tidigare style.color='' → mörk default). */
+    [id$="MonthBtn"], [id$="YearBtn"] { color: #fff; }
 
     .auth-magic-sent {
       background: rgba(62,180,137,0.08);
@@ -5702,9 +5710,9 @@
             const toY = j.endYear || '';
             // Slutdatum FÖRST (senaste först = mer naturligt: "2025 – 2018")
             const period = fromY && toY ? (toY + ' – ' + fromY) : (toY || fromY || '');
-            return '<div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">• <strong style="color:#3eb489;">' + t + '</strong>' +
-              (c ? ' <span style="color:rgba(62,180,137,0.7);">· ' + c + '</span>' : '') +
-              (period ? ' <span style="color:rgba(62,180,137,0.55);font-size:11px;">(' + period + ')</span>' : '') +
+            return '<div style="line-height:1.5;">• <strong style="color:#3eb489;">' + cvEsc(t) + '</strong>' +
+              (c ? ' <span style="color:rgba(62,180,137,0.7);">· ' + cvEsc(c) + '</span>' : '') +
+              (period ? ' <span style="color:rgba(62,180,137,0.55);font-size:11px;">(' + cvEsc(period) + ')</span>' : '') +
               '</div>';
           }).join('');
           existingWrap.style.display = 'block';
@@ -5742,7 +5750,13 @@
       renderJobs();
       updatePreview();
       closeModal('jobModal');
-      showToast('✅ Arbetslivserfarenhet sparad!', 'success');
+      // Nytt jobb (ej redigering) → påminn om att kompetenser/profiltext bör uppdateras
+      // så de speglar det nya jobbet (de uppdateras inte automatiskt).
+      if (idx >= 0) {
+        showToast('✅ Arbetslivserfarenhet sparad!', 'success');
+      } else {
+        showToast('✅ Jobb tillagt! Tips: uppdatera dina kompetenser & profiltext så de speglar det nya jobbet.', 'success');
+      }
     }
 
     function removeJob(idx) {
@@ -6617,10 +6631,17 @@
 
         const data = await response.json();
         const rawText = data.content[0].text.trim().replace(/```json|```/g, '').trim();
-        let parsed;
-        try { parsed = JSON.parse(rawText); } catch(e) { parsed = { alternativ: [] }; }
+        // Robust parsning: prova direkt, annars extrahera första {…}-blocket
+        // (modellen kan linda JSON i text). Matchar mönstret i övriga parsers.
+        let parsed = null;
+        try { parsed = JSON.parse(rawText); }
+        catch(e) {
+          const m = rawText.match(/\{[\s\S]*\}/);
+          if (m) { try { parsed = JSON.parse(m[0]); } catch(e2) {} }
+        }
+        if (!parsed) parsed = { alternativ: [] };
 
-        const alts = parsed.alternativ || [];
+        const alts = parsed.alternativ || parsed.alternatives || [];
         aiCacheSet(profileCacheKey, alts);
         if (alts.length < 1) throw new Error('Inga alternativ returnerades');
 
@@ -13726,8 +13747,13 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
       if (!resp.ok) throw new Error('API-fel ' + resp.status);
       const data = await resp.json();
       const raw = (data.content || []).map(b => b.text || '').join('').replace(/```json|```/g, '').trim();
-      let parsed;
-      try { parsed = JSON.parse(raw); } catch(e) { throw new Error('Kunde inte tolka AI-svar'); }
+      let parsed = null;
+      try { parsed = JSON.parse(raw); }
+      catch(e) {
+        const m = raw.match(/\{[\s\S]*\}/);
+        if (m) { try { parsed = JSON.parse(m[0]); } catch(e2) {} }
+      }
+      if (!parsed) throw new Error('Kunde inte tolka AI-svar');
 
       // Nyckelord
       const kwEl = document.getElementById('matchaKeywords');
