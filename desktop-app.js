@@ -4511,9 +4511,11 @@
     html.push('<div class="cv-name">' + escape(cvData.name || 'Ditt namn') + '</div>');
     if (cvData.title) html.push('<div class="cv-title">' + escape(cvData.title) + '</div>');
     const contact = [];
-    if (cvData.email) contact.push('✉ ' + escape(cvData.email));
-    if (cvData.phone) contact.push('📞 ' + escape(cvData.phone));
-    if (contact.length) html.push('<div class="cv-contact">' + contact.join(' · ') + '</div>');
+    const _icoMail = '<svg viewBox="0 0 24 24" width="12" height="12" style="vertical-align:-1px;margin-right:5px;opacity:.85" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>';
+    const _icoPhone = '<svg viewBox="0 0 24 24" width="12" height="12" style="vertical-align:-1px;margin-right:5px;opacity:.85" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
+    if (cvData.email) contact.push(_icoMail + escape(cvData.email));
+    if (cvData.phone) contact.push(_icoPhone + escape(cvData.phone));
+    if (contact.length) html.push('<div class="cv-contact">' + contact.join(' &nbsp;·&nbsp; ') + '</div>');
     html.push('</div>'); // end cv-header-content
     html.push('</div>'); // end cv-header
 
