@@ -9715,6 +9715,12 @@ var D={
     if(les.pre){
       h+='<div style="background:rgba(62,180,137,.07);border:1px solid rgba(62,180,137,.25);border-radius:12px;padding:14px 16px;margin-bottom:16px;white-space:pre-wrap;font-size:14px;line-height:1.6;color:rgba(255,255,255,.85);">'+les.pre+'</div>';
     }
+    // Self-hosted lektionsvideo (Remotion-mp4)
+    if(les.video){
+      h+='<div style="border-radius:12px;overflow:hidden;background:#000;margin-bottom:16px;box-shadow:0 4px 20px rgba(0,0,0,.3);">';
+      h+='<video controls playsinline preload="metadata" style="width:100%;display:block;"><source src="'+les.video+'" type="video/mp4">Din webbläsare stöder inte video.</video>';
+      h+='</div>';
+    }
     // YouTube-embed om lektionen har yt-fält (och inte är Rick Roll-placeholdern)
     if(les.yt && les.yt.indexOf('dQw4w9WgXcQ')===-1){
       h+='<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;background:#000;margin-bottom:16px;">';
@@ -9752,7 +9758,7 @@ var D={
     document.getElementById('ovnModview').innerHTML=h;
     if(DEMO_SKIP_COUNTDOWN){return;}
     // Lås Nästa-knappen: 5 sek för text, 15 sek om video finns (tvingar läsning/visning)
-    var hasVideo=(les.yt && les.yt.indexOf('dQw4w9WgXcQ')===-1) || (les.intro==='video' && m.video);
+    var hasVideo=(les.yt && les.yt.indexOf('dQw4w9WgXcQ')===-1) || (les.intro==='video' && m.video) || !!les.video;
     var lockMs=hasVideo?15000:5000, lockSec=hasVideo?15:5;
     var remain=lockSec;
     var tickInt=setInterval(function(){

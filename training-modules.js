@@ -40,8 +40,8 @@ a:'Den här modulen är grunden i plattformen och ska ge en tydlig förståelse 
 cards:[
 {icon:'🛟',h:'Sista skyddsnätet',t:'Ekonomiskt bistånd är samhällets sista skyddsnät när du inte kan försörja dig själv.'},
 {icon:'🏷️',h:'Flera namn — samma sak',t:'Det kallas också försörjningsstöd eller socialbidrag.'},
-{icon:'🎬',h:'Se filmen ovan',t:'Attention förklarar hur ekonomiskt bistånd fungerar i Sverige. Nästa lektion går in på kravet på aktivitet.'}
-],a:'Ekonomiskt bistånd regleras i Socialtjänstlagen (SoL). Rätten prövas individuellt av kommunens socialtjänst. Biståndet består av två delar: riksnorm (mat, kläder, hygien, fritid) + skäliga kostnader (hyra, el, hemförsäkring, arbetsresor). För att få bistånd måste du först ha uttömt andra möjligheter — a-kassa, sjukpenning, föräldrapenning, bostadsbidrag m.m.',yt:'https://www.youtube.com/embed/PieoOiL4Lug'},
+{icon:'🎬',h:'Se filmen ovan',t:'Filmen förklarar hur ekonomiskt bistånd fungerar i Sverige. Nästa lektion går in på kravet på aktivitet.'}
+],a:'Ekonomiskt bistånd regleras i Socialtjänstlagen (SoL). Rätten prövas individuellt av kommunens socialtjänst. Biståndet består av två delar: riksnorm (mat, kläder, hygien, fritid) + skäliga kostnader (hyra, el, hemförsäkring, arbetsresor). För att få bistånd måste du först ha uttömt andra möjligheter — a-kassa, sjukpenning, föräldrapenning, bostadsbidrag m.m.',video:'/videos/e3-bistand.mp4'},
 {t:'Vad är aktivitetskrav?',
 cards:[
 {icon:'✅',h:'Vad räknas som aktivitet?',t:'Delta i möten, söka jobb aktivt, delta i praktik eller utbildning, och stå till arbetsmarknadens förfogande.'},

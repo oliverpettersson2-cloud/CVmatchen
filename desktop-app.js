@@ -6319,6 +6319,7 @@
       const text = l.s || '';
       const deep = l.a || '';
       const yt   = l.yt || '';
+      const lvideo = l.video || '';
       const pre  = l.pre || '';
       // Steg-etikett: Översikt / Introduktionsfilm är egna intro-steg,
       // riktiga lektioner numreras separat (utan att räkna med intro-stegen).
@@ -6349,6 +6350,12 @@
       // Pre-intro (syfte/mål/innehåll) FÖRE videon
       if (pre) {
         html += '<div style="background:rgba(62,180,137,0.07); border:1px solid rgba(62,180,137,0.25); border-radius:10px; padding:14px 16px; margin:10px 0 16px; white-space:pre-wrap; font-size:14px; line-height:1.6; color:rgba(255,255,255,0.85);">' + escape(pre) + '</div>';
+      }
+      // Self-hosted lektionsvideo (Remotion-mp4)
+      if (lvideo) {
+        html += '<div style="margin:12px 0 16px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 20px rgba(0,0,0,0.3);">';
+        html += '<video controls playsinline preload="metadata" style="width:100%; display:block;"><source src="' + escapeAttr(lvideo) + '" type="video/mp4">Din webbläsare stöder inte video.</video>';
+        html += '</div>';
       }
       // YouTube-embed om lektionen har yt-fält (och det inte är Rick Roll-placeholdern)
       if (yt && yt.indexOf('dQw4w9WgXcQ') === -1) {
