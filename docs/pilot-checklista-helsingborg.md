@@ -1,88 +1,116 @@
 # Pilot-checklista — CVmatchen × Helsingborg AMF
 
 Pilot: Ungdoms-/Kompetensarena · ca 20–40 deltagare · 3–4 handläggare ·
-3 månader, kostnadsfritt · Uppdaterad: 2026-07-10
+3 månader, kostnadsfritt
+**Uppdaterad: 2026-07-11** (efter nattens PR #16–18 + verifiering mot kod)
 
-Ägare: **[D]** = Oliver/du · **[K]** = kommun (chef/verksamhet) ·
-**[DSO]** = dataskyddsombud · **[J]** = jag (kod)
+Ägare: **[D]** Oliver/du · **[K]** kommun (chef/verksamhet) ·
+**[DSO]** dataskyddsombud · **[J]** jag (kod)
 
 ---
 
-## 🔴 MÅSTE vara klart innan första riktiga deltagardata
+## ⚠️ TESTA FÖRST I MORGONRUNDAN
+- [ ] **Exportera en PDF från appen** (CV eller rapport). Lambdan bootar
+      bevisat och samma kod gav perfekta PDF:er (åäö, styling) lokalt, men
+      Chromium-körningen i Vercel-lambdan går bara att slutverifiera med en
+      riktig export efter nattens ESM-migrering (`api/pdf.mjs`). Funkar den
+      inte → säg till, rollback är ett kommando. · **[D]**
+
+---
+
+## 🔴 BLOCKERAR pilotstart (innan första riktiga deltagardata)
 
 ### Juridiskt & organisatoriskt
-- [ ] **PUB-avtal signerat** av båda parter (du för PathfinderAI, behörig
-      kommunföreträdare för PUA — inte du i SYV-rollen) · **[D]+[K]**
-- [ ] **Pilotbeslut fattat och diariefört av kommunen** (din chef/
-      verksamhetschef — inte du), skilt från den generella bisysslan · **[K]**
-- [ ] **DPIA godkänd av DSO** · **[DSO]**
-- [ ] **Laglig grund för ev. art. 9-uppgifter fastställd** · **[DSO]**
-- [ ] **Lagringstid fastställd** (förslag: radering vid pilotens slut) · **[DSO]**
+- [ ] PUB-avtal signerat av båda parter (du för PathfinderAI, behörig
+      kommunföreträdare för PUA — ej du i SYV-rollen) · **[D]+[K]**
+- [ ] Pilotbeslut fattat + diariefört av kommunen (din chef/verksamhetschef),
+      skilt från den generella bisysslan · **[K]**
+- [ ] DPIA godkänd av DSO · **[DSO]**
+- [ ] Laglig grund för ev. art. 9-uppgifter fastställd · **[DSO]**
+- [ ] Lagringstid fastställd (förslag: radering vid pilotens slut) · **[DSO]**
 
-### Tekniskt
-- [ ] **Accept-invite-token-flödet** klart (i dag "dekorativ" token —
-      blocker #9) · **[J]**
-- [ ] **Mejlleverans verifierad** (invite → deltagare via Resend) · **[D]+[J]**
-- [ ] **Invite-kedjan testad end-to-end** (bjud in → OTP → CV → uppgift) · **[D]+[J]**
+### Tekniskt (test, ej bygge)
+- [ ] Mejl-/OTP-leverans verifierad i skarpt (invite → deltagare via Resend) · **[D]+[J]**
+- [ ] Invite-kedjan testad end-to-end (bjud in → OTP → CV → uppgift) · **[D]+[J]**
 
 ---
 
-## ✅ Redan klart
+## ✅ KLART — verifierat i koden
 
+### Natten (PR #16–18)
+- [x] **API-kostnadshärdning** — chat.js: modell-whitelist (bara Sonnet 5 +
+      Haiku 4.5), origin-spärr (→403), 20 anrop/IP/min + 300/IP/dygn
+- [x] **pdf.js** — 6 PDF/IP/min + origin-spärr (var helt oskyddad)
+- [x] **Beroende-sårbarheter 23 → 0** — puppeteer-core 25.1 +
+      @sparticuz/chromium 149 (matchat par), Sentry 10
+- [x] **CSP skärpt** — `unsafe-eval` borttagen (jsPDF/html2canvas/JSZip
+      verifierade utan violations)
+- [x] **PDF-lambdan** flyttad till `api/pdf.mjs` (äkta ESM, löste ERR_REQUIRE_ESM)
+
+### Sedan tidigare
 - [x] GDPR-radering (`admin_delete_user` + `user_delete_self`, kaskad 13
-      tabeller + auth)
+      tabeller + auth + invites)
 - [x] AI-samtycke live (versionerat, återkalleligt)
-- [x] Bedrock-EU aktiv (AI-data stannar i Frankfurt)
+- [x] Bedrock-EU aktiv (AI-data i Frankfurt, ingen lagring/träning)
 - [x] Varningstext mot känsliga uppgifter i fritext (art. 9)
 - [x] DEMO_MODE av i produktion
 - [x] Multi-tenant-isolation (serverside verifyAdmin, deny-by-default)
-- [x] XSS-fixar + OAuth-callback-säkerhet (host-header, CSRF)
-- [x] Bisyssla prövad och godkänd av HR (undertecknat beslut)
-- [x] PUB- och DPIA-utkast framtagna (Helsingborg-specifika)
-- [x] Verifieringsrapport (hemlighetsscan, beroende-scan, a11y-scan)
+- [x] XSS-fixar + OAuth-callback (host-header-whitelist, CSRF-state)
+- [x] SQL-injektion (#15) — UUID-arrays saneras före PostgREST `in.(...)`
+- [x] Rate-limiting på admin-actions (#19) — `_RATE_LIMITS` + 429
+- [x] admin_audit används (#21) — radering/åtgärder loggas
+- [x] **Deltagar-invite validerat** — token + e-post + utgång + konsumtion
+- [x] Bisyssla prövad + godkänd av HR (undertecknat beslut)
+- [x] Matchningsverktyget (404-bugg) fixat
 - [x] a11y: aria-label på alla synliga kontroller
-- [x] Lasttest-script (`tests/load-test.js`)
+- [x] Dokument: PUB + DPIA (Helsingborg-specifika), verifieringsrapport,
+      lasttest-script
 
 ---
 
-## 🟠 Bör fixas tidigt (ej blockerande)
+## 🟠 BÖR fixas (ej blockerande, men klokt före/tidigt i pilot)
 
 - [ ] **Rotera de två flaggade API-nycklarna** (`SUPABASE_SERVICE_KEY` +
-      `ANTHROPIC_API_KEY`) — ~5 min · **[D]** (backlog #34)
-- [ ] Döp om `WS_BEARER_TOKEN_BEDROCK` → `AWS_BEARER_TOKEN_BEDROCK` i Vercel ·
-      **[D]** (backlog #33)
-- [ ] Onboarding-guide för handläggare (första-gångs-vy) · **[J]** (#11)
-- [ ] Mobil-layout i handläggar-vyn · **[J]** (#12)
-- [ ] Rate-limiting på admin-endpoints · **[J]** (#19)
-- [ ] Pilot-utgångsbanner när < 14 dagar kvar · **[J]** (#13)
-- [ ] "Skicka om invite"-knapp · **[J]** (#14)
+      `ANTHROPIC_API_KEY`) — ~5 min · **[D]** (#34)
+- [ ] Döp om `WS_BEARER_TOKEN_BEDROCK` → `AWS_BEARER_TOKEN_BEDROCK` i Vercel · **[D]** (#33)
+- [ ] **Invite-token som defense-in-depth i handläggar-OAuth** (#9) — i dag
+      gatekeepas handläggare av e-post-allowlist (säkert nog); token
+      valideras ej. Lågt, bör wire:as. · **[J]**
+- [ ] Fel-svar kan läcka DB-meddelandetext (`JSON.stringify(result.data)`
+      som fallback) — maska (#18) · **[J]**
+- [ ] E-post-PII i nekad-försök-loggen — verifiera/maska (#17) · **[J]**
+- [ ] Onboarding-guide för handläggare (första-gångs-vy) (#11) · **[J]**
+- [ ] Mobil-layout i handläggar-vyn (#12) · **[J]**
+- [ ] "Skicka om invite"-knapp (#14) + pilot-utgångsbanner (#13) · **[J]**
 
 ---
 
-## 🟡 Kan vänta till efter pilotstart
+## 🟡 KAN vänta (efter pilotstart / bred lansering)
 
-- [ ] Puppeteer-uppgradering (23 dep-sårbarheter, kräver PDF-test) · **[J]** (#35)
-- [ ] Statistik-export som CSV · **[J]** (#22)
-- [ ] AI-SYV-chatt som pratbubblor · **[J]** (#S4)
-- [ ] Capacitor-app (App Store/Google Play + push) · **[J]** (#S3)
-- [ ] Extern pentest + WCAG-audit (finansieras via Visionsfonden) · **[D]**
+- [ ] `unsafe-inline` i CSP — kräver refaktor av alla inline-handlers · **[J]**
+- [ ] Full JWT-auth på chat.js — origin-spärren täcker webbläsarvägen;
+      djup auth kräver ändringar i många anropsställen, görs vaket · **[J]**
+- [ ] Extern penetrationstest (före bred lansering) · **[D]** (Visionsfonden)
+- [ ] Extern WCAG-audit av hela appen (t.ex. Funka) · **[D]** (Visionsfonden)
+- [ ] Djup GDPR-audit · **[D/DSO]**
+- [ ] Statistik-export CSV (#22), pratbubblor (#S4), Capacitor-app (#S3) · **[J]**
 
 ---
 
 ## 📅 Parallella spår
-
-- [ ] **Visionsfonden-ansökan** (öppnar september 2026) — finansierar
-      pentest + WCAG-audit · **[D]** (#S1)
-- [ ] Effektuppföljning under piloten (deltar/slutför/upplevd nytta) — ger
+- [ ] **Visionsfonden-ansökan** (öppnar sept 2026) — finansierar pentest +
+      WCAG-audit · **[D]** (#S1)
+- [ ] Effektuppföljning under piloten (deltar/slutför/upplevd nytta) —
       beslutsunderlag + underlag till Visionsfonden · **[D]+[J]**
 
 ---
 
-## Rekommenderad ordning
+## Exakt: vad återstår för att bli grön?
 
-1. **[K]** Pilotbeslut diariefört + **[D]/[K]** PUB signerat + **[DSO]** DPIA godkänd
-   → grön juridik.
-2. **[J]** Bygg klart accept-invite-token (#9) → sista tekniska blockern.
-3. **[D]+[J]** Testa invite-kedjan + mejlleverans med ett testkonto.
-4. **[D]** Rotera nycklarna (#34).
-5. Bjud in första riktiga deltagaren. 🚀
+**Bara 5 juridik/DSO-punkter + 2 tester.** Ingen kvarvarande *blockerande*
+kodlucka — deltagarflödet är säkert, kostnader härdade, sårbarheter nollade.
+
+1. **[K]** diariefört pilotbeslut · **[D]/[K]** PUB signerat · **[DSO]** DPIA godkänd
+2. **[D]** testa PDF-export (morgonrundan) + rotera nycklar
+3. **[D]+[J]** testa invite-kedjan + mejl med ett testkonto
+4. Bjud in första riktiga deltagaren. 🚀
