@@ -43,8 +43,8 @@ Komplexitet: trivial / liten / medel / större / krångligt.
 | 14 | "Skicka om invite"-knapp | handlaggare.html | Liten | ⏳ |
 | 15 | SQL-injection-risk i `user_id=in.(...)` | api/supabase.js:670 | Liten | ⏳ |
 | 16 | DOM-XSS i CV-skill-rendering | index.html:5178, 5703, 5820 | Liten | ⏳ |
-| 17 | Email-PII loggas i admin_activity_log | api/supabase.js:156 | Trivial | ⏳ |
-| 18 | Stack-traces läcker i error-responses | api/supabase.js, api/pdf.js | Liten | ⏳ |
+| 17 | PII i loggar: supabase.js var redan maskad (maskPII). Åtgärdat 2026-07-11: callback.js loggade hela tokenData (access_token!) + graphData (namn/e-post) + rå admin-check-text → nu endast status/felkod, e-post maskas. | api/v1/auth/microsoft/callback.js | Trivial | ✅ |
+| 18 | DB-feltext läckte i felsvar. Åtgärdat 2026-07-11: send_otp JSON.stringify-fallback + 3 st `result.data.message` (Postgres-schema-läcka) → generiska klientsvar + maskad serverloggning. | api/supabase.js | Liten | ✅ |
 | 19 | Rate-limiting på admin-endpoints | api/supabase.js | Medel | ⏳ |
 | 20 | `admin_list_diary_stats` per-user-validering | api/supabase.js | Liten | ⏳ |
 | 21 | Audit-logg fylls inte (admin_audit oanvänd) | api/supabase.js | Medel | ⏳ |

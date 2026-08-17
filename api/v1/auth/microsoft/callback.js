@@ -100,7 +100,8 @@ export default async function handler(req, res) {
 
     const tokenData = await tokenResponse.json();
     if (!tokenResponse.ok) {
-      console.error('[MS-callback] Token exchange failed:', tokenData);
+      // Logga ALDRIG hela tokenData — kan innehålla access_token/id_token.
+      console.error('[MS-callback] Token exchange failed:', tokenResponse.status, tokenData.error, tokenData.error_description || '');
       return redirectWithError(req, res, 'token_exchange_failed');
     }
 
@@ -110,7 +111,8 @@ export default async function handler(req, res) {
     });
     const graphData = await graphResponse.json();
     if (!graphResponse.ok) {
-      console.error('[MS-callback] Graph API failed:', graphData);
+      // Logga ALDRIG hela graphData — innehåller namn/e-post (PII).
+      console.error('[MS-callback] Graph API failed:', graphResponse.status, graphData.error?.code || '');
       return redirectWithError(req, res, 'graph_failed');
     }
 
@@ -137,7 +139,9 @@ export default async function handler(req, res) {
     );
 
     if (!adminCheckResp.ok) {
-      console.error('[MS-callback] Admin-check mot Supabase failed:', await adminCheckResp.text());
+      // Maska ev. e-post i feltexten innan den når Vercel-loggarna.
+      const _errText = (await adminCheckResp.text() || '').replace(/[\w.+-]+@[\w-]+\.[\w.-]+/g, '[email]').slice(0, 300);
+      console.error('[MS-callback] Admin-check mot Supabase failed:', adminCheckResp.status, _errText);
       return redirectWithError(req, res, 'admin_check_failed');
     }
 

@@ -249,7 +249,11 @@ export default async function handler(req, res) {
 
     if (action === 'send_otp') {
       const result = await makeRequest(`${SUPABASE_URL}/auth/v1/otp`, { method: 'POST', headers: baseHeaders }, { email, options: { shouldCreateUser: true } });
-      if (result.status >= 400) return res.status(result.status).json({ error: result.data.error_description || result.data.msg || result.data.message || JSON.stringify(result.data) });
+      if (result.status >= 400) {
+        // Läck aldrig rå DB-payload till klienten — logga maskat serverside.
+        console.warn('[send_otp] misslyckades:', result.status, maskPII(result.data));
+        return res.status(result.status).json({ error: result.data.error_description || result.data.msg || result.data.message || 'Kunde inte skicka koden — försök igen om en stund' });
+      }
       return res.status(200).json({ success: true });
     }
 
@@ -1123,7 +1127,7 @@ export default async function handler(req, res) {
           job_match_id: jobMatchId || null
         }
       );
-      if (result.status >= 400) return res.status(result.status).json({ error: result.data.message || 'Kunde inte skapa session' });
+      if (result.status >= 400) { console.warn('[interview_session] DB-fel:', result.status, maskPII(result.data)); return res.status(result.status).json({ error: 'Kunde inte skapa session' }); }
       const rows = Array.isArray(result.data) ? result.data : [];
       return res.status(201).json({ session: rows[0] || null });
     }
@@ -1143,7 +1147,7 @@ export default async function handler(req, res) {
           content: content
         }
       );
-      if (result.status >= 400) return res.status(result.status).json({ error: result.data.message || 'Kunde inte spara meddelande' });
+      if (result.status >= 400) { console.warn('[interview_message] DB-fel:', result.status, maskPII(result.data)); return res.status(result.status).json({ error: 'Kunde inte spara meddelande' }); }
       const rows = Array.isArray(result.data) ? result.data : [];
       return res.status(201).json({ message: rows[0] || null });
     }
@@ -1190,7 +1194,7 @@ export default async function handler(req, res) {
           difficulty: qDiff || null
         }
       );
-      if (result.status >= 400) return res.status(result.status).json({ error: result.data.message || 'Kunde inte spara fråga' });
+      if (result.status >= 400) { console.warn('[saved_question] DB-fel:', result.status, maskPII(result.data)); return res.status(result.status).json({ error: 'Kunde inte spara fråga' }); }
       const rows = Array.isArray(result.data) ? result.data : [];
       return res.status(201).json({ savedQuestion: rows[0] || null });
     }
