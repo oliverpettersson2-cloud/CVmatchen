@@ -2,19 +2,10 @@
 
 Pilot: Ungdoms-/Kompetensarena · ca 20–40 deltagare · 3–4 handläggare ·
 3 månader, kostnadsfritt
-**Uppdaterad: 2026-07-11** (efter nattens PR #16–18 + verifiering mot kod)
+**Uppdaterad: 2026-07-11 em** (PDF-export verifierad i prod ✅ · CSP-regression fixad · kartan 33 kommuner · #9/#11/#13/#14/#17/#18 klara)
 
 Ägare: **[D]** Oliver/du · **[K]** kommun (chef/verksamhet) ·
 **[DSO]** dataskyddsombud · **[J]** jag (kod)
-
----
-
-## ⚠️ TESTA FÖRST I MORGONRUNDAN
-- [ ] **Exportera en PDF från appen** (CV eller rapport). Lambdan bootar
-      bevisat och samma kod gav perfekta PDF:er (åäö, styling) lokalt, men
-      Chromium-körningen i Vercel-lambdan går bara att slutverifiera med en
-      riktig export efter nattens ESM-migrering (`api/pdf.mjs`). Funkar den
-      inte → säg till, rollback är ett kommando. · **[D]**
 
 ---
 
@@ -75,12 +66,13 @@ Pilot: Ungdoms-/Kompetensarena · ca 20–40 deltagare · 3–4 handläggare ·
 - [ ] Döp om `WS_BEARER_TOKEN_BEDROCK` → `AWS_BEARER_TOKEN_BEDROCK` i Vercel · **[D]** (#33)
 - [x] Invite-token valideras vid första handläggar-OAuth-login (#9) — klart
 - [x] Väntande deltagar-inbjudningar synliga + "Skicka om"-knapp (#14) — klart
-- [ ] Fel-svar kan läcka DB-meddelandetext (`JSON.stringify(result.data)`
-      som fallback) — maska (#18) · **[J]**
-- [ ] E-post-PII i nekad-försök-loggen — verifiera/maska (#17) · **[J]**
-- [ ] Onboarding-guide för handläggare (första-gångs-vy) (#11) · **[J]**
-- [ ] Mobil-layout i handläggar-vyn (#12) · **[J]**
-- [ ] "Skicka om invite"-knapp (#14) + pilot-utgångsbanner (#13) · **[J]**
+- [x] Felsvar maskade — generiska klientsvar, maskad serverlogg (#18)
+- [x] PII/token-läckor i loggar stoppade — callback.js loggade tokenData
+      (access_token!) + graphData (#17)
+- [x] Onboarding-guide för handläggare (#11) — rollanpassad välkomstmodal
+- [x] Pilot-utgångsbanner < 14 dagar (#13)
+- [ ] Mobil-layout i handläggar-vyn (#12) — enda kvarvarande [J]-punkt,
+      görs bäst med din feedback på riktiga skärmar · **[J]**
 
 ---
 
@@ -110,6 +102,6 @@ Pilot: Ungdoms-/Kompetensarena · ca 20–40 deltagare · 3–4 handläggare ·
 kodlucka — deltagarflödet är säkert, kostnader härdade, sårbarheter nollade.
 
 1. **[K]** diariefört pilotbeslut · **[D]/[K]** PUB signerat · **[DSO]** DPIA godkänd
-2. **[D]** testa PDF-export (morgonrundan) + rotera nycklar
+2. **[D]** rotera nycklarna (#34) + env-namnbytet (#33) — ~7 min i Vercel
 3. **[D]+[J]** testa invite-kedjan + mejl med ett testkonto
 4. Bjud in första riktiga deltagaren. 🚀
