@@ -73,9 +73,8 @@ Pilot: Ungdoms-/Kompetensarena · ca 20–40 deltagare · 3–4 handläggare ·
 - [ ] **Rotera de två flaggade API-nycklarna** (`SUPABASE_SERVICE_KEY` +
       `ANTHROPIC_API_KEY`) — ~5 min · **[D]** (#34)
 - [ ] Döp om `WS_BEARER_TOKEN_BEDROCK` → `AWS_BEARER_TOKEN_BEDROCK` i Vercel · **[D]** (#33)
-- [ ] **Invite-token som defense-in-depth i handläggar-OAuth** (#9) — i dag
-      gatekeepas handläggare av e-post-allowlist (säkert nog); token
-      valideras ej. Lågt, bör wire:as. · **[J]**
+- [x] Invite-token valideras vid första handläggar-OAuth-login (#9) — klart
+- [x] Väntande deltagar-inbjudningar synliga + "Skicka om"-knapp (#14) — klart
 - [ ] Fel-svar kan läcka DB-meddelandetext (`JSON.stringify(result.data)`
       som fallback) — maska (#18) · **[J]**
 - [ ] E-post-PII i nekad-försök-loggen — verifiera/maska (#17) · **[J]**
