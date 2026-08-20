@@ -888,6 +888,9 @@ td{padding:10px 13px;vertical-align:middle}
             <button class="btn" onclick="exportData()">Exportera</button>
           </div>
 
+          <!-- Väntande deltagar-inbjudningar (fylls av loadPendingInvites) -->
+          <div id="pendingInvitesStrip" style="display:none;margin-bottom:14px;"></div>
+
           <!-- Status-chips -->
           <div class="chips" id="statusChips" style="margin-bottom:14px">
             <div class="chip act" data-status=""><span>Alla</span><span class="chip-c" id="cnt-all">0</span></div>
@@ -1683,7 +1686,7 @@ function enterApp(){
   document.getElementById('sbRole').textContent=admin.email||'';
   document.getElementById('sbAv').textContent=ini(admin.name||admin.email||'?');
   document.getElementById('pgSub').textContent=roleSubtitle();
-  buildNav();loadUsers();loadStats();startRefreshTimer();checkPilotExpiry();maybeShowOnboarding();
+  buildNav();loadUsers();loadStats();startRefreshTimer();checkPilotExpiry();maybeShowOnboarding();loadPendingInvites();
 }
 
 // Visar en kort välkomst-guide första gången en handläggare loggar in.
@@ -1722,6 +1725,51 @@ function maybeShowOnboarding(){
       overlay.remove();
     };
   } catch(_) {}
+}
+
+// ═══ Väntande deltagar-inbjudningar: lista + skicka om ═══
+async function loadPendingInvites(){
+  try {
+    const strip = document.getElementById('pendingInvitesStrip');
+    if (!strip) return;
+    const data = await post('list_user_invites', {});
+    const invites = (data && data.invites) || [];
+    if (!invites.length) { strip.style.display = 'none'; strip.innerHTML = ''; return; }
+    let h = '<div style="background:rgba(217,119,6,0.06);border:1px solid rgba(217,119,6,0.25);border-radius:10px;padding:10px 14px;">';
+    h += '<div style="font-size:12px;font-weight:700;color:#d97706;margin-bottom:6px;">⏳ Väntande inbjudningar (' + invites.length + ') — deltagare som inte loggat in än</div>';
+    h += '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
+    invites.forEach(inv => {
+      const expired = inv.expires_at && new Date(inv.expires_at) < new Date();
+      h += '<div style="display:flex;align-items:center;gap:6px;background:var(--cd,#fff);border:1px solid var(--bd);border-radius:8px;padding:4px 8px;font-size:11px;">' +
+        '<span style="color:' + (expired ? '#dc2626' : 'var(--mu)') + ';">' + (expired ? '⚠️ ' : '') + escapeHtml(inv.email) + '</span>' +
+        '<button onclick="resendUserInvite(\'' + inv.id + '\',this)" style="background:none;border:1px solid #d97706;color:#d97706;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;">↻ Skicka om</button>' +
+        '</div>';
+    });
+    h += '</div></div>';
+    strip.innerHTML = h;
+    strip.style.display = 'block';
+  } catch(_) { /* stripen är hjälpinfo — får aldrig fälla vyn */ }
+}
+
+async function resendUserInvite(inviteId, btn){
+  try {
+    if (btn) { btn.disabled = true; btn.textContent = '⏳'; }
+    const data = await post('resend_user_invite', { inviteId });
+    if (data && data.email_sent) {
+      showOk('✉️ Inbjudan skickad igen!');
+    } else if (data && data.invite_token) {
+      // Mejlet gick inte iväg — erbjud manuell länk som fallback
+      const link = location.origin + '/?invite=' + encodeURIComponent(data.invite_token);
+      try { await navigator.clipboard.writeText(link); showErr('Mejl kunde inte skickas — länken är kopierad, dela den manuellt.'); }
+      catch(_) { showErr('Mejl kunde inte skickas. Länk: ' + link); }
+    } else {
+      showErr((data && data.error) || 'Kunde inte skicka om');
+    }
+    loadPendingInvites();
+  } catch(e) {
+    showErr('Kunde inte skicka om inbjudan');
+    if (btn) { btn.disabled = false; btn.textContent = '↻ Skicka om'; }
+  }
 }
 
 // Visar varningsbanner när admins egen kommun har < 14 dagar kvar av piloten.
@@ -3615,6 +3663,7 @@ async function sendInvite(){
     const headline = data.email_sent
       ? '✉️ Inbjudan skickad till ' + email + '. Mottagaren får ett mejl med en magic-link.'
       : '⚠️ Inbjudan skapad, men mejl kunde inte skickas. Kopiera länken och skicka manuellt:';
+    loadPendingInvites();
     showInviteStatus(
       headline + '<br>' +
       '<div style="display:flex;gap:6px;margin-top:8px;">' +

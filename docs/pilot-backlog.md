@@ -37,10 +37,10 @@ Komplexitet: trivial / liten / medel / större / krångligt.
 
 | # | Vad | Var | Komplexitet | Status |
 |---|---|---|---|---|
-| 11 | Onboarding-guide för handläggare (första-gångs-vy) | handlaggare.html | Medel | ⏳ |
+| 11 | Onboarding-guide för handläggare — rollanpassad välkomstmodal vid första besök (localStorage-gated). Fanns redan (maybeShowOnboarding). | handlaggare.html:1691 | Medel | ✅ |
 | 12 | Mobil-layout saknas i handläggar-vyn | handlaggare.html | Medel | ⏳ |
-| 13 | Pilot-utgångsbanner när < 14 dagar kvar | handlaggare.html:6110 | Liten | ⏳ |
-| 14 | "Skicka om invite"-knapp | handlaggare.html | Liten | ⏳ |
+| 13 | Pilot-utgångsbanner < 14 dagar — checkPilotExpiry + pilotExpiryBanner. Fanns redan. | handlaggare.html:1728 | Liten | ✅ |
+| 14 | "Skicka om invite" — admins hade redan (resendAdminInvite). Byggt 2026-07-11 för DELTAGARE: väntande-inbjudningar-strip i Deltagare-vyn + list_user_invites/resend_user_invite (tenant-kontrollerad, förlänger 30 dgr, magiclink-fallback för redan registrerade). | handlaggare.html + api/supabase.js | Liten | ✅ |
 | 15 | SQL-injection-risk i `user_id=in.(...)` | api/supabase.js:670 | Liten | ⏳ |
 | 16 | DOM-XSS i CV-skill-rendering | index.html:5178, 5703, 5820 | Liten | ⏳ |
 | 17 | PII i loggar: supabase.js var redan maskad (maskPII). Åtgärdat 2026-07-11: callback.js loggade hela tokenData (access_token!) + graphData (namn/e-post) + rå admin-check-text → nu endast status/felkod, e-post maskas. | api/v1/auth/microsoft/callback.js | Trivial | ✅ |

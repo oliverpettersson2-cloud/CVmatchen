@@ -975,6 +975,78 @@ export default async function handler(req, res) {
       });
     }
 
+    if (action === 'list_user_invites') {
+      // Öppna (ej konsumerade) deltagar-inbjudningar inom adminens scope,
+      // så handläggaren ser vilka som väntar och kan skicka om.
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      let url = `${SUPABASE_URL}/rest/v1/user_invites?consumed_at=is.null&select=id,email,kommun_id,enhet_id,expires_at,created_at,invited_by&order=created_at.desc&limit=100`;
+      if (admin.role !== 'superadmin' && admin.kommun_id) {
+        url += `&kommun_id=eq.${admin.kommun_id}`;
+        if (admin.enhet_id != null && admin.role === 'handlaggare') url += `&enhet_id=eq.${admin.enhet_id}`;
+      }
+      const result = await makeRequest(url, { method: 'GET', headers: serviceHeaders() });
+      if (result.status >= 400) {
+        console.warn('[list_user_invites] DB-fel:', result.status, maskPII(result.data));
+        return res.status(500).json({ error: 'Kunde inte hämta inbjudningar' });
+      }
+      return res.status(200).json({ invites: Array.isArray(result.data) ? result.data : [] });
+    }
+
+    if (action === 'resend_user_invite') {
+      // Skickar om magic-link-mejlet för en öppen inbjudan + förlänger giltigheten.
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const inviteId = req.body?.inviteId;
+      if (!inviteId) return res.status(400).json({ error: 'inviteId krävs' });
+      const invRes = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/user_invites?id=eq.${encodeURIComponent(inviteId)}&consumed_at=is.null&select=id,email,token,kommun_id,enhet_id&limit=1`,
+        { method: 'GET', headers: serviceHeaders() }
+      );
+      const inv = Array.isArray(invRes.data) && invRes.data[0];
+      if (!inv) return res.status(404).json({ error: 'Inbjudan hittades inte (eller är redan använd)' });
+      // Tenant-kontroll: bara superadmin får röra andra kommuners invites.
+      if (admin.role !== 'superadmin' && String(inv.kommun_id) !== String(admin.kommun_id)) {
+        await logAdminDenied(admin.id, action, 'cross_tenant_invite');
+        return res.status(403).json({ error: 'forbidden' });
+      }
+      // Förläng giltigheten 30 dagar från nu.
+      const newExpires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+      await makeRequest(
+        `${SUPABASE_URL}/rest/v1/user_invites?id=eq.${encodeURIComponent(inviteId)}`,
+        { method: 'PATCH', headers: { ...serviceHeaders(), 'Prefer': 'return=minimal' } },
+        { expires_at: newExpires }
+      );
+      const origin = req.headers?.origin || req.headers?.referer?.split('/').slice(0,3).join('/') || '';
+      const redirectTo = origin
+        ? `${origin}/?invite=${encodeURIComponent(inv.token)}`
+        : `https://cvmatchen.com/?invite=${encodeURIComponent(inv.token)}`;
+      let emailSent = false, emailError = null;
+      try {
+        // Redan registrerade användare kan inte re-invitas via /auth/v1/invite
+        // (422) — fall då tillbaka på magic-link via /auth/v1/magiclink.
+        let mailRes = await makeRequest(
+          `${SUPABASE_URL}/auth/v1/invite?redirect_to=${encodeURIComponent(redirectTo)}`,
+          { method: 'POST', headers: serviceHeaders() },
+          { email: inv.email, data: { invited_by_admin_id: admin.id, kommun_id: inv.kommun_id, enhet_id: inv.enhet_id } }
+        );
+        if (mailRes.status === 422) {
+          mailRes = await makeRequest(
+            `${SUPABASE_URL}/auth/v1/magiclink?redirect_to=${encodeURIComponent(redirectTo)}`,
+            { method: 'POST', headers: serviceHeaders() },
+            { email: inv.email }
+          );
+        }
+        emailSent = mailRes.status < 400;
+        if (!emailSent) emailError = mailRes.data;
+      } catch(e) { emailError = String(e); }
+      await logAdminAction(admin.id, 'resend_user_invite', { invite_id: inviteId, email_sent: emailSent });
+      return res.status(200).json({
+        ok: true, email_sent: emailSent, invite_token: inv.token,
+        email_error: emailError ? maskPII(String(emailError)).slice(0, 200) : null
+      });
+    }
+
     if (action === 'admin_overview_per_kommun') {
       // Superadmin-överblick: en rad per kommun med pilot-status och nyckeltal.
       // Övriga admins ser bara sin egen kommun.
