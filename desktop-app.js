@@ -5706,20 +5706,32 @@
     const list = pfGetSaved();
     const entry = list.find(c => c.id === id);
     if (!entry) { toast('CV hittades inte', 'error'); return; }
+    if (!entry.data || !entry.data.name) {
+      toast('CV:t saknar namn — öppna det och fyll i namn först', 'error');
+      return;
+    }
 
-    // Spara nuvarande state, ladda in det sparade tillfälligt, exportera, återställ
+    // cvDocument måste vara monterat (synligt) för html2canvas — om vi står i
+    // Profil-vyn är CV-vyn dold och bounding rect blir 0. Växla därför till
+    // CV-vyn först (renderPreview körs automatiskt), exportera, och växla
+    // sedan tillbaka utan att skriva över cvData.
+    const wasView = (typeof currentView !== 'undefined') ? currentView : null;
     const prev = JSON.parse(JSON.stringify(cvData));
     try {
       cvData = Object.assign(createEmptyCV(), JSON.parse(JSON.stringify(entry.data)));
       ['jobs','education','languages','certifications','licenses','references','skills'].forEach(k => {
         if (!Array.isArray(cvData[k])) cvData[k] = [];
       });
+      if (typeof switchView === 'function') switchView('cv');
       renderPreview();
-      await new Promise(r => setTimeout(r, 100));
+      await new Promise(r => setTimeout(r, 250));
       await window.cvExportPDF();
+    } catch (e) {
+      toast('Kunde inte exportera: ' + (e && e.message ? e.message : 'okänt fel'), 'error');
     } finally {
       cvData = prev;
       renderPreview();
+      if (wasView && wasView !== 'cv' && typeof switchView === 'function') switchView(wasView);
     }
   };
 
@@ -5796,18 +5808,27 @@
     const list = pfGetMatched();
     const entry = list.find(c => c.id === id);
     if (!entry) { toast('Matchat CV hittades inte', 'error'); return; }
+    if (!entry.data || !entry.data.name) {
+      toast('CV:t saknar namn — öppna det och fyll i namn först', 'error');
+      return;
+    }
+    const wasView = (typeof currentView !== 'undefined') ? currentView : null;
     const prev = JSON.parse(JSON.stringify(cvData));
     try {
       cvData = Object.assign(createEmptyCV(), JSON.parse(JSON.stringify(entry.data)));
       ['jobs','education','languages','certifications','licenses','references','skills'].forEach(k => {
         if (!Array.isArray(cvData[k])) cvData[k] = [];
       });
+      if (typeof switchView === 'function') switchView('cv');
       renderPreview();
-      await new Promise(r => setTimeout(r, 100));
+      await new Promise(r => setTimeout(r, 250));
       await window.cvExportPDF();
+    } catch (e) {
+      toast('Kunde inte exportera: ' + (e && e.message ? e.message : 'okänt fel'), 'error');
     } finally {
       cvData = prev;
       renderPreview();
+      if (wasView && wasView !== 'cv' && typeof switchView === 'function') switchView(wasView);
     }
   };
 
@@ -5923,7 +5944,7 @@
           <div style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.3px;margin-bottom:4px;">Träna</div>
           <div style="font-size:13px;color:rgba(255,255,255,0.5);">Förbered dig för arbetslivet — välj ett område nedan.</div>
         </div>
-        <div style="grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
+        <div style="grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;">
           <!-- Övningar — leder till kategori-grid -->
           <div class="ov-card train-cat-card" onclick="trainOpenCat('ovningar_grid')"
                style="border-color:rgba(62,180,137,0.4);background:linear-gradient(135deg,rgba(62,180,137,0.10),rgba(62,180,137,0.04));padding:22px 20px;display:flex;flex-direction:column;gap:14px;min-height:170px;">
@@ -5972,6 +5993,20 @@
             <div style="margin-top:auto;font-size:12px;color:${taskColor};font-weight:700;">
               ${openTaskCount > 0 ? openTaskCount + ' att göra' : (totalTasks > 0 ? 'Alla klara!' : 'Väntar på tilldelning')}
             </div>
+          </div>
+
+          <!-- Språkassistent (Duolingo-liknande) — kommer snart -->
+          <div class="ov-card train-cat-card" onclick="trainShowComingSoonDesktop('sprak')"
+               style="border-color:rgba(34,197,94,0.4);background:linear-gradient(135deg,rgba(34,197,94,0.10),rgba(34,197,94,0.04));padding:22px 20px;display:flex;flex-direction:column;gap:14px;min-height:170px;position:relative;">
+            <div style="position:absolute;top:12px;right:12px;background:#22c55e;color:#fff;font-size:9px;font-weight:900;padding:3px 9px;border-radius:10px;letter-spacing:0.6px;text-transform:uppercase;">Snart</div>
+            <div style="display:flex;align-items:flex-start;gap:14px;">
+              <div class="ov-card-icon" style="background:rgba(34,197,94,0.2);color:#22c55e;font-size:26px;flex-shrink:0;">🦉</div>
+              <div>
+                <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:2px;">Språkassistent</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.45;">Träna svenska 5 min/dag — som Duolingo, för jobb och vardag.</div>
+              </div>
+            </div>
+            <div style="margin-top:auto;font-size:12px;color:#22c55e;font-weight:700;font-style:italic;">Under utveckling</div>
           </div>
         </div>
       `;
@@ -6077,6 +6112,47 @@
   window.trainOpenCat = function(catId) {
     currentTrainCat = catId;
     renderTrainingHome();
+  };
+
+  // Visar "Kommer snart"-modal för funktioner under utveckling på desktop.
+  // Matchar mobilens trainShowComingSoon — inline-byggd så vi slipper dela DOM.
+  window.trainShowComingSoonDesktop = function(id) {
+    var defs = {
+      sprak: {
+        icon: '🦉', color: '#22c55e',
+        title: 'Språkassistent',
+        sub: 'Som Duolingo — fast för svenska du behöver i jobb och vardag',
+        features: [
+          ['📅', 'Daglig träning', '5 minuter om dagen — bygg en streak'],
+          ['💼', 'Yrkesvokabulär', 'Lager, vård, bygg, kontor — anpassat för ditt mål'],
+          ['🎙️', 'Uttal & lyssning', 'Hör hur orden låter — repetera tills det sitter'],
+          ['🎯', 'Personligt anpassat', 'AI-tester ger dig nästa lektion baserat på vad du kan'],
+          ['🏆', 'Belöningar', 'XP, streaks och nivåer som peppar dig framåt']
+        ]
+      }
+    };
+    var def = defs[id]; if (!def) return;
+    var ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;';
+    ov.onclick = function(e) { if (e.target === ov) ov.remove(); };
+    var feat = def.features.map(function(f) {
+      return '<div style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);">' +
+        '<div style="font-size:22px;width:28px;text-align:center;">' + f[0] + '</div>' +
+        '<div style="flex:1;text-align:left;"><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;">' + f[1] + '</div>' +
+        '<div style="font-size:12px;color:rgba(255,255,255,0.6);line-height:1.4;">' + f[2] + '</div></div></div>';
+    }).join('');
+    ov.innerHTML =
+      '<div style="background:#1a1a2e;border:1px solid rgba(34,197,94,0.3);border-radius:18px;max-width:480px;width:100%;padding:28px;text-align:center;">' +
+        '<div style="font-size:48px;margin-bottom:12px;">' + def.icon + '</div>' +
+        '<div style="font-size:22px;font-weight:800;color:#fff;margin-bottom:6px;">' + def.title + '</div>' +
+        '<div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:20px;">' + def.sub + '</div>' +
+        '<div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:12px;padding:14px 18px;margin-bottom:18px;">' + feat + '</div>' +
+        '<div style="font-size:12px;color:' + def.color + ';font-weight:800;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:14px;">🚧 Under utveckling</div>' +
+        '<button id="_csCloseBtn" style="width:100%;padding:13px;background:' + def.color + ';border:none;color:#fff;font-size:14px;font-weight:800;border-radius:12px;cursor:pointer;">Stäng</button>' +
+      '</div>';
+    document.body.appendChild(ov);
+    var btn = ov.querySelector('#_csCloseBtn');
+    if (btn) btn.onclick = function() { ov.remove(); };
   };
 
   // Från Övningar-kategori-grid tillbaka till Träna-hub (3 rutor)
