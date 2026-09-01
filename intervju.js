@@ -845,12 +845,18 @@
       var pick = function() {
         tts.voices = window.speechSynthesis.getVoices()
           .filter(function(v) { return v.lang && v.lang.toLowerCase().indexOf('sv') === 0; });
-        var prefNames = ['Alva (Förbättrad)','Alva','Klara','Hedvig','Bengt','Google svenska'];
+        // Neurala/"Natural"-röster låter markant mänskligare — ta dem först
+        // (Edge: Sofie/Hillevi Online Natural, macOS/iOS: Alva Förbättrad,
+        // Android/Chrome: Google svenska), därefter övriga kända svenska.
+        var prefNames = ['Sofie Online (Natural)','Hillevi Online (Natural)','Sofie','Alva (Förbättrad)','Alva (Enhanced)','Google svenska','Alva','Klara','Hedvig','Bengt'];
         for (var i = 0; i < prefNames.length; i++) {
           var match = tts.voices.find(function(v) { return v.name.indexOf(prefNames[i]) !== -1; });
           if (match) { tts.voice = match; break; }
         }
-        if (!tts.voice && tts.voices.length) tts.voice = tts.voices[0];
+        if (!tts.voice) {
+          // Fallback: vilken "Natural"/"Online"-röst som helst på svenska
+          tts.voice = tts.voices.find(function(v){ return /natural|online/i.test(v.name); }) || tts.voices[0] || null;
+        }
         tts.ready = true;
       };
       pick();
@@ -866,16 +872,26 @@
         u.rate = CONFIG.ttsRate;
         u.pitch = CONFIG.ttsPitch;
         if (tts.voice) u.voice = tts.voice;
+        // Chrome-workaround: desktop-Chrome pausar speechSynthesis tyst efter
+        // ~15 s på långa repliker. En periodisk resume() håller talet igång.
+        var _keepAlive = null;
+        function _stopKeepAlive(){ if (_keepAlive) { clearInterval(_keepAlive); _keepAlive = null; } }
         u.onstart = function() {
           state.ai.isSpeaking = true;
           updateStatusPill();
+          _stopKeepAlive();
+          _keepAlive = setInterval(function(){
+            try { if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) { window.speechSynthesis.pause(); window.speechSynthesis.resume(); } } catch(e) {}
+          }, 10000);
         };
         u.onend = function() {
+          _stopKeepAlive();
           state.ai.isSpeaking = false;
           updateStatusPill();
           resolve();
         };
         u.onerror = function() {
+          _stopKeepAlive();
           state.ai.isSpeaking = false;
           updateStatusPill();
           resolve();

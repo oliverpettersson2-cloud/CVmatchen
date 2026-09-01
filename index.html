@@ -7388,8 +7388,9 @@ ${styleTexts}
       if (hash && hash.includes('access_token')) {
         const params = new URLSearchParams(hash.replace('#', '?'));
         const accessToken = params.get('access_token');
+        const refreshToken = params.get('refresh_token');
         if (accessToken) {
-          authHandleMagicLinkRedirect(accessToken);
+          authHandleMagicLinkRedirect(accessToken, refreshToken);
           window.history.replaceState({}, document.title, window.location.pathname);
           return; // splash hides inside authHandleMagicLinkRedirect
         }
@@ -7402,6 +7403,11 @@ ${styleTexts}
           if (user && user.email && user.loggedIn) {
             window.authUserId = user.userId || null;
             window.authAccessToken = user.accessToken || null;
+            // Access-JWT:n lever ~1h — förnya direkt vid appstart om sessionen
+            // är äldre än 50 min (annars 401 på första riktiga anropet),
+            // och starta 45-min-timern.
+            if (!user.createdAt || Date.now() - user.createdAt > 50 * 60 * 1000) authRefreshSession();
+            authStartRefreshTimer();
             // Redan inloggad — hoppa direkt till appen utan mellanskärm
             authSetLoggedInSilent(user.email, user.userId, user.accessToken);
             return;
@@ -7412,7 +7418,7 @@ ${styleTexts}
       document.getElementById('authOverlay').classList.remove('hidden');
     }
 
-    async function authHandleMagicLinkRedirect(accessToken) {
+    async function authHandleMagicLinkRedirect(accessToken, refreshToken) {
       try {
         const resp = await fetch('/api/supabase', {
           method: 'POST',
@@ -7423,7 +7429,7 @@ ${styleTexts}
         const email = data.email || data.user?.email || '';
         const userId = data.id || data.user?.id || '';
         if (email) {
-          authSetLoggedIn(email, false, userId, accessToken);
+          authSetLoggedIn(email, false, userId, accessToken, refreshToken);
           document.getElementById('authOverlay').classList.add('hidden');
           setNavStep(2);
           showLoginSplash(email);
@@ -7671,7 +7677,7 @@ ${styleTexts}
 
         const userId = data.user?.id || '';
         const accessToken = data.access_token || '';
-        authSetLoggedIn(authCurrentEmail, true, userId, accessToken);
+        authSetLoggedIn(authCurrentEmail, true, userId, accessToken, data.refresh_token || null);
 
       } catch(e) {
         errEl.textContent = e.message || 'Felaktig eller utgången kod. Försök igen.';
@@ -7685,7 +7691,36 @@ ${styleTexts}
       btn.innerHTML = 'Verifiera kod';
     }
 
-    function authSetLoggedIn(email, isNew, userId, accessToken) {
+    // ── SESSION-FÖRNYELSE (deltagare) ──
+    // Supabase access-JWT lever ~1h. Utan förnyelse loggas deltagaren tyst ut
+    // mitt i ett pass. Vi sparar refresh-token och förnyar var 45:e minut +
+    // direkt vid appstart om sessionen är gammal.
+    async function authRefreshSession() {
+      try {
+        const raw = pfRead(AUTH_STORAGE_KEY);
+        if (!raw) return false;
+        const saved = JSON.parse(raw);
+        if (!saved || !saved.refreshToken) return false;
+        const resp = await fetch('/api/supabase', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'refresh_session', refreshToken: saved.refreshToken })
+        });
+        const data = await resp.json();
+        if (!resp.ok || !data.access_token) return false;
+        saved.accessToken = data.access_token;
+        saved.refreshToken = data.refresh_token || saved.refreshToken; // roteras av Supabase
+        saved.createdAt = Date.now();
+        pfStore(AUTH_STORAGE_KEY, JSON.stringify(saved));
+        window.authAccessToken = data.access_token;
+        return true;
+      } catch(e) { return false; }
+    }
+    function authStartRefreshTimer() {
+      if (window._authRefreshTimer) clearInterval(window._authRefreshTimer);
+      window._authRefreshTimer = setInterval(authRefreshSession, 45 * 60 * 1000);
+    }
+
+    function authSetLoggedIn(email, isNew, userId, accessToken, refreshToken) {
       // SÄKERHETSFIX: detektera user-byte och rensa föregående users data
       try {
         var prevAuthRaw = localStorage.getItem(AUTH_STORAGE_KEY);
@@ -7700,16 +7735,21 @@ ${styleTexts}
         }
       } catch(e) { console.warn('User-switch check fail:', e); }
 
+      // Behåll befintlig refresh-token om anropet inte skickar en ny
+      var _prevRefresh = null;
+      try { var _pr = JSON.parse(pfRead(AUTH_STORAGE_KEY) || 'null'); _prevRefresh = _pr && _pr.refreshToken || null; } catch(_){}
       pfStore(AUTH_STORAGE_KEY, JSON.stringify({
         email,
         loggedIn: true,
         userId: userId || null,
         accessToken: accessToken || null,
+        refreshToken: refreshToken || _prevRefresh,
         createdAt: Date.now()
       }));
 
       window.authUserId = userId || null;
       window.authAccessToken = accessToken || null;
+      authStartRefreshTimer();
 
       logEvent('login');
       setNavStep(2);

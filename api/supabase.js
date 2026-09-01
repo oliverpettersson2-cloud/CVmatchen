@@ -260,7 +260,28 @@ export default async function handler(req, res) {
     if (action === 'verify_otp') {
       const result = await makeRequest(`${SUPABASE_URL}/auth/v1/verify`, { method: 'POST', headers: baseHeaders }, { email, token, type: 'email' });
       if (result.status >= 400) return res.status(result.status).json({ error: result.data.error_description || result.data.msg || result.data.message || 'Felaktig eller utgången kod' });
-      return res.status(200).json({ access_token: result.data.access_token, user: result.data.user });
+      return res.status(200).json({ access_token: result.data.access_token, refresh_token: result.data.refresh_token, user: result.data.user });
+    }
+
+    if (action === 'refresh_session') {
+      // Förnyar deltagarens Supabase-session (access-JWT ~1h) med refresh-token
+      // så att appen inte tyst loggar ut mitt i ett pass.
+      const rt = req.body?.refreshToken;
+      if (!rt || typeof rt !== 'string') return res.status(400).json({ error: 'refreshToken krävs' });
+      const result = await makeRequest(
+        `${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`,
+        { method: 'POST', headers: baseHeaders },
+        { refresh_token: rt }
+      );
+      if (result.status >= 400) {
+        // Refresh-tokens roteras — en förbrukad/återkallad token kräver ny inloggning.
+        return res.status(401).json({ error: 'refresh_failed' });
+      }
+      return res.status(200).json({
+        access_token: result.data.access_token,
+        refresh_token: result.data.refresh_token,
+        user: result.data.user
+      });
     }
 
     if (action === 'get_user') {
