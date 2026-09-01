@@ -234,8 +234,10 @@
     function buildSystem() {
       var base = AISYV_SYSTEM_PROMPT;
       if (!eduData || !eduData.utbildningar || !eduData.utbildningar.length) return base;
-      var lista = eduData.utbildningar.slice(0, 30).map(function(u) {
-        return u.namn + ' (' + u.typ + ', ' + u.ort + ', ' + (u.langd || '') + ', krav: ' + (u.krav || '') + ', ' + u.url + ')';
+      // Ta med upp till 60 utbildningar (statisk kurerad data + live MYH-data)
+      // i kompakt format — vid 30 klipptes hälften av MYH-utbudet bort.
+      var lista = eduData.utbildningar.slice(0, 60).map(function(u) {
+        return u.namn + '|' + (u.skola || '') + '|' + u.typ + '|' + u.ort + '|' + (u.langd || '') + '|' + (u.krav || '');
       }).join('; ');
       return base + " REELLA UTBILDNINGAR I FAMILJEN HELSINGBORG (källa: " + (eduData.kalla || '') + "): " + lista + ". Använd dessa när det passar. Mer info: skanevux.se, myh.se, lu.se/campus-helsingborg.";
     }
