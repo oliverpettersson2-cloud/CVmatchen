@@ -3573,12 +3573,12 @@
     </div>
   </section>
 
-  <!-- ===== INTERVJUTRÄNING-VYN (modulen bygger sitt eget UI i #trainView-intervju) ===== -->
-  <section class="view" id="view-intervju">
-    <div id="trainView-intervju" class="train-view train-view--active">
-      <!-- intervju.js injicerar sitt UI här vid första öppning -->
-    </div>
-  </section>
+  <!-- ===== INTERVJUTRÄNING =====
+       switchView('intervju') aliasas till Träna-hubben, som skapar sin egen
+       #trainView-intervju i ov-detail. Den statiska containern som låg här
+       kapade ID:t (getElementById tar första i DOM) så modulen byggde sitt
+       UI i en dold nod → blank vy. Behåll INTE en dublett här. -->
+  <section class="view" id="view-intervju"></section>
 
   <!-- ===== UTBILDA DIG / AI-SYV-VYN (portad från mobilen) ===== -->
   <section class="view" id="view-aisyv">
