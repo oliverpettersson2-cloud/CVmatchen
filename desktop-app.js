@@ -6709,11 +6709,7 @@
           document.head.appendChild(style);
         }
       }
-      // 2. Dölj "Intervjuträning"-tabben (vyn finns kvar men nås via Träna-hub)
-      const ivTab = document.querySelector('.sb-tab[data-view="intervju"]');
-      if (ivTab) {
-        ivTab.style.display = 'none';
-      }
+      // 2. Intervju-tabben visas igen — intervjuträningen är släppt (aug 2026).
       // 3. Flagga: uppgifter visas bara inom Träna, inte i Profil
       window._tasksOnlyInTrain = true;
 
