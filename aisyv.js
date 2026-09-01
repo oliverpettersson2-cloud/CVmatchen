@@ -583,7 +583,9 @@
 
       var cvCtx = (eduCurrentView === 'cv-match') ? getCVContext() : '';
       var system = buildSystem() + (cvCtx ? ' ' + cvCtx : '');
-      var messages = eduHistory.filter(function(m){ return m.role==='user'||m.role==='assistant'; });
+      // Cappa historiken (senaste 12 turer) — annars växer varje anrop i
+      // token-kostnad linjärt med samtalets längd utan att träffsäkerheten ökar.
+      var messages = eduHistory.filter(function(m){ return m.role==='user'||m.role==='assistant'; }).slice(-12);
 
       try {
         var resp = await fetch('/api/chat', {
