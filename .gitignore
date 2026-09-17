@@ -1,0 +1,32 @@
+# Beroenden
+node_modules/
+
+# Hemligheter — får ALDRIG committas
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.*
+credentials.*
+
+# Byggartefakter och verktyg
+.vercel/
+.next/
+dist/
+build/
+*.log
+npm-debug.log*
+
+# Lokalt skräp
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# Tillfälliga filer
+tmp/
+temp/
+*.tmp
