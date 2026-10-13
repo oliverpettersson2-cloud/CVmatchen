@@ -37,6 +37,29 @@ Information (integritetspolicy + AI-samtycke), tillgång/portabilitet
 (dataexport i appen), rättelse (deltagaren redigerar själv), radering
 (kontoradering — se åtgärd 1), återkallat samtycke (art. 7.3).
 
+## 5b. Besöksstatistik (Vercel Web Analytics)
+
+Tjänsten använder Vercel Web Analytics för aggregerad besöksstatistik
+(sidvisningar per sida, enhetstyp, hänvisande källa). Detta är en separat
+behandling från deltagarnas uppgifter och sker hos Vercel, som redan är
+anlitat underbiträde för hosting.
+
+- **Inga cookies sätts** och ingen spårning sker över andra webbplatser.
+  Appens cookie-information om "strikt nödvändiga cookies" är därför
+  fortsatt korrekt.
+- Besökaren identifieras inte. Vercel härleder en icke-återvändbar hash ur
+  inkommande begäran som roterar dagligen och inte kan kopplas till en
+  fysisk person.
+- Ingen koppling sker mellan statistiken och deltagarens konto, CV eller
+  aktivitet i systemet.
+- Behandlingen sker inom EU/EES.
+- Syftet är drift och förbättring av tjänsten samt underlag för
+  pilotutvärderingen (hur mycket tjänsten faktiskt används).
+
+Bedömning: låg integritetsrisk. Ingen personuppgift i GDPR:s mening bedöms
+behandlas, men behandlingen redovisas här för fullständighet. **DSO avgör
+om ytterligare information till registrerade krävs.**
+
 ## 6. Riskanalys (urval)
 | Risk | Nivå | Skydd | Restrisk |
 |------|------|-------|----------|
@@ -44,6 +67,7 @@ Information (integritetspolicy + AI-samtycke), tillgång/portabilitet
 | Cross-tenant-läcka | Medel | Serverside verifyAdmin, deny-by-default | Låg |
 | Känsliga uppgifter i fritext | Hög | AI-samtycke + varningstext + människa-i-loopen | Medel |
 | AI-text felaktig | Medel | Deltagaren granskar/godkänner allt | Låg |
+| Besöksstatistik | Låg | Cookiefri, ingen identifiering, EU-region | Låg |
 | AI-data lämnar EU | Låg–Medel | Bedrock EU, ingen lagring/träning | Låg |
 | Aktivitetslogg → försörjningsstöd | Medel | Logg = underlag, ej beslut; handläggarrutin | Låg–Medel |
 

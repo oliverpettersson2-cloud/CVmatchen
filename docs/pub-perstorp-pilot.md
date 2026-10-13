@@ -120,7 +120,7 @@ produktionsdata i utveckling, incidentrutin med 24h-frist.
 
 | Underbiträde | Tjänst | Behandlingsregion |
 |--------------|--------|-------------------|
-| Vercel | Hosting + serverless | Stockholm (EU) |
+| Vercel | Hosting, serverless + cookiefri besöksstatistik | Stockholm (EU) |
 | Supabase | Databas + auth | Frankfurt (EU) |
 | AWS Bedrock | AI-inferens | Frankfurt (EU) |
 | Resend | Transaktionsmejl | EU |

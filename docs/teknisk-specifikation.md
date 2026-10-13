@@ -101,6 +101,12 @@ Hela teknikstacken är inom EU/EES för GDPR-efterlevnad.
 ### Region: Stockholm (arn1)
 Vercels region `arn1` ligger i AWS Stockholm-datacenter.
 
+### Besöksstatistik
+Vercel Web Analytics är aktiverat — cookiefri och anonymiserad
+sidvisningsstatistik. Scriptet laddas från samma origin
+(`/_vercel/insights/script.js`), vilket gör att projektets CSP täcker det
+utan undantag. Ingen koppling till deltagarkonton.
+
 ### Funktioner
 
 #### `/api/supabase.js`
