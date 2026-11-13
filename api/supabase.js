@@ -258,9 +258,40 @@ export default async function handler(req, res) {
     }
 
     if (action === 'verify_otp') {
-      const result = await makeRequest(`${SUPABASE_URL}/auth/v1/verify`, { method: 'POST', headers: baseHeaders }, { email, token, type: 'email' });
-      if (result.status >= 400) return res.status(result.status).json({ error: result.data.error_description || result.data.msg || result.data.message || 'Felaktig eller utgången kod' });
-      return res.status(200).json({ access_token: result.data.access_token, refresh_token: result.data.refresh_token, user: result.data.user });
+      // Supabase lagrar engångskoden under olika token_type beroende på hur
+      // den skickades och om kontot redan fanns: en NY användare får
+      // 'confirmation_token' (type 'email'), medan en BEFINTLIG användare som
+      // begär inloggningskod får 'recovery_token'. Skickar vi fel type svarar
+      // Supabase "Token has expired or is invalid" även när koden är helt
+      // korrekt och oanvänd — vilket ser ut som ett utgånget mejl för
+      // deltagaren men i själva verket är ett typfel.
+      //
+      // Vi provar därför typerna i tur och ordning. Koden förbrukas först vid
+      // en lyckad verifiering, så ett misslyckat försök bränner ingenting.
+      const TYPER = ['email', 'recovery', 'magiclink'];
+      let sista = null;
+      for (const type of TYPER) {
+        const r = await makeRequest(
+          `${SUPABASE_URL}/auth/v1/verify`,
+          { method: 'POST', headers: baseHeaders },
+          { email, token, type }
+        );
+        if (r.status < 400) {
+          return res.status(200).json({
+            access_token: r.data.access_token,
+            refresh_token: r.data.refresh_token,
+            user: r.data.user
+          });
+        }
+        sista = r;
+        // 429 = rate limit. Fortsätt inte hamra då.
+        if (r.status === 429) break;
+      }
+      console.warn('[verify_otp] misslyckades för alla typer:', sista && sista.status, maskPII(sista && sista.data));
+      return res.status(sista ? sista.status : 400).json({
+        error: (sista && (sista.data.error_description || sista.data.msg || sista.data.message))
+          || 'Felaktig eller utgången kod'
+      });
     }
 
     if (action === 'refresh_session') {

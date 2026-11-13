@@ -1,10 +1,11 @@
 -- ============================================================
 -- CVmatchen — tabell för språkträningens progress
--- Kör i Supabase SQL Editor (Dashboard → SQL Editor → New query).
--- Idempotent: går att köra om utan att något går sönder.
 --
--- Samma form som saved_cvs / job_diary så den befintliga
--- save_table-vägen i api/supabase.js fungerar utan särkod.
+-- Följer exakt samma konvention som saved_cvs och job_diary:
+-- primärnyckel på user_id (ingen separat id-kolumn), kaskad mot
+-- auth.users, och EN RLS-policy "Egen data" med FOR ALL.
+-- Det gör att den befintliga save_table-vägen i api/supabase.js
+-- (DELETE följt av INSERT per user_id) fungerar utan särkod.
 --
 -- data-blobben ser ut så här:
 --   { "<bransch>": { "<ovningstyp>": { pass, ratt, totalt, tidSek, senast } },
@@ -12,43 +13,26 @@
 -- tidSek = AKTIV träningstid i sekunder. Klockan pausas när fliken
 -- döljs och efter 90 s utan interaktion, så loggen visar faktisk
 -- träning och inte hur länge webbläsaren stått på.
+--
+-- Idempotent: går att köra om utan att något går sönder.
 -- ============================================================
 
 create table if not exists public.sprak_progress (
-  id        uuid primary key default gen_random_uuid(),
-  user_id   uuid not null references auth.users(id) on delete cascade,
+  user_id   uuid primary key references auth.users(id) on delete cascade,
   data      jsonb not null default '{}'::jsonb,
-  saved_at  timestamptz not null default now()
+  saved_at  timestamptz default now()
 );
-
--- En rad per deltagare
-create unique index if not exists sprak_progress_user_id_key
-  on public.sprak_progress (user_id);
 
 alter table public.sprak_progress enable row level security;
 
--- Deltagaren når bara sin egen rad
-drop policy if exists "sprak_progress_select_own" on public.sprak_progress;
-create policy "sprak_progress_select_own" on public.sprak_progress
-  for select using (auth.uid() = user_id);
-
-drop policy if exists "sprak_progress_insert_own" on public.sprak_progress;
-create policy "sprak_progress_insert_own" on public.sprak_progress
-  for insert with check (auth.uid() = user_id);
-
-drop policy if exists "sprak_progress_update_own" on public.sprak_progress;
-create policy "sprak_progress_update_own" on public.sprak_progress
-  for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
-
-drop policy if exists "sprak_progress_delete_own" on public.sprak_progress;
-create policy "sprak_progress_delete_own" on public.sprak_progress
-  for delete using (auth.uid() = user_id);
+drop policy if exists "Egen data" on public.sprak_progress;
+create policy "Egen data" on public.sprak_progress
+  for all using (auth.uid() = user_id);
 
 -- ============================================================
--- VIKTIGT — GDPR-radering
--- admin_delete_user och user_delete_self i api/supabase.js
--- kaskaderar över en lista med tabeller. Den här tabellen
--- raderas automatiskt via "on delete cascade" mot auth.users,
--- men lägg ändå till 'sprak_progress' i raderingslistan så att
--- radering fungerar även om auth-posten behålls.
+-- GDPR-radering
+-- Raderas automatiskt via "on delete cascade" mot auth.users.
+-- Tabellen finns dessutom med i TABLES-listan i api/supabase.js
+-- (admin_delete_user + user_delete_self) så radering fungerar
+-- även när auth-posten behålls.
 -- ============================================================
