@@ -28,6 +28,8 @@
   <!-- Intervjuträning-modul (lazy-initieras av Träning-hubben) -->
   <link rel="stylesheet" href="intervju.css">
   <script src="intervju.js" defer></script>
+  <link rel="stylesheet" href="sprak.css">
+  <script src="sprak.js" defer></script>
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
   <link rel="apple-touch-icon" href="/icon-192.png">
   <link rel="apple-touch-icon" sizes="512x512" href="/icon-512.png">
@@ -7957,6 +7959,11 @@ ${styleTexts}
           try { localStorage.setItem('pathfinder_job_diary', JSON.stringify(result.jobDiary)); } catch(e) {}
         }
 
+        // Språkträningens progress — sprak.js läser samma nyckel
+        if (result.sprakProgress && typeof result.sprakProgress === 'object') {
+          try { localStorage.setItem('cvm_sprak_v1', JSON.stringify(result.sprakProgress)); } catch(e) {}
+        }
+
         // Toast undertryckt — splashskärmen fyller den rollen vid start
       } catch(e) {
       }
@@ -9170,6 +9177,15 @@ ${styleTexts}
                 <div class="train-tile-desc">Öva på vanliga intervjufrågor och få AI-feedback.</div>
               </div>
               <div class="train-tile-meta">AI-driven · ny session</div>
+            <div class="train-tile" onclick="trainSwitchView('sprak')">
+              <div class="train-tile-glow"></div>
+              <div>
+                <div class="train-tile-icon">🗣️</div>
+                <div class="train-tile-name">Språkträning</div>
+                <div class="train-tile-desc">Yrkessvenska för vård, lager, service och bygg — allt går att lyssna på.</div>
+              </div>
+              <div class="train-tile-meta" id="trainSprakMeta">Inte påbörjat</div>
+            </div>
             </div>
             <!-- Språkassistent (Duolingo-liknande) — Kommer snart-kort -->
             <div class="train-tile train-tile--coming" onclick="trainShowComingSoon('sprak')" style="border-color:rgba(34,197,94,0.35);background:linear-gradient(180deg, rgba(34,197,94,0.08) 0%, rgba(34,197,94,0.03) 100%);position:relative;">
@@ -9225,6 +9241,12 @@ ${styleTexts}
       </div>
 
       <!-- VIEW 3: Intervjuträning — intervju.js bygger sitt eget UI här -->
+      <!-- VIEW 4: Språkträning — sprak.js bygger sitt eget UI här -->
+      <div id="trainView-sprak" class="train-view">
+        <button class="train-back" onclick="trainSwitchView('hub')">← Tillbaka till Träna</button>
+        <!-- UI injiceras av sprak.js vid första öppning -->
+      </div>
+
       <div id="trainView-intervju" class="train-view">
         <button class="train-back" onclick="trainSwitchView('hub')">← Tillbaka</button>
         <!-- Intervju-modulens UI injiceras här av intervju.js vid första öppning -->
@@ -11025,6 +11047,17 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
         ? pct + '% klarat — fortsätt där du slutade'
         : 'Lektioner, övningar och quiz';
     }
+    // Språkträningens mätartext på hub-rutan
+    var sprakMeta = document.getElementById('trainSprakMeta');
+    if (sprakMeta && typeof window.sprSummary === 'function') {
+      try {
+        var ss = window.sprSummary();
+        sprakMeta.textContent = ss.pass
+          ? ss.pass + ' pass · ' + ss.andel + '% rätt'
+          : 'Inte påbörjat';
+      } catch (e) {}
+    }
+
     // Räknare för tilldelade uppgifter på hub-rutan
     var taskMeta = document.getElementById('trainTaskMeta');
     var taskBadge = document.getElementById('trainTaskBadge');
@@ -11104,7 +11137,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
   };
 
   window.trainSwitchView = function(view) {
-    var views = ['hub','ovn','intervju'];
+    var views = ['hub','ovn','intervju','sprak'];
     views.forEach(function(v){
       var el = document.getElementById('trainView-' + v);
       if (!el) return;
@@ -11125,6 +11158,13 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
     // När Intervjuträning öppnas första gången — initiera modulen
     if (view === 'intervju' && typeof window.ivInit === 'function') {
       try { window.ivInit(); } catch(e) { console.warn('Intervju init fail:', e); }
+    }
+
+    // Språkträning — samma mönster
+    if (view === 'sprak' && typeof window.sprInit === 'function') {
+      try { window.sprInit(); } catch(e) { console.warn('Språk init fail:', e); }
+    } else if (view !== 'sprak' && typeof window.sprCleanup === 'function') {
+      try { window.sprCleanup(); } catch(e) {}
     }
 
     // Uppdatera hub-badgen när vi går tillbaka till hub

@@ -906,8 +906,8 @@ td{padding:10px 13px;vertical-align:middle}
           <!-- Tabell -->
           <div class="tw">
             <table>
-              <thead><tr><th style="width:36px;text-align:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--mu);vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></th><th onclick="sortBy('namn')">Namn<span class="sort-ind" data-k="namn"></span></th><th class="hm" onclick="sortBy('handlaggare')">Handläggare<span class="sort-ind" data-k="handlaggare"></span></th><th class="hm" onclick="sortBy('enhet')">Enhet<span class="sort-ind" data-k="enhet"></span></th><th onclick="sortBy('lastSeen')">Senast aktiv<span class="sort-ind" data-k="lastSeen"></span></th><th class="hm" onclick="sortBy('cv')">CV<span class="sort-ind" data-k="cv"></span></th><th class="hm" onclick="sortBy('ovningar')">Övningar<span class="sort-ind" data-k="ovningar"></span></th><th class="hm" onclick="sortBy('uppgifter')">Uppgifter<span class="sort-ind" data-k="uppgifter"></span></th><th class="hm" title="Antal sökta jobb (jobbdagbok)" onclick="sortBy('sokta')">Sökta<span class="sort-ind" data-k="sokta"></span></th><th onclick="sortBy('status')">Status<span class="sort-ind" data-k="status"></span></th></tr></thead>
-              <tbody id="tBody"><tr><td colspan="10" class="loading">Laddar deltagare...</td></tr></tbody>
+              <thead><tr><th style="width:36px;text-align:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--mu);vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></th><th onclick="sortBy('namn')">Namn<span class="sort-ind" data-k="namn"></span></th><th class="hm" onclick="sortBy('handlaggare')">Handläggare<span class="sort-ind" data-k="handlaggare"></span></th><th class="hm" onclick="sortBy('enhet')">Enhet<span class="sort-ind" data-k="enhet"></span></th><th onclick="sortBy('lastSeen')">Senast aktiv<span class="sort-ind" data-k="lastSeen"></span></th><th class="hm" onclick="sortBy('cv')">CV<span class="sort-ind" data-k="cv"></span></th><th class="hm" onclick="sortBy('ovningar')">Övningar<span class="sort-ind" data-k="ovningar"></span></th><th class="hm" title="Andel rätt i språkträningen och antal genomförda pass" onclick="sortBy('sprak')">Språk<span class="sort-ind" data-k="sprak"></span></th><th class="hm" onclick="sortBy('uppgifter')">Uppgifter<span class="sort-ind" data-k="uppgifter"></span></th><th class="hm" title="Antal sökta jobb (jobbdagbok)" onclick="sortBy('sokta')">Sökta<span class="sort-ind" data-k="sokta"></span></th><th onclick="sortBy('status')">Status<span class="sort-ind" data-k="status"></span></th></tr></thead>
+              <tbody id="tBody"><tr><td colspan="11" class="loading">Laddar deltagare...</td></tr></tbody>
             </table>
             <div class="pg-bar"><span id="pgInfo"></span></div>
           </div>
@@ -1829,7 +1829,7 @@ function switchTab(id){
 
 // ═══ USERS-LISTA ═══
 async function loadUsers(){
-  document.getElementById('tBody').innerHTML='<tr><td colspan="10" class="loading">Laddar ärenden...</td></tr>';
+  document.getElementById('tBody').innerHTML='<tr><td colspan="11" class="loading">Laddar ärenden...</td></tr>';
   // Skicka inga filter till backend — visa ALLA registrerade användare.
   // Handläggaren styr själv via enhet- och handläggar-dropdownsen i UI:t.
   // (Tidigare filtrerade backend automatiskt på admin.kommun_id/enhet_id
@@ -1838,8 +1838,8 @@ async function loadUsers(){
   const filters={};
   let data;
   try{data=await post('admin_list_users',{filters,adminId:admin.id});}
-  catch(e){document.getElementById('tBody').innerHTML=`<tr><td colspan="10" class="loading" style="color:var(--rd)">API-anslutningsfel: ${escapeHtml(e.message)}</td></tr>`;showErr('Kunde inte hämta användare: '+e.message);return;}
-  if(data.error){document.getElementById('tBody').innerHTML=`<tr><td colspan="10" class="loading" style="color:var(--rd)">Fel från API: ${escapeHtml(data.error)}</td></tr>`;showErr('API-fel: '+data.error);return;}
+  catch(e){document.getElementById('tBody').innerHTML=`<tr><td colspan="11" class="loading" style="color:var(--rd)">API-anslutningsfel: ${escapeHtml(e.message)}</td></tr>`;showErr('Kunde inte hämta användare: '+e.message);return;}
+  if(data.error){document.getElementById('tBody').innerHTML=`<tr><td colspan="11" class="loading" style="color:var(--rd)">Fel från API: ${escapeHtml(data.error)}</td></tr>`;showErr('API-fel: '+data.error);return;}
   let backendUsers = data.data||data.users||(Array.isArray(data)?data:[]);
   // DIAGNOSTIK: logga vad backend returnerar så vi kan se varför Oliver Pettersson saknas
   console.log('[CVmatchen] Backend returnerade ' + backendUsers.length + ' användare:',
@@ -1851,7 +1851,7 @@ async function loadUsers(){
   );
   // Injicera demo-handläggare + deltagare för demonstration
   allUsers = injectDemoUsers(backendUsers);
-  if(allUsers.length===0) document.getElementById('tBody').innerHTML='<tr><td colspan="10" class="loading">Inga deltagare hittades</td></tr>';
+  if(allUsers.length===0) document.getElementById('tBody').innerHTML='<tr><td colspan="11" class="loading">Inga deltagare hittades</td></tr>';
 
   // Fyll enhet-filtret — inkludera "Utan enhet" för användare som loggat in själva
   const enheter = [...new Set(allUsers.map(u=>u.enheter?.name||u.enhet_name).filter(Boolean))].sort();
@@ -2019,6 +2019,7 @@ function _sortVal(u, key){
       const done = vals.filter(v=>v===true||(v&&v.done===true)).length;
       return vals.length ? done/vals.length : 0;
     }
+    case 'sprak':      return u.sprak?.totalt ? (u.sprak.ratt / u.sprak.totalt) : -1;
     case 'uppgifter':  return u.tasks ? (u.tasks.total||0) : 0;
     case 'sokta':      return u.applied_count || u.sokta_count || 0;
     case 'status':     return u.status || '';
@@ -2081,6 +2082,10 @@ function renderTable(users){
     const isPlaceholder = dn.isPlaceholder;
     const email=cvd.email||u.email||'';
     const taskInfo=u.tasks?`${u.tasks.completed||0}/${u.tasks.total||0}`:'—';
+    const sp=u.sprak||{pass:0,ratt:0,totalt:0};
+    const sprakCell = sp.totalt
+      ? `${Math.round(sp.ratt/sp.totalt*100)}% <span style="color:var(--mu);font-size:10px">(${sp.pass} pass)</span>`
+      : '<span style="color:var(--mu)">—</span>';
     const progData=u.progress||{},vals=Object.values(progData);
     const doneP=vals.filter(v=>v===true||(v&&v.done===true)).length;
     const progPct=vals.length?Math.round(doneP/vals.length*100):0;
@@ -2116,11 +2121,12 @@ function renderTable(users){
       <td class="dc">${escapeHtml(lastSeen)}</td>
       <td class="hm tc">${cvd.name||cvd.title?'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--gn);vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg>':'<span style="color:var(--mu)">—</span>'}</td>
       <td class="hm tc">${progPct}%</td>
+      <td class="hm tc">${sprakCell}</td>
       <td class="hm tc">${taskInfo}</td>
       <td class="hm tc" data-diary-uid="${uid}"><span style="color:var(--mu)">…</span></td>
       <td><span class="bd ${escapeHtml(u.status||'new')}">${SL[u.status]||'Ny'}</span></td>
     </tr>`;
-  }).join(''):'<tr><td colspan="10" class="loading">Inga deltagare matchar sökningen</td></tr>';
+  }).join(''):'<tr><td colspan="11" class="loading">Inga deltagare matchar sökningen</td></tr>';
   document.getElementById('pgInfo').textContent=`${f.length} deltagare`;
   // Hämta sökta-jobb-stats i batch (1 API-anrop för alla synliga deltagare)
   loadDiaryStats(f.map(u => u.user_id || u.id).filter(Boolean));

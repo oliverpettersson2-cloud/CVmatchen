@@ -305,7 +305,7 @@ export default async function handler(req, res) {
     }
 
     if (action === 'save_table') {
-      const ALLOWED = ['saved_cvs', 'matched_cvs', 'saved_edu', 'job_diary'];
+      const ALLOWED = ['saved_cvs', 'matched_cvs', 'saved_edu', 'job_diary', 'sprak_progress'];
       if (!ALLOWED.includes(table)) return res.status(400).json({ error: 'Invalid table: ' + table });
       const jwt = await verifyJwtUser(accessToken);
       if (!jwt) return res.status(401).json({ error: 'invalid_token' });
@@ -322,16 +322,17 @@ export default async function handler(req, res) {
     }
 
     if (action === 'load_all') {
-      const [cvRes, savedRes, matchedRes, progressRes, eduRes, diaryRes] = await Promise.all([
+      const [cvRes, savedRes, matchedRes, progressRes, eduRes, diaryRes, sprakRes] = await Promise.all([
         makeRequest(`${SUPABASE_URL}/rest/v1/cvs?user_id=eq.${userId}&select=data&limit=1`, { method: 'GET', headers: authHeaders(accessToken) }),
         makeRequest(`${SUPABASE_URL}/rest/v1/saved_cvs?user_id=eq.${userId}&select=data&limit=1`, { method: 'GET', headers: authHeaders(accessToken) }),
         makeRequest(`${SUPABASE_URL}/rest/v1/matched_cvs?user_id=eq.${userId}&select=data&limit=1`, { method: 'GET', headers: authHeaders(accessToken) }),
         makeRequest(`${SUPABASE_URL}/rest/v1/ovning_progress?user_id=eq.${userId}&select=progress&limit=1`, { method: 'GET', headers: authHeaders(accessToken) }),
         makeRequest(`${SUPABASE_URL}/rest/v1/saved_edu?user_id=eq.${userId}&select=data&limit=1`, { method: 'GET', headers: authHeaders(accessToken) }),
         makeRequest(`${SUPABASE_URL}/rest/v1/job_diary?user_id=eq.${userId}&select=data&limit=1`, { method: 'GET', headers: authHeaders(accessToken) }),
+        makeRequest(`${SUPABASE_URL}/rest/v1/sprak_progress?user_id=eq.${userId}&select=data&limit=1`, { method: 'GET', headers: authHeaders(accessToken) }),
       ]);
       const pick = (r, key) => { const rows = Array.isArray(r.data) ? r.data : []; return rows[0]?.[key] || null; };
-      return res.status(200).json({ cv: pick(cvRes, 'data'), savedCvs: pick(savedRes, 'data'), matchedCvs: pick(matchedRes, 'data'), progress: pick(progressRes, 'progress'), savedEdu: pick(eduRes, 'data'), jobDiary: pick(diaryRes, 'data') });
+      return res.status(200).json({ cv: pick(cvRes, 'data'), savedCvs: pick(savedRes, 'data'), matchedCvs: pick(matchedRes, 'data'), progress: pick(progressRes, 'progress'), savedEdu: pick(eduRes, 'data'), jobDiary: pick(diaryRes, 'data'), sprakProgress: pick(sprakRes, 'data') });
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -548,15 +549,32 @@ export default async function handler(req, res) {
       if (userIds.length) {
         const idsFilter = safeUuidIn(userIds);
         if (!idsFilter) return res.status(200).json({ data: [] });
-        const [cvRes, progressRes, taskRes] = await Promise.all([
+        const [cvRes, progressRes, taskRes, sprakRes] = await Promise.all([
           makeRequest(`${SUPABASE_URL}/rest/v1/cvs?user_id=in.(${idsFilter})&select=user_id,data,updated_at`, { method: 'GET', headers: serviceHeaders() }),
           makeRequest(`${SUPABASE_URL}/rest/v1/ovning_progress?user_id=in.(${idsFilter})&select=user_id,progress`, { method: 'GET', headers: serviceHeaders() }),
           makeRequest(`${SUPABASE_URL}/rest/v1/tasks?user_id=in.(${idsFilter})&select=user_id,status`, { method: 'GET', headers: serviceHeaders() }),
+          makeRequest(`${SUPABASE_URL}/rest/v1/sprak_progress?user_id=in.(${idsFilter})&select=user_id,data`, { method: 'GET', headers: serviceHeaders() }),
         ]);
         const cvMap = {};
         (Array.isArray(cvRes.data) ? cvRes.data : []).forEach(r => { cvMap[r.user_id] = r; });
         const progMap = {};
         (Array.isArray(progressRes.data) ? progressRes.data : []).forEach(r => { progMap[r.user_id] = r.progress; });
+        // Språkträning → { pass, ratt, totalt } per deltagare
+        const sprakMap = {};
+        (Array.isArray(sprakRes.data) ? sprakRes.data : []).forEach(r => {
+          const d = r.data || {};
+          let pass = 0, ratt = 0, totalt = 0;
+          Object.keys(d).forEach(bransch => {
+            if (bransch.charAt(0) === '_') return;          // _uppdaterad m.fl.
+            const b = d[bransch] || {};
+            Object.keys(b).forEach(mode => {
+              pass += b[mode].pass || 0;
+              ratt += b[mode].ratt || 0;
+              totalt += b[mode].totalt || 0;
+            });
+          });
+          sprakMap[r.user_id] = { pass, ratt, totalt };
+        });
         const taskMap = {};
         (Array.isArray(taskRes.data) ? taskRes.data : []).forEach(r => {
           if (!taskMap[r.user_id]) taskMap[r.user_id] = { total: 0, completed: 0, pending: 0 };
@@ -568,6 +586,7 @@ export default async function handler(req, res) {
           u.cv = cvMap[u.user_id] || null;
           u.progress = progMap[u.user_id] || null;
           u.tasks = taskMap[u.user_id] || { total: 0, completed: 0, pending: 0 };
+          u.sprak = sprakMap[u.user_id] || { pass: 0, ratt: 0, totalt: 0 };
         });
       }
       return res.status(200).json({ data: users });
@@ -818,7 +837,7 @@ export default async function handler(req, res) {
       if (!admin) return;
       const targetUserId = req.body?.targetUserId;
       if (!targetUserId) return res.status(400).json({ error: 'targetUserId krävs' });
-      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
       for (const t of TABLES) {
         await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${targetUserId}`, { method: 'DELETE', headers: serviceHeaders() });
       }
@@ -835,7 +854,7 @@ export default async function handler(req, res) {
       // GDPR: deltagare raderar sitt eget konto.
       const jwt = await verifyJwtUser(accessToken);
       if (!jwt) return res.status(401).json({ error: 'invalid_token' });
-      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
       for (const t of TABLES) {
         await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${jwt.id}`, { method: 'DELETE', headers: serviceHeaders() });
       }

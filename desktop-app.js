@@ -1127,8 +1127,12 @@
   window.switchView = function(view) {
     // ALIAS: 'intervju' och 'train' → 'ovningar' (numera "Träna"-fliken som rymmer båda)
     let openIntervju = false;
+    let openSprak = false;
     if (view === 'intervju') {
       openIntervju = true;
+      view = 'ovningar';
+    } else if (view === 'sprak') {
+      openSprak = true;
       view = 'ovningar';
     } else if (view === 'train') {
       view = 'ovningar';
@@ -1179,7 +1183,10 @@
     }
     if (view === 'ovningar') {
       // "Träna"-vyn — innehåller hub med Övningar + Intervjuträning + Uppgifter
-      if (openIntervju) {
+      if (openSprak) {
+        currentTrainCat = 'sprak';
+        renderTrainingHome();
+      } else if (openIntervju) {
         // Användaren klickade på en intervju-länk eller liknande shortcut
         currentTrainCat = 'intervju';
         renderTrainingHome();
@@ -5849,6 +5856,30 @@
 
     const grid = document.getElementById('ovGrid');
 
+    // Specialfall: språkträning vald — använd sprak.js (laddad i HTML:en)
+    if (currentTrainCat === 'sprak') {
+      document.getElementById('ov-home').style.display = 'none';
+      document.getElementById('ov-detail').style.display = 'block';
+      document.getElementById('ov-detail').innerHTML = `
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+          <button class="train-back ov-back" onclick="trainBackToHub()" style="margin:0;">← Tillbaka till Träna</button>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:22px;">🗣️</span>
+            <div>
+              <div style="font-size:17px;font-weight:800;color:#fff;">Språkträning</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.45);">Yrkessvenska med uppläsning</div>
+            </div>
+          </div>
+        </div>
+        <div id="trainView-sprak"></div>`;
+      setTimeout(() => {
+        if (typeof window.sprInit === 'function') {
+          try { window.sprInit(); } catch(e) { console.warn('sprInit fail:', e); }
+        }
+      }, 50);
+      return;
+    }
+
     // Specialfall: intervjuträning vald — använd intervju.js (laddad i HTML:en)
     if (currentTrainCat === 'intervju') {
       document.getElementById('ov-home').style.display = 'none';
@@ -5956,6 +5987,19 @@
               </div>
             </div>
             <div style="margin-top:auto;font-size:12px;color:#a78bfa;font-weight:700;">AI-driven · ny session</div>
+          </div>
+
+          <!-- Språkträning -->
+          <div class="ov-card train-cat-card" onclick="switchView('sprak')"
+               style="border-color:rgba(62,180,137,0.4);background:linear-gradient(135deg,rgba(62,180,137,0.10),rgba(62,180,137,0.03));padding:22px 20px;display:flex;flex-direction:column;gap:14px;min-height:170px;cursor:pointer;">
+            <div style="display:flex;align-items:flex-start;gap:14px;">
+              <div class="ov-card-icon" style="background:rgba(62,180,137,0.2);color:#3eb489;font-size:26px;flex-shrink:0;">🗣️</div>
+              <div>
+                <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:2px;">Språkträning</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.45;">Yrkessvenska för vård, lager, service och bygg — allt går att lyssna på.</div>
+              </div>
+            </div>
+            <div style="margin-top:auto;font-size:12px;color:#3eb489;font-weight:700;">Med uppläsning</div>
           </div>
 
           <!-- Uppgifter från handläggare -->

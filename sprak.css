@@ -1,0 +1,203 @@
+/* ============================================================
+   CVmatchen — Språkträning, stilmall
+   Scopad under #trainView-sprak så inget läcker ut i appen.
+   Mörkt tema som resten av appen, stora träffytor för mobil.
+   ============================================================ */
+
+#trainView-sprak .spr-root {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 4px 0 40px;
+  color: #fff;
+}
+
+#trainView-sprak .spr-screen { display: none; }
+#trainView-sprak .spr-screen.spr-screen--active { display: block; }
+
+#trainView-sprak .spr-h {
+  font-size: 22px; font-weight: 800; margin: 6px 0 6px; color: #fff; line-height: 1.25;
+}
+#trainView-sprak .spr-sub {
+  font-size: 14px; color: rgba(255,255,255,0.6); margin: 0 0 20px; line-height: 1.5;
+}
+
+/* ── Knappar ───────────────────────────────────────────────── */
+#trainView-sprak .spr-back {
+  background: none; border: none; color: rgba(255,255,255,0.55);
+  font-size: 13px; cursor: pointer; padding: 6px 0; margin-bottom: 8px;
+}
+#trainView-sprak .spr-back:hover { color: #fff; }
+
+#trainView-sprak .spr-primary,
+#trainView-sprak .spr-secondary {
+  border: none; border-radius: 12px; padding: 14px 22px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+}
+#trainView-sprak .spr-primary { background: #a78bfa; color: #1a1a2e; }
+#trainView-sprak .spr-secondary {
+  background: rgba(255,255,255,0.08); color: #fff;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+/* ── Branschval ────────────────────────────────────────────── */
+#trainView-sprak .spr-branches {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px;
+}
+#trainView-sprak .spr-branch {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px; padding: 18px 16px; cursor: pointer; text-align: left;
+  transition: border-color .15s, transform .15s, background .15s;
+}
+#trainView-sprak .spr-branch:hover {
+  border-color: #a78bfa; background: rgba(167,139,250,0.10); transform: translateY(-2px);
+}
+#trainView-sprak .spr-branch-i { font-size: 28px; }
+#trainView-sprak .spr-branch-n { font-size: 15px; font-weight: 800; color: #fff; }
+#trainView-sprak .spr-branch-m { font-size: 11.5px; color: rgba(255,255,255,0.45); }
+
+/* ── Övningstyper ──────────────────────────────────────────── */
+#trainView-sprak .spr-modes { display: grid; gap: 12px; }
+#trainView-sprak .spr-mode {
+  display: grid; grid-template-columns: 42px 1fr; grid-template-rows: auto auto auto;
+  column-gap: 12px; align-items: center;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px; padding: 16px; cursor: pointer; text-align: left;
+  transition: border-color .15s, background .15s;
+}
+#trainView-sprak .spr-mode:hover { border-color: #a78bfa; background: rgba(167,139,250,0.08); }
+#trainView-sprak .spr-mode-i { grid-row: 1 / 4; font-size: 26px; text-align: center; }
+#trainView-sprak .spr-mode-n { font-size: 15px; font-weight: 800; color: #fff; }
+#trainView-sprak .spr-mode-d { font-size: 12.5px; color: rgba(255,255,255,0.55); line-height: 1.45; }
+#trainView-sprak .spr-mode-p { font-size: 11.5px; color: #3eb489; font-weight: 700; }
+#trainView-sprak .spr-mode-p:empty { display: none; }
+
+/* ── Övningsvy ─────────────────────────────────────────────── */
+#trainView-sprak .spr-top {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
+}
+#trainView-sprak .spr-top .spr-back { margin: 0; white-space: nowrap; }
+#trainView-sprak .spr-progress {
+  flex: 1; height: 6px; background: rgba(255,255,255,0.10);
+  border-radius: 3px; overflow: hidden;
+}
+#trainView-sprak .spr-progress-bar {
+  height: 100%; width: 0; background: #a78bfa; border-radius: 3px; transition: width .25s;
+}
+#trainView-sprak .spr-count {
+  font-size: 12px; color: rgba(255,255,255,0.5); font-variant-numeric: tabular-nums;
+}
+
+#trainView-sprak .spr-q-label {
+  font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.65);
+  text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 10px; line-height: 1.5;
+}
+#trainView-sprak .spr-word {
+  font-size: 30px; font-weight: 800; color: #fff; margin-bottom: 8px; line-height: 1.2;
+}
+#trainView-sprak .spr-phrase {
+  font-size: 19px; font-weight: 600; color: #fff; margin-bottom: 8px; line-height: 1.45;
+}
+#trainView-sprak .spr-listen { margin: 18px 0 10px; }
+#trainView-sprak .spr-listen .spr-hear { width: 68px; height: 68px; font-size: 28px; }
+#trainView-sprak .spr-hint { font-size: 13.5px; color: rgba(255,255,255,0.55); margin-bottom: 8px; }
+
+/* ── Lästext ───────────────────────────────────────────────── */
+#trainView-sprak .spr-text {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 12px; padding: 16px; margin-bottom: 18px;
+}
+#trainView-sprak .spr-text-h {
+  font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+#trainView-sprak .spr-text p {
+  font-size: 15px; line-height: 1.75; color: rgba(255,255,255,0.88); margin: 0;
+}
+#trainView-sprak .spr-text--mini {
+  display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin-bottom: 14px;
+}
+#trainView-sprak .spr-text--mini span { font-size: 13px; color: rgba(255,255,255,0.6); }
+
+/* ── Svarsalternativ ───────────────────────────────────────── */
+#trainView-sprak .spr-alts { display: grid; gap: 10px; margin: 16px 0; }
+#trainView-sprak .spr-alt {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  width: 100%; background: rgba(255,255,255,0.05);
+  border: 1.5px solid rgba(255,255,255,0.14); border-radius: 12px;
+  padding: 15px 16px; cursor: pointer; text-align: left;
+  font-size: 15px; color: #fff; line-height: 1.45;
+  transition: border-color .15s, background .15s;
+}
+#trainView-sprak .spr-alt:hover:not(.spr-alt--locked) {
+  border-color: #a78bfa; background: rgba(167,139,250,0.08);
+}
+#trainView-sprak .spr-alt-t { flex: 1; }
+#trainView-sprak .spr-alt--locked { cursor: default; }
+#trainView-sprak .spr-alt--right {
+  border-color: #3eb489; background: rgba(62,180,137,0.15);
+}
+#trainView-sprak .spr-alt--wrong {
+  border-color: #ef4444; background: rgba(239,68,68,0.12);
+}
+
+/* ── Återkoppling ──────────────────────────────────────────── */
+#trainView-sprak .spr-feedback {
+  font-size: 14px; line-height: 1.6; padding: 0; margin: 0;
+}
+#trainView-sprak .spr-feedback:empty { display: none; }
+#trainView-sprak .spr-feedback--ok,
+#trainView-sprak .spr-feedback--no {
+  padding: 12px 14px; border-radius: 10px; margin-bottom: 14px;
+}
+#trainView-sprak .spr-feedback--ok { background: rgba(62,180,137,0.14); color: #a7f3d0; }
+#trainView-sprak .spr-feedback--no { background: rgba(239,68,68,0.12); color: #fecaca; }
+#trainView-sprak .spr-feedback em {
+  display: block; margin-top: 6px; font-style: italic; color: rgba(255,255,255,0.75);
+}
+
+#trainView-sprak .spr-next {
+  width: 100%; background: #a78bfa; color: #1a1a2e; border: none;
+  border-radius: 12px; padding: 15px; font-size: 15px; font-weight: 800; cursor: pointer;
+}
+
+/* ── Klart ─────────────────────────────────────────────────── */
+#trainView-sprak .spr-done { text-align: center; padding: 30px 0; }
+#trainView-sprak .spr-done-i { font-size: 52px; margin-bottom: 8px; }
+#trainView-sprak .spr-done-btns {
+  display: flex; gap: 10px; justify-content: center; margin-top: 22px; flex-wrap: wrap;
+}
+
+/* ── Uppläsningsknapp ──────────────────────────────────────── */
+#trainView-sprak .spr-hear {
+  flex: 0 0 auto;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(167,139,250,0.16); border: 1px solid rgba(167,139,250,0.35);
+  color: #fff; font-size: 16px; cursor: pointer; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  vertical-align: middle; transition: background .15s, transform .15s;
+}
+#trainView-sprak .spr-hear:hover { background: rgba(167,139,250,0.30); }
+#trainView-sprak .spr-hear.spr-speaking {
+  background: #a78bfa; color: #1a1a2e; animation: sprPulse 1.1s ease-in-out infinite;
+}
+@keyframes sprPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.12); }
+}
+
+/* ── Mobil ─────────────────────────────────────────────────── */
+@media (max-width: 560px) {
+  #trainView-sprak .spr-h { font-size: 19px; }
+  #trainView-sprak .spr-word { font-size: 25px; }
+  #trainView-sprak .spr-phrase { font-size: 17px; }
+  #trainView-sprak .spr-branches { grid-template-columns: 1fr 1fr; gap: 10px; }
+  #trainView-sprak .spr-branch { padding: 14px 12px; }
+  #trainView-sprak .spr-alt { padding: 14px; font-size: 14.5px; }
+}
+
+/* Respektera minskad rörelse */
+@media (prefers-reduced-motion: reduce) {
+  #trainView-sprak .spr-hear.spr-speaking { animation: none; }
+  #trainView-sprak .spr-branch:hover { transform: none; }
+}
