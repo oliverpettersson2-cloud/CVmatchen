@@ -563,7 +563,7 @@ export default async function handler(req, res) {
         const sprakMap = {};
         (Array.isArray(sprakRes.data) ? sprakRes.data : []).forEach(r => {
           const d = r.data || {};
-          let pass = 0, ratt = 0, totalt = 0;
+          let pass = 0, ratt = 0, totalt = 0, tidSek = 0;
           Object.keys(d).forEach(bransch => {
             if (bransch.charAt(0) === '_') return;          // _uppdaterad m.fl.
             const b = d[bransch] || {};
@@ -571,9 +571,10 @@ export default async function handler(req, res) {
               pass += b[mode].pass || 0;
               ratt += b[mode].ratt || 0;
               totalt += b[mode].totalt || 0;
+              tidSek += b[mode].tidSek || 0;
             });
           });
-          sprakMap[r.user_id] = { pass, ratt, totalt };
+          sprakMap[r.user_id] = { pass, ratt, totalt, tidSek };
         });
         const taskMap = {};
         (Array.isArray(taskRes.data) ? taskRes.data : []).forEach(r => {
@@ -586,7 +587,7 @@ export default async function handler(req, res) {
           u.cv = cvMap[u.user_id] || null;
           u.progress = progMap[u.user_id] || null;
           u.tasks = taskMap[u.user_id] || { total: 0, completed: 0, pending: 0 };
-          u.sprak = sprakMap[u.user_id] || { pass: 0, ratt: 0, totalt: 0 };
+          u.sprak = sprakMap[u.user_id] || { pass: 0, ratt: 0, totalt: 0, tidSek: 0 };
         });
       }
       return res.status(200).json({ data: users });

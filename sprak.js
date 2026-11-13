@@ -203,7 +203,7 @@
   };
 
   // ── Tillstånd ───────────────────────────────────────────────
-  var state = { branch: null, mode: null, items: [], idx: 0, correct: 0, answered: false };
+  var state = { branch: null, mode: null, items: [], idx: 0, correct: 0, answered: false, finished: false };
   var PKEY = 'cvm_sprak_v1';
 
   function loadProgress() {
@@ -225,18 +225,87 @@
       }
     } catch (e) {}
   }
-  function recordResult(branch, mode, correct, total) {
+  function recordResult(branch, mode, correct, total, aktivSek) {
     var p = loadProgress();
     if (!p[branch]) p[branch] = {};
-    var prev = p[branch][mode] || { pass: 0, ratt: 0, totalt: 0 };
+    var prev = p[branch][mode] || { pass: 0, ratt: 0, totalt: 0, tidSek: 0 };
     p[branch][mode] = {
       pass: prev.pass + 1,
       ratt: prev.ratt + correct,
       totalt: prev.totalt + total,
+      tidSek: (prev.tidSek || 0) + (aktivSek || 0),
       senast: new Date().toISOString()
     };
     p._uppdaterad = new Date().toISOString();
     saveProgress(p);
+  }
+
+  /* ── Tidloggning ────────────────────────────────────────────
+     Mäter AKTIV tid, inte hur länge fliken varit öppen. Tiden
+     pausas när fliken döljs och när deltagaren varit stilla en
+     stund. Det är skillnaden mellan en logg en kommun kan lita
+     på och en som bara visar att webbläsaren stod på.
+     ──────────────────────────────────────────────────────────── */
+  var IDLE_MS = 90000;             // 90 s utan interaktion → räknas inte
+  var timer = {
+    aktivMs: 0,
+    sedan: null,                   // tidpunkt då pågående intervall började
+    senasteAktivitet: 0,
+    idleKoll: null,
+
+    start: function () {
+      this.aktivMs = 0;
+      this.senasteAktivitet = Date.now();
+      this.sedan = Date.now();
+      var self = this;
+      clearInterval(this.idleKoll);
+      this.idleKoll = setInterval(function () {
+        if (self.sedan && Date.now() - self.senasteAktivitet > IDLE_MS) self.paus();
+      }, 5000);
+    },
+
+    // Räknar in tiden fram till nu och stoppar klockan
+    paus: function () {
+      if (this.sedan) {
+        this.aktivMs += Date.now() - this.sedan;
+        this.sedan = null;
+      }
+    },
+
+    // Startar om klockan efter paus — bara om ett pass pågår
+    ater: function () {
+      if (!this.sedan && this.idleKoll) {
+        this.sedan = Date.now();
+        this.senasteAktivitet = Date.now();
+      }
+    },
+
+    puls: function () {
+      this.senasteAktivitet = Date.now();
+      this.ater();
+    },
+
+    stopp: function () {
+      this.paus();
+      clearInterval(this.idleKoll);
+      this.idleKoll = null;
+      return Math.round(this.aktivMs / 1000);
+    }
+  };
+
+  // Fliken döljs → pausa. Syns igen → fortsätt.
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) timer.paus(); else timer.puls();
+  });
+
+  function formatTid(sek) {
+    sek = Math.max(0, Math.round(sek || 0));
+    if (sek < 60) return sek + ' sek';
+    var min = Math.round(sek / 60);
+    if (min < 60) return min + ' min';
+    var h = Math.floor(min / 60);
+    var m = min % 60;
+    return h + ' h' + (m ? ' ' + m + ' min' : '');
   }
 
   // ── Uppläsning (Web Speech API) ─────────────────────────────
@@ -393,7 +462,8 @@
       if (!el) return;
       var d = p[m];
       el.textContent = d && d.totalt
-        ? Math.round((d.ratt / d.totalt) * 100) + '% rätt · ' + d.pass + ' pass'
+        ? Math.round((d.ratt / d.totalt) * 100) + '% rätt · ' + d.pass + ' pass' +
+          (d.tidSek ? ' · ' + formatTid(d.tidSek) : '')
         : '';
     });
   }
@@ -510,13 +580,17 @@
   }
 
   function next() {
+    if (state.finished) return;
     state.idx++;
     if (state.idx >= state.items.length) return finish();
     renderCard();
   }
 
   function finish() {
-    recordResult(state.branch, state.mode, state.correct, state.items.length);
+    if (state.finished) return;
+    state.finished = true;
+    var aktivSek = timer.stopp();
+    recordResult(state.branch, state.mode, state.correct, state.items.length, aktivSek);
     var pct = Math.round((state.correct / state.items.length) * 100);
     var omdome = pct >= 80 ? 'Mycket bra jobbat!' : pct >= 50 ? 'Bra — fortsätt träna!' : 'Kör en gång till, det sitter snart.';
     var d = $('#sprDone');
@@ -524,7 +598,7 @@
       d.innerHTML =
         '<div class="spr-done-i">' + (pct >= 80 ? '🎉' : '💪') + '</div>' +
         '<h2 class="spr-h">' + state.correct + ' av ' + state.items.length + ' rätt</h2>' +
-        '<p class="spr-sub">' + omdome + '</p>' +
+        '<p class="spr-sub">' + omdome + '<br><span class="spr-tid">⏱ ' + formatTid(aktivSek) + ' aktiv träning</span></p>' +
         '<div class="spr-done-btns">' +
         '  <button type="button" class="spr-primary" id="sprAgain">Träna igen</button>' +
         '  <button type="button" class="spr-secondary" id="sprToMenu">Tillbaka</button>' +
@@ -538,7 +612,9 @@
     state.items = buildItems(state.branch, mode);
     state.idx = 0;
     state.correct = 0;
+    state.finished = false;
     if (!state.items.length) return;
+    timer.start();
     showScreen('ovning');
     renderCard();
   }
@@ -549,6 +625,7 @@
     if (!root || root.dataset.sprBound === '1') return;
 
     root.addEventListener('click', function (e) {
+      timer.puls();
       var hear = e.target.closest('.spr-hear');
       if (hear) { e.preventDefault(); e.stopPropagation(); tts.speak(hear.dataset.say, hear); return; }
 
@@ -564,7 +641,7 @@
       if (e.target.closest('#sprNext')) { next(); return; }
       if (e.target.closest('#sprAgain')) { startOvning(state.mode); return; }
       if (e.target.closest('#sprToMenu')) { tts.cancel(); renderMenu(); showScreen('menu'); return; }
-      if (e.target.closest('#sprBackMenu')) { tts.cancel(); renderMenu(); showScreen('menu'); return; }
+      if (e.target.closest('#sprBackMenu')) { timer.stopp(); tts.cancel(); renderMenu(); showScreen('menu'); return; }
       if (e.target.closest('#sprBackSetup')) { tts.cancel(); renderBranches(); showScreen('setup'); return; }
     });
 
@@ -587,13 +664,18 @@
 
   // Hur många pass deltagaren gjort totalt — används av Träna-hubben
   window.sprSummary = function () {
-    var p = loadProgress(), pass = 0, ratt = 0, tot = 0;
+    var p = loadProgress(), pass = 0, ratt = 0, tot = 0, tid = 0;
     Object.keys(p).forEach(function (b) {
       if (b.charAt(0) === '_') return;
       Object.keys(p[b]).forEach(function (m) {
-        pass += p[b][m].pass || 0; ratt += p[b][m].ratt || 0; tot += p[b][m].totalt || 0;
+        pass += p[b][m].pass || 0; ratt += p[b][m].ratt || 0;
+        tot += p[b][m].totalt || 0; tid += p[b][m].tidSek || 0;
       });
     });
-    return { pass: pass, ratt: ratt, totalt: tot, andel: tot ? Math.round((ratt / tot) * 100) : null };
+    return {
+      pass: pass, ratt: ratt, totalt: tot, tidSek: tid,
+      tidText: formatTid(tid),
+      andel: tot ? Math.round((ratt / tot) * 100) : null
+    };
   };
 })();

@@ -11053,7 +11053,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
       try {
         var ss = window.sprSummary();
         sprakMeta.textContent = ss.pass
-          ? ss.pass + ' pass · ' + ss.andel + '% rätt'
+          ? ss.pass + ' pass · ' + ss.andel + '% rätt' + (ss.tidSek ? ' · ' + ss.tidText : '')
           : 'Inte påbörjat';
       } catch (e) {}
     }

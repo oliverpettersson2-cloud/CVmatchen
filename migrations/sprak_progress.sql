@@ -5,6 +5,13 @@
 --
 -- Samma form som saved_cvs / job_diary så den befintliga
 -- save_table-vägen i api/supabase.js fungerar utan särkod.
+--
+-- data-blobben ser ut så här:
+--   { "<bransch>": { "<ovningstyp>": { pass, ratt, totalt, tidSek, senast } },
+--     "_uppdaterad": "<iso-tid>" }
+-- tidSek = AKTIV träningstid i sekunder. Klockan pausas när fliken
+-- döljs och efter 90 s utan interaktion, så loggen visar faktisk
+-- träning och inte hur länge webbläsaren stått på.
 -- ============================================================
 
 create table if not exists public.sprak_progress (
