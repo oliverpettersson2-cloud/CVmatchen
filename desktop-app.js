@@ -5996,10 +5996,10 @@
               <div class="ov-card-icon" style="background:rgba(62,180,137,0.2);color:#3eb489;font-size:26px;flex-shrink:0;">🗣️</div>
               <div>
                 <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:2px;">Språkträning</div>
-                <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.45;">Yrkessvenska för vård, lager, service och bygg — allt går att lyssna på.</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.45;">Yrkessvenska med test — tider, regler och fyra branscher. Allt går att lyssna på.</div>
               </div>
             </div>
-            <div style="margin-top:auto;font-size:12px;color:#3eb489;font-weight:700;">Med uppläsning</div>
+            <div style="margin-top:auto;font-size:12px;color:#3eb489;font-weight:700;">Testa din nivå · med uppläsning</div>
           </div>
 
           <!-- Uppgifter från handläggare -->

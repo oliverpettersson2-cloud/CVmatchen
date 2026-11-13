@@ -35,19 +35,25 @@ Grunden är byggd. Det är därför ett halvår räcker.
 
 ### Januari 2027 — grunden
 - [ ] Datamodell: `deltagare` utökas med spår, fas, start/slut, telefon, status
-- [ ] **Fält för sfi-kurs och betyg vid inskrivning.** Utan det går sambandet
+- [~] **Fält för sfi-kurs och betyg vid inskrivning.** Utan det går sambandet
       mellan vår skala och ett externt mått inte att räkna fram i efterhand.
-      Kostar ett fält nu, omöjligt att rädda i juni.
+      *Delvis klart 2026-11-13:* deltagaren uppger sfi-kurs frivilligt i
+      språktestets intro (sparas med varje testresultat). **Kvar:** ett fält
+      där personalen registrerar verifierad kurs och betyg vid inskrivning —
+      självrapporterat räcker inte som valideringsunderlag.
 - [ ] **Femte rollnivå: KBT/fysio** — ser bara egna bokningar och deltagarnamn
 - [ ] **F1 Närvaro** — dagens pass, ett klick per deltagare, frånvarotyp + kommentar
 - [ ] F1.6 Närvaro i procent per deltagare och vecka
-- [ ] Ändra inaktivitetspaus i tidloggningen från 90 sek till 5 min (F1.4)
+- [x] Ändra inaktivitetspaus i tidloggningen från 90 sek till 5 min (F1.4) — *klart 2026-11-13*
 - [ ] B3: logga även *läsning* av deltagardata, inte bara åtgärder
 - [ ] B2: skärp filtreringen från enhet till enskild deltagare
 
 ### Februari 2027 — språk
-- [ ] Innehållsvolym i språkmodulen (väntar på besked om digital tid, se nedan)
-- [ ] **Eget språktest med egen skala** — fyra steg namngivna i vad deltagaren
+- [x] Nytt grundområde *Allmänt på jobbet* med två nya övningstyper: **tider**
+      (halv åtta = 07.30) och **regelord** (måste / får / får inte / behöver inte
+      / borde) — *klart 2026-11-13*
+- [ ] Innehållsvolym i branschområdena (väntar på besked om digital tid, se nedan)
+- [x] **Eget språktest med egen skala** — *klart 2026-11-13* — fyra steg namngivna i vad deltagaren
       klarar på jobbet (Komma igång / Klara vardagen / Delta i arbetet /
       Klara sig själv). Varje uppgift taggas med avsedd nivå; svårighetsgraden
       kalibreras med sfi kurs C och D som riktmärke. Lagra både poäng och steg.

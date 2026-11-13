@@ -906,7 +906,7 @@ td{padding:10px 13px;vertical-align:middle}
           <!-- Tabell -->
           <div class="tw">
             <table>
-              <thead><tr><th style="width:36px;text-align:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--mu);vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></th><th onclick="sortBy('namn')">Namn<span class="sort-ind" data-k="namn"></span></th><th class="hm" onclick="sortBy('handlaggare')">Handläggare<span class="sort-ind" data-k="handlaggare"></span></th><th class="hm" onclick="sortBy('enhet')">Enhet<span class="sort-ind" data-k="enhet"></span></th><th onclick="sortBy('lastSeen')">Senast aktiv<span class="sort-ind" data-k="lastSeen"></span></th><th class="hm" onclick="sortBy('cv')">CV<span class="sort-ind" data-k="cv"></span></th><th class="hm" onclick="sortBy('ovningar')">Övningar<span class="sort-ind" data-k="ovningar"></span></th><th class="hm" title="Andel rätt, antal pass och aktiv träningstid (pausas vid inaktivitet)" onclick="sortBy('sprak')">Språk<span class="sort-ind" data-k="sprak"></span></th><th class="hm" onclick="sortBy('uppgifter')">Uppgifter<span class="sort-ind" data-k="uppgifter"></span></th><th class="hm" title="Antal sökta jobb (jobbdagbok)" onclick="sortBy('sokta')">Sökta<span class="sort-ind" data-k="sokta"></span></th><th onclick="sortBy('status')">Status<span class="sort-ind" data-k="status"></span></th></tr></thead>
+              <thead><tr><th style="width:36px;text-align:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--mu);vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></th><th onclick="sortBy('namn')">Namn<span class="sort-ind" data-k="namn"></span></th><th class="hm" onclick="sortBy('handlaggare')">Handläggare<span class="sort-ind" data-k="handlaggare"></span></th><th class="hm" onclick="sortBy('enhet')">Enhet<span class="sort-ind" data-k="enhet"></span></th><th onclick="sortBy('lastSeen')">Senast aktiv<span class="sort-ind" data-k="lastSeen"></span></th><th class="hm" onclick="sortBy('cv')">CV<span class="sort-ind" data-k="cv"></span></th><th class="hm" onclick="sortBy('ovningar')">Övningar<span class="sort-ind" data-k="ovningar"></span></th><th class="hm" title="Steg och poäng på senaste språktestet med förändring sedan förra, samt andel rätt i övningar och aktiv tid" onclick="sortBy('sprak')">Språk<span class="sort-ind" data-k="sprak"></span></th><th class="hm" onclick="sortBy('uppgifter')">Uppgifter<span class="sort-ind" data-k="uppgifter"></span></th><th class="hm" title="Antal sökta jobb (jobbdagbok)" onclick="sortBy('sokta')">Sökta<span class="sort-ind" data-k="sokta"></span></th><th onclick="sortBy('status')">Status<span class="sort-ind" data-k="status"></span></th></tr></thead>
               <tbody id="tBody"><tr><td colspan="11" class="loading">Laddar deltagare...</td></tr></tbody>
             </table>
             <div class="pg-bar"><span id="pgInfo"></span></div>
@@ -2019,7 +2019,8 @@ function _sortVal(u, key){
       const done = vals.filter(v=>v===true||(v&&v.done===true)).length;
       return vals.length ? done/vals.length : 0;
     }
-    case 'sprak':      return u.sprak?.totalt ? (u.sprak.ratt / u.sprak.totalt) : -1;
+    // Sortera på testpoäng i första hand; utan test på andel rätt i övningar (alltid under testade)
+    case 'sprak':      return u.sprak?.test ? u.sprak.test.poang : (u.sprak?.totalt ? (u.sprak.ratt / u.sprak.totalt) - 1 : -2);
     case 'uppgifter':  return u.tasks ? (u.tasks.total||0) : 0;
     case 'sokta':      return u.applied_count || u.sokta_count || 0;
     case 'status':     return u.status || '';
@@ -2087,8 +2088,20 @@ function renderTable(users){
       ? (sp.tidSek < 3600 ? Math.round(sp.tidSek/60)+' min'
                           : Math.floor(sp.tidSek/3600)+' h '+Math.round((sp.tidSek%3600)/60)+' min')
       : null;
-    const sprakCell = sp.totalt
-      ? `${Math.round(sp.ratt/sp.totalt*100)}%<br><span style="color:var(--mu);font-size:10px">${sp.pass} pass${sprakTid ? ' · '+sprakTid : ''}</span>`
+    const spT = sp.test;
+    const spPil = (spT && spT.forandring != null)
+      ? (spT.forandring > 0 ? ` <span style="color:#3eb489">↑${spT.forandring}</span>`
+        : spT.forandring < 0 ? ` <span style="color:var(--rd)">↓${Math.abs(spT.forandring)}</span>` : ' ±0')
+      : '';
+    const spTestRad = spT
+      ? `<span style="display:block;font-weight:700" title="Senaste språktest ${(spT.datum||'').split('T')[0]}">Steg ${spT.steg} · ${spT.poang} p${spPil}</span>`
+      : '';
+    const spOvnRad = sp.totalt
+      ? `${Math.round(sp.ratt/sp.totalt*100)}% rätt · ${sp.pass} pass`
+      : '';
+    const spDetaljer = [spOvnRad, sprakTid].filter(Boolean).join(' · ');
+    const sprakCell = (sp.totalt || spT)
+      ? `${spTestRad}${spDetaljer ? `<span style="color:var(--mu);font-size:10px">${spDetaljer}</span>` : ''}`
       : '<span style="color:var(--mu)">—</span>';
     const progData=u.progress||{},vals=Object.values(progData);
     const doneP=vals.filter(v=>v===true||(v&&v.done===true)).length;

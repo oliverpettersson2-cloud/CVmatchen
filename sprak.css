@@ -206,3 +206,115 @@
   #trainView-sprak .spr-hear.spr-speaking { animation: none; }
   #trainView-sprak .spr-branch:hover { transform: none; }
 }
+
+/* ============================================================
+   Språktest + Allmänt på jobbet
+   ============================================================ */
+
+/* Författar-CSS (display:grid på .spr-mode) slår webbläsarens
+   [hidden]. Utan den här raden syns dolda övningstyper ändå. */
+#trainView-sprak [hidden] { display: none !important; }
+
+/* ── Testkort på startsidan ────────────────────────────────── */
+#trainView-sprak .spr-testcard {
+  display: flex; align-items: center; gap: 14px; width: 100%;
+  background: linear-gradient(135deg, rgba(62,180,137,0.16), rgba(62,180,137,0.05));
+  border: 1.5px solid rgba(62,180,137,0.45); border-radius: 16px;
+  padding: 16px 18px; margin-bottom: 16px;
+  cursor: pointer; text-align: left; color: #fff;
+  transition: border-color .15s, transform .15s;
+}
+#trainView-sprak .spr-testcard:hover { border-color: #3eb489; transform: translateY(-1px); }
+#trainView-sprak .spr-testcard-i { font-size: 28px; flex: 0 0 auto; }
+#trainView-sprak .spr-testcard-body { flex: 1; display: grid; gap: 2px; min-width: 0; }
+#trainView-sprak .spr-testcard-n { font-size: 16px; font-weight: 800; }
+#trainView-sprak .spr-testcard-d { font-size: 12.5px; color: rgba(255,255,255,0.65); line-height: 1.45; }
+#trainView-sprak .spr-testcard-cta { font-size: 13px; font-weight: 800; color: #3eb489; white-space: nowrap; }
+
+/* ── Testintro ─────────────────────────────────────────────── */
+#trainView-sprak .spr-test-fakta {
+  margin: 0 0 18px; padding-left: 18px;
+  display: grid; gap: 6px;
+  color: rgba(255,255,255,0.78); font-size: 14px; line-height: 1.6;
+}
+#trainView-sprak .spr-test-fakta b { color: #fff; }
+#trainView-sprak .spr-test-note {
+  background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.35);
+  color: #fde68a; border-radius: 10px; padding: 11px 14px;
+  font-size: 13.5px; line-height: 1.5; margin-bottom: 18px;
+}
+#trainView-sprak .spr-sfi-q { margin-bottom: 20px; }
+#trainView-sprak .spr-sfi-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+#trainView-sprak .spr-sfi {
+  background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.16);
+  color: #fff; border-radius: 999px; padding: 9px 15px; font-size: 14px; cursor: pointer;
+}
+#trainView-sprak .spr-sfi--on { background: rgba(167,139,250,0.22); border-color: #a78bfa; font-weight: 700; }
+
+/* ── Testfrågor ────────────────────────────────────────────── */
+#trainView-sprak .spr-quote {
+  font-size: 19px; font-weight: 600; line-height: 1.5; color: #fff;
+  background: rgba(255,255,255,0.05); border-left: 3px solid #a78bfa;
+  border-radius: 0 10px 10px 0; padding: 14px 16px; margin-bottom: 14px;
+}
+#trainView-sprak .spr-vetinte {
+  display: block; margin: 0 auto;
+  background: none; border: 1px dashed rgba(255,255,255,0.28);
+  color: rgba(255,255,255,0.7); border-radius: 10px;
+  padding: 11px 22px; font-size: 14px; cursor: pointer;
+}
+#trainView-sprak .spr-vetinte:hover { color: #fff; border-color: rgba(255,255,255,0.55); }
+
+/* ── Tider och förklaringar i övningarna ───────────────────── */
+#trainView-sprak .spr-alt--tid .spr-alt-t {
+  font-size: 22px; font-weight: 800; letter-spacing: 0.5px;
+  font-variant-numeric: tabular-nums;
+}
+#trainView-sprak .spr-forklaring {
+  display: block; margin-top: 8px; color: rgba(255,255,255,0.92); line-height: 1.55;
+}
+#trainView-sprak .spr-forklaring .spr-hear { width: 30px; height: 30px; font-size: 13px; }
+
+/* ── Testresultat ──────────────────────────────────────────── */
+#trainView-sprak .spr-result { padding: 8px 0; }
+#trainView-sprak .spr-steg-badge {
+  display: inline-block; background: #3eb489; color: #10241c;
+  font-weight: 900; font-size: 13px; letter-spacing: 0.6px; text-transform: uppercase;
+  border-radius: 999px; padding: 5px 14px; margin-bottom: 8px;
+}
+#trainView-sprak .spr-skala { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 4px 0 18px; }
+#trainView-sprak .spr-skala-steg {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 10px; padding: 9px 6px; text-align: center; display: grid; gap: 2px;
+}
+#trainView-sprak .spr-skala-steg span { font-size: 17px; font-weight: 800; color: rgba(255,255,255,0.4); }
+#trainView-sprak .spr-skala-steg small { font-size: 10.5px; color: rgba(255,255,255,0.4); line-height: 1.3; }
+#trainView-sprak .spr-skala-steg--nadd { background: rgba(62,180,137,0.18); border-color: rgba(62,180,137,0.55); }
+#trainView-sprak .spr-skala-steg--nadd span,
+#trainView-sprak .spr-skala-steg--nadd small { color: #a7f3d0; }
+#trainView-sprak .spr-poang { font-size: 15px; color: rgba(255,255,255,0.75); margin-bottom: 6px; }
+#trainView-sprak .spr-poang b { font-size: 30px; color: #fff; font-variant-numeric: tabular-nums; margin-right: 4px; }
+#trainView-sprak .spr-poang span { display: block; font-size: 13px; color: #3eb489; font-weight: 700; margin-top: 2px; }
+#trainView-sprak .spr-delar { display: grid; gap: 12px; margin: 18px 0; }
+#trainView-sprak .spr-del-h {
+  display: flex; justify-content: space-between; gap: 10px;
+  font-size: 13.5px; color: rgba(255,255,255,0.8); margin-bottom: 5px;
+}
+#trainView-sprak .spr-del-h b { font-variant-numeric: tabular-nums; color: #fff; }
+#trainView-sprak .spr-del-bar { height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+#trainView-sprak .spr-del-bar div { height: 100%; background: #a78bfa; border-radius: 4px; }
+#trainView-sprak .spr-rek {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  background: rgba(167,139,250,0.10); border: 1px solid rgba(167,139,250,0.35);
+  border-radius: 12px; padding: 14px 16px; margin-bottom: 14px;
+}
+#trainView-sprak .spr-rek b { display: block; font-size: 16px; color: #fff; }
+#trainView-sprak .spr-rek .spr-q-label { margin-bottom: 2px; }
+
+@media (max-width: 560px) {
+  #trainView-sprak .spr-skala small { display: none; }
+  #trainView-sprak .spr-testcard-cta { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #trainView-sprak .spr-testcard:hover { transform: none; }
+}

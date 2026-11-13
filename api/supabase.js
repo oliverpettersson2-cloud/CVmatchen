@@ -605,7 +605,19 @@ export default async function handler(req, res) {
               tidSek += b[mode].tidSek || 0;
             });
           });
-          sprakMap[r.user_id] = { pass, ratt, totalt, tidSek };
+          // Senaste språktest + förändring mot förra. Jämförs bara inom
+          // samma testversion — ändras frågebanken är poängen inte jämförbar.
+          const tester = Array.isArray(d._test) ? d._test : [];
+          tester.forEach(t => { tidSek += t.tidSek || 0; });
+          const sista = tester[tester.length - 1] || null;
+          const forra = tester[tester.length - 2] || null;
+          const test = sista ? {
+            steg: sista.steg,
+            poang: sista.poang,
+            datum: sista.datum,
+            forandring: (forra && forra.version === sista.version) ? sista.poang - forra.poang : null
+          } : null;
+          sprakMap[r.user_id] = { pass, ratt, totalt, tidSek, test };
         });
         const taskMap = {};
         (Array.isArray(taskRes.data) ? taskRes.data : []).forEach(r => {
@@ -618,7 +630,7 @@ export default async function handler(req, res) {
           u.cv = cvMap[u.user_id] || null;
           u.progress = progMap[u.user_id] || null;
           u.tasks = taskMap[u.user_id] || { total: 0, completed: 0, pending: 0 };
-          u.sprak = sprakMap[u.user_id] || { pass: 0, ratt: 0, totalt: 0, tidSek: 0 };
+          u.sprak = sprakMap[u.user_id] || { pass: 0, ratt: 0, totalt: 0, tidSek: 0, test: null };
         });
       }
       return res.status(200).json({ data: users });

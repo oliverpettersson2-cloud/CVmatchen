@@ -9182,7 +9182,7 @@ ${styleTexts}
               <div>
                 <div class="train-tile-icon">🗣️</div>
                 <div class="train-tile-name">Språkträning</div>
-                <div class="train-tile-desc">Yrkessvenska för vård, lager, service och bygg — allt går att lyssna på.</div>
+                <div class="train-tile-desc">Yrkessvenska med test — tider, regler och fyra branscher. Allt går att lyssna på.</div>
               </div>
               <div class="train-tile-meta" id="trainSprakMeta">Inte påbörjat</div>
             </div>
@@ -11052,9 +11052,11 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
     if (sprakMeta && typeof window.sprSummary === 'function') {
       try {
         var ss = window.sprSummary();
-        sprakMeta.textContent = ss.pass
-          ? ss.pass + ' pass · ' + ss.andel + '% rätt' + (ss.tidSek ? ' · ' + ss.tidText : '')
-          : 'Inte påbörjat';
+        var spDelar = [];
+        if (ss.test) spDelar.push('Steg ' + ss.test.steg + ' · ' + ss.test.namn);
+        if (ss.pass) spDelar.push(ss.pass + ' pass');
+        if (ss.tidSek >= 60) spDelar.push(ss.tidText);
+        sprakMeta.textContent = spDelar.length ? spDelar.join(' · ') : 'Inte påbörjat';
       } catch (e) {}
     }
 
