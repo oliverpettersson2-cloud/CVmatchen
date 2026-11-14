@@ -140,6 +140,24 @@ td{padding:10px 13px;vertical-align:middle}
 .ud-tab.act .ud-tab-l{color:var(--ac)}
 .ud-body{padding:22px 26px}
 .ud-body-h{font-size:16px;font-weight:700;margin-bottom:16px;letter-spacing:-.2px}
+/* Programfliken */
+.prog-intro{color:var(--tx2);font-size:13px;line-height:1.55;margin:-8px 0 18px;max-width:62ch}
+.prog-sec{border:1px solid var(--bd);border-radius:var(--r);background:var(--sf);padding:16px 18px;margin-bottom:14px}
+.prog-sec-h{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--mu);margin-bottom:12px}
+.prog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px 16px}
+.prog-f{display:grid;gap:5px;min-width:0}
+.prog-f label{font-size:12.5px;color:var(--tx2);font-weight:600}
+.prog-in{width:100%;padding:9px 11px;border:1px solid var(--bd);border-radius:8px;background:var(--sf);color:var(--tx);font:inherit;font-size:13.5px}
+.prog-in:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+.prog-note{font-size:12px;color:var(--mu);margin-top:10px;line-height:1.5}
+.prog-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0 22px}
+.prog-msg{font-size:13px;color:var(--tx2)}
+.prog-msg.ok{color:var(--gn);font-weight:600}
+.prog-msg.err{color:var(--rd);font-weight:600}
+.prog-logg{display:grid;gap:0;border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.prog-logg-r{display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap;padding:9px 14px;font-size:13px;background:var(--sf);border-bottom:1px solid var(--bdl)}
+.prog-logg-r:last-child{border-bottom:none}
+.prog-logg-r span:last-child{color:var(--mu);font-size:12px;font-variant-numeric:tabular-nums}
 .ud-body-empty{padding:40px 20px;text-align:center;color:var(--mu);font-size:13px}
 .ud-list{border:1px solid var(--bdl);border-radius:8px;overflow:hidden}
 .ud-list-row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bdl);align-items:center;font-size:13px}
@@ -2090,7 +2108,7 @@ function renderTable(users){
       : null;
     const spT = sp.test;
     const spPil = (spT && spT.forandring != null)
-      ? (spT.forandring > 0 ? ` <span style="color:#3eb489">↑${spT.forandring}</span>`
+      ? (spT.forandring > 0 ? ` <span style="color:var(--gn)">↑${spT.forandring}</span>`
         : spT.forandring < 0 ? ` <span style="color:var(--rd)">↓${Math.abs(spT.forandring)}</span>` : ' ±0')
       : '';
     const spTestRad = spT
@@ -2217,10 +2235,12 @@ const DETAIL_TABS = [
   {id:'cv',         label:'CV',                   icon:'<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'},
   {id:'matcha',     label:'Matcha',               icon:'<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>'},
   {id:'utbilda',    label:'Utbilda dig',          icon:'<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>'},
+  {id:'program',    label:'Program',              icon:'<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 22V4"/><path d="M4 4h12l-2 4 2 4H4"/></svg>'},
   {id:'traning',    label:'Träning & uppgifter',  icon:'<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6.5 6.5h11v11h-11z"/><path d="M3 9h3M3 15h3M18 9h3M18 15h3M9 3v3M15 3v3M9 18v3M15 18v3"/></svg>'}
 ];
 
 async function openDetail(userId){
+  _programDirty = false;
   currentUserId = userId;
   currentDetailTab = 'cv';
   // Visa detaljvy, dölj listvy
@@ -2321,6 +2341,7 @@ document.addEventListener('visibilitychange', () => {
 });
 
 function switchDetailTab(tabId){
+  _programDirty = false;
   currentDetailTab = tabId;
   document.querySelectorAll('.ud-tab').forEach(t=>t.classList.remove('act'));
   document.querySelector(`.ud-tab[data-tab="${tabId}"]`)?.classList.add('act');
@@ -2450,6 +2471,126 @@ function renderDetailTab(tabId, data){
     case 'matcha':   body.innerHTML = renderTabMatcha(data); break;
     case 'utbilda':  body.innerHTML = renderTabUtbilda(data); break;
     case 'traning':  body.innerHTML = renderTabTraning(data); break;
+    case 'program':  renderTabProgram(data); break;
+  }
+}
+
+// ═══ Programfliken — fas, spår, datum, programstatus, verifierad sfi ═══
+const PROG_L = {
+  programstatus: { '': 'Inte i program', aktiv: 'Aktiv', avslutad: 'Avslutad', avbrott: 'Avbrott' },
+  spar:          { '': 'Inte valt', ordinarie: 'Ordinarie', foraldraspar: 'Föräldraspår' },
+  fas:           { '': 'Inte vald', landa: 'Landa', rusta: 'Rusta', valja_soka: 'Välja och söka' },
+  sfi_kurs:      { '': 'Inte kontrollerat', ingen: 'Läser inte sfi', A: 'Kurs A', B: 'Kurs B', C: 'Kurs C', D: 'Kurs D', klar_D: 'Klar med kurs D' },
+  sfi_betyg:     { '': 'Inte kontrollerat', pagar: 'Kursen pågår', A: 'A', B: 'B', C: 'C', D: 'D', E: 'E', F: 'F (ej godkänt)' }
+};
+const PROG_TYP_L = { programstatus: 'Programstatus', spar: 'Spår', fas: 'Fas', program_start: 'Startdatum',
+                     program_slut: 'Slutdatum', sfi_kurs: 'Sfi-kurs', sfi_betyg: 'Sfi-betyg' };
+let _programDirty = false;
+
+function _progDatum(iso){
+  if (!iso) return '';
+  try { return new Date(iso).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short', year: 'numeric' }).replace(/\.$/, ''); }
+  catch(_) { return String(iso).split('T')[0]; }
+}
+function _progSelect(id, falt, varde){
+  const opts = Object.entries(PROG_L[falt]).map(([v, l]) =>
+    `<option value="${v}"${(varde || '') === v ? ' selected' : ''}>${escapeHtml(l)}</option>`).join('');
+  return `<select id="${id}" class="prog-in" data-falt="${falt}">${opts}</select>`;
+}
+
+function renderTabProgram(data, meddelande){
+  const body = document.getElementById('udBody');
+  // Detaljvyn hämtas och ritas om var 20:e sekund. Rör inte formuläret
+  // medan personalen har osparade ändringar — annars raderas de.
+  if (_programDirty && document.getElementById('progForm')) return;
+  const a = data.assignment || {};
+  if (!a.user_id) {
+    body.innerHTML = `<div class="ud-body-h">Program</div><div class="ud-body-empty">Programuppgifter kan bara anges för registrerade deltagare.</div>`;
+    return;
+  }
+  const fasAndrad = a.fas_andrad_at ? `Fas ändrad ${escapeHtml(_progDatum(a.fas_andrad_at))}.` : '';
+  const sfiKontroll = a.sfi_verifierad_at
+    ? `Kontrollerad ${escapeHtml(_progDatum(a.sfi_verifierad_at))}.`
+    : 'Inte kontrollerad än.';
+  body.innerHTML = `
+    <div class="ud-body-h">Program</div>
+    <p class="prog-intro">Fylls i för deltagare som går i ett program. Lämnas fälten tomma fungerar CVmatchen som vanligt.</p>
+    <form id="progForm" onsubmit="event.preventDefault();saveProgram()" oninput="_markProgramDirty()" onchange="_markProgramDirty()">
+      <div class="prog-sec">
+        <div class="prog-sec-h">Deltagande</div>
+        <div class="prog-grid">
+          <div class="prog-f"><label for="pgStatus">Programstatus</label>${_progSelect('pgStatus','programstatus',a.programstatus)}</div>
+          <div class="prog-f"><label for="pgSpar">Spår</label>${_progSelect('pgSpar','spar',a.spar)}</div>
+          <div class="prog-f"><label for="pgFas">Fas</label>${_progSelect('pgFas','fas',a.fas)}</div>
+          <div class="prog-f"><label for="pgStart">Startdatum</label><input type="date" id="pgStart" class="prog-in" data-falt="program_start" value="${escapeHtml(a.program_start || '')}"></div>
+          <div class="prog-f"><label for="pgSlut">Slutdatum</label><input type="date" id="pgSlut" class="prog-in" data-falt="program_slut" value="${escapeHtml(a.program_slut || '')}"></div>
+        </div>
+        ${fasAndrad ? `<div class="prog-note">${fasAndrad}</div>` : ''}
+      </div>
+      <div class="prog-sec">
+        <div class="prog-sec-h">Sfi — kontrollerad uppgift</div>
+        <div class="prog-grid">
+          <div class="prog-f"><label for="pgSfiKurs">Sfi-kurs</label>${_progSelect('pgSfiKurs','sfi_kurs',a.sfi_kurs)}</div>
+          <div class="prog-f"><label for="pgSfiBetyg">Betyg</label>${_progSelect('pgSfiBetyg','sfi_betyg',a.sfi_betyg)}</div>
+        </div>
+        <div class="prog-note">Ange det ni har sett i intyg eller betygsdokument, inte deltagarens egen uppgift. Uppgiften används för att jämföra språktestets resultat med ett externt mått. ${sfiKontroll}</div>
+      </div>
+      <div class="prog-actions">
+        <button type="submit" class="btn btn-primary" id="pgSpara" disabled>Spara</button>
+        <span class="prog-msg${meddelande ? ' ' + meddelande.klass : ''}" id="pgMsg" role="status">${meddelande ? escapeHtml(meddelande.text) : ''}</span>
+      </div>
+    </form>
+    <div class="ud-body-h" style="font-size:14px">Ändringar</div>
+    <div id="progLogg"><div class="ud-body-empty">Laddar…</div></div>`;
+  _programDirty = false;
+  _laddaProgramLogg(a.user_id);
+}
+
+function _markProgramDirty(){
+  _programDirty = true;
+  const b = document.getElementById('pgSpara');
+  if (b) b.disabled = false;
+  const m = document.getElementById('pgMsg');
+  if (m) { m.className = 'prog-msg'; m.textContent = 'Osparade ändringar'; }
+}
+
+async function saveProgram(){
+  const uid = currentUserId;
+  const program = {};
+  document.querySelectorAll('#progForm [data-falt]').forEach(el => { program[el.dataset.falt] = el.value; });
+  const b = document.getElementById('pgSpara');
+  const m = document.getElementById('pgMsg');
+  if (b) b.disabled = true;
+  if (m) { m.className = 'prog-msg'; m.textContent = 'Sparar…'; }
+  try {
+    const r = await post('admin_update_program', { targetUserId: uid, program });
+    if (currentUserId !== uid) return;
+    if (currentUserData) currentUserData.assignment = r.assignment;
+    _programDirty = false;
+    renderTabProgram(currentUserData, r.andrat
+      ? { klass: 'ok', text: 'Sparat (' + r.andrat + (r.andrat === 1 ? ' ändring)' : ' ändringar)') }
+      : { klass: '', text: 'Inget hade ändrats' });
+  } catch (e) {
+    if (b) b.disabled = false;
+    if (m) { m.className = 'prog-msg err'; m.textContent = 'Kunde inte spara: ' + (e.message || 'okänt fel'); }
+  }
+}
+
+async function _laddaProgramLogg(uid){
+  const box = document.getElementById('progLogg');
+  try {
+    const r = await post('admin_get_program_logg', { targetUserId: uid });
+    if (currentUserId !== uid || !document.getElementById('progLogg')) return;
+    const rader = r.logg || [];
+    if (!rader.length) { document.getElementById('progLogg').innerHTML = '<div class="ud-body-empty">Inga ändringar ännu.</div>'; return; }
+    const visa = (typ, v) => v == null || v === '' ? '—'
+      : (PROG_L[typ] ? (PROG_L[typ][v] || v) : _progDatum(v));
+    document.getElementById('progLogg').innerHTML = '<div class="prog-logg">' + rader.map(x =>
+      `<div class="prog-logg-r"><span><b>${escapeHtml(PROG_TYP_L[x.typ] || x.typ)}:</b> ${escapeHtml(visa(x.typ, x.fran))} → ${escapeHtml(visa(x.typ, x.till))}</span>` +
+      `<span>${escapeHtml(_progDatum(x.skapad_at))}${x.av ? ' · ' + escapeHtml(x.av) : ''}</span></div>`
+    ).join('') + '</div>';
+  } catch (e) {
+    if (box && document.getElementById('progLogg')) box.innerHTML = `<div class="ud-body-empty" style="color:var(--rd)">Kunde inte hämta ändringar: ${escapeHtml(e.message || '')}</div>`;
   }
 }
 

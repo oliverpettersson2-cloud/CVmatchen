@@ -34,19 +34,20 @@ Grunden är byggd. Det är därför ett halvår räcker.
 ## 🔨 Ska byggas
 
 ### Januari 2027 — grunden
-- [ ] Datamodell: `deltagare` utökas med spår, fas, start/slut, telefon, status
-- [~] **Fält för sfi-kurs och betyg vid inskrivning.** Utan det går sambandet
+- [x] Datamodell: `deltagare` utökas med spår, fas, start/slut, status — *klart 2026-11-14*. Telefon fanns redan (`user_assignments.phone`). Programstatus i egen kolumn, eftersom `status` redan betyder aktivitetsstatus. Ändringslogg i `program_logg`.
+- [x] **Fält för sfi-kurs och betyg vid inskrivning.** *Klart 2026-11-14:* personalen anger kontrollerad kurs och betyg i fliken Program; vem som kontrollerade och när sparas automatiskt. Utan det går sambandet
       mellan vår skala och ett externt mått inte att räkna fram i efterhand.
       *Delvis klart 2026-11-13:* deltagaren uppger sfi-kurs frivilligt i
       språktestets intro (sparas med varje testresultat). **Kvar:** ett fält
       där personalen registrerar verifierad kurs och betyg vid inskrivning —
       självrapporterat räcker inte som valideringsunderlag.
-- [ ] **Femte rollnivå: KBT/fysio** — ser bara egna bokningar och deltagarnamn
+- [ ] **Femte rollnivå: KBT/fysio** — ser bara egna bokningar och deltagarnamn. *Flyttad till april:* rollen har inget att visa förrän bokningarna finns.
 - [ ] **F1 Närvaro** — dagens pass, ett klick per deltagare, frånvarotyp + kommentar
 - [ ] F1.6 Närvaro i procent per deltagare och vecka
 - [x] Ändra inaktivitetspaus i tidloggningen från 90 sek till 5 min (F1.4) — *klart 2026-11-13*
 - [ ] B3: logga även *läsning* av deltagardata, inte bara åtgärder
-- [ ] B2: skärp filtreringen från enhet till enskild deltagare
+- [ ] B2: kommunens handläggare ser bara egna deltagare. *Flyttad till maj, med handläggarvyn:* rollen `handlaggare` används i dag av personalen, som ska se alla. B2 kräver en ny, läsbehörig roll — inte en inskränkning av den befintliga.
+- [x] Bugg: rollen `enhetsadmin` nekades av databasen trots att kod och gränssnitt erbjöd den — *rättad 2026-11-14*
 
 ### Februari 2027 — språk
 - [x] Nytt grundområde *Allmänt på jobbet* med två nya övningstyper: **tider**

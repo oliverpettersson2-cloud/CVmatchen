@@ -63,7 +63,8 @@ export default async function handler(req, res) {
   const _action = req.body?.action;
   const _RATE_LIMITS = {
     admin_login: 20, admin_invite: 20, user_invite: 30, admin_resend_invite: 20,
-    admin_delete_user: 10, user_delete_self: 5, send_otp: 10, verify_otp: 20
+    admin_delete_user: 10, user_delete_self: 5, send_otp: 10, verify_otp: 20,
+    admin_update_program: 60
   };
   if (_action && _RATE_LIMITS[_action] && !checkRateLimit(_ip, _action, _RATE_LIMITS[_action])) {
     return res.status(429).json({ error: 'För många försök — vänta en minut och försök igen.' });
@@ -881,7 +882,7 @@ export default async function handler(req, res) {
       if (!admin) return;
       const targetUserId = req.body?.targetUserId;
       if (!targetUserId) return res.status(400).json({ error: 'targetUserId krävs' });
-      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
       for (const t of TABLES) {
         await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${targetUserId}`, { method: 'DELETE', headers: serviceHeaders() });
       }
@@ -898,7 +899,7 @@ export default async function handler(req, res) {
       // GDPR: deltagare raderar sitt eget konto.
       const jwt = await verifyJwtUser(accessToken);
       if (!jwt) return res.status(401).json({ error: 'invalid_token' });
-      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
       for (const t of TABLES) {
         await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${jwt.id}`, { method: 'DELETE', headers: serviceHeaders() });
       }
@@ -1214,6 +1215,117 @@ export default async function handler(req, res) {
       await makeRequest(`${SUPABASE_URL}/rest/v1/admins?id=eq.${target.id}`, { method: 'PATCH', headers: serviceHeaders() }, { invite_token: newToken, invite_expires: newExpires });
       await logAdminAction(admin.id, 'admin_resend_invite', { target_admin_id: target.id });
       return res.status(200).json({ invite_token: newToken });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // PROGRAM — fas, spår, datum, programstatus och verifierad sfi-nivå
+    // för deltagare i en programverksamhet. Varje ändring loggas i
+    // program_logg (vem, när, från, till).
+    // ═══════════════════════════════════════════════════════════════
+    const PROGRAM_VAL = {
+      spar:          ['ordinarie', 'foraldraspar'],
+      fas:           ['landa', 'rusta', 'valja_soka'],
+      programstatus: ['aktiv', 'avslutad', 'avbrott'],
+      sfi_kurs:      ['ingen', 'A', 'B', 'C', 'D', 'klar_D'],
+      sfi_betyg:     ['A', 'B', 'C', 'D', 'E', 'F', 'pagar']
+    };
+    const PROGRAM_DATUM = ['program_start', 'program_slut'];
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+    // requestedUserId låser bara till kommun. För skrivning låses också
+    // till enhet för den som har en — samma regel som deltagarlistan.
+    async function hamtaProgramDeltagare(admin, uid) {
+      const r = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${encodeURIComponent(uid)}&select=*&limit=1`,
+        { method: 'GET', headers: serviceHeaders() }
+      );
+      const rad = (Array.isArray(r.data) ? r.data : [])[0];
+      if (!rad) return { fel: 404 };
+      if (admin.role !== 'superadmin' && admin.enhet_id != null
+          && String(rad.enhet_id) !== String(admin.enhet_id)) return { fel: 403 };
+      return { rad };
+    }
+
+    if (action === 'admin_update_program') {
+      const uid = targetUserId;
+      if (!uid || !UUID_RE.test(uid)) return res.status(400).json({ error: 'Ogiltigt deltagar-id' });
+      const { admin } = await requireAdmin(res, accessToken, action, { requestedUserId: uid });
+      if (!admin) return;
+      const { rad: cur, fel } = await hamtaProgramDeltagare(admin, uid);
+      if (fel === 404) return res.status(404).json({ error: 'Deltagaren saknas' });
+      if (fel === 403) return res.status(403).json({ error: 'Deltagaren tillhör en annan enhet' });
+
+      const indata = (req.body && typeof req.body.program === 'object' && req.body.program) || {};
+      const patch = {};
+      const logg = [];
+
+      for (const falt of Object.keys(PROGRAM_VAL)) {
+        if (!(falt in indata)) continue;
+        const v = indata[falt] === '' || indata[falt] == null ? null : String(indata[falt]);
+        if (v !== null && !PROGRAM_VAL[falt].includes(v)) {
+          return res.status(400).json({ error: `Ogiltigt värde för ${falt}` });
+        }
+        if (v !== (cur[falt] ?? null)) { patch[falt] = v; logg.push({ typ: falt, fran: cur[falt] ?? null, till: v }); }
+      }
+      for (const falt of PROGRAM_DATUM) {
+        if (!(falt in indata)) continue;
+        const v = indata[falt] === '' || indata[falt] == null ? null : String(indata[falt]);
+        if (v !== null && (!/^\d{4}-\d{2}-\d{2}$/.test(v) || isNaN(Date.parse(v)))) {
+          return res.status(400).json({ error: `Ogiltigt datum för ${falt}` });
+        }
+        if (v !== (cur[falt] ?? null)) { patch[falt] = v; logg.push({ typ: falt, fran: cur[falt] ?? null, till: v }); }
+      }
+
+      const start = 'program_start' in patch ? patch.program_start : cur.program_start;
+      const slut  = 'program_slut'  in patch ? patch.program_slut  : cur.program_slut;
+      if (start && slut && slut < start) {
+        return res.status(400).json({ error: 'Slutdatum kan inte ligga före startdatum' });
+      }
+
+      if (!logg.length) return res.status(200).json({ assignment: cur, andrat: 0 });
+
+      const nu = new Date().toISOString();
+      if ('fas' in patch) patch.fas_andrad_at = nu;
+      if ('sfi_kurs' in patch || 'sfi_betyg' in patch) {
+        patch.sfi_verifierad_av = admin.id;
+        patch.sfi_verifierad_at = nu;
+      }
+
+      const upd = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${encodeURIComponent(uid)}`,
+        { method: 'PATCH', headers: { ...serviceHeaders(), 'Prefer': 'return=representation' } },
+        patch
+      );
+      if (upd.status >= 400) {
+        console.warn('[admin_update_program] PATCH misslyckades:', upd.status, maskPII(upd.data));
+        return res.status(400).json({ error: 'Kunde inte spara programuppgifterna' });
+      }
+      await makeRequest(
+        `${SUPABASE_URL}/rest/v1/program_logg`,
+        { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=minimal' } },
+        logg.map(l => ({ user_id: uid, typ: l.typ, fran: l.fran, till: l.till, admin_id: admin.id }))
+      );
+      await logAdminAction(admin.id, 'admin_update_program', { target_user_id: uid, falt: logg.map(l => l.typ) });
+      const ny = (Array.isArray(upd.data) ? upd.data : [])[0] || { ...cur, ...patch };
+      return res.status(200).json({ assignment: ny, andrat: logg.length });
+    }
+
+    if (action === 'admin_get_program_logg') {
+      const uid = targetUserId;
+      if (!uid || !UUID_RE.test(uid)) return res.status(400).json({ error: 'Ogiltigt deltagar-id' });
+      const { admin } = await requireAdmin(res, accessToken, action, { requestedUserId: uid });
+      if (!admin) return;
+      const { fel } = await hamtaProgramDeltagare(admin, uid);
+      if (fel === 404) return res.status(404).json({ error: 'Deltagaren saknas' });
+      if (fel === 403) return res.status(403).json({ error: 'Deltagaren tillhör en annan enhet' });
+      const r = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/program_logg?user_id=eq.${encodeURIComponent(uid)}&select=typ,fran,till,skapad_at,admins(name)&order=skapad_at.desc&limit=50`,
+        { method: 'GET', headers: serviceHeaders() }
+      );
+      const rader = (Array.isArray(r.data) ? r.data : []).map(x => ({
+        typ: x.typ, fran: x.fran, till: x.till, skapad_at: x.skapad_at, av: x.admins?.name || null
+      }));
+      return res.status(200).json({ logg: rader });
     }
 
     if (action === 'admin_get_kommuner') {
