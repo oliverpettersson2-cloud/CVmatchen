@@ -7,6 +7,7 @@
 <!-- Typsnitt självhostas via system-font-stack (ingen extern Google Fonts-anrop → ingen IP-läcka till USA, GDPR-rent) -->
 <!-- Delad modulkatalog (samma 105 moduler som deltagar-appen) — exponerar window.TRAINING_DATA -->
 <script src="training-modules.js"></script>
+<script src="narvaro-admin.js"></script>
 <style>
 :focus-visible{outline:3px solid #1a73e8;outline-offset:2px;}
 .skip-link{position:absolute;left:-9999px;top:0;z-index:9999;background:#1a73e8;color:#fff;padding:10px 16px;border-radius:0 0 6px 0;}
@@ -934,6 +935,7 @@ td{padding:10px 13px;vertical-align:middle}
         <div class="pan" id="p-uppgifter"><div id="tasksContent" class="loading">Laddar tilldelade uppgifter...</div></div>
 
         <div class="pan" id="p-matchning"><div id="matchningContent" class="loading">Laddar matchningsverktyg...</div></div>
+        <div class="pan" id="p-narvaro"><div id="narvaroContent" class="loading">Laddar närvaro...</div></div>
 
         <div class="pan" id="p-admins"><div id="adminsContent" class="loading">Laddar handläggare och admins...</div></div>
 
@@ -1155,6 +1157,7 @@ const PAGE_INFO = {
   mina:        {title:'Deltagare',  sub: () => roleSubtitle()},
   uppgifter:   {title:'Tilldelade uppgifter', sub: () => 'Alla uppgifter du tilldelat — aktiva, avklarade och försenade'},
   matchning:   {title:'Matchningsverktyg', sub: () => 'Matcha deltagare mot lediga tjänster och övervaka träffsäkerhet'},
+  narvaro:     {title:'Närvaro', sub: () => 'Dagens pass, närvaroregistrering och veckoschema'},
   admins:      {title:'Handläggare & admins', sub: () => 'Användare med admin-roll i systemet'},
   material:    {title:'Sparat material & uppgifter',  sub: () => 'Delat bibliotek för hela enheten — uppgifter, PowerPoints och AI-uppdaterade versioner'}
 };
@@ -1824,6 +1827,7 @@ function buildNav(){
     {id:'mina',label:'Deltagare',icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'},
     {id:'matchning',label:'Matchningsverktyg',icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>'},
     {id:'uppgifter',label:'Tilldelade uppgifter',icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>'},
+    {id:'narvaro',label:'Närvaro',icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M9 16l2 2 4-4"/></svg>'},
     {id:'material',label:'Sparat material & uppgifter',icon:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>'}
   ];
   document.getElementById('sbNav').innerHTML=items.map((it,i)=>`<div class="sb-nav-item${i===0?' act':''}" data-id="${it.id}" onclick="switchTab('${it.id}')">${it.icon}<span>${it.label}</span></div>`).join('');
@@ -1841,6 +1845,7 @@ function switchTab(id){
   if(id==='mina') renderMinaView();
   if(id==='uppgifter') renderTasksView();
   if(id==='matchning') renderMatchningView();
+  if(id==='narvaro' && typeof narvaroRender === 'function') narvaroRender();
   if(id==='admins') renderAdminsView();
   if(id==='material') renderMaterialView();
 }
@@ -2540,9 +2545,12 @@ function renderTabProgram(data, meddelande){
         <span class="prog-msg${meddelande ? ' ' + meddelande.klass : ''}" id="pgMsg" role="status">${meddelande ? escapeHtml(meddelande.text) : ''}</span>
       </div>
     </form>
-    <div class="ud-body-h" style="font-size:14px">Ändringar</div>
+    <div class="ud-body-h" style="font-size:14px">Närvaro per vecka</div>
+    <div id="progNarvaro"><div class="ud-body-empty">Laddar…</div></div>
+    <div class="ud-body-h" style="font-size:14px;margin-top:22px">Ändringar</div>
     <div id="progLogg"><div class="ud-body-empty">Laddar…</div></div>`;
   _programDirty = false;
+  _laddaProgramNarvaro(a.user_id);
   _laddaProgramLogg(a.user_id);
 }
 
@@ -2563,7 +2571,7 @@ async function saveProgram(){
   if (b) b.disabled = true;
   if (m) { m.className = 'prog-msg'; m.textContent = 'Sparar…'; }
   try {
-    const r = await post('admin_update_program', { targetUserId: uid, program });
+    const r = await (window.postMedFelmeddelande || post)('admin_update_program', { targetUserId: uid, program });
     if (currentUserId !== uid) return;
     if (currentUserData) currentUserData.assignment = r.assignment;
     _programDirty = false;
@@ -2576,10 +2584,32 @@ async function saveProgram(){
   }
 }
 
+// Närvaro per vecka (F1.6). Bara registrerade pass räknas — ett pass som
+// personalen inte bockat är okänt, inte frånvaro.
+async function _laddaProgramNarvaro(uid){
+  try {
+    const r = await (window.postMedFelmeddelande || post)('admin_get_deltagare_narvaro', { targetUserId: uid });
+    const box = document.getElementById('progNarvaro');
+    if (currentUserId !== uid || !box) return;
+    const v = r.veckor || [];
+    if (!v.length) { box.innerHTML = '<div class="ud-body-empty">Ingen registrerad närvaro ännu.</div>'; return; }
+    const tim = m => (Math.round(m / 6) / 10).toString().replace('.', ',');
+    box.innerHTML = '<div class="prog-logg">' + v.map(w => {
+      const pct = w.procent == null ? '—' : w.procent + ' %';
+      const farg = w.procent == null ? 'var(--mu)' : w.procent >= 80 ? 'var(--gn)' : w.procent >= 50 ? 'var(--or)' : 'var(--rd)';
+      const fr = [w.sen ? w.sen + ' sen' : '', w.giltig ? w.giltig + ' giltig frånvaro' : '', w.ogiltig ? w.ogiltig + ' ogiltig frånvaro' : ''].filter(Boolean).join(' · ');
+      return `<div class="prog-logg-r"><span><b style="color:${farg}">${pct}</b> · vecka ${getWeekNumber(new Date(w.mandag + 'T12:00:00'))} · ${tim(w.narvaroMin)} av ${tim(w.schemaMin)} tim${fr ? ' · ' + escapeHtml(fr) : ''}</span><span>${w.pass} pass</span></div>`;
+    }).join('') + '</div><div class="prog-note">Räknat på registrerade pass. Sen räknas som närvaro.</div>';
+  } catch (e) {
+    const box = document.getElementById('progNarvaro');
+    if (box) box.innerHTML = `<div class="ud-body-empty" style="color:var(--rd)">Kunde inte hämta närvaro: ${escapeHtml(e.message || '')}</div>`;
+  }
+}
+
 async function _laddaProgramLogg(uid){
   const box = document.getElementById('progLogg');
   try {
-    const r = await post('admin_get_program_logg', { targetUserId: uid });
+    const r = await (window.postMedFelmeddelande || post)('admin_get_program_logg', { targetUserId: uid });
     if (currentUserId !== uid || !document.getElementById('progLogg')) return;
     const rader = r.logg || [];
     if (!rader.length) { document.getElementById('progLogg').innerHTML = '<div class="ud-body-empty">Inga ändringar ännu.</div>'; return; }

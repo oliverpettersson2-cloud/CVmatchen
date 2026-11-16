@@ -42,8 +42,9 @@ Grunden är byggd. Det är därför ett halvår räcker.
       där personalen registrerar verifierad kurs och betyg vid inskrivning —
       självrapporterat räcker inte som valideringsunderlag.
 - [ ] **Femte rollnivå: KBT/fysio** — ser bara egna bokningar och deltagarnamn. *Flyttad till april:* rollen har inget att visa förrän bokningarna finns.
-- [ ] **F1 Närvaro** — dagens pass, ett klick per deltagare, frånvarotyp + kommentar
-- [ ] F1.6 Närvaro i procent per deltagare och vecka
+- [x] **F1 Närvaro** — dagens pass, ett klick per deltagare, frånvarotyp + kommentar — *klart 2026-11-16*. Närvarande är förvalt (F1.2); bara deltagare med programstatus Aktiv och rätt fas/spår listas (F1.1).
+- [x] F1.6 Närvaro i procent per deltagare och vecka — *klart 2026-11-16*, i fliken Program. Räknas bara på registrerade pass; ett obockat pass är okänt, inte frånvaro. Sen räknas som närvaro.
+- [ ] F1.5 Deltagaren ser sin egen närvaro — byggs med deltagarens schemavy (F2.3)
 - [x] Ändra inaktivitetspaus i tidloggningen från 90 sek till 5 min (F1.4) — *klart 2026-11-13*
 - [ ] B3: logga även *läsning* av deltagardata, inte bara åtgärder
 - [ ] B2: kommunens handläggare ser bara egna deltagare. *Flyttad till maj, med handläggarvyn:* rollen `handlaggare` används i dag av personalen, som ska se alla. B2 kräver en ny, läsbehörig roll — inte en inskränkning av den befintliga.
@@ -61,8 +62,10 @@ Grunden är byggd. Det är därför ett halvår räcker.
       Aldrig A1–B2 eller GERS — varken i gränssnittet eller i rapporten.
 
 ### Mars 2027 — schema och skattning
-- [ ] **F2 Mitt schema** — `pass_mall`, `vecka_tema` (8-veckorscykel), `pass_instans`
-- [ ] F2.6 Fasbyte Landa → Rusta → Välja och söka, slår igenom nästa vecka
+- [x] Veckoschema som **serier** (`pass_mall` + `pass_instans`) — *klart 2026-11-16*. En serie = flera veckodagar, giltighetstid, varje eller varannan vecka. Ändringar med valt omfång: bara det här passet / alla [måndagar] framåt / hela serien framåt. Ställ in ett pass eller alla pass en dag. Pass med registrerad närvaro skrivs aldrig bort.
+- [ ] F2.3 Deltagarens schemavy i mobilen — enkelt språk, ikoner L/U/A/D, uppläsning
+- [ ] `vecka_tema` — 8-veckorscykeln med tema, utflykt, ordtema, hälsofokus
+- [ ] F2.6 Fasbyte Landa → Rusta → Välja och söka, slår igenom nästa vecka. *Delvis:* fasen sätts i fliken Program men slår i dag igenom direkt, inte från nästa vecka.
 - [ ] **F5 Funktionsskattning mot målyrke** — sju dimensioner, fyra svarsalternativ
 - [ ] WHO-5 + självskattad hälsa (en fråga, jämförbar med nationell statistik)
 - [ ] Beräkning: arbetsförmåga mot målyrket → matchar / delvis / inte

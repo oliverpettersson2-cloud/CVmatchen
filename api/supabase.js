@@ -64,7 +64,8 @@ export default async function handler(req, res) {
   const _RATE_LIMITS = {
     admin_login: 20, admin_invite: 20, user_invite: 30, admin_resend_invite: 20,
     admin_delete_user: 10, user_delete_self: 5, send_otp: 10, verify_otp: 20,
-    admin_update_program: 60
+    admin_update_program: 60, admin_save_narvaro: 120, admin_edit_schema: 60,
+    admin_create_serie: 60, admin_avsluta_schema: 30, admin_installa_pass: 60
   };
   if (_action && _RATE_LIMITS[_action] && !checkRateLimit(_ip, _action, _RATE_LIMITS[_action])) {
     return res.status(429).json({ error: 'För många försök — vänta en minut och försök igen.' });
@@ -882,7 +883,7 @@ export default async function handler(req, res) {
       if (!admin) return;
       const targetUserId = req.body?.targetUserId;
       if (!targetUserId) return res.status(400).json({ error: 'targetUserId krävs' });
-      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','narvaro','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
       for (const t of TABLES) {
         await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${targetUserId}`, { method: 'DELETE', headers: serviceHeaders() });
       }
@@ -899,7 +900,7 @@ export default async function handler(req, res) {
       // GDPR: deltagare raderar sitt eget konto.
       const jwt = await verifyJwtUser(accessToken);
       if (!jwt) return res.status(401).json({ error: 'invalid_token' });
-      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','narvaro','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
       for (const t of TABLES) {
         await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${jwt.id}`, { method: 'DELETE', headers: serviceHeaders() });
       }
@@ -1326,6 +1327,392 @@ export default async function handler(req, res) {
         typ: x.typ, fran: x.fran, till: x.till, skapad_at: x.skapad_at, av: x.admins?.name || null
       }));
       return res.status(200).json({ logg: rader });
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // SCHEMA OCH NÄRVARO (kravspec F1 + grund för F2)
+    //
+    // pass_mall    = veckoschemat, en rad per veckodag. Rader med samma
+    //                serie_id är en serie och kan ändras tillsammans.
+    // pass_instans = ett faktiskt pass ett visst datum. Skapas från
+    //                mallen första gången dagen öppnas, med tid, titel
+    //                och målgrupp kopierade — så att en senare ändring
+    //                aldrig skriver om vad som gällde ett passerat datum.
+    // narvaro      = en rad per deltagare och pass.
+    // ═══════════════════════════════════════════════════════════════
+    const NV_DAG_RE = /^\d{4}-\d{2}-\d{2}$/;
+    const NV_TID_RE = /^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/;
+    const NV_TYPER = ['L', 'U', 'A', 'D'];
+    const NV_STATUS = ['narvarande', 'sen', 'franvarande_giltig', 'franvarande_ogiltig'];
+    const nvIdag = () => new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Stockholm' });
+    const nvVeckodag = d => { const w = new Date(d + 'T12:00:00Z').getUTCDay(); return w === 0 ? 7 : w; };
+    const nvMandagMs = d => { const t = new Date(d + 'T12:00:00Z'); t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() || 7) - 1)); return t.getTime(); };
+    const nvVeckorMellan = (a, b) => Math.round((nvMandagMs(b) - nvMandagMs(a)) / (7 * 86400000));
+    const nvDagFore = d => { const t = new Date(d + 'T12:00:00Z'); t.setUTCDate(t.getUTCDate() - 1); return t.toISOString().slice(0, 10); };
+    const nvMin = t => { const [h, m] = String(t).split(':').map(Number); return h * 60 + m; };
+    const nvRows = r => (Array.isArray(r.data) ? r.data : []);
+    const nvGET = () => ({ method: 'GET', headers: serviceHeaders() });
+    const nvPATCH = (extra) => ({ method: 'PATCH', headers: { ...serviceHeaders(), 'Prefer': 'return=minimal', ...(extra || {}) } });
+    const nvTid = t => String(t).slice(0, 5);
+
+    // Vilken verksamhet gäller anropet? Övriga roller låses till sin egen;
+    // superadmin anger kommun (och ev. enhet) och vi kontrollerar att de hör ihop.
+    async function nvScope(admin, body) {
+      if (admin.role !== 'superadmin') {
+        if (!admin.kommun_id) return { fel: 'Ditt konto saknar kommun' };
+        return { kommun_id: admin.kommun_id, enhet_id: admin.enhet_id ?? null };
+      }
+      const k = parseInt(body?.kommunId, 10);
+      if (!Number.isFinite(k)) return { fel: 'Välj kommun' };
+      let e = null;
+      if (body?.enhetId != null && body.enhetId !== '') {
+        e = parseInt(body.enhetId, 10);
+        if (!Number.isFinite(e)) return { fel: 'Ogiltig enhet' };
+        const r = await makeRequest(`${SUPABASE_URL}/rest/v1/enheter?id=eq.${e}&kommun_id=eq.${k}&select=id&limit=1`, nvGET());
+        if (!nvRows(r).length) return { fel: 'Enheten hör inte till kommunen' };
+      }
+      return { kommun_id: k, enhet_id: e };
+    }
+    const nvScopeFilter = s => `kommun_id=eq.${s.kommun_id}&enhet_id=${s.enhet_id == null ? 'is.null' : 'eq.' + s.enhet_id}`;
+    function nvIScope(admin, rad) {
+      if (admin.role === 'superadmin') return true;
+      if (String(rad.kommun_id) !== String(admin.kommun_id)) return false;
+      if (admin.enhet_id != null && String(rad.enhet_id) !== String(admin.enhet_id)) return false;
+      return true;
+    }
+
+    function nvValidera(f, kravAlla) {
+      const ut = {};
+      if (kravAlla || 'titel' in f) {
+        const t = String(f.titel || '').trim();
+        if (!t || t.length > 120) return { fel: 'Titeln måste vara 1–120 tecken' };
+        ut.titel = t;
+      }
+      if (kravAlla || 'typ' in f) {
+        if (!NV_TYPER.includes(f.typ)) return { fel: 'Välj typ av pass' };
+        ut.typ = f.typ;
+      }
+      for (const k of ['starttid', 'sluttid']) {
+        if (kravAlla || k in f) {
+          if (!NV_TID_RE.test(String(f[k] || ''))) return { fel: k === 'starttid' ? 'Ogiltig starttid' : 'Ogiltig sluttid' };
+          ut[k] = nvTid(f[k]);
+        }
+      }
+      if (ut.starttid && ut.sluttid && nvMin(ut.sluttid) <= nvMin(ut.starttid)) return { fel: 'Sluttiden måste vara efter starttiden' };
+      if ('faser' in f) {
+        const a = Array.isArray(f.faser) ? f.faser : [];
+        if (a.some(x => !PROGRAM_VAL.fas.includes(x))) return { fel: 'Ogiltig fas' };
+        ut.faser = a.length ? a : null;
+      }
+      if ('spar' in f) {
+        const a = Array.isArray(f.spar) ? f.spar : [];
+        if (a.some(x => !PROGRAM_VAL.spar.includes(x))) return { fel: 'Ogiltigt spår' };
+        ut.spar = a.length ? a : null;
+      }
+      return { ut };
+    }
+
+    // Skapar dagens pass ur veckoschemat om de inte redan finns.
+    async function nvSkapaPass(sc, datum) {
+      const r = await makeRequest(
+        `${SUPABASE_URL}/rest/v1/pass_mall?${nvScopeFilter(sc)}&veckodag=eq.${nvVeckodag(datum)}&aktiv=eq.true` +
+        `&giltig_fran=lte.${datum}&or=(giltig_till.is.null,giltig_till.gte.${datum})&select=*`, nvGET());
+      const nya = nvRows(r)
+        .filter(m => nvVeckorMellan(m.giltig_fran, datum) % (m.intervall_veckor || 1) === 0)
+        .map(m => ({ pass_mall_id: m.id, kommun_id: m.kommun_id, enhet_id: m.enhet_id, datum,
+                     starttid: m.starttid, sluttid: m.sluttid, titel: m.titel, typ: m.typ, faser: m.faser, spar: m.spar }));
+      if (nya.length) {
+        await makeRequest(`${SUPABASE_URL}/rest/v1/pass_instans?on_conflict=pass_mall_id,datum`,
+          { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'resolution=ignore-duplicates,return=minimal' } }, nya);
+      }
+    }
+
+    // Tar bort pass från och med ett datum som INTE har någon registrerad
+    // närvaro. Registrerade pass är historik och står kvar.
+    async function nvRensaFramtida(mallIds, fran) {
+      if (!mallIds.length) return;
+      const inst = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/pass_instans?pass_mall_id=in.(${mallIds.join(',')})&datum=gte.${fran}&select=id`, nvGET()));
+      if (!inst.length) return;
+      const ids = inst.map(i => i.id);
+      const reg = new Set(nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/narvaro?pass_instans_id=in.(${ids.join(',')})&select=pass_instans_id`, nvGET())).map(x => x.pass_instans_id));
+      const bort = ids.filter(id => !reg.has(id));
+      if (bort.length) await makeRequest(`${SUPABASE_URL}/rest/v1/pass_instans?id=in.(${bort.join(',')})`, { method: 'DELETE', headers: serviceHeaders() });
+    }
+
+    async function nvAktiva(kommun_id, enhet_id) {
+      let url = `${SUPABASE_URL}/rest/v1/user_assignments?select=user_id,name,fas,spar,program_start,program_slut&programstatus=eq.aktiv&kommun_id=eq.${kommun_id}`;
+      if (enhet_id != null) url += `&enhet_id=eq.${enhet_id}`;
+      return nvRows(await makeRequest(url, nvGET())).filter(u => u.user_id);
+    }
+    // Ska deltagaren vara med på passet? Programperiod + passets faser och spår.
+    const nvSkaDelta = (u, p) =>
+      (!u.program_start || u.program_start <= p.datum) && (!u.program_slut || u.program_slut >= p.datum)
+      && (!p.faser || !p.faser.length || p.faser.includes(u.fas))
+      && (!p.spar || !p.spar.length || p.spar.includes(u.spar));
+
+    async function nvHamtaPass(admin, passId) {
+      const id = parseInt(passId, 10);
+      if (!Number.isFinite(id)) return { fel: 400, msg: 'Ogiltigt pass' };
+      const p = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/pass_instans?id=eq.${id}&select=*&limit=1`, nvGET()))[0];
+      if (!p) return { fel: 404, msg: 'Passet finns inte' };
+      if (!nvIScope(admin, p)) return { fel: 403, msg: 'Passet tillhör en annan verksamhet' };
+      return { p };
+    }
+
+    // Vilka rader i veckoschemat berörs? 'veckodag' = passets egen dag i
+    // serien, 'serie' = alla dagar i serien.
+    async function nvMallarFor(admin, omfang, p, serieId) {
+      let mallar;
+      if (omfang === 'veckodag') {
+        if (!p || !p.pass_mall_id) return { fel: 400, msg: 'Passet ingår inte i någon serie' };
+        mallar = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/pass_mall?id=eq.${p.pass_mall_id}&select=*`, nvGET()));
+      } else {
+        let sid = serieId;
+        if (!sid && p && p.pass_mall_id) {
+          sid = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/pass_mall?id=eq.${p.pass_mall_id}&select=serie_id&limit=1`, nvGET()))[0]?.serie_id;
+        }
+        if (!sid || !UUID_RE.test(sid)) return { fel: 400, msg: 'Serien hittades inte' };
+        mallar = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/pass_mall?serie_id=eq.${sid}&aktiv=eq.true&select=*`, nvGET()));
+      }
+      if (!mallar.length) return { fel: 404, msg: 'Serien hittades inte' };
+      if (mallar.some(m => !nvIScope(admin, m))) return { fel: 403, msg: 'Serien tillhör en annan verksamhet' };
+      return { mallar };
+    }
+
+    if (action === 'admin_list_serier') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const sc = await nvScope(admin, req.body);
+      if (sc.fel) return res.status(400).json({ error: sc.fel });
+      const idag = nvIdag();
+      const r = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/pass_mall?${nvScopeFilter(sc)}&aktiv=eq.true&select=*&order=veckodag,starttid`, nvGET()));
+      const serier = {};
+      r.filter(m => !m.giltig_till || m.giltig_till >= idag).forEach(m => {
+        const s = serier[m.serie_id] || (serier[m.serie_id] = {
+          serie_id: m.serie_id, titel: m.titel, typ: m.typ, faser: m.faser, spar: m.spar,
+          giltig_fran: m.giltig_fran, giltig_till: m.giltig_till, intervall_veckor: m.intervall_veckor, dagar: []
+        });
+        s.dagar.push({ mall_id: m.id, veckodag: m.veckodag, starttid: nvTid(m.starttid), sluttid: nvTid(m.sluttid), titel: m.titel, typ: m.typ });
+      });
+      return res.status(200).json({ serier: Object.values(serier) });
+    }
+
+    if (action === 'admin_create_serie') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const sc = await nvScope(admin, req.body);
+      if (sc.fel) return res.status(400).json({ error: sc.fel });
+      const s = req.body?.serie || {};
+      const dagar = [...new Set((Array.isArray(s.veckodagar) ? s.veckodagar : []).map(Number))].filter(d => d >= 1 && d <= 7);
+      if (!dagar.length) return res.status(400).json({ error: 'Välj minst en veckodag' });
+      const v = nvValidera({ ...s, faser: s.faser || [], spar: s.spar || [] }, true);
+      if (v.fel) return res.status(400).json({ error: v.fel });
+      const fran = String(s.giltig_fran || nvIdag());
+      const till = s.giltig_till ? String(s.giltig_till) : null;
+      if (!NV_DAG_RE.test(fran) || (till && !NV_DAG_RE.test(till))) return res.status(400).json({ error: 'Ogiltigt datum' });
+      if (till && till < fran) return res.status(400).json({ error: 'Slutdatum kan inte ligga före startdatum' });
+      const intervall = Number(s.intervall_veckor) === 2 ? 2 : 1;
+      const serie_id = crypto.randomUUID();
+      const rader = dagar.map(d => ({ ...v.ut, kommun_id: sc.kommun_id, enhet_id: sc.enhet_id, veckodag: d,
+        serie_id, giltig_fran: fran, giltig_till: till, intervall_veckor: intervall, skapad_av: admin.id }));
+      const w = await makeRequest(`${SUPABASE_URL}/rest/v1/pass_mall`, { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=minimal' } }, rader);
+      if (w.status >= 400) {
+        console.warn('[admin_create_serie]', w.status, maskPII(w.data));
+        return res.status(400).json({ error: 'Kunde inte spara serien' });
+      }
+      await logAdminAction(admin.id, 'admin_create_serie', { serie_id, dagar });
+      return res.status(200).json({ serie_id, dagar: dagar.length });
+    }
+
+    if (action === 'admin_list_pass_dag') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const sc = await nvScope(admin, req.body);
+      if (sc.fel) return res.status(400).json({ error: sc.fel });
+      const datum = String(req.body?.datum || '');
+      if (!NV_DAG_RE.test(datum)) return res.status(400).json({ error: 'Ogiltigt datum' });
+      await nvSkapaPass(sc, datum);
+      const pass = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/pass_instans?${nvScopeFilter(sc)}&datum=eq.${datum}&select=*&order=starttid`, nvGET()));
+      const del = await nvAktiva(sc.kommun_id, sc.enhet_id);
+      const ids = pass.map(p => p.id);
+      const reg = ids.length ? nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/narvaro?pass_instans_id=in.(${ids.join(',')})&select=pass_instans_id,status`, nvGET())) : [];
+      return res.status(200).json({
+        datum,
+        pass: pass.map(p => {
+          const r = reg.filter(x => x.pass_instans_id === p.id);
+          return { ...p, starttid: nvTid(p.starttid), sluttid: nvTid(p.sluttid),
+                   forvantade: del.filter(u => nvSkaDelta(u, p)).length,
+                   registrerade: r.length,
+                   narvarande: r.filter(x => x.status === 'narvarande' || x.status === 'sen').length };
+        })
+      });
+    }
+
+    if (action === 'admin_get_pass_narvaro') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const { p, fel, msg } = await nvHamtaPass(admin, req.body?.passId);
+      if (fel) return res.status(fel).json({ error: msg });
+      const del = await nvAktiva(p.kommun_id, p.enhet_id);
+      const reg = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/narvaro?pass_instans_id=eq.${p.id}&select=user_id,status,kommentar`, nvGET()));
+      const regMap = {};
+      reg.forEach(r => { regMap[r.user_id] = r; });
+      const lista = del.filter(u => nvSkaDelta(u, p) || regMap[u.user_id]).map(u => ({
+        user_id: u.user_id, name: u.name, fas: u.fas, spar: u.spar,
+        status: regMap[u.user_id]?.status || null, kommentar: regMap[u.user_id]?.kommentar || ''
+      }));
+      // Den som registrerats men sedan lämnat programmet ska ändå synas
+      reg.filter(r => !lista.some(x => x.user_id === r.user_id)).forEach(r => lista.push({
+        user_id: r.user_id, name: null, status: r.status, kommentar: r.kommentar || '', ejAktiv: true
+      }));
+      return res.status(200).json({ pass: { ...p, starttid: nvTid(p.starttid), sluttid: nvTid(p.sluttid) }, deltagare: lista, registrerad: reg.length > 0 });
+    }
+
+    if (action === 'admin_save_narvaro') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const { p, fel, msg } = await nvHamtaPass(admin, req.body?.passId);
+      if (fel) return res.status(fel).json({ error: msg });
+      if (p.installt) return res.status(400).json({ error: 'Passet är inställt' });
+      const rader = Array.isArray(req.body?.rader) ? req.body.rader : [];
+      if (!rader.length || rader.length > 200) return res.status(400).json({ error: 'Ingen närvaro att spara' });
+      // Bara deltagare som hör till passet — eller redan är registrerade på det
+      const tillatna = new Set((await nvAktiva(p.kommun_id, p.enhet_id)).filter(u => nvSkaDelta(u, p)).map(u => u.user_id));
+      nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/narvaro?pass_instans_id=eq.${p.id}&select=user_id`, nvGET())).forEach(r => tillatna.add(r.user_id));
+      const nu = new Date().toISOString();
+      const ut = [];
+      for (const r of rader) {
+        if (!r || !UUID_RE.test(String(r.user_id || ''))) return res.status(400).json({ error: 'Ogiltig deltagare' });
+        if (!tillatna.has(r.user_id)) return res.status(403).json({ error: 'En deltagare hör inte till passet' });
+        if (!NV_STATUS.includes(r.status)) return res.status(400).json({ error: 'Ogiltig närvarostatus' });
+        const k = r.kommentar == null ? null : (String(r.kommentar).trim().slice(0, 300) || null);
+        ut.push({ pass_instans_id: p.id, user_id: r.user_id, status: r.status, kommentar: k, registrerad_av: admin.id, registrerad_at: nu });
+      }
+      const w = await makeRequest(`${SUPABASE_URL}/rest/v1/narvaro?on_conflict=pass_instans_id,user_id`,
+        { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'resolution=merge-duplicates,return=minimal' } }, ut);
+      if (w.status >= 400) {
+        console.warn('[admin_save_narvaro]', w.status, maskPII(w.data));
+        return res.status(400).json({ error: 'Kunde inte spara närvaron' });
+      }
+      await logAdminAction(admin.id, 'admin_save_narvaro', { pass_instans_id: p.id, antal: ut.length });
+      return res.status(200).json({ sparade: ut.length });
+    }
+
+    // Ställ in (eller återställ) ett pass — eller alla pass i verksamheten
+    // den dagen ('dag'), t.ex. en helgdag eller studiedag.
+    if (action === 'admin_installa_pass') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const { p, fel, msg } = await nvHamtaPass(admin, req.body?.passId);
+      if (fel) return res.status(fel).json({ error: msg });
+      const omfang = req.body?.omfang === 'dag' ? 'dag' : 'pass';
+      const installt = !!req.body?.installt;
+      const kommentar = installt && req.body?.kommentar ? (String(req.body.kommentar).trim().slice(0, 300) || null) : null;
+      const url = omfang === 'dag'
+        ? `${SUPABASE_URL}/rest/v1/pass_instans?${nvScopeFilter(p)}&datum=eq.${p.datum}`
+        : `${SUPABASE_URL}/rest/v1/pass_instans?id=eq.${p.id}`;
+      const w = await makeRequest(url, { method: 'PATCH', headers: { ...serviceHeaders(), 'Prefer': 'return=representation' } }, { installt, kommentar });
+      if (w.status >= 400) return res.status(400).json({ error: 'Kunde inte ändra passet' });
+      await logAdminAction(admin.id, 'admin_installa_pass', { pass_instans_id: p.id, omfang, installt });
+      return res.status(200).json({ andrade: nvRows(w).length });
+    }
+
+    // Ändra tid, titel, typ eller målgrupp. omfang:
+    //   'pass'     — bara det här passet
+    //   'veckodag' — passets veckodag i serien, från och med fran_datum
+    //   'serie'    — alla dagar i serien, från och med fran_datum
+    if (action === 'admin_edit_schema') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const omfang = req.body?.omfang;
+      if (!['pass', 'veckodag', 'serie'].includes(omfang)) return res.status(400).json({ error: 'Välj vad ändringen ska gälla' });
+      let p = null;
+      if (req.body?.passId != null) {
+        const h = await nvHamtaPass(admin, req.body.passId);
+        if (h.fel) return res.status(h.fel).json({ error: h.msg });
+        p = h.p;
+      }
+      const v = nvValidera(req.body?.andring || {}, false);
+      if (v.fel) return res.status(400).json({ error: v.fel });
+      if (!Object.keys(v.ut).length) return res.status(200).json({ andrade: 0 });
+
+      if (omfang === 'pass') {
+        if (!p) return res.status(400).json({ error: 'Passet saknas' });
+        const s = v.ut.starttid || nvTid(p.starttid), e = v.ut.sluttid || nvTid(p.sluttid);
+        if (nvMin(e) <= nvMin(s)) return res.status(400).json({ error: 'Sluttiden måste vara efter starttiden' });
+        await makeRequest(`${SUPABASE_URL}/rest/v1/pass_instans?id=eq.${p.id}`, nvPATCH(), v.ut);
+        await logAdminAction(admin.id, 'admin_edit_schema', { omfang, pass_instans_id: p.id, falt: Object.keys(v.ut) });
+        return res.status(200).json({ andrade: 1 });
+      }
+
+      const m = await nvMallarFor(admin, omfang, p, req.body?.serieId);
+      if (m.fel) return res.status(m.fel).json({ error: m.msg });
+      const fran = String(req.body?.fran_datum || (p ? p.datum : nvIdag()));
+      if (!NV_DAG_RE.test(fran)) return res.status(400).json({ error: 'Ogiltigt datum' });
+      for (const mall of m.mallar) {
+        const s = v.ut.starttid || nvTid(mall.starttid), e = v.ut.sluttid || nvTid(mall.sluttid);
+        if (nvMin(e) <= nvMin(s)) return res.status(400).json({ error: 'Sluttiden måste vara efter starttiden' });
+      }
+      const ids = m.mallar.map(x => x.id).join(',');
+      await makeRequest(`${SUPABASE_URL}/rest/v1/pass_mall?id=in.(${ids})`, nvPATCH(), v.ut);
+      // Redan skapade pass från och med datumet följer med, även registrerade:
+      // personalen har uttryckligen valt "från och med".
+      await makeRequest(`${SUPABASE_URL}/rest/v1/pass_instans?pass_mall_id=in.(${ids})&datum=gte.${fran}`, nvPATCH(), v.ut);
+      await logAdminAction(admin.id, 'admin_edit_schema', { omfang, fran, mallar: m.mallar.length, falt: Object.keys(v.ut) });
+      return res.status(200).json({ andrade: m.mallar.length });
+    }
+
+    // Avsluta en veckodag i serien eller hela serien från och med ett datum.
+    if (action === 'admin_avsluta_schema') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const omfang = req.body?.omfang;
+      if (!['veckodag', 'serie'].includes(omfang)) return res.status(400).json({ error: 'Välj vad som ska avslutas' });
+      let p = null;
+      if (req.body?.passId != null) {
+        const h = await nvHamtaPass(admin, req.body.passId);
+        if (h.fel) return res.status(h.fel).json({ error: h.msg });
+        p = h.p;
+      }
+      const m = await nvMallarFor(admin, omfang, p, req.body?.serieId);
+      if (m.fel) return res.status(m.fel).json({ error: m.msg });
+      const fran = String(req.body?.fran_datum || (p ? p.datum : nvIdag()));
+      if (!NV_DAG_RE.test(fran)) return res.status(400).json({ error: 'Ogiltigt datum' });
+      for (const mall of m.mallar) {
+        const patch = fran <= mall.giltig_fran ? { aktiv: false } : { giltig_till: nvDagFore(fran) };
+        await makeRequest(`${SUPABASE_URL}/rest/v1/pass_mall?id=eq.${mall.id}`, nvPATCH(), patch);
+      }
+      await nvRensaFramtida(m.mallar.map(x => x.id), fran);
+      await logAdminAction(admin.id, 'admin_avsluta_schema', { omfang, fran, mallar: m.mallar.length });
+      return res.status(200).json({ avslutade: m.mallar.length });
+    }
+
+    // Närvaro per vecka för en deltagare (F1.6). Bara REGISTRERADE pass
+    // räknas: ett pass som personalen inte bockat säger ingenting om
+    // deltagaren och får inte se ut som frånvaro. 'sen' räknas som närvaro.
+    if (action === 'admin_get_deltagare_narvaro') {
+      const uid = targetUserId;
+      if (!uid || !UUID_RE.test(uid)) return res.status(400).json({ error: 'Ogiltigt deltagar-id' });
+      const { admin } = await requireAdmin(res, accessToken, action, { requestedUserId: uid });
+      if (!admin) return;
+      const r = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/narvaro?user_id=eq.${encodeURIComponent(uid)}&select=status,pass_instans(datum,starttid,sluttid,installt)`, nvGET()));
+      const veckor = {};
+      r.forEach(x => {
+        const p = x.pass_instans;
+        if (!p || p.installt) return;
+        const ms = nvMandagMs(p.datum);
+        const v = veckor[ms] || (veckor[ms] = { mandag: new Date(ms).toISOString().slice(0, 10), pass: 0, schemaMin: 0, narvaroMin: 0, sen: 0, giltig: 0, ogiltig: 0 });
+        const min = nvMin(p.sluttid) - nvMin(p.starttid);
+        v.pass++;
+        v.schemaMin += min;
+        if (x.status === 'narvarande' || x.status === 'sen') v.narvaroMin += min;
+        if (x.status === 'sen') v.sen++;
+        if (x.status === 'franvarande_giltig') v.giltig++;
+        if (x.status === 'franvarande_ogiltig') v.ogiltig++;
+      });
+      const lista = Object.values(veckor).sort((a, b) => (a.mandag < b.mandag ? 1 : -1)).slice(0, 8)
+        .map(v => ({ ...v, procent: v.schemaMin ? Math.round((100 * v.narvaroMin) / v.schemaMin) : null }));
+      return res.status(200).json({ veckor: lista });
     }
 
     if (action === 'admin_get_kommuner') {
