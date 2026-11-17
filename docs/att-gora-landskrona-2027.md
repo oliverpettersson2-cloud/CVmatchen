@@ -107,8 +107,8 @@ Grunden är byggd. Det är därför ett halvår räcker.
 ### April 2027 — bokning, avstämning, testkörning
 - [ ] **F3 Bokning** — bokningsbara tider, snabbokning av alla aktiva, ingen dubbelbokning
 - [ ] F3.5 SMS-påminnelse dagen före kl. 16 — EU-leverantör, aldrig insatsens art
-- [ ] **F4 Veckoavstämning** — tre fält, kopplad till bokningen, uppdaterar planen
-- [ ] **F8 Avbrott** — fast orsakslista + fritext, slår igenom i statistiken
+- [x] **F4 Veckoavstämning** — *klart 2026-11-17*. Tre fält i Program-fliken, en per vecka, historik per deltagare. *Nästa vecka* visas för deltagaren som *Din plan den här veckan*. Kopplingen till bokningen görs när F3 finns.
+- [x] **F8 Avbrott** — *klart 2026-11-17*. Orsak krävs när status blir Avbrott eller Avslutad, slutdatum sätts automatiskt. Orsakerna: fått jobb, börjat studera, annan insats, flyttat, personliga skäl, uteblivit, annat. **Sjukdom är medvetet borttagen** (hälsodata) — *personliga skäl* täcker det. Statistiken kommer med F7.
 - [ ] F7 Veckorapport till handläggare, automatiskt måndag morgon
 - [ ] **Testkörning med 3–5 personer**
 

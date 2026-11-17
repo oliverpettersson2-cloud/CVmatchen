@@ -2487,11 +2487,16 @@ const PROG_L = {
   spar:          { '': 'Inte valt', ordinarie: 'Ordinarie', foraldraspar: 'Föräldraspår' },
   fas:           { '': 'Inte vald', landa: 'Landa', rusta: 'Rusta', valja_soka: 'Välja och söka' },
   sfi_kurs:      { '': 'Inte kontrollerat', ingen: 'Läser inte sfi', A: 'Kurs A', B: 'Kurs B', C: 'Kurs C', D: 'Kurs D', klar_D: 'Klar med kurs D' },
-  sfi_betyg:     { '': 'Inte kontrollerat', pagar: 'Kursen pågår', A: 'A', B: 'B', C: 'C', D: 'D', E: 'E', F: 'F (ej godkänt)' }
+  sfi_betyg:     { '': 'Inte kontrollerat', pagar: 'Kursen pågår', A: 'A', B: 'B', C: 'C', D: 'D', E: 'E', F: 'F (ej godkänt)' },
+  // F8: ingen hälsoorsak — "Personliga skäl" täcker det utan att säga varför
+  avslut_orsak:  { '': 'Välj orsak…', jobb: 'Fått jobb', studier: 'Börjat studera', annan_insats: 'Gått till annan insats',
+                   flyttat: 'Flyttat', personliga_skal: 'Personliga skäl', uteblivit: 'Uteblivit', annat: 'Annat' }
 };
 const PROG_TYP_L = { programstatus: 'Programstatus', spar: 'Spår', fas: 'Fas', fas_planerad: 'Planerat fasbyte', program_start: 'Startdatum',
-                     program_slut: 'Slutdatum', sfi_kurs: 'Sfi-kurs', sfi_betyg: 'Sfi-betyg' };
+                     program_slut: 'Slutdatum', sfi_kurs: 'Sfi-kurs', sfi_betyg: 'Sfi-betyg',
+                     avslut_orsak: 'Orsak till avslut', avslut_kommentar: 'Kommentar om avslut' };
 let _programDirty = false;
+let _avDirty = false;
 
 function _progDatum(iso){
   if (!iso) return '';
@@ -2509,6 +2514,7 @@ function renderTabProgram(data, meddelande){
   // Detaljvyn hämtas och ritas om var 20:e sekund. Rör inte formuläret
   // medan personalen har osparade ändringar — annars raderas de.
   if (_programDirty && document.getElementById('progForm')) return;
+  if (_avDirty && document.getElementById('avForm')) return;
   const a = data.assignment || {};
   if (!a.user_id) {
     body.innerHTML = `<div class="ud-body-h">Program</div><div class="ud-body-empty">Programuppgifter kan bara anges för registrerade deltagare.</div>`;
@@ -2523,7 +2529,7 @@ function renderTabProgram(data, meddelande){
   body.innerHTML = `
     <div class="ud-body-h">Program</div>
     <p class="prog-intro">Fylls i för deltagare som går i ett program. Lämnas fälten tomma fungerar CVmatchen som vanligt.</p>
-    <form id="progForm" onsubmit="event.preventDefault();saveProgram()" oninput="_markProgramDirty()" onchange="_markProgramDirty()">
+    <form id="progForm" onsubmit="event.preventDefault();saveProgram()" oninput="_markProgramDirty()" onchange="_markProgramDirty();_visaAvslut()">
       <div class="prog-sec">
         <div class="prog-sec-h">Deltagande</div>
         <div class="prog-grid">
@@ -2532,6 +2538,10 @@ function renderTabProgram(data, meddelande){
           <div class="prog-f"><label for="pgFas">Fas</label>${_progSelect('pgFas','fas',a.fas_ny || a.fas)}</div>
           <div class="prog-f"><label for="pgStart">Startdatum</label><input type="date" id="pgStart" class="prog-in" data-falt="program_start" value="${escapeHtml(a.program_start || '')}"></div>
           <div class="prog-f"><label for="pgSlut">Slutdatum</label><input type="date" id="pgSlut" class="prog-in" data-falt="program_slut" value="${escapeHtml(a.program_slut || '')}"></div>
+        </div>
+        <div id="pgAvslut" class="prog-grid" style="margin-top:12px;${a.programstatus === 'avbrott' || a.programstatus === 'avslutad' ? '' : 'display:none'}">
+          <div class="prog-f"><label for="pgOrsak">Orsak till avslut</label>${_progSelect('pgOrsak','avslut_orsak',a.avslut_orsak)}</div>
+          <div class="prog-f"><label for="pgAvslutKom">Kommentar (valfritt)</label><input id="pgAvslutKom" class="prog-in" data-falt="avslut_kommentar" maxlength="300" placeholder="Inga hälsouppgifter" value="${escapeHtml(a.avslut_kommentar || '')}"></div>
         </div>
         ${fasAndrad ? `<div class="prog-note">${fasAndrad}</div>` : ''}
         ${a.fas ? `<label class="prog-note" style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="pgFasDirekt"> Byt fas direkt i stället (för att rätta ett fel)</label>` : ''}
@@ -2549,13 +2559,80 @@ function renderTabProgram(data, meddelande){
         <span class="prog-msg${meddelande ? ' ' + meddelande.klass : ''}" id="pgMsg" role="status">${meddelande ? escapeHtml(meddelande.text) : ''}</span>
       </div>
     </form>
-    <div class="ud-body-h" style="font-size:14px">Närvaro per vecka</div>
+    <div class="ud-body-h" style="font-size:14px">Veckoavstämning</div>
+    <div id="progAvst"><div class="ud-body-empty">Laddar…</div></div>
+    <div class="ud-body-h" style="font-size:14px;margin-top:22px">Närvaro per vecka</div>
     <div id="progNarvaro"><div class="ud-body-empty">Laddar…</div></div>
     <div class="ud-body-h" style="font-size:14px;margin-top:22px">Ändringar</div>
     <div id="progLogg"><div class="ud-body-empty">Laddar…</div></div>`;
   _programDirty = false;
   _laddaProgramNarvaro(a.user_id);
   _laddaProgramLogg(a.user_id);
+  _laddaAvstamning(a.user_id);
+}
+
+function _visaAvslut(){
+  const st = document.getElementById('pgStatus')?.value;
+  const box = document.getElementById('pgAvslut');
+  if (box) box.style.display = (st === 'avbrott' || st === 'avslutad') ? '' : 'none';
+}
+
+// ── Veckoavstämning (F4) ────────────────────────────────────
+function _veckansMandag(){
+  const t = new Date(); t.setHours(12); t.setDate(t.getDate() - ((t.getDay() || 7) - 1));
+  return t.toLocaleDateString('sv-SE');
+}
+function _veckoNr(d){
+  const t = new Date(d + 'T12:00:00Z'); const dag = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - dag);
+  return Math.ceil(((t - new Date(Date.UTC(t.getUTCFullYear(), 0, 1))) / 86400000 + 1) / 7);
+}
+const AV_FRAGOR = [['hur_gick', 'Hur gick veckans uppgifter?'], ['svart', 'Vad var svårt?'], ['nasta_vecka', 'Vad gör du nästa vecka?']];
+
+async function _laddaAvstamning(uid){
+  const box = document.getElementById('progAvst');
+  if (!box) return;
+  let lista = [];
+  try {
+    lista = (await (window.postMedFelmeddelande || post)('admin_list_avstamning', { targetUserId: uid })).avstamningar || [];
+  } catch (e) {
+    if (document.getElementById('progAvst')) box.innerHTML = `<div class="ud-body-empty" style="color:var(--rd)">${escapeHtml(e.message || 'Kunde inte hämta avstämningar')}</div>`;
+    return;
+  }
+  if (currentUserId !== uid || !document.getElementById('progAvst') || (_avDirty && document.getElementById('avForm'))) return;
+  const mandag = _veckansMandag();
+  const denna = lista.find(x => x.vecka === mandag) || {};
+  box.innerHTML = `
+    <form id="avForm" class="prog-sec" onsubmit="event.preventDefault();_sparaAvstamning()" oninput="_avDirty=true;document.getElementById('avSpara').disabled=false">
+      <div class="prog-sec-h">Vecka ${_veckoNr(mandag)} ${denna.id ? '· sparad' : ''}</div>
+      ${AV_FRAGOR.map(([k, l]) => `<div class="prog-f" style="margin-bottom:10px"><label for="av_${k}">${l}</label>
+        <textarea id="av_${k}" class="prog-in" rows="2" maxlength="1000" style="resize:vertical">${escapeHtml(denna[k] || '')}</textarea></div>`).join('')}
+      <div class="prog-note" style="margin-top:0">Fyll i under eller direkt efter samtalet. <b>Nästa vecka</b> visas för deltagaren som veckans plan. Skriv inga hälsouppgifter.</div>
+      <div class="prog-actions"><button type="submit" class="btn btn-primary" id="avSpara" disabled>Spara avstämning</button><span class="prog-msg" id="avMsg" role="status"></span></div>
+    </form>
+    ${lista.filter(x => x.vecka !== mandag).length ? '<div class="prog-logg">' + lista.filter(x => x.vecka !== mandag).map(x => `
+      <details class="prog-logg-r" style="display:block"><summary style="cursor:pointer"><b>Vecka ${_veckoNr(x.vecka)}</b> · ${escapeHtml(_progDatum(x.vecka))}${x.av ? ' · ' + escapeHtml(x.av) : ''}</summary>
+        ${AV_FRAGOR.filter(([k]) => x[k]).map(([k, l]) => `<div style="margin:6px 0 0"><div style="font-size:11px;color:var(--mu);font-weight:700">${l}</div><div style="white-space:pre-line">${escapeHtml(x[k])}</div></div>`).join('')}
+      </details>`).join('') + '</div>' : ''}`;
+}
+
+async function _sparaAvstamning(){
+  const uid = currentUserId;
+  const av = { vecka: _veckansMandag() };
+  AV_FRAGOR.forEach(([k]) => { av[k] = document.getElementById('av_' + k)?.value || ''; });
+  const m = document.getElementById('avMsg'), b = document.getElementById('avSpara');
+  if (b) b.disabled = true;
+  if (m) { m.className = 'prog-msg'; m.textContent = 'Sparar…'; }
+  try {
+    await (window.postMedFelmeddelande || post)('admin_save_avstamning', { targetUserId: uid, avstamning: av });
+    _avDirty = false;
+    if (currentUserId !== uid) return;
+    await _laddaAvstamning(uid);
+    const m2 = document.getElementById('avMsg');
+    if (m2) { m2.className = 'prog-msg ok'; m2.textContent = 'Sparat'; }
+  } catch (e) {
+    if (b) b.disabled = false;
+    if (m) { m.className = 'prog-msg err'; m.textContent = e.message || 'Kunde inte spara'; }
+  }
 }
 
 function _markProgramDirty(){
@@ -2626,6 +2703,7 @@ async function _laddaProgramLogg(uid){
         const [fas, fran] = String(v).split('@');
         return (PROG_L.fas[fas] || fas) + (fran ? ' från ' + _progDatum(fran) : '');
       }
+      if (typ === 'avslut_kommentar') return String(v);
       return PROG_L[typ] ? (PROG_L[typ][v] || v) : _progDatum(v);
     };
     document.getElementById('progLogg').innerHTML = '<div class="prog-logg">' + rader.map(x =>

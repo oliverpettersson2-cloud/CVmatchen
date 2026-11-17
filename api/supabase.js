@@ -67,7 +67,7 @@ export default async function handler(req, res) {
     admin_update_program: 60, admin_save_narvaro: 120, admin_edit_schema: 60,
     admin_create_serie: 60, admin_avsluta_schema: 30, admin_installa_pass: 60,
     admin_save_vecka_tema: 60, admin_save_temacykel_start: 30,
-    admin_save_praktik: 60, admin_save_praktik_kandidat: 120, my_praktik_svar: 30, my_att_gora_klar: 60,
+    admin_save_praktik: 60, admin_save_praktik_kandidat: 120, my_praktik_svar: 30, my_att_gora_klar: 60, admin_save_avstamning: 60,
     admin_save_grupp: 60, admin_set_grupp_deltagare: 60
   };
   if (_action && _RATE_LIMITS[_action] && !checkRateLimit(_ip, _action, _RATE_LIMITS[_action])) {
@@ -886,7 +886,7 @@ export default async function handler(req, res) {
       if (!admin) return;
       const targetUserId = req.body?.targetUserId;
       if (!targetUserId) return res.status(400).json({ error: 'targetUserId krävs' });
-      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','narvaro','praktik_kandidat','grupp_deltagare','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','narvaro','praktik_kandidat','grupp_deltagare','avstamning','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
       for (const t of TABLES) {
         await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${targetUserId}`, { method: 'DELETE', headers: serviceHeaders() });
       }
@@ -903,7 +903,7 @@ export default async function handler(req, res) {
       // GDPR: deltagare raderar sitt eget konto.
       const jwt = await verifyJwtUser(accessToken);
       if (!jwt) return res.status(401).json({ error: 'invalid_token' });
-      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','narvaro','praktik_kandidat','grupp_deltagare','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','narvaro','praktik_kandidat','grupp_deltagare','avstamning','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
       for (const t of TABLES) {
         await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${jwt.id}`, { method: 'DELETE', headers: serviceHeaders() });
       }
@@ -1231,7 +1231,10 @@ export default async function handler(req, res) {
       fas:           ['landa', 'rusta', 'valja_soka'],
       programstatus: ['aktiv', 'avslutad', 'avbrott'],
       sfi_kurs:      ['ingen', 'A', 'B', 'C', 'D', 'klar_D'],
-      sfi_betyg:     ['A', 'B', 'C', 'D', 'E', 'F', 'pagar']
+      sfi_betyg:     ['A', 'B', 'C', 'D', 'E', 'F', 'pagar'],
+      // F8: orsak när programmet avslutas eller avbryts. Ingen hälsoorsak —
+      // pilot 1 samlar inte in hälsodata.
+      avslut_orsak:  ['jobb', 'studier', 'annan_insats', 'flyttat', 'personliga_skal', 'uteblivit', 'annat']
     };
     const PROGRAM_DATUM = ['program_start', 'program_slut'];
     const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -1257,6 +1260,54 @@ export default async function handler(req, res) {
       if (admin.role !== 'superadmin' && admin.enhet_id != null
           && String(rad.enhet_id) !== String(admin.enhet_id)) return { fel: 403 };
       return { rad };
+    }
+
+    // ── Veckoavstämning (F4) ────────────────────────────────────
+    // En per deltagare och vecka. "Nästa vecka" visas för deltagaren.
+    const AV_FALT = ['hur_gick', 'svart', 'nasta_vecka'];
+    const avMandag = d => { const t = new Date(d + 'T12:00:00Z'); t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() || 7) - 1)); return t.toISOString().slice(0, 10); };
+
+    if (action === 'admin_list_avstamning') {
+      const uid = targetUserId;
+      if (!uid || !UUID_RE.test(uid)) return res.status(400).json({ error: 'Ogiltigt deltagar-id' });
+      const { admin } = await requireAdmin(res, accessToken, action, { requestedUserId: uid });
+      if (!admin) return;
+      const { fel } = await hamtaProgramDeltagare(admin, uid);
+      if (fel) return res.status(fel).json({ error: fel === 404 ? 'Deltagaren saknas' : 'Deltagaren tillhör en annan enhet' });
+      const r = await makeRequest(`${SUPABASE_URL}/rest/v1/avstamning?user_id=eq.${uid}&select=id,vecka,hur_gick,svart,nasta_vecka,skapad_av,uppdaterad_at&order=vecka.desc&limit=52`, { method: 'GET', headers: serviceHeaders() });
+      const rader = Array.isArray(r.data) ? r.data : [];
+      const aIds = [...new Set(rader.map(x => x.skapad_av).filter(Boolean))];
+      const namn = {};
+      if (aIds.length) {
+        const a = await makeRequest(`${SUPABASE_URL}/rest/v1/admins?id=in.(${aIds.join(',')})&select=id,name,email`, { method: 'GET', headers: serviceHeaders() });
+        (Array.isArray(a.data) ? a.data : []).forEach(x => { namn[x.id] = x.name || String(x.email || '').split('@')[0]; });
+      }
+      return res.status(200).json({ avstamningar: rader.map(x => ({ ...x, av: namn[x.skapad_av] || null })) });
+    }
+
+    if (action === 'admin_save_avstamning') {
+      const uid = targetUserId;
+      if (!uid || !UUID_RE.test(uid)) return res.status(400).json({ error: 'Ogiltigt deltagar-id' });
+      const { admin } = await requireAdmin(res, accessToken, action, { requestedUserId: uid });
+      if (!admin) return;
+      const { fel } = await hamtaProgramDeltagare(admin, uid);
+      if (fel) return res.status(fel).json({ error: fel === 404 ? 'Deltagaren saknas' : 'Deltagaren tillhör en annan enhet' });
+      const b = req.body?.avstamning || {};
+      const dag = String(b.vecka || new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Stockholm' }));
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(dag)) return res.status(400).json({ error: 'Ogiltigt datum' });
+      const rad = { user_id: uid, vecka: avMandag(dag), uppdaterad_at: new Date().toISOString() };
+      for (const f of AV_FALT) {
+        const v = String(b[f] || '').trim();
+        if (v.length > 1000) return res.status(400).json({ error: 'Varje fält får vara högst 1000 tecken' });
+        rad[f] = v || null;
+      }
+      if (!AV_FALT.some(f => rad[f])) return res.status(400).json({ error: 'Fyll i minst ett fält' });
+      const w = await makeRequest(`${SUPABASE_URL}/rest/v1/avstamning?on_conflict=user_id,vecka`,
+        { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'resolution=merge-duplicates,return=minimal' } },
+        { ...rad, skapad_av: admin.id });
+      if (w.status >= 400) { console.warn('[admin_save_avstamning]', w.status, maskPII(w.data)); return res.status(400).json({ error: 'Kunde inte spara avstämningen' }); }
+      await logAdminAction(admin.id, 'admin_save_avstamning', { target_user_id: uid, vecka: rad.vecka });
+      return res.status(200).json({ ok: true, vecka: rad.vecka });
     }
 
     if (action === 'admin_update_program') {
@@ -1314,6 +1365,27 @@ export default async function handler(req, res) {
           return res.status(400).json({ error: `Ogiltigt datum för ${falt}` });
         }
         if (v !== (cur[falt] ?? null)) { patch[falt] = v; logg.push({ typ: falt, fran: cur[falt] ?? null, till: v }); }
+      }
+
+      // F8: avslut och avbrott kräver orsak; slutdatum sätts om det saknas
+      const nyStatus = 'programstatus' in patch ? patch.programstatus : cur.programstatus;
+      const avslutas = nyStatus === 'avbrott' || nyStatus === 'avslutad';
+      if (avslutas && !('avslut_orsak' in patch ? patch.avslut_orsak : cur.avslut_orsak)) {
+        return res.status(400).json({ error: 'Välj orsak till att programmet avslutas' });
+      }
+      if ('avslut_kommentar' in indata) {
+        const k = String(indata.avslut_kommentar || '').trim();
+        if (k.length > 300) return res.status(400).json({ error: 'Kommentaren får vara högst 300 tecken' });
+        if ((k || null) !== (cur.avslut_kommentar ?? null)) { patch.avslut_kommentar = k || null; logg.push({ typ: 'avslut_kommentar', fran: null, till: k ? 'ändrad' : null }); }
+      }
+      if (!avslutas && 'programstatus' in patch && (cur.avslut_orsak || cur.avslut_kommentar)) {
+        // Tillbaka till aktiv: orsaken gäller inte längre (finns kvar i loggen)
+        if (cur.avslut_orsak && !('avslut_orsak' in patch)) { patch.avslut_orsak = null; logg.push({ typ: 'avslut_orsak', fran: cur.avslut_orsak, till: null }); }
+        if (cur.avslut_kommentar && !('avslut_kommentar' in patch)) patch.avslut_kommentar = null;
+      }
+      if (avslutas && 'programstatus' in patch && !('program_slut' in patch)) {
+        const idagSE = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Stockholm' });
+        if (!cur.program_slut || cur.program_slut > idagSE) { patch.program_slut = idagSE; logg.push({ typ: 'program_slut', fran: cur.program_slut ?? null, till: idagSE }); }
       }
 
       const start = 'program_start' in patch ? patch.program_start : cur.program_start;
@@ -2295,8 +2367,12 @@ export default async function handler(req, res) {
       });
 
       const minPraktik = (await pkPlaceringar([jwt.id]))[jwt.id] || [];
+      // F4.3: senaste avstämningens "nästa vecka" — från förra veckan eller denna
+      const forraMandag = new Date(nvMandagMs(idag) - 7 * 86400000).toISOString().slice(0, 10);
+      const planRad = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/avstamning?user_id=eq.${jwt.id}&vecka=gte.${forraMandag}&nasta_vecka=not.is.null&select=vecka,nasta_vecka,uppdaterad_at&order=vecka.desc&limit=1`, nvGET()))[0];
       return res.status(200).json({
         iProgram: true,
+        plan: planRad ? { text: planRad.nasta_vecka, skriven: planRad.uppdaterad_at.slice(0, 10) } : null,
         grupper: (u.grupper || []).filter(g => g.aktiv && (!g.slut || g.slut >= idag)).map(g => g.namn).filter(Boolean),
         fas: nvFas(u, idag), spar: u.spar,
         fasNy: u.fas_ny || null, fasNyFran: u.fas_ny_fran || null,

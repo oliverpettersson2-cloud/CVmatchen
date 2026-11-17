@@ -149,6 +149,8 @@
         (tillbaka ? '<button type="button" class="mp-tillbaka" data-mp-tillbaka="1">← Tillbaka</button>' : '') +
         '<h2 class="mp-h">Mitt schema</h2>' +
         '<p class="mp-fas">' + fasRad + '</p>' +
+        (d.plan ? '<div class="mp-plan"><div class="mp-plan-h"><span>📝 Din plan den här veckan</span>' +
+          hor('Din plan den här veckan. ' + d.plan.text, 'Lyssna på din plan') + '</div><p>' + esc(d.plan.text) + '</p></div>' : '') +
         '<div class="mp-veckonav">' +
         '<button type="button" class="mp-pil" data-mp-vecka="-7" aria-label="Föregående vecka">‹</button>' +
         '<span>Vecka ' + veckonummer(d.fran) + '</span>' +
@@ -261,6 +263,9 @@
       '.mp-h{font-size:24px;font-weight:800;margin:4px 0 6px}',
       '.mp-h3{font-size:17px;font-weight:800;margin:0 0 10px}',
       '.mp-fas{color:rgba(255,255,255,.8);font-size:15px;line-height:1.5;margin:0 0 14px}',
+      '.mp-plan{background:rgba(240,192,64,.1);border:1px solid rgba(240,192,64,.35);border-radius:14px;padding:12px 14px;margin:0 0 16px}',
+      '.mp-plan-h{display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:800;font-size:15px}',
+      '.mp-plan p{margin:6px 0 0;font-size:15px;line-height:1.5;white-space:pre-line}',
       '.mp-veckonav{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,255,255,.05);border-radius:12px;padding:6px;margin-bottom:14px;font-weight:800;font-size:16px}',
       '.mp-pil{width:46px;height:46px;border-radius:10px;border:0;background:rgba(255,255,255,.08);color:#fff;font-size:24px;cursor:pointer}',
       '.mp-dag{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:12px 14px;margin-bottom:10px}',
