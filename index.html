@@ -30,6 +30,7 @@
   <script src="intervju.js" defer></script>
   <link rel="stylesheet" href="sprak.css">
   <script src="sprak.js" defer></script>
+  <script src="mitt-program.js" defer></script>
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
   <link rel="apple-touch-icon" href="/icon-192.png">
   <link rel="apple-touch-icon" sizes="512x512" href="/icon-512.png">
@@ -8541,6 +8542,9 @@ ${styleTexts}
   <!-- Mobil innehållsyta -->
   <div id="mobileContent" style="top: 52px;">
 
+    <!-- Mitt schema — nås från kortet på Hej, ingen egen menyknapp -->
+    <div class="mob-panel" id="mobPanel-program"><div style="padding:8px 16px 32px;"><div id="mpVy"></div></div></div>
+
     <!-- FLIK 1: Info (Personuppgifter) -->
     <div class="mob-panel" id="mobPanel-info">
 
@@ -11512,6 +11516,8 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
     <!-- FLIK: Hej -->
     <div class="mob-panel mob-panel--active" id="mobPanel-hej">
       <div style="padding:8px 16px 32px;">
+        <!-- Dagens pass — visas bara för deltagare i ett program (mitt-program.js) -->
+        <div id="mpHejKort" hidden></div>
 
         <!-- Hero -->
         <div style="text-align:center;padding:28px 0 24px;">
@@ -12178,6 +12184,11 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
   }
 
   // ── Flik-navigation ──────────────────────────────────
+  window.mpOppnaFranHej = function() {
+    mobSwitchTab('program');
+    if (typeof window.mpOppna === 'function') window.mpOppna('mpVy', function(){ mobSwitchTab('hej'); });
+  };
+
   function mobSwitchTab(tab) {
     if (!isMobile()) return;
 
@@ -12200,8 +12211,10 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
 
     const panel = document.getElementById('mobPanel-' + tab);
     if (panel) panel.classList.add('mob-panel--active');
-    const btn = document.getElementById('tabBtn-' + tab);
+    // Schemat hör till startsidan — låt Hej-knappen vara markerad
+    const btn = document.getElementById('tabBtn-' + (tab === 'program' ? 'hej' : tab));
     if (btn) btn.classList.add('mob-tab--active');
+    if (tab === 'hej' && typeof window.mpHejKort === 'function') { try { window.mpHejKort('mpHejKort'); } catch(e) {} }
 
     if (tab === 'export') {
       mobBuildTemplateGrid();

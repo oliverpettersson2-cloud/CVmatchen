@@ -2488,7 +2488,7 @@ const PROG_L = {
   sfi_kurs:      { '': 'Inte kontrollerat', ingen: 'Läser inte sfi', A: 'Kurs A', B: 'Kurs B', C: 'Kurs C', D: 'Kurs D', klar_D: 'Klar med kurs D' },
   sfi_betyg:     { '': 'Inte kontrollerat', pagar: 'Kursen pågår', A: 'A', B: 'B', C: 'C', D: 'D', E: 'E', F: 'F (ej godkänt)' }
 };
-const PROG_TYP_L = { programstatus: 'Programstatus', spar: 'Spår', fas: 'Fas', program_start: 'Startdatum',
+const PROG_TYP_L = { programstatus: 'Programstatus', spar: 'Spår', fas: 'Fas', fas_planerad: 'Planerat fasbyte', program_start: 'Startdatum',
                      program_slut: 'Slutdatum', sfi_kurs: 'Sfi-kurs', sfi_betyg: 'Sfi-betyg' };
 let _programDirty = false;
 
@@ -2513,7 +2513,9 @@ function renderTabProgram(data, meddelande){
     body.innerHTML = `<div class="ud-body-h">Program</div><div class="ud-body-empty">Programuppgifter kan bara anges för registrerade deltagare.</div>`;
     return;
   }
-  const fasAndrad = a.fas_andrad_at ? `Fas ändrad ${escapeHtml(_progDatum(a.fas_andrad_at))}.` : '';
+  const fasAndrad = (a.fas_andrad_at ? `Fas ändrad ${escapeHtml(_progDatum(a.fas_andrad_at))}. ` : '')
+    + (a.fas_ny ? `<b>Byter till ${escapeHtml(PROG_L.fas[a.fas_ny] || a.fas_ny)} från ${escapeHtml(_progDatum(a.fas_ny_fran))}.</b> ` : '')
+    + (a.fas ? 'Ett nytt fasbyte gäller från nästa måndag, så att veckans schema inte ändras mitt i veckan.' : '');
   const sfiKontroll = a.sfi_verifierad_at
     ? `Kontrollerad ${escapeHtml(_progDatum(a.sfi_verifierad_at))}.`
     : 'Inte kontrollerad än.';
@@ -2526,11 +2528,12 @@ function renderTabProgram(data, meddelande){
         <div class="prog-grid">
           <div class="prog-f"><label for="pgStatus">Programstatus</label>${_progSelect('pgStatus','programstatus',a.programstatus)}</div>
           <div class="prog-f"><label for="pgSpar">Spår</label>${_progSelect('pgSpar','spar',a.spar)}</div>
-          <div class="prog-f"><label for="pgFas">Fas</label>${_progSelect('pgFas','fas',a.fas)}</div>
+          <div class="prog-f"><label for="pgFas">Fas</label>${_progSelect('pgFas','fas',a.fas_ny || a.fas)}</div>
           <div class="prog-f"><label for="pgStart">Startdatum</label><input type="date" id="pgStart" class="prog-in" data-falt="program_start" value="${escapeHtml(a.program_start || '')}"></div>
           <div class="prog-f"><label for="pgSlut">Slutdatum</label><input type="date" id="pgSlut" class="prog-in" data-falt="program_slut" value="${escapeHtml(a.program_slut || '')}"></div>
         </div>
         ${fasAndrad ? `<div class="prog-note">${fasAndrad}</div>` : ''}
+        ${a.fas ? `<label class="prog-note" style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="pgFasDirekt"> Byt fas direkt i stället (för att rätta ett fel)</label>` : ''}
       </div>
       <div class="prog-sec">
         <div class="prog-sec-h">Sfi — kontrollerad uppgift</div>
@@ -2571,7 +2574,10 @@ async function saveProgram(){
   if (b) b.disabled = true;
   if (m) { m.className = 'prog-msg'; m.textContent = 'Sparar…'; }
   try {
-    const r = await (window.postMedFelmeddelande || post)('admin_update_program', { targetUserId: uid, program });
+    const fasDirekt = !!document.getElementById('pgFasDirekt')?.checked;
+    // Står fältet kvar på nuvarande fas medan ett byte är planerat, skicka ändå med
+    // fasen så att servern kan avgöra om bytet ska avbrytas.
+    const r = await (window.postMedFelmeddelande || post)('admin_update_program', { targetUserId: uid, program, fasDirekt });
     if (currentUserId !== uid) return;
     if (currentUserData) currentUserData.assignment = r.assignment;
     _programDirty = false;
@@ -2613,8 +2619,14 @@ async function _laddaProgramLogg(uid){
     if (currentUserId !== uid || !document.getElementById('progLogg')) return;
     const rader = r.logg || [];
     if (!rader.length) { document.getElementById('progLogg').innerHTML = '<div class="ud-body-empty">Inga ändringar ännu.</div>'; return; }
-    const visa = (typ, v) => v == null || v === '' ? '—'
-      : (PROG_L[typ] ? (PROG_L[typ][v] || v) : _progDatum(v));
+    const visa = (typ, v) => {
+      if (v == null || v === '') return typ === 'fas_planerad' ? 'avbrutet' : '—';
+      if (typ === 'fas_planerad') {
+        const [fas, fran] = String(v).split('@');
+        return (PROG_L.fas[fas] || fas) + (fran ? ' från ' + _progDatum(fran) : '');
+      }
+      return PROG_L[typ] ? (PROG_L[typ][v] || v) : _progDatum(v);
+    };
     document.getElementById('progLogg').innerHTML = '<div class="prog-logg">' + rader.map(x =>
       `<div class="prog-logg-r"><span><b>${escapeHtml(PROG_TYP_L[x.typ] || x.typ)}:</b> ${escapeHtml(visa(x.typ, x.fran))} → ${escapeHtml(visa(x.typ, x.till))}</span>` +
       `<span>${escapeHtml(_progDatum(x.skapad_at))}${x.av ? ' · ' + escapeHtml(x.av) : ''}</span></div>`

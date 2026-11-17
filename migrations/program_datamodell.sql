@@ -81,3 +81,17 @@ create index if not exists program_logg_user_idx
 -- RLS på utan policies: bara backend (service role) läser och skriver.
 -- Deltagaren har ingen anledning att läsa personalens ändringslogg direkt.
 alter table public.program_logg enable row level security;
+
+-- 4. Planerat fasbyte (kravspec F2.6) ---------------------------------
+-- En deltagare som redan har en fas byter från nästa måndag, så att
+-- veckans schema inte ändras mitt i veckan. Fasen och datumet sparas
+-- som ett par; det ena får inte finnas utan det andra.
+alter table public.user_assignments
+  add column if not exists fas_ny       text,
+  add column if not exists fas_ny_fran  date;
+alter table public.user_assignments drop constraint if exists ua_fas_ny_check;
+alter table public.user_assignments add constraint ua_fas_ny_check
+  check (fas_ny is null or fas_ny in ('landa','rusta','valja_soka'));
+alter table public.user_assignments drop constraint if exists ua_fas_ny_par_check;
+alter table public.user_assignments add constraint ua_fas_ny_par_check
+  check ((fas_ny is null) = (fas_ny_fran is null));

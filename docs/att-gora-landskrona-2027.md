@@ -44,7 +44,7 @@ Grunden är byggd. Det är därför ett halvår räcker.
 - [ ] **Femte rollnivå: KBT/fysio** — ser bara egna bokningar och deltagarnamn. *Flyttad till april:* rollen har inget att visa förrän bokningarna finns.
 - [x] **F1 Närvaro** — dagens pass, ett klick per deltagare, frånvarotyp + kommentar — *klart 2026-11-16*. Närvarande är förvalt (F1.2); bara deltagare med programstatus Aktiv och rätt fas/spår listas (F1.1).
 - [x] F1.6 Närvaro i procent per deltagare och vecka — *klart 2026-11-16*, i fliken Program. Räknas bara på registrerade pass; ett obockat pass är okänt, inte frånvaro. Sen räknas som närvaro.
-- [ ] F1.5 Deltagaren ser sin egen närvaro — byggs med deltagarens schemavy (F2.3)
+- [x] F1.5 Deltagaren ser sin egen närvaro — per pass och per vecka — *klart 2026-11-17*
 - [x] Ändra inaktivitetspaus i tidloggningen från 90 sek till 5 min (F1.4) — *klart 2026-11-13*
 - [ ] B3: logga även *läsning* av deltagardata, inte bara åtgärder
 - [ ] B2: kommunens handläggare ser bara egna deltagare. *Flyttad till maj, med handläggarvyn:* rollen `handlaggare` används i dag av personalen, som ska se alla. B2 kräver en ny, läsbehörig roll — inte en inskränkning av den befintliga.
@@ -63,9 +63,9 @@ Grunden är byggd. Det är därför ett halvår räcker.
 
 ### Mars 2027 — schema och skattning
 - [x] Veckoschema som **serier** (`pass_mall` + `pass_instans`) — *klart 2026-11-16*. En serie = flera veckodagar, giltighetstid, varje eller varannan vecka. Ändringar med valt omfång: bara det här passet / alla [måndagar] framåt / hela serien framåt. Ställ in ett pass eller alla pass en dag. Pass med registrerad närvaro skrivs aldrig bort.
-- [ ] F2.3 Deltagarens schemavy i mobilen — enkelt språk, ikoner L/U/A/D, uppläsning
+- [x] F2.3 Deltagarens schemavy — *klart 2026-11-17*. Dagens pass överst på Hej, hela veckan ett tryck bort. Ingen ny menyknapp. Ikoner, uppläsning av varje dag, inställda pass med anledning. Syns bara för deltagare med programstatus Aktiv. Mobil och desktop.
 - [ ] `vecka_tema` — 8-veckorscykeln med tema, utflykt, ordtema, hälsofokus
-- [ ] F2.6 Fasbyte Landa → Rusta → Välja och söka, slår igenom nästa vecka. *Delvis:* fasen sätts i fliken Program men slår i dag igenom direkt, inte från nästa vecka.
+- [x] F2.6 Fasbyte slår igenom nästa måndag — *klart 2026-11-17*. Första fasen sätts direkt (ny deltagare får Landa på en gång). Kryssruta för att rätta direkt. Planerat byte syns i Program och i deltagarens vy.
 - [ ] **F5 Funktionsskattning mot målyrke** — sju dimensioner, fyra svarsalternativ
 - [ ] WHO-5 + självskattad hälsa (en fråga, jämförbar med nationell statistik)
 - [ ] Beräkning: arbetsförmåga mot målyrket → matchar / delvis / inte

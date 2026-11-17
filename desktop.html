@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="sprak.css">
 <script src="intervju.js" defer></script>
   <script src="sprak.js" defer></script>
+  <script src="mitt-program.js" defer></script>
 
 <style>
   :focus-visible{outline:3px solid #1a73e8;outline-offset:2px;}
@@ -3217,6 +3218,7 @@
 
   <!-- ===== HEJ-VYN ===== -->
   <section class="view active" id="view-hej">
+    <div id="mpHejDesk" hidden style="max-width:640px;margin:0 auto 18px;"></div>
     <div class="hej-hero">
       <div class="hej-greet" id="hejGreet" style="display:none;"></div>
       <div class="hej-icon">🎯</div>
@@ -3584,6 +3586,9 @@
        kapade ID:t (getElementById tar första i DOM) så modulen byggde sitt
        UI i en dold nod → blank vy. Behåll INTE en dublett här. -->
   <section class="view" id="view-intervju"></section>
+
+  <!-- Mitt schema — nås från kortet på Hej -->
+  <section class="view" id="view-program"><div id="mpVyDesk"></div></section>
 
   <!-- ===== UTBILDA DIG / AI-SYV-VYN (portad från mobilen) ===== -->
   <section class="view" id="view-aisyv">

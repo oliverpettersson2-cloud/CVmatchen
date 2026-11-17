@@ -1124,6 +1124,8 @@
   // ============================================================
   // VIEW SWITCHING
   // ============================================================
+  window.mpOppnaFranHej = function () { window.switchView('program'); };
+
   window.switchView = function(view) {
     // ALIAS: 'intervju' och 'train' → 'ovningar' (numera "Träna"-fliken som rymmer båda)
     let openIntervju = false;
@@ -1153,6 +1155,10 @@
 
     if (view === 'hej') {
       renderHejView();
+      if (typeof window.mpHejKort === 'function') { try { window.mpHejKort('mpHejDesk'); } catch(e) {} }
+    }
+    if (view === 'program' && typeof window.mpOppna === 'function') {
+      window.mpOppna('mpVyDesk', function () { window.switchView('hej'); });
     }
     if (view === 'cv') {
       cvSwitchStep(currentStep);

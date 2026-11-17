@@ -1235,12 +1235,21 @@ export default async function handler(req, res) {
 
     // requestedUserId låser bara till kommun. För skrivning låses också
     // till enhet för den som har en — samma regel som deltagarlistan.
+    async function befordraFas(rad) {
+      const idag = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Stockholm' });
+      if (!rad || !rad.fas_ny || !rad.fas_ny_fran || rad.fas_ny_fran > idag) return rad;
+      const patch = { fas: rad.fas_ny, fas_andrad_at: rad.fas_ny_fran + 'T00:00:00+01:00', fas_ny: null, fas_ny_fran: null };
+      await makeRequest(`${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${encodeURIComponent(rad.user_id)}&fas_ny_fran=eq.${rad.fas_ny_fran}`,
+        { method: 'PATCH', headers: { ...serviceHeaders(), 'Prefer': 'return=minimal' } }, patch);
+      return { ...rad, ...patch };
+    }
+
     async function hamtaProgramDeltagare(admin, uid) {
       const r = await makeRequest(
         `${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${encodeURIComponent(uid)}&select=*&limit=1`,
         { method: 'GET', headers: serviceHeaders() }
       );
-      const rad = (Array.isArray(r.data) ? r.data : [])[0];
+      const rad = await befordraFas((Array.isArray(r.data) ? r.data : [])[0]);
       if (!rad) return { fel: 404 };
       if (admin.role !== 'superadmin' && admin.enhet_id != null
           && String(rad.enhet_id) !== String(admin.enhet_id)) return { fel: 403 };
@@ -1256,9 +1265,36 @@ export default async function handler(req, res) {
       if (fel === 404) return res.status(404).json({ error: 'Deltagaren saknas' });
       if (fel === 403) return res.status(403).json({ error: 'Deltagaren tillhör en annan enhet' });
 
-      const indata = (req.body && typeof req.body.program === 'object' && req.body.program) || {};
+      let indata = (req.body && typeof req.body.program === 'object' && req.body.program) || {};
       const patch = {};
       const logg = [];
+
+      // Fasbyte (F2.6): en deltagare som redan har en fas byter från nästa
+      // måndag, så att veckans schema inte ändras mitt i veckan. Första
+      // fasen sätts direkt (en ny deltagare ska få rätt schema på en gång),
+      // liksom när personalen uttryckligen väljer att rätta direkt.
+      let fasPlan = null;
+      if ('fas' in indata) {
+        const ny = indata.fas === '' || indata.fas == null ? null : String(indata.fas);
+        if (ny !== null && !PROGRAM_VAL.fas.includes(ny)) return res.status(400).json({ error: 'Ogiltigt värde för fas' });
+        const direkt = !!(req.body && req.body.fasDirekt) || !cur.fas || ny === null;
+        let hanterad = false;
+        if (direkt) {
+          // Direktbyte: ett ev. planerat byte ersätts av det som sätts nu
+          if (cur.fas_ny && ny === cur.fas) fasPlan = { fas_ny: null, fas_ny_fran: null };
+        } else if (ny === (cur.fas_ny ?? null)) {
+          hanterad = true;                                   // oförändrat planerat byte — behåll datumet
+        } else if (ny === cur.fas) {
+          hanterad = true;
+          if (cur.fas_ny) fasPlan = { fas_ny: null, fas_ny_fran: null };   // tillbaka till nuvarande = avbryt
+        } else {
+          hanterad = true;
+          const t = new Date(new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Stockholm' }) + 'T12:00:00Z');
+          t.setUTCDate(t.getUTCDate() + (8 - (t.getUTCDay() || 7)));
+          fasPlan = { fas_ny: ny, fas_ny_fran: t.toISOString().slice(0, 10) };
+        }
+        if (hanterad) { indata = { ...indata }; delete indata.fas; }
+      }
 
       for (const falt of Object.keys(PROGRAM_VAL)) {
         if (!(falt in indata)) continue;
@@ -1282,6 +1318,15 @@ export default async function handler(req, res) {
       if (start && slut && slut < start) {
         return res.status(400).json({ error: 'Slutdatum kan inte ligga före startdatum' });
       }
+
+      if (fasPlan && (fasPlan.fas_ny !== (cur.fas_ny ?? null) || fasPlan.fas_ny_fran !== (cur.fas_ny_fran ?? null))) {
+        patch.fas_ny = fasPlan.fas_ny;
+        patch.fas_ny_fran = fasPlan.fas_ny_fran;
+        logg.push(fasPlan.fas_ny
+          ? { typ: 'fas_planerad', fran: cur.fas ?? null, till: fasPlan.fas_ny + '@' + fasPlan.fas_ny_fran }
+          : { typ: 'fas_planerad', fran: cur.fas_ny ?? null, till: null });
+      }
+      if ('fas' in patch) { patch.fas_ny = null; patch.fas_ny_fran = null; }
 
       if (!logg.length) return res.status(200).json({ assignment: cur, andrat: 0 });
 
@@ -1440,14 +1485,16 @@ export default async function handler(req, res) {
     }
 
     async function nvAktiva(kommun_id, enhet_id) {
-      let url = `${SUPABASE_URL}/rest/v1/user_assignments?select=user_id,name,fas,spar,program_start,program_slut&programstatus=eq.aktiv&kommun_id=eq.${kommun_id}`;
+      let url = `${SUPABASE_URL}/rest/v1/user_assignments?select=user_id,name,fas,fas_ny,fas_ny_fran,spar,program_start,program_slut&programstatus=eq.aktiv&kommun_id=eq.${kommun_id}`;
       if (enhet_id != null) url += `&enhet_id=eq.${enhet_id}`;
       return nvRows(await makeRequest(url, nvGET())).filter(u => u.user_id);
     }
     // Ska deltagaren vara med på passet? Programperiod + passets faser och spår.
+    // Planerat fasbyte gäller från fas_ny_fran — före det datumet gäller nuvarande fas
+    const nvFas = (u, datum) => (u.fas_ny && u.fas_ny_fran && datum >= u.fas_ny_fran) ? u.fas_ny : u.fas;
     const nvSkaDelta = (u, p) =>
       (!u.program_start || u.program_start <= p.datum) && (!u.program_slut || u.program_slut >= p.datum)
-      && (!p.faser || !p.faser.length || p.faser.includes(u.fas))
+      && (!p.faser || !p.faser.length || p.faser.includes(nvFas(u, p.datum)))
       && (!p.spar || !p.spar.length || p.spar.includes(u.spar));
 
     async function nvHamtaPass(admin, passId) {
@@ -1713,6 +1760,68 @@ export default async function handler(req, res) {
       const lista = Object.values(veckor).sort((a, b) => (a.mandag < b.mandag ? 1 : -1)).slice(0, 8)
         .map(v => ({ ...v, procent: v.schemaMin ? Math.round((100 * v.narvaroMin) / v.schemaMin) : null }));
       return res.status(200).json({ veckor: lista });
+    }
+
+    // Deltagarens egen vecka: passen hen ska vara på, egen närvaro per pass
+    // och närvaro per vecka. Bara för deltagare med programstatus Aktiv;
+    // övriga får iProgram:false och ser ingenting nytt i appen.
+    if (action === 'my_program') {
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
+      const ua = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${jwt.id}&select=*&limit=1`, nvGET()))[0];
+      const u = await befordraFas(ua);
+      if (!u || u.programstatus !== 'aktiv' || !u.kommun_id) return res.status(200).json({ iProgram: false });
+
+      const idag = nvIdag();
+      let fran = String(req.body?.fran || idag);
+      if (!NV_DAG_RE.test(fran)) return res.status(400).json({ error: 'Ogiltigt datum' });
+      const m = new Date(nvMandagMs(fran));
+      fran = m.toISOString().slice(0, 10);
+      const dagar = [...Array(7)].map((_, i) => { const t = new Date(m); t.setUTCDate(t.getUTCDate() + i); return t.toISOString().slice(0, 10); });
+      const till = dagar[6];
+
+      // Pass kan ligga på kommunnivå eller på deltagarens enhet
+      const scopes = [{ kommun_id: u.kommun_id, enhet_id: null }];
+      if (u.enhet_id != null) scopes.push({ kommun_id: u.kommun_id, enhet_id: u.enhet_id });
+      await Promise.all(scopes.flatMap(sc => dagar.map(d => nvSkapaPass(sc, d))));
+      const enhetVillkor = u.enhet_id != null ? `or=(enhet_id.is.null,enhet_id.eq.${u.enhet_id})` : 'enhet_id=is.null';
+      const pass = nvRows(await makeRequest(
+        `${SUPABASE_URL}/rest/v1/pass_instans?kommun_id=eq.${u.kommun_id}&${enhetVillkor}&datum=gte.${fran}&datum=lte.${till}&select=*&order=datum,starttid`, nvGET()))
+        .filter(p => nvSkaDelta(u, p));
+      const ids = pass.map(p => p.id);
+      const egen = ids.length ? nvRows(await makeRequest(
+        `${SUPABASE_URL}/rest/v1/narvaro?user_id=eq.${jwt.id}&pass_instans_id=in.(${ids.join(',')})&select=pass_instans_id,status`, nvGET())) : [];
+      const egenMap = {};
+      egen.forEach(x => { egenMap[x.pass_instans_id] = x.status; });
+
+      // Närvaro per vecka, senaste sex veckorna med registrerade pass
+      const alla = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/narvaro?user_id=eq.${jwt.id}&select=status,pass_instans(datum,starttid,sluttid,installt)`, nvGET()));
+      const veckor = {};
+      alla.forEach(x => {
+        const p = x.pass_instans;
+        if (!p || p.installt) return;
+        const ms = nvMandagMs(p.datum);
+        const v = veckor[ms] || (veckor[ms] = { mandag: new Date(ms).toISOString().slice(0, 10), schemaMin: 0, narvaroMin: 0 });
+        const min = nvMin(p.sluttid) - nvMin(p.starttid);
+        v.schemaMin += min;
+        if (x.status === 'narvarande' || x.status === 'sen') v.narvaroMin += min;
+      });
+
+      return res.status(200).json({
+        iProgram: true,
+        fas: nvFas(u, idag), spar: u.spar,
+        fasNy: u.fas_ny || null, fasNyFran: u.fas_ny_fran || null,
+        fran, till, idag,
+        dagar: dagar.map(d => ({
+          datum: d,
+          pass: pass.filter(p => p.datum === d).map(p => ({
+            id: p.id, titel: p.titel, typ: p.typ, starttid: nvTid(p.starttid), sluttid: nvTid(p.sluttid),
+            installt: p.installt, kommentar: p.installt ? p.kommentar : null, narvaro: egenMap[p.id] || null
+          }))
+        })),
+        veckor: Object.values(veckor).sort((a, b) => (a.mandag < b.mandag ? 1 : -1)).slice(0, 6)
+          .map(v => ({ mandag: v.mandag, procent: v.schemaMin ? Math.round((100 * v.narvaroMin) / v.schemaMin) : null }))
+      });
     }
 
     if (action === 'admin_get_kommuner') {
