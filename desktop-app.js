@@ -1156,6 +1156,7 @@
     if (view === 'hej') {
       renderHejView();
       if (typeof window.mpHejKort === 'function') { try { window.mpHejKort('mpHejDesk'); } catch(e) {} }
+      if (typeof window.meKort === 'function') { try { window.meKort('meHejDesk'); } catch(e) {} }
     }
     if (view === 'program' && typeof window.mpOppna === 'function') {
       window.mpOppna('mpVyDesk', function () { window.switchView('hej'); });

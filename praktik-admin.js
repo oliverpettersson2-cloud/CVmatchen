@@ -225,10 +225,11 @@
     var box = document.getElementById('pkKand');
     if (!box) return;
     if (!st.kandidater.length) {
-      box.innerHTML = '<p class="pk-hint">Inga kandidater än. Matcha nedan och lägg till dem som passar.</p>';
+      box.innerHTML = '<p class="pk-hint">Inga kandidater än. Matcha nedan och lägg till dem som passar. Sätt sedan status Tillfrågad för att visa platsen för deltagaren.</p>';
       return;
     }
-    box.innerHTML = '<div class="pk-klista">' + st.kandidater.map(function (k) {
+    box.innerHTML = '<p class="pk-hint">Välj <b>Tillfrågad</b> så ser deltagaren platsen på startsidan i appen och kan svara <i>Intresserad</i> eller <i>Inte nu</i>. Svaret syns här. Poäng, motivering, kommentar och kontaktpersonen visas aldrig för deltagaren.</p>' +
+      '<div class="pk-klista">' + st.kandidater.map(function (k) {
       var namn = k.name || namnFor(k.user_id);
       return '<div class="pk-krad">' +
         '<div class="pk-krad-n"><button type="button" class="pk-lank" onclick="pk.visaDeltagare(\'' + k.user_id + '\')">' + esc(namn) + '</button>' +

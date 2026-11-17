@@ -67,7 +67,7 @@ export default async function handler(req, res) {
     admin_update_program: 60, admin_save_narvaro: 120, admin_edit_schema: 60,
     admin_create_serie: 60, admin_avsluta_schema: 30, admin_installa_pass: 60,
     admin_save_vecka_tema: 60, admin_save_temacykel_start: 30,
-    admin_save_praktik: 60, admin_save_praktik_kandidat: 120
+    admin_save_praktik: 60, admin_save_praktik_kandidat: 120, my_praktik_svar: 30
   };
   if (_action && _RATE_LIMITS[_action] && !checkRateLimit(_ip, _action, _RATE_LIMITS[_action])) {
     return res.status(429).json({ error: 'För många försök — vänta en minut och försök igen.' });
@@ -2018,6 +2018,43 @@ export default async function handler(req, res) {
       if (w.status >= 400) { console.warn('[admin_save_praktik_kandidat]', w.status, maskPII(w.data)); return res.status(400).json({ error: 'Kunde inte spara' }); }
       await logAdminAction(admin.id, 'admin_save_praktik_kandidat', { praktik_id: plats.id, user_id: b.userId, status: rad.status });
       return res.status(200).json({ ok: true });
+    }
+
+    // ── Deltagarens praktikerbjudanden ──────────────────────────
+    // Deltagaren ser platser där personalen satt status Tillfrågad,
+    // och sina egna svar. Personalens poäng, motivering, kommentar och
+    // arbetsgivarens kontaktuppgifter skickas aldrig hit.
+    const ME_SYNLIG = ['tillfragad', 'intresserad', 'placerad'];
+    const ME_FALT = 'id,titel,arbetsgivare,yrkesomrade,adress,ort,innehall,forvantningar,krav,timmar_per_vecka,arbetstider,start_datum,slut_datum,status';
+
+    if (action === 'my_praktik') {
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
+      const k = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/praktik_kandidat?user_id=eq.${jwt.id}&status=in.(${ME_SYNLIG.join(',')})&select=praktik_id,status,uppdaterad_at`, nvGET()));
+      if (!k.length) return res.status(200).json({ erbjudanden: [] });
+      const platser = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/praktikplatser?id=in.(${k.map(x => x.praktik_id).join(',')})&select=${ME_FALT}`, nvGET()));
+      const pMap = {}; platser.forEach(p => { pMap[p.id] = p; });
+      const ut = k.map(x => ({ ...pMap[x.praktik_id], mittSvar: x.status }))
+        .filter(p => p.id && (p.mittSvar === 'placerad' || ['oppen', 'tillsatt'].includes(p.status)))
+        .map(({ status, ...p }) => p)
+        .sort((a, b) => ME_SYNLIG.indexOf(b.mittSvar) - ME_SYNLIG.indexOf(a.mittSvar));
+      return res.status(200).json({ erbjudanden: ut });
+    }
+
+    if (action === 'my_praktik_svar') {
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
+      const svar = req.body?.svar;
+      if (!['intresserad', 'nej', 'tillfragad'].includes(svar)) return res.status(400).json({ error: 'Ogiltigt svar' });
+      const pid = parseInt(req.body?.praktikId, 10);
+      if (!Number.isFinite(pid)) return res.status(400).json({ error: 'Ogiltig plats' });
+      const rad = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/praktik_kandidat?praktik_id=eq.${pid}&user_id=eq.${jwt.id}&select=id,status&limit=1`, nvGET()))[0];
+      // Deltagaren kan bara svara på en fråga, eller ångra sitt svar. Placering
+      // och personalens egna statusar kan hen inte ändra.
+      if (!rad || !['tillfragad', 'intresserad', 'nej'].includes(rad.status)) return res.status(404).json({ error: 'Erbjudandet finns inte längre' });
+      const w = await makeRequest(`${SUPABASE_URL}/rest/v1/praktik_kandidat?id=eq.${rad.id}`, nvPATCH(), { status: svar, uppdaterad_at: new Date().toISOString() });
+      if (w.status >= 400) return res.status(400).json({ error: 'Kunde inte spara ditt svar' });
+      return res.status(200).json({ ok: true, status: svar });
     }
 
     if (action === 'my_program') {

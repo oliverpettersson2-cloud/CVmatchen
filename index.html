@@ -31,6 +31,7 @@
   <link rel="stylesheet" href="sprak.css">
   <script src="sprak.js" defer></script>
   <script src="mitt-program.js" defer></script>
+  <script src="mina-erbjudanden.js" defer></script>
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
   <link rel="apple-touch-icon" href="/icon-192.png">
   <link rel="apple-touch-icon" sizes="512x512" href="/icon-512.png">
@@ -11518,6 +11519,8 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
       <div style="padding:8px 16px 32px;">
         <!-- Dagens pass — visas bara för deltagare i ett program (mitt-program.js) -->
         <div id="mpHejKort" hidden></div>
+        <!-- Praktikerbjudanden — visas bara när personalen frågat deltagaren (mina-erbjudanden.js) -->
+        <div id="meHejKort" hidden></div>
 
         <!-- Hero -->
         <div style="text-align:center;padding:28px 0 24px;">
@@ -12215,6 +12218,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
     const btn = document.getElementById('tabBtn-' + (tab === 'program' ? 'hej' : tab));
     if (btn) btn.classList.add('mob-tab--active');
     if (tab === 'hej' && typeof window.mpHejKort === 'function') { try { window.mpHejKort('mpHejKort'); } catch(e) {} }
+    if (tab === 'hej' && typeof window.meKort === 'function') { try { window.meKort('meHejKort'); } catch(e) {} }
 
     if (tab === 'export') {
       mobBuildTemplateGrid();
