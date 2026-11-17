@@ -163,7 +163,7 @@
     });
   }
 
-  // Veckans tema. Personalens fält (KBT-tema m.m.) skickas aldrig hit.
+  // Veckans tema. Personalens fält (intern anteckning, måndag eftermiddag) skickas aldrig hit.
   var TEMA_RADER = [
     ['tema', '🎯', 'Veckans tema'], ['utflykt', '🚶', 'Utflykt'], ['ordtema', '🗣️', 'Veckans ord'],
     ['halsofokus', '💚', 'Hälsa'], ['modul', '📚', 'Veckans modul']

@@ -1,6 +1,8 @@
 # Lägesrapport — CVmatchen inför pilot 2027
 
-**2026-11-17** · Pilot enligt kravspec: 16 platser, testkörning april 2027, start juni 2027
+**2026-11-17** · Pilot: 20 platser, testkörning april 2027, start juni 2027
+
+> **Uppdaterad samma kväll:** KBT tas bort, hälsa erbjuds som träning i grupp utan att hälsodata samlas in, 20 platser från start, lokal 15 000 kr och aktiviteter 10 000 kr per månad. Siffrorna nedan är omräknade.
 
 ---
 
@@ -16,9 +18,11 @@ ligger utanför produkten: anställningen och bisysslan, om kommunen godtar
 loggad digital tid som aktivitet, konsekvensbedömningen för hälsodata, och
 att det ännu inte finns någon beställare med avtal.
 
-**Ekonomin behöver ett beslut.** Kravspecen räknar med 16 platser.
-Kalkylen har sin brytpunkt vid 20–21 platser. Med 16 platser i helpaketet
-går verksamheten back cirka 40 000 kr i månaden med nuvarande bemanning.
+**Ekonomin går ihop — med marginal som hänger på beläggningen.** Utan KBT
+och fysioterapeut sjunker de fasta kostnaderna till 159 500 kr i månaden.
+Med 20 platser ligger brytpunkten på cirka 8 000 kr per plats och månad vid
+full beläggning. Vid 9 000 kr blir överskottet cirka 20 500 kr i månaden;
+vid 90 % beläggning cirka 2 500 kr. Din egen lön är redan inräknad.
 
 **Nästa steg är felsökning.** Allt är testat i delar, men ingenting är ännu
 testat från början till slut mot den riktiga servern. Det görs med
@@ -111,8 +115,6 @@ Storlek: **S** en dag eller mindre · **M** några dagar · **L** en vecka eller
 | **Veckoavstämning**, tre fält | M | F4 | Enklast efter bokning |
 | **Bokning** med lediga tider, snabbokning, ingen dubbelbokning | L | F3 | — |
 | **SMS-påminnelse** dagen före | M | F3.5 | SMS-leverantör och biträdesavtal |
-| **Roll för KBT och fysioterapeut** | S | Roller | Bokning |
-| **Hälsoskattning:** funktion mot målyrke, WHO-5, självskattad hälsa | M | F5.2 | Egen tabell, DPIA |
 | **Veckorapport** till handläggare, måndag morgon | M | F7 | Avstämning, avbrott |
 | **Handläggarvy** för kommunen + läsbehörig roll | L | F6, B2 | — |
 | **Månadsrapport** som PDF, aggregerad | M | F7 | Avbrott, skattning |
@@ -150,23 +152,25 @@ bra produkten är.
    per deltagare och månad om en start är tre månader. Granters pris är
    sannolikt subventionerat av att de samtidigt fick starta Rusta och
    matcha. Konkurrera inte med det priset; sälj den grupp de inte tar.
-5. **Antal platser.** 16 platser enligt specen ger förlust med nuvarande
-   bemanning. Välj: fler platser (minst 21), lägre fasta kostnader, eller
-   en budgeterad förlust under piloten med option på utökning.
+5. **Antal platser — beslutat: 20.** Brytpunkten ligger då på cirka
+   8 000 kr per plats och månad vid full beläggning. Planera för att
+   snittbeläggningen blir lägre än 100 % när deltagare slutar och ersätts.
 6. **Rörelsekapital** för cirka två till tre månaders drift innan första
    betalningen.
 
 ### Juridik och dataskydd
 
-7. **DPIA omskriven för artikel 9.** Nuvarande mall förutsätter att
-   känsliga uppgifter undviks. Hälsoskattningen samlar in dem.
+7. **DPIA uppdaterad.** Utan hälsoskattning och KBT samlas inga
+   hälsouppgifter in systematiskt, så den stora omskrivningen för artikel 9
+   behövs inte i pilot 1. Uppdatera för närvaro och schema, och döp
+   träningspassen neutralt.
 8. **PUB för den aktuella kommunen**, signerat av båda parter.
 9. **Dataskyddsombudets beslut** om laglig grund enligt artikel 9.2 och
    gallringstid.
 10. **SMS-leverantör inom EU** med granskat biträdesavtal.
-11. **Om KBT-stödet:** har personen legitimation som psykolog eller
-    psykoterapeut? Annars heter det KBT-baserad stresshantering, och
-    behandling journalförs aldrig i CVmatchen.
+11. **Aktiviteter:** prisuppgifter från instruktör (t.ex. Friskis &
+    Svettis), simhall och eventuella studiebesök, så att budgeten på
+    10 000 kr i månaden går att fördela.
 
 ### Organisation och bolag
 
@@ -204,7 +208,9 @@ bra produkten är.
 | F5.1 | Egen skala i fyra steg i stället för GERS A1–B2 |
 | F5.2, F5.4 | Funktionsförmåga mot målyrket; lagra riktning, inte kliniska mätvärden |
 | D4 | Microsoft EntraID med MFA för personal i stället för BankID |
-| Omfattning | 16 platser är under brytpunkten — antingen fler platser eller budgeterad förlust |
+| Hälsa | KBT och fysioterapeut bort; hälsa som träning i grupp; ingen hälsodata i pilot 1 |
+| D3, D8 | Utan hälsodata och KBT förenklas konsekvensbedömningen och journalfrågan försvinner |
+| Omfattning | 20 platser i stället för 16 |
 | F2 | Schemat i serier med omfångsval (utökning av specen) |
 
 ---

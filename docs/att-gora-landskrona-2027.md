@@ -1,7 +1,15 @@
 # Att göra — pilot Landskrona 2027
 
 **CVmatchen · lågtröskelprogram under aktivitetskravet**
-Upprättad 2026-11-13 · Pilot: 16 platser, testkörning april 2027, start juni 2027
+Upprättad 2026-11-13 · Pilot: **20 platser** (ändrat 2026-11-17), testkörning april 2027, start juni 2027
+
+## Beslut 2026-11-17
+
+- **KBT tas bort ur pilot 1.** Ingen KBT-baserad stresshantering och ingen fysioterapeut på timmar.
+- **Hälsa erbjuds som utbildning och träning i grupp**, t.ex. med extern instruktör. Ingen hälsodata samlas in i pilot 1 — hälsoskattningen skjuts upp.
+- **20 platser från start** i stället för 16.
+- **Lokal 15 000 kr/mån. Aktiviteter 10 000 kr/mån** — instruktör, simhall, studiebesök.
+- Fasta kostnader sjunker från 184 500 till **159 500 kr/mån**. Brytpunkt vid 20 platser: **cirka 8 000 kr per plats och månad** vid full beläggning.
 
 Den här listan styr vad som byggs. **Avstå-listan längst ned är inte en
 önskelista som ratats — den är det som gör tidsplanen möjlig.** Varje punkt
@@ -41,7 +49,7 @@ Grunden är byggd. Det är därför ett halvår räcker.
       språktestets intro (sparas med varje testresultat). **Kvar:** ett fält
       där personalen registrerar verifierad kurs och betyg vid inskrivning —
       självrapporterat räcker inte som valideringsunderlag.
-- [ ] **Femte rollnivå: KBT/fysio** — ser bara egna bokningar och deltagarnamn. *Flyttad till april:* rollen har inget att visa förrän bokningarna finns.
+- [–] ~~Femte rollnivå: KBT/fysio~~ — *struken 2026-11-17*. KBT och fysioterapeut ingår inte i pilot 1. Externa instruktörer behöver ingen åtkomst till CVmatchen.
 - [x] **F1 Närvaro** — dagens pass, ett klick per deltagare, frånvarotyp + kommentar — *klart 2026-11-16*. Närvarande är förvalt (F1.2); bara deltagare med programstatus Aktiv och rätt fas/spår listas (F1.1).
 - [x] F1.6 Närvaro i procent per deltagare och vecka — *klart 2026-11-16*, i fliken Program. Räknas bara på registrerade pass; ett obockat pass är okänt, inte frånvaro. Sen räknas som närvaro.
 - [x] F1.5 Deltagaren ser sin egen närvaro — per pass och per vecka — *klart 2026-11-17*
@@ -66,10 +74,10 @@ Grunden är byggd. Det är därför ett halvår räcker.
 - [x] F2.3 Deltagarens schemavy — *klart 2026-11-17*. Dagens pass överst på Hej, hela veckan ett tryck bort. Ingen ny menyknapp. Ikoner, uppläsning av varje dag, inställda pass med anledning. Syns bara för deltagare med programstatus Aktiv. Mobil och desktop.
 - [x] `vecka_tema` — 8-veckorscykeln — *klart 2026-11-17*. Startmåndag anges en gång, cykelveckan räknas fram varv efter varv. Tema, utflykt, ordtema, hälsofokus, modul, måndag eftermiddag, KBT-tema och testvecka. Personalen ser allt; deltagaren ser inte KBT-tema eller måndag eftermiddag. Testvecka påminner om språktestet.
 - [x] F2.6 Fasbyte slår igenom nästa måndag — *klart 2026-11-17*. Första fasen sätts direkt (ny deltagare får Landa på en gång). Kryssruta för att rätta direkt. Planerat byte syns i Program och i deltagarens vy.
-- [ ] **F5 Funktionsskattning mot målyrke** — sju dimensioner, fyra svarsalternativ
-- [ ] WHO-5 + självskattad hälsa (en fråga, jämförbar med nationell statistik)
-- [ ] Beräkning: arbetsförmåga mot målyrket → matchar / delvis / inte
-- [ ] Egen tabell för skattningsdata: striktare behörighet, egen gallringsklocka
+- [–] ~~F5 hälsoskattning (funktion mot målyrke, WHO-5, självskattad hälsa)~~ — *skjuten upp 2026-11-17*.
+      Ingen hälsodata samlas in i pilot 1. Hälsoarbetet följs upp genom **deltagande i träningspassen**,
+      som redan registreras i närvaron. Döp passen neutralt (*Rörelse*, *Träning*), inte *Rehab* — ett
+      passnamn som avslöjar hälsobesvär gör närvaron till hälsodata.
 
 ### April 2027 — bokning, avstämning, testkörning
 - [ ] **F3 Bokning** — bokningsbara tider, snabbokning av alla aktiva, ingen dubbelbokning
@@ -86,9 +94,10 @@ Grunden är byggd. Det är därför ett halvår räcker.
 
 ### Parallellt — juridik och affär
 - [ ] PUB omskriven för Landskrona
-- [ ] **DPIA omskriven från grunden för artikel 9** — nuvarande mall förutsätter
-      att känsliga uppgifter undviks, inte att de systematiskt samlas in
-- [ ] SMS-leverantör inom EU vald, biträdesavtal granskat
+- [ ] **DPIA uppdaterad** för närvaro, schema och aktiviteter. *Förenklad 2026-11-17:* utan
+      hälsoskattning och KBT samlas inga hälsouppgifter in systematiskt, så omskrivningen för
+      artikel 9 behövs inte i pilot 1. Låt ändå dataskyddsombudet bedöma — målgruppen är sårbar.
+- [ ] SMS-leverantör inom EU vald, biträdesavtal granskat. *Kostnad:* cirka 0,50–1 kr per SMS (ej verifierat mot leverantörens prislista); 20 deltagare ger storleksordningen 100–300 kr/mån.
 - [ ] Gallringstid fastställd med kommunens DSO
 - [ ] BIP-kopplingen inskriven i specen
 

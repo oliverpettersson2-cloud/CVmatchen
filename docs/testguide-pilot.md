@@ -49,7 +49,7 @@ ditt namn. Under sfi står *Kontrollerad [datum]*.
 2. Verksamhet: **Övrigt**, enhet **Allmänna användare**.
 3. **Veckoschema** → ange **förra måndagens datum** som start → **Spara start**.
 4. Klicka på kortet för **vecka 2** → fyll i Tema *Kommunikation*, Utflykt
-   *Biblioteket*, KBT-tema *Oro och grubbel*, kryssa **Testvecka** → Spara.
+   *Biblioteket*, Intern anteckning *Testanteckning*, kryssa **Testvecka** → Spara.
 
 **Förväntat:** *"Nu: vecka 2"*, vecka 2-kortet är grönt och visar temat och
 *Testvecka*.
@@ -83,8 +83,8 @@ inte "HTTP 400".
 **Förväntat:** *"Sparat för 1 deltagare"*. Tillbaka i Dagens pass:
 *"Registrerad · 1 av 1 närvarande"* (sen räknas som närvaro).
 
-**Ta tid** om du registrerar för flera deltagare — målet i specen är 16
-deltagare på under 2 minuter.
+**Ta tid** om du registrerar för flera deltagare — målet i specen är en
+hel grupp (nu 20 deltagare) på under 2 minuter.
 
 ---
 
@@ -114,7 +114,7 @@ närvaro på i test 4 ska vara oförändrat — registrerade pass skrivs aldrig 
 **Förväntat:**
 - *"Du är i fasen Landa."*
 - Rutan **Den här veckan** med tema och utflykt (är det cykelvecka 2) och
-  påminnelse om testvecka. **KBT-temat ska INTE synas.**
+  påminnelse om testvecka. **Den interna anteckningen ska INTE synas.**
 - Dagens pass har grön ram; passet från test 4 visar *⏱ Du kom sent*.
 - Inställda pass överstrukna med anledning.
 - ‹ › byter vecka.
@@ -156,7 +156,7 @@ närvaro på i test 4 ska vara oförändrat — registrerade pass skrivs aldrig 
 |---|---|
 | Logga in på telefonen med ett **annat** konto som inte är Aktiv i program | Inget schemakort på Hej, appen ser ut som förut |
 | Två konton på samma telefon efter varandra | Det andra kontot ser aldrig det förstas schema |
-| Deltagarens veckovy | Inget KBT-tema, ingen "måndag eftermiddag" |
+| Deltagarens veckovy | Ingen intern anteckning, ingen "måndag eftermiddag" |
 
 ---
 

@@ -617,7 +617,7 @@
   // ── Temacykel (8 veckor) ────────────────────────────────────
   var TEMA_ETIKETT = [
     ['tema', 'Tema'], ['utflykt', 'Utflykt'], ['ordtema', 'Ordtema'], ['halsofokus', 'Hälsofokus'],
-    ['modul', 'Veckans modul'], ['man_em', 'Måndag eftermiddag'], ['kbt_tema', 'KBT-tema (visas bara för personal)']
+    ['modul', 'Veckans modul'], ['man_em', 'Måndag eftermiddag'], ['kbt_tema', 'Intern anteckning (visas bara för personal)']
   ];
 
   function temaRad(t) {
@@ -668,7 +668,7 @@
     var v = (st.tema && st.tema.veckor || []).find(function (x) { return x.cykelvecka === n; }) || {};
     modal(
       '<h3 class="nv-m-h">Cykelvecka ' + n + '</h3>' +
-      '<p class="nv-m-sub">Gäller varje gång vecka ' + n + ' kommer tillbaka i cykeln. KBT-tema och måndag eftermiddag visas bara för personal.</p>' +
+      '<p class="nv-m-sub">Gäller varje gång vecka ' + n + ' kommer tillbaka i cykeln. Intern anteckning och måndag eftermiddag visas bara för personal.</p>' +
       '<div class="prog-grid">' + TEMA_ETIKETT.map(function (e) {
         return falt(e[1], '<input id="nvt_' + e[0] + '" class="prog-in" maxlength="120" value="' + esc(v[e[0]] || '') + '">', 'nvt_' + e[0]);
       }).join('') + '</div>' +
