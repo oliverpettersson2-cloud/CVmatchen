@@ -99,7 +99,7 @@
       (d ? '<div class="mu-dl mu-dl-' + d.k + '">' + (d.k === 'sen' ? '⚠️ ' : '⏰ ') + esc(d.text) + '</div>' : '') +
       '<div class="mu-msg" role="status" id="muMsg' + t.id + '"></div></div>' +
       (t.auto
-        ? '<button type="button" class="mu-gor" data-mu-oppna="1">Gör den →</button>'
+        ? '<button type="button" class="mu-gor" data-mu-oppna="' + esc(t.verify_field || '') + '">Gör den →</button>'
         : '<button type="button" class="mu-klar" data-mu-klar="' + t.id + '" aria-label="Markera ' + esc(t.title) + ' som klar">✓ Klar</button>') +
       '</div>';
   }
@@ -156,7 +156,7 @@
     e.preventDefault(); e.stopPropagation();
     if (t.hasAttribute('data-mu-klar')) return klar(t.getAttribute('data-mu-klar'), t);
     if (t.hasAttribute('data-mu-oppna')) {
-      if (typeof window.muOppnaUppgifter === 'function') window.muOppnaUppgifter();
+      if (typeof window.muOppnaUppgifter === 'function') window.muOppnaUppgifter(t.getAttribute('data-mu-oppna'));
       return;
     }
     if (t.hasAttribute('data-mu-alla')) {

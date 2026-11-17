@@ -9156,16 +9156,6 @@ ${styleTexts}
             <div class="train-hub-sub">Förbered dig för arbetslivet — välj ett område att träna på.</div>
           </div>
           <div class="train-hub-grid">
-            <div class="train-tile" onclick="trainShowTasks()" style="position:relative;border-color:rgba(240,192,64,0.35);background:linear-gradient(180deg, rgba(240,192,64,0.08) 0%, rgba(240,192,64,0.03) 100%);">
-              <div class="train-tile-glow" style="background:radial-gradient(circle at top right, rgba(240,192,64,0.18), transparent 60%);"></div>
-              <span id="trainTaskBadge" style="display:none;position:absolute;top:12px;right:12px;background:#ef4444;color:#fff;font-size:10px;font-weight:900;min-width:20px;height:20px;border-radius:10px;padding:0 6px;align-items:center;justify-content:center;letter-spacing:0.2px;box-shadow:0 2px 6px rgba(239,68,68,0.45);z-index:2;">0</span>
-              <div>
-                <div class="train-tile-icon">📋</div>
-                <div class="train-tile-name">Uppgifter från handläggare</div>
-                <div class="train-tile-desc">Uppgifter din handläggare tilldelat dig — gör klart och markera som slutförda.</div>
-              </div>
-              <div class="train-tile-meta" id="trainTaskMeta">Inga uppgifter än</div>
-            </div>
             <div class="train-tile" onclick="trainOpenOvn()">
               <div class="train-tile-glow"></div>
               <div>
@@ -9447,8 +9437,7 @@ var CATS=[
 {id:'studier', icon:'📖',name:'Studier', sub:'20 moduler',color:'#60a5fa', mods:STUDIER_ORDERED},
 {id:'halsa',   icon:'🫀',name:'Hälsa',   sub:'20 moduler',color:'#fb923c', mods:HALSA},
 {id:'ekonomi', icon:'💰',name:'Ekonomi',sub:'20 moduler',color:'#a78bfa', mods:EKONOMI},
-{id:'digital', icon:'🌐',name:'Digitalt',sub:'20 moduler',  color:'#34d399', mods:DIGITAL},
-{id:'uppg',    icon:'✅',name:'Uppgifter',sub:'Din checklista',color:'#f0c040',mods:null}
+{id:'digital', icon:'🌐',name:'Digitalt',sub:'20 moduler',  color:'#34d399', mods:DIGITAL}
 ];
 
 // ═══════════════════════════════
@@ -12192,9 +12181,16 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
 
   // ── Flik-navigation ──────────────────────────────────
   // "Gör den →" på Att göra-kortet: öppna uppgiftsvyn under Träna
-  window.muOppnaUppgifter = function() {
+  // Uppgifter finns bara på startsidan. Automatiskt kontrollerade uppgifter
+  // ("sök 5 jobb", "gör klart CV:t") skickar deltagaren dit uppgiften görs.
+  window.muOppnaUppgifter = function(falt) {
+    var f = String(falt || '');
+    if (/^cv_/.test(f) && typeof window.mobOpenCV === 'function') { window.mobOpenCV(); return; }
+    if (/jobs_applied|match_count/.test(f)) { mobSwitchTab('matcha'); return; }
+    if (/interview|session_duration/.test(f) && typeof window.profileGoToTrain === 'function') { window.profileGoToTrain('intervju'); return; }
+    if (/saved_edu/.test(f)) { mobSwitchTab('aisyv'); return; }
+    if (/exercise|module/.test(f) && typeof window.profileGoToTrain === 'function') { window.profileGoToTrain('ovn'); return; }
     mobSwitchTab('ovningar');
-    setTimeout(function(){ try { if (window.D && D.openCat) D.openCat('uppg'); } catch(e) {} }, 120);
   };
   window.mpOppnaFranHej = function() {
     mobSwitchTab('program');

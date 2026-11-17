@@ -1127,7 +1127,14 @@
   window.mpOppnaFranHej = function () { window.switchView('program'); };
 
   // "Gör den →" på Att göra-kortet: uppgifterna visas i Profil på datorn
-  window.muOppnaUppgifter = function() { window.switchView('profil'); };
+  window.muOppnaUppgifter = function(falt) {
+    const f = String(falt || '');
+    if (/^cv_/.test(f)) return window.switchView('cv');
+    if (/jobs_applied|match_count/.test(f)) return window.switchView('matcha');
+    if (/interview|session_duration/.test(f)) return window.switchView('intervju');
+    if (/saved_edu/.test(f)) return window.switchView('aisyv');
+    window.switchView('ovningar');
+  };
   window.switchView = function(view) {
     // ALIAS: 'intervju' och 'train' → 'ovningar' (numera "Träna"-fliken som rymmer båda)
     let openIntervju = false;
@@ -2247,9 +2254,9 @@
 
   function updateTaskBadges() {
     const openCount = tasksOpen().length;
-    const ovBadge = document.getElementById('sbOvningarBadge');
-    const pfBadge = document.getElementById('sbProfilBadge');
-    [ovBadge, pfBadge].forEach(el => {
+    // Uppgifterna visas på startsidan — räknaren sitter på Hej
+    ['sbOvningarBadge', 'sbProfilBadge'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+    [document.getElementById('sbHejBadge')].forEach(el => {
       if (!el) return;
       if (openCount > 0) {
         el.textContent = String(openCount);
@@ -5169,14 +5176,6 @@
 
     const tiles = [
       {
-        id: 'tasks',
-        emoji: '✅',
-        label: 'Uppgifter<br>från handläggare',
-        count: pendingTasks,
-        badge: pendingTasks,
-        variant: ''
-      },
-      {
         id: 'saved',
         emoji: '📄',
         label: 'Mina CV',
@@ -6012,21 +6011,6 @@
             <div style="margin-top:auto;font-size:12px;color:#3eb489;font-weight:700;">Testa din nivå · med uppläsning</div>
           </div>
 
-          <!-- Uppgifter från handläggare -->
-          <div class="ov-card train-cat-card" onclick="trainOpenCat('uppg')"
-               style="border-color:${taskColor}40;background:linear-gradient(135deg,${taskColor}1a,${taskColor}06);padding:22px 20px;display:flex;flex-direction:column;gap:14px;min-height:170px;position:relative;">
-            ${openTaskCount > 0 ? `<div style="position:absolute;top:12px;right:12px;background:#ef4444;color:#fff;font-size:12px;font-weight:900;border-radius:13px;padding:3px 11px;animation:pulse 2s ease-in-out infinite;">${openTaskCount}</div>` : ''}
-            <div style="display:flex;align-items:flex-start;gap:14px;">
-              <div class="ov-card-icon" style="background:${taskColor}20;color:${taskColor};font-size:26px;flex-shrink:0;">✅</div>
-              <div>
-                <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:2px;">Uppgifter</div>
-                <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.45;">${totalTasks > 0 ? 'Från din handläggare' : 'Inga uppgifter ännu'}</div>
-              </div>
-            </div>
-            <div style="margin-top:auto;font-size:12px;color:${taskColor};font-weight:700;">
-              ${openTaskCount > 0 ? openTaskCount + ' att göra' : (totalTasks > 0 ? 'Alla klara!' : 'Väntar på tilldelning')}
-            </div>
-          </div>
         </div>
       `;
       return;
