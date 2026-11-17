@@ -1135,6 +1135,25 @@
     if (/saved_edu/.test(f)) return window.switchView('aisyv');
     window.switchView('ovningar');
   };
+  window.uppdateraHejKort = function() {
+    if (typeof window.mpHejKort === 'function') { try { window.mpHejKort('mpHejDesk'); } catch(e) {} }
+    if (typeof window.meKort === 'function') { try { window.meKort('meHejDesk'); } catch(e) {} }
+    if (typeof window.muKort === 'function') { try { window.muKort('muHejDesk'); } catch(e) {} }
+  };
+  // Korten på startsidan (schema, praktik, att göra) laddas när inloggningen
+  // ändras, när appen kommer tillbaka i förgrunden och var 2:a minut — inte
+  // bara vid flikbyte. Annars syns en ny uppgift först när man klickat runt.
+  (function () {
+    var senast = null, tid = 0;
+    function kor() { try { if (typeof window.uppdateraHejKort === 'function') window.uppdateraHejKort(); } catch (e) {} tid = Date.now(); }
+    setInterval(function () {
+      var t = window.authAccessToken || null;
+      if (t !== senast) { senast = t; kor(); return; }
+      if (t && !document.hidden && Date.now() - tid > 120000) kor();
+    }, 1500);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden && window.authAccessToken) kor(); });
+  })();
+
   window.switchView = function(view) {
     // ALIAS: 'intervju' och 'train' → 'ovningar' (numera "Träna"-fliken som rymmer båda)
     let openIntervju = false;
@@ -1164,9 +1183,7 @@
 
     if (view === 'hej') {
       renderHejView();
-      if (typeof window.mpHejKort === 'function') { try { window.mpHejKort('mpHejDesk'); } catch(e) {} }
-      if (typeof window.meKort === 'function') { try { window.meKort('meHejDesk'); } catch(e) {} }
-      if (typeof window.muKort === 'function') { try { window.muKort('muHejDesk'); } catch(e) {} }
+      if (typeof window.uppdateraHejKort === 'function') window.uppdateraHejKort();
     }
     if (view === 'program' && typeof window.mpOppna === 'function') {
       window.mpOppna('mpVyDesk', function () { window.switchView('hej'); });
