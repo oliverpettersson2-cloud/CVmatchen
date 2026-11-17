@@ -110,6 +110,10 @@ Grunden är byggd. Det är därför ett halvår räcker.
 - [x] **F4 Veckoavstämning** — *klart 2026-11-17*. Tre fält i Program-fliken, en per vecka, historik per deltagare. *Nästa vecka* visas för deltagaren som *Din plan den här veckan*. Kopplingen till bokningen görs när F3 finns.
 - [x] **F8 Avbrott** — *klart 2026-11-17*. Orsak krävs när status blir Avbrott eller Avslutad, slutdatum sätts automatiskt. Orsakerna: fått jobb, börjat studera, annan insats, flyttat, personliga skäl, uteblivit, annat. **Sjukdom är medvetet borttagen** (hälsodata) — *personliga skäl* täcker det. Statistiken kommer med F7.
 - [ ] F7 Veckorapport till handläggare, automatiskt måndag morgon
+      **Öppna frågor (2026-11-17) — besvaras innan bygget:**
+      1. *Mottagare:* deltagarens tilldelade handläggare, eller en adress per kommun?
+      2. *Innehåll:* förslaget är bara siffror och status i mejlet — närvaro i %, avstämning
+         gjord/inte gjord, nya avbrott och placeringar. Inga fritexter; detaljer läses inloggad.
 - [ ] **Testkörning med 3–5 personer**
 
 ### Maj 2027 — vy och rapport
