@@ -67,7 +67,8 @@ export default async function handler(req, res) {
     admin_update_program: 60, admin_save_narvaro: 120, admin_edit_schema: 60,
     admin_create_serie: 60, admin_avsluta_schema: 30, admin_installa_pass: 60,
     admin_save_vecka_tema: 60, admin_save_temacykel_start: 30,
-    admin_save_praktik: 60, admin_save_praktik_kandidat: 120, my_praktik_svar: 30, my_att_gora_klar: 60
+    admin_save_praktik: 60, admin_save_praktik_kandidat: 120, my_praktik_svar: 30, my_att_gora_klar: 60,
+    admin_save_grupp: 60, admin_set_grupp_deltagare: 60
   };
   if (_action && _RATE_LIMITS[_action] && !checkRateLimit(_ip, _action, _RATE_LIMITS[_action])) {
     return res.status(429).json({ error: 'För många försök — vänta en minut och försök igen.' });
@@ -885,7 +886,7 @@ export default async function handler(req, res) {
       if (!admin) return;
       const targetUserId = req.body?.targetUserId;
       if (!targetUserId) return res.status(400).json({ error: 'targetUserId krävs' });
-      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','narvaro','praktik_kandidat','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','narvaro','praktik_kandidat','grupp_deltagare','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
       for (const t of TABLES) {
         await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${targetUserId}`, { method: 'DELETE', headers: serviceHeaders() });
       }
@@ -902,7 +903,7 @@ export default async function handler(req, res) {
       // GDPR: deltagare raderar sitt eget konto.
       const jwt = await verifyJwtUser(accessToken);
       if (!jwt) return res.status(401).json({ error: 'invalid_token' });
-      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','narvaro','praktik_kandidat','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','narvaro','praktik_kandidat','grupp_deltagare','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
       for (const t of TABLES) {
         await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${jwt.id}`, { method: 'DELETE', headers: serviceHeaders() });
       }
@@ -1456,7 +1457,20 @@ export default async function handler(req, res) {
         if (a.some(x => !PROGRAM_VAL.spar.includes(x))) return { fel: 'Ogiltigt spår' };
         ut.spar = a.length ? a : null;
       }
+      if ('grupper' in f) {
+        const a = [...new Set((Array.isArray(f.grupper) ? f.grupper : []).map(Number))];
+        if (a.some(x => !Number.isInteger(x) || x <= 0) || a.length > 20) return { fel: 'Ogiltig grupp' };
+        ut.grupper = a.length ? a : null;
+      }
       return { ut };
+    }
+    // Grupperna måste höra till samma kommun som passet, och till samma enhet
+    // eller hela kommunen.
+    async function nvGrupperOK(kommun_id, enhet_id, ids) {
+      if (!ids || !ids.length) return true;
+      const r = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/grupper?id=in.(${ids.join(',')})&select=id,kommun_id,enhet_id`, nvGET()));
+      return r.length === ids.length && r.every(g => String(g.kommun_id) === String(kommun_id)
+        && (g.enhet_id == null || String(g.enhet_id) === String(enhet_id)));
     }
 
     // Skapar dagens pass ur veckoschemat om de inte redan finns.
@@ -1467,7 +1481,7 @@ export default async function handler(req, res) {
       const nya = nvRows(r)
         .filter(m => nvVeckorMellan(m.giltig_fran, datum) % (m.intervall_veckor || 1) === 0)
         .map(m => ({ pass_mall_id: m.id, kommun_id: m.kommun_id, enhet_id: m.enhet_id, datum,
-                     starttid: m.starttid, sluttid: m.sluttid, titel: m.titel, typ: m.typ, faser: m.faser, spar: m.spar }));
+                     starttid: m.starttid, sluttid: m.sluttid, titel: m.titel, typ: m.typ, faser: m.faser, spar: m.spar, grupper: m.grupper }));
       if (nya.length) {
         await makeRequest(`${SUPABASE_URL}/rest/v1/pass_instans?on_conflict=pass_mall_id,datum`,
           { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'resolution=ignore-duplicates,return=minimal' } }, nya);
@@ -1489,15 +1503,27 @@ export default async function handler(req, res) {
     async function nvAktiva(kommun_id, enhet_id) {
       let url = `${SUPABASE_URL}/rest/v1/user_assignments?select=user_id,name,fas,fas_ny,fas_ny_fran,spar,program_start,program_slut&programstatus=eq.aktiv&kommun_id=eq.${kommun_id}`;
       if (enhet_id != null) url += `&enhet_id=eq.${enhet_id}`;
-      return nvRows(await makeRequest(url, nvGET())).filter(u => u.user_id);
+      return nvMedGrupper(nvRows(await makeRequest(url, nvGET())).filter(u => u.user_id));
     }
+    // Lägger till deltagarnas gruppmedlemskap: u.grupper = [{ id, namn, start, slut, aktiv }]
+    async function nvMedGrupper(lista) {
+      const ids = safeUuidIn(lista.map(u => u.user_id));
+      const per = {};
+      if (ids) nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/grupp_deltagare?user_id=in.(${ids})&select=user_id,grupp_id,grupper(namn,start_datum,slut_datum,aktiv)`, nvGET()))
+        .forEach(r => { (per[r.user_id] = per[r.user_id] || []).push({ id: r.grupp_id, namn: r.grupper?.namn, start: r.grupper?.start_datum, slut: r.grupper?.slut_datum, aktiv: r.grupper?.aktiv !== false }); });
+      lista.forEach(u => { u.grupper = per[u.user_id] || []; });
+      return lista;
+    }
+    const nvIGrupp = (u, p) => !p.grupper || !p.grupper.length || (u.grupper || []).some(g =>
+      g.aktiv && p.grupper.includes(g.id) && (!g.start || g.start <= p.datum) && (!g.slut || g.slut >= p.datum));
     // Ska deltagaren vara med på passet? Programperiod + passets faser och spår.
     // Planerat fasbyte gäller från fas_ny_fran — före det datumet gäller nuvarande fas
     const nvFas = (u, datum) => (u.fas_ny && u.fas_ny_fran && datum >= u.fas_ny_fran) ? u.fas_ny : u.fas;
     const nvSkaDelta = (u, p) =>
       (!u.program_start || u.program_start <= p.datum) && (!u.program_slut || u.program_slut >= p.datum)
       && (!p.faser || !p.faser.length || p.faser.includes(nvFas(u, p.datum)))
-      && (!p.spar || !p.spar.length || p.spar.includes(u.spar));
+      && (!p.spar || !p.spar.length || p.spar.includes(u.spar))
+      && nvIGrupp(u, p);
 
     // ── Temacykel ──
     const TEMA_FALT = ['tema', 'utflykt', 'ordtema', 'halsofokus', 'modul', 'kbt_tema', 'man_em'];
@@ -1563,7 +1589,7 @@ export default async function handler(req, res) {
       const serier = {};
       r.filter(m => !m.giltig_till || m.giltig_till >= idag).forEach(m => {
         const s = serier[m.serie_id] || (serier[m.serie_id] = {
-          serie_id: m.serie_id, titel: m.titel, typ: m.typ, faser: m.faser, spar: m.spar,
+          serie_id: m.serie_id, titel: m.titel, typ: m.typ, faser: m.faser, spar: m.spar, grupper: m.grupper,
           giltig_fran: m.giltig_fran, giltig_till: m.giltig_till, intervall_veckor: m.intervall_veckor, dagar: []
         });
         s.dagar.push({ mall_id: m.id, veckodag: m.veckodag, starttid: nvTid(m.starttid), sluttid: nvTid(m.sluttid), titel: m.titel, typ: m.typ });
@@ -1579,8 +1605,9 @@ export default async function handler(req, res) {
       const s = req.body?.serie || {};
       const dagar = [...new Set((Array.isArray(s.veckodagar) ? s.veckodagar : []).map(Number))].filter(d => d >= 1 && d <= 7);
       if (!dagar.length) return res.status(400).json({ error: 'Välj minst en veckodag' });
-      const v = nvValidera({ ...s, faser: s.faser || [], spar: s.spar || [] }, true);
+      const v = nvValidera({ ...s, faser: s.faser || [], spar: s.spar || [], grupper: s.grupper || [] }, true);
       if (v.fel) return res.status(400).json({ error: v.fel });
+      if (!(await nvGrupperOK(sc.kommun_id, sc.enhet_id, v.ut.grupper))) return res.status(400).json({ error: 'Gruppen hör inte till verksamheten' });
       const fran = String(s.giltig_fran || nvIdag());
       const till = s.giltig_till ? String(s.giltig_till) : null;
       if (!NV_DAG_RE.test(fran) || (till && !NV_DAG_RE.test(till))) return res.status(400).json({ error: 'Ogiltigt datum' });
@@ -1711,6 +1738,7 @@ export default async function handler(req, res) {
       if (v.fel) return res.status(400).json({ error: v.fel });
       if (!Object.keys(v.ut).length) return res.status(200).json({ andrade: 0 });
 
+      if (v.ut.grupper && p && !(await nvGrupperOK(p.kommun_id, p.enhet_id, v.ut.grupper))) return res.status(400).json({ error: 'Gruppen hör inte till verksamheten' });
       if (omfang === 'pass') {
         if (!p) return res.status(400).json({ error: 'Passet saknas' });
         const s = v.ut.starttid || nvTid(p.starttid), e = v.ut.sluttid || nvTid(p.sluttid);
@@ -1724,6 +1752,7 @@ export default async function handler(req, res) {
       if (m.fel) return res.status(m.fel).json({ error: m.msg });
       const fran = String(req.body?.fran_datum || (p ? p.datum : nvIdag()));
       if (!NV_DAG_RE.test(fran)) return res.status(400).json({ error: 'Ogiltigt datum' });
+      if (v.ut.grupper && m.mallar[0] && !(await nvGrupperOK(m.mallar[0].kommun_id, m.mallar[0].enhet_id, v.ut.grupper))) return res.status(400).json({ error: 'Gruppen hör inte till verksamheten' });
       for (const mall of m.mallar) {
         const s = v.ut.starttid || nvTid(mall.starttid), e = v.ut.sluttid || nvTid(mall.sluttid);
         if (nvMin(e) <= nvMin(s)) return res.status(400).json({ error: 'Sluttiden måste vara efter starttiden' });
@@ -1853,6 +1882,112 @@ export default async function handler(req, res) {
     // Deltagarens egen vecka: passen hen ska vara på, egen närvaro per pass
     // och närvaro per vecka. Bara för deltagare med programstatus Aktiv;
     // övriga får iProgram:false och ser ingenting nytt i appen.
+    // ── Grupper ─────────────────────────────────────────────────
+    // Grupper inom verksamheten (t.ex. Jobbnära, Hälsa, Mässprepp).
+    // Enhetens egna grupper + kommunens gemensamma.
+    function grValidera(g) {
+      const ut = {};
+      const namn = String(g.namn || '').trim();
+      if (!namn || namn.length > 60) return { fel: 'Namnet måste vara 1–60 tecken' };
+      ut.namn = namn;
+      if (!['lopande', 'termin'].includes(g.typ)) return { fel: 'Välj löpande eller termin' };
+      ut.typ = g.typ;
+      ut.beskrivning = String(g.beskrivning || '').trim().slice(0, 500) || null;
+      for (const f of ['start_datum', 'slut_datum']) {
+        if (!g[f]) { ut[f] = null; continue; }
+        if (!NV_DAG_RE.test(String(g[f]))) return { fel: 'Ogiltigt datum' };
+        ut[f] = String(g[f]);
+      }
+      if (ut.typ === 'termin' && (!ut.start_datum || !ut.slut_datum)) return { fel: 'En termingrupp behöver start- och slutdatum' };
+      if (ut.start_datum && ut.slut_datum && ut.slut_datum < ut.start_datum) return { fel: 'Slutdatum kan inte ligga före startdatum' };
+      if ('aktiv' in g) ut.aktiv = !!g.aktiv;
+      return { ut };
+    }
+    async function grHamta(admin, id) {
+      const n = parseInt(id, 10);
+      if (!Number.isFinite(n)) return null;
+      const g = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/grupper?id=eq.${n}&select=*&limit=1`, nvGET()))[0];
+      return g && nvIScope(admin, g) ? g : null;
+    }
+
+    if (action === 'admin_list_grupper') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const sc = await nvScope(admin, req.body);
+      if (sc.fel) return res.status(400).json({ error: sc.fel });
+      let url = `${SUPABASE_URL}/rest/v1/grupper?kommun_id=eq.${sc.kommun_id}&select=*&order=aktiv.desc,namn.asc`;
+      url += sc.enhet_id != null ? `&or=(enhet_id.eq.${sc.enhet_id},enhet_id.is.null)` : '&enhet_id=is.null';
+      const grupper = nvRows(await makeRequest(url, nvGET()));
+      const antal = {};
+      if (grupper.length) nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/grupp_deltagare?grupp_id=in.(${grupper.map(g => g.id).join(',')})&select=grupp_id`, nvGET()))
+        .forEach(r => { antal[r.grupp_id] = (antal[r.grupp_id] || 0) + 1; });
+      return res.status(200).json({ grupper: grupper.map(g => ({ ...g, antal: antal[g.id] || 0 })) });
+    }
+
+    if (action === 'admin_save_grupp') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const g = req.body?.grupp || {};
+      const v = grValidera(g);
+      if (v.fel) return res.status(400).json({ error: v.fel });
+      if (g.id) {
+        const gammal = await grHamta(admin, g.id);
+        if (!gammal) return res.status(404).json({ error: 'Gruppen finns inte' });
+        const w = await makeRequest(`${SUPABASE_URL}/rest/v1/grupper?id=eq.${gammal.id}`, nvPATCH(), v.ut);
+        if (w.status >= 400) { console.warn('[admin_save_grupp]', w.status, maskPII(w.data)); return res.status(400).json({ error: 'Kunde inte spara gruppen' }); }
+        await logAdminAction(admin.id, 'admin_save_grupp', { grupp_id: gammal.id });
+        return res.status(200).json({ id: gammal.id });
+      }
+      const sc = await nvScope(admin, req.body);
+      if (sc.fel) return res.status(400).json({ error: sc.fel });
+      const w = await makeRequest(`${SUPABASE_URL}/rest/v1/grupper?select=id`,
+        { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=representation' } },
+        { ...v.ut, kommun_id: sc.kommun_id, enhet_id: sc.enhet_id, skapad_av: admin.id });
+      const ny = nvRows(w)[0];
+      if (w.status >= 400 || !ny) { console.warn('[admin_save_grupp]', w.status, maskPII(w.data)); return res.status(400).json({ error: 'Kunde inte spara gruppen' }); }
+      await logAdminAction(admin.id, 'admin_save_grupp', { grupp_id: ny.id, ny: true });
+      return res.status(200).json({ id: ny.id });
+    }
+
+    // Medlemmar + aktiva deltagare i gruppens verksamhet att välja bland
+    if (action === 'admin_get_grupp_deltagare') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const g = await grHamta(admin, req.body?.gruppId);
+      if (!g) return res.status(404).json({ error: 'Gruppen finns inte' });
+      const med = new Set(nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/grupp_deltagare?grupp_id=eq.${g.id}&select=user_id`, nvGET())).map(r => r.user_id));
+      let url = `${SUPABASE_URL}/rest/v1/user_assignments?kommun_id=eq.${g.kommun_id}&select=user_id,name,programstatus,fas&order=name.asc`;
+      if (g.enhet_id != null) url += `&enhet_id=eq.${g.enhet_id}`;
+      const alla = nvRows(await makeRequest(url, nvGET())).filter(u => u.user_id && (u.programstatus === 'aktiv' || med.has(u.user_id)));
+      return res.status(200).json({ deltagare: alla.map(u => ({ user_id: u.user_id, name: u.name, aktiv: u.programstatus === 'aktiv', fas: u.fas, med: med.has(u.user_id) })) });
+    }
+
+    // Sätter gruppens medlemmar till exakt den angivna listan
+    if (action === 'admin_set_grupp_deltagare') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const g = await grHamta(admin, req.body?.gruppId);
+      if (!g) return res.status(404).json({ error: 'Gruppen finns inte' });
+      const nya = [...new Set(Array.isArray(req.body?.userIds) ? req.body.userIds : [])];
+      if (nya.some(id => !UUID_RE.test(String(id))) || nya.length > 500) return res.status(400).json({ error: 'Ogiltig deltagare' });
+      // Alla måste höra till gruppens verksamhet
+      if (nya.length) {
+        let url = `${SUPABASE_URL}/rest/v1/user_assignments?user_id=in.(${safeUuidIn(nya)})&kommun_id=eq.${g.kommun_id}&select=user_id`;
+        if (g.enhet_id != null) url += `&enhet_id=eq.${g.enhet_id}`;
+        const ok = new Set(nvRows(await makeRequest(url, nvGET())).map(r => r.user_id));
+        if (nya.some(id => !ok.has(id))) return res.status(400).json({ error: 'En deltagare hör inte till gruppens verksamhet' });
+      }
+      const fore = new Set(nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/grupp_deltagare?grupp_id=eq.${g.id}&select=user_id`, nvGET())).map(r => r.user_id));
+      const lagg = nya.filter(id => !fore.has(id));
+      const ta = [...fore].filter(id => !nya.includes(id));
+      if (lagg.length) await makeRequest(`${SUPABASE_URL}/rest/v1/grupp_deltagare?on_conflict=grupp_id,user_id`,
+        { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'resolution=ignore-duplicates,return=minimal' } },
+        lagg.map(user_id => ({ grupp_id: g.id, user_id, tillagd_av: admin.id })));
+      if (ta.length) await makeRequest(`${SUPABASE_URL}/rest/v1/grupp_deltagare?grupp_id=eq.${g.id}&user_id=in.(${safeUuidIn(ta)})`, { method: 'DELETE', headers: serviceHeaders() });
+      await logAdminAction(admin.id, 'admin_set_grupp_deltagare', { grupp_id: g.id, tillagda: lagg.length, borttagna: ta.length });
+      return res.status(200).json({ tillagda: lagg.length, borttagna: ta.length, antal: nya.length });
+    }
+
     // ── Praktikplatser ──────────────────────────────────────────
     // Platser hör till en verksamhet (kommun + ev. enhet) som veckoschemat.
     // praktik_kandidat är matchningens resultat och grunden för att
@@ -2088,6 +2223,7 @@ export default async function handler(req, res) {
       const ua = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${jwt.id}&select=*&limit=1`, nvGET()))[0];
       const u = await befordraFas(ua);
       if (!u || u.programstatus !== 'aktiv' || !u.kommun_id) return res.status(200).json({ iProgram: false });
+      await nvMedGrupper([u]);
 
       const idag = nvIdag();
       let fran = String(req.body?.fran || idag);
@@ -2126,6 +2262,7 @@ export default async function handler(req, res) {
 
       return res.status(200).json({
         iProgram: true,
+        grupper: (u.grupper || []).filter(g => g.aktiv && (!g.slut || g.slut >= idag)).map(g => g.namn).filter(Boolean),
         fas: nvFas(u, idag), spar: u.spar,
         fasNy: u.fas_ny || null, fasNyFran: u.fas_ny_fran || null,
         fran, till, idag,

@@ -31,13 +31,15 @@ där är något vi aktivt väljer bort, med skäl.
 - [ ] Praktikplatsen som pass i deltagarens schema (typ *Arbetsgivare*) när hen är placerad
 - [ ] Uppföljning: närvaro på praktiken och arbetsgivarens omdöme
 
-## Förslag: grupper i stället för bara kommun
+## Grupper (byggt 2026-11-17)
 
-- [ ] Behåll **kommun** som kund och personuppgiftsansvarig. Lägg till **grupper** inom verksamheten:
-      t.ex. *Jobbnära*, *Hälsa*, *Mässprepp*. En grupp har namn, typ, period (löpande eller termin)
-      och deltagare. En deltagare kan vara med i flera grupper.
-- [ ] Pass, temacykel och praktikplatser kan riktas till en grupp, precis som i dag till fas och spår.
-- [ ] Mässprepp som termingrupp (t.ex. vårterminen) med eget schema och mål, ovanpå grundprogrammet.
+- [x] Kommun kvar som kund och personuppgiftsansvarig. **Grupper** inom verksamheten, t.ex. *Jobbnära*, *Rörelse*, *Mässprepp*
+- [x] Typ löpande eller termin (termin kräver start och slut). En deltagare kan vara med i flera grupper
+- [x] Pass riktas till grupper i Veckoschema, precis som till fas och spår. Termingruppens pass gäller bara inom perioden
+- [x] Deltagaren ser *"Du är med i Jobbnära och Mässprepp"* i sitt schema
+- [ ] Temacykel per grupp (i dag en cykel per verksamhet)
+- [ ] Praktikmatchning filtrerad på grupp
+- [ ] Grupp i deltagarlistan och i rapporterna
 
 ## ✅ Finns redan — återanvänds
 

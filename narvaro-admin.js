@@ -39,7 +39,7 @@
     scope: null, kommuner: [], enheter: [],
     vy: 'dag', datum: idag(),
     pass: [], aktivt: null, deltagare: [], val: {}, registrerad: false,
-    serier: []
+    serier: [], grupper: [], gruppScope: null
   };
 
   // ── Hjälpare ────────────────────────────────────────────────
@@ -86,6 +86,26 @@
     return anrop(action, d);
   }
 
+  async function laddaGrupper(tvinga) {
+    var nyckel = st.scope ? st.scope.kommunId + ':' + st.scope.enhetId : null;
+    if (!nyckel) { st.grupper = []; return; }
+    if (!tvinga && st.gruppScope === nyckel) return;
+    try { st.grupper = (await api('admin_list_grupper', {})).grupper || []; st.gruppScope = nyckel; }
+    catch (e) { st.grupper = []; }
+  }
+  function aktivaGrupper(valda) {
+    var ut = {};
+    st.grupper.forEach(function (g) {
+      if (g.aktiv || (valda || []).map(String).indexOf(String(g.id)) > -1) ut[g.id] = g.namn + (g.typ === 'termin' ? ' (termin)' : '');
+    });
+    return ut;
+  }
+  function gruppFalt(valda) {
+    var alt = aktivaGrupper(valda);
+    if (!Object.keys(alt).length) return '';
+    return '<fieldset class="nv-omf"><legend>För vilka grupper? Inget val = alla</legend>' + bockar('nvmGrupp', alt, valda) + '</fieldset>';
+  }
+
   function tomt(rubrik, text, extra) {
     return '<div class="nv-tomt"><b>' + esc(rubrik) + '</b><p>' + esc(text) + '</p>' + (extra || '') + '</div>';
   }
@@ -93,8 +113,15 @@
     var el = document.getElementById(id);
     if (el) el.innerHTML = '<div class="ud-body-empty" style="color:var(--rd)">' + esc(e && e.message || 'Något gick fel') + '</div>';
   }
-  function malgrupp(f, s) {
+  function gruppNamn(ids) {
+    return (ids || []).map(function (id) {
+      var g = st.grupper.find(function (x) { return String(x.id) === String(id); });
+      return g ? g.namn : 'Grupp ' + id;
+    });
+  }
+  function malgrupp(f, s, g) {
     var d = [];
+    if (g && g.length) d.push(gruppNamn(g).join(', '));
     if (f && f.length) d.push(f.map(function (x) { return FASER[x] || x; }).join(', '));
     if (s && s.length) d.push(s.map(function (x) { return SPAR[x] || x; }).join(', '));
     return d.length ? d.join(' · ') : 'Alla deltagare';
@@ -150,7 +177,7 @@
           return '<option value="' + e.id + '"' + (st.scope && String(st.scope.enhetId) === String(e.id) ? ' selected' : '') + '>' + esc(e.name) + '</option>';
         }).join('') + '</select></div>';
     }
-    h += '<div class="nv-seg" role="tablist">' + seg('dag', 'Dagens pass') + seg('schema', 'Veckoschema') + '</div></div>';
+    h += '<div class="nv-seg" role="tablist">' + seg('dag', 'Dagens pass') + seg('schema', 'Veckoschema') + seg('grupper', 'Grupper') + '</div></div>';
     return h;
   }
   function seg(id, txt) {
@@ -167,9 +194,12 @@
       body().innerHTML = tomt('Välj verksamhet', 'Välj kommun, och vid behov enhet, för att se schema och närvaro.');
       return;
     }
-    if (st.vy === 'schema') renderSchema();
-    else if (st.vy === 'narvaro') renderNarvaro();
-    else renderDag();
+    laddaGrupper().then(function () {
+      if (st.vy === 'schema') renderSchema();
+      else if (st.vy === 'grupper') renderGrupper();
+      else if (st.vy === 'narvaro') renderNarvaro();
+      else renderDag();
+    });
   }
 
   // ── Dagens pass ─────────────────────────────────────────────
@@ -213,7 +243,7 @@
       '<div class="nv-pass-tid">' + esc(p.starttid) + '<span>' + esc(p.sluttid) + '</span></div>' +
       '<div class="nv-pass-mitt">' +
       '<div class="nv-pass-titel">' + esc(p.titel) + '</div>' +
-      '<div class="nv-pass-meta"><span title="' + esc(t.namn) + '">' + t.ikon + ' ' + esc(t.namn) + '</span> · ' + esc(malgrupp(p.faser, p.spar)) + '</div>' +
+      '<div class="nv-pass-meta"><span title="' + esc(t.namn) + '">' + t.ikon + ' ' + esc(t.namn) + '</span> · ' + esc(malgrupp(p.faser, p.spar, p.grupper)) + '</div>' +
       '<div>' + status + '</div></div>' +
       '<div class="nv-pass-knappar">' +
       (p.installt ? '' : '<button type="button" class="btn btn-primary" onclick="nv.oppnaNarvaro(' + p.id + ')">' + (p.registrerade ? 'Ändra närvaro' : 'Registrera närvaro') + '</button>') +
@@ -246,7 +276,7 @@
     if (!p || !b) return;
     var h = '<button type="button" class="nv-tillbaka" onclick="nv.vy(\'dag\')">← Dagens pass</button>' +
       '<div class="nv-n-head"><div class="nv-pass-titel">' + esc(p.titel) + '</div>' +
-      '<div class="nv-pass-meta">' + esc(visaDatum(p.datum, true)) + ' · ' + esc(p.starttid) + '–' + esc(p.sluttid) + ' · ' + esc(malgrupp(p.faser, p.spar)) + '</div></div>';
+      '<div class="nv-pass-meta">' + esc(visaDatum(p.datum, true)) + ' · ' + esc(p.starttid) + '–' + esc(p.sluttid) + ' · ' + esc(malgrupp(p.faser, p.spar, p.grupper)) + '</div></div>';
     if (!st.deltagare.length) {
       b.innerHTML = h + tomt('Inga deltagare på passet',
         'Här visas deltagare med programstatus Aktiv vars fas och spår passar passet. Det anges i fliken Program på varje deltagare.');
@@ -496,7 +526,7 @@
     return '<div class="nv-serie">' +
       '<div class="nv-pass-titel">' + (t.ikon || '') + ' ' + esc(s.titel) + '</div>' +
       '<div class="nv-pass-meta">' + esc(dagText) + '</div>' +
-      '<div class="nv-pass-meta">' + esc(giltig) + ' · ' + (s.intervall_veckor === 2 ? 'varannan vecka' : 'varje vecka') + ' · ' + esc(malgrupp(s.faser, s.spar)) + '</div>' +
+      '<div class="nv-pass-meta">' + esc(giltig) + ' · ' + (s.intervall_veckor === 2 ? 'varannan vecka' : 'varje vecka') + ' · ' + esc(malgrupp(s.faser, s.spar, s.grupper)) + '</div>' +
       '<div class="nv-m-rad">' +
       '<button type="button" class="btn" onclick="nv.andraSerie(\'' + s.serie_id + '\')">Ändra serien</button>' +
       '<button type="button" class="btn nv-farlig" onclick="nv.avslutaSerie(\'' + s.serie_id + '\')">Avsluta serien</button>' +
@@ -522,6 +552,7 @@
       '</div>' +
       '<fieldset class="nv-omf"><legend>För vilka faser? Inget val = alla</legend>' + bockar('nvmFas', FASER, []) + '</fieldset>' +
       '<fieldset class="nv-omf"><legend>För vilka spår? Inget val = alla</legend>' + bockar('nvmSpar', SPAR, []) + '</fieldset>' +
+      gruppFalt([]) +
       '<div class="nv-m-act"><span id="nvmMsg" role="status"></span>' +
       '<button type="button" class="btn" onclick="nv.stang()">Avbryt</button>' +
       '<button type="button" class="btn btn-primary" onclick="nv.sparaSerie()">Spara serien</button></div>'
@@ -533,7 +564,7 @@
       titel: varde('nvmTitel'), typ: varde('nvmTyp'), starttid: varde('nvmStart'), sluttid: varde('nvmSlut'),
       veckodagar: lasBockar('nvmDag').map(Number), intervall_veckor: Number(valtRadio('nvmInt') || 1),
       giltig_fran: varde('nvmFran'), giltig_till: varde('nvmTill') || null,
-      faser: lasBockar('nvmFas'), spar: lasBockar('nvmSpar')
+      faser: lasBockar('nvmFas'), spar: lasBockar('nvmSpar'), grupper: lasBockar('nvmGrupp').map(Number)
     };
     if (!serie.titel) { mmsg('Skriv en titel', 'err'); return; }
     if (!serie.veckodagar.length) { mmsg('Välj minst en veckodag', 'err'); return; }
@@ -563,6 +594,7 @@
       (sammaTid ? '' : '<p class="nv-m-sub">Dagarna har olika tider. Lämna tiderna tomma för att behålla dem.</p>') +
       '<fieldset class="nv-omf"><legend>För vilka faser? Inget val = alla</legend>' + bockar('nvmFas', FASER, s.faser) + '</fieldset>' +
       '<fieldset class="nv-omf"><legend>För vilka spår? Inget val = alla</legend>' + bockar('nvmSpar', SPAR, s.spar) + '</fieldset>' +
+      gruppFalt(s.grupper || []) +
       '<div class="nv-m-act"><span id="nvmMsg" role="status"></span>' +
       '<button type="button" class="btn" onclick="nv.stang()">Avbryt</button>' +
       '<button type="button" class="btn btn-primary" onclick="nv.sparaSerieAndring(\'' + serieId + '\')">Spara ändring</button></div>'
@@ -584,6 +616,10 @@
     var faser = lasBockar('nvmFas'), spar = lasBockar('nvmSpar');
     if (JSON.stringify(faser.slice().sort()) !== JSON.stringify((s.faser || []).slice().sort())) andring.faser = faser;
     if (JSON.stringify(spar.slice().sort()) !== JSON.stringify((s.spar || []).slice().sort())) andring.spar = spar;
+    if (document.querySelector('input[name="nvmGrupp"]')) {
+      var gr = lasBockar('nvmGrupp').map(Number).sort();
+      if (JSON.stringify(gr) !== JSON.stringify((s.grupper || []).map(Number).sort())) andring.grupper = gr;
+    }
     if (!Object.keys(andring).length) { mmsg('Inget har ändrats'); return; }
     mmsg('Sparar…');
     try {
@@ -612,6 +648,106 @@
       await api('admin_avsluta_schema', { serieId: serieId, omfang: 'serie', fran_datum: varde('nvmFran') || idag() });
       stang();
       renderSchema();
+    } catch (e) { mmsg(e.message, 'err'); }
+  }
+
+  // ── Grupper ─────────────────────────────────────────────────
+  // T.ex. Jobbnära, Hälsa, Mässprepp. En deltagare kan vara med i flera.
+  // Pass riktas till grupper i Veckoschema.
+  async function renderGrupper() {
+    var b = body();
+    b.innerHTML = '<div class="nv-schema-top"><p class="nv-hint">Grupper samlar deltagare som gör samma sak, t.ex. <i>Jobbnära</i> eller <i>Mässprepp</i>. ' +
+      'En deltagare kan vara med i flera. Rikta sedan pass till en grupp under Veckoschema.</p>' +
+      '<button type="button" class="btn btn-primary" onclick="nv.nyGrupp()">+ Ny grupp</button></div><div id="nvGrupper"><div class="ud-body-empty">Laddar…</div></div>';
+    await laddaGrupper(true);
+    var l = document.getElementById('nvGrupper');
+    if (!l || st.vy !== 'grupper') return;
+    if (!st.grupper.length) {
+      l.innerHTML = tomt('Inga grupper än', 'Skapa till exempel Jobbnära (löpande) eller Mässprepp (vårterminen). Välj neutrala namn — ett gruppnamn som avslöjar hälsobesvär gör medlemslistan till hälsodata.');
+      return;
+    }
+    l.innerHTML = '<div class="nv-gr-grid">' + st.grupper.map(function (g) {
+      var per = g.typ === 'termin' ? visaDatum(g.start_datum) + ' – ' + visaDatum(g.slut_datum) : 'Löpande';
+      var slut = g.slut_datum && g.slut_datum < idag();
+      return '<div class="nv-gr' + (g.aktiv && !slut ? '' : ' av') + '">' +
+        '<div class="nv-gr-h"><b>' + esc(g.namn) + '</b>' + (!g.aktiv ? '<span class="nv-pill mu">Avslutad</span>' : slut ? '<span class="nv-pill mu">Perioden slut</span>' : '') + '</div>' +
+        '<div class="nv-pass-meta">' + esc(per) + ' · ' + g.antal + (g.antal === 1 ? ' deltagare' : ' deltagare') + '</div>' +
+        (g.beskrivning ? '<p class="nv-gr-b">' + esc(g.beskrivning) + '</p>' : '') +
+        '<div class="nv-m-rad"><button type="button" class="btn btn-primary" onclick="nv.gruppDeltagare(' + g.id + ')">Deltagare</button>' +
+        '<button type="button" class="btn" onclick="nv.andraGrupp(' + g.id + ')">Ändra</button></div></div>';
+    }).join('') + '</div>';
+  }
+
+  function gruppFormular(g) {
+    g = g || { typ: 'lopande', aktiv: true };
+    modal(
+      '<h3 class="nv-m-h">' + (g.id ? 'Ändra grupp' : 'Ny grupp') + '</h3>' +
+      '<p class="nv-m-sub">Välj ett neutralt namn som deltagarna känner igen, t.ex. Jobbnära, Rörelse eller Mässprepp.</p>' +
+      '<div class="prog-grid">' + falt('Namn', '<input id="nvgNamn" class="prog-in" maxlength="60" value="' + esc(g.namn || '') + '">', 'nvgNamn') + '</div>' +
+      '<fieldset class="nv-omf"><legend>Typ</legend>' +
+      radio('nvgTyp', 'lopande', 'Löpande — deltagare kommer och går', g.typ === 'lopande') +
+      radio('nvgTyp', 'termin', 'Termin — fast start och slut, t.ex. vårterminen', g.typ === 'termin') + '</fieldset>' +
+      '<div class="prog-grid">' +
+      falt('Startdatum', '<input type="date" id="nvgStart" class="prog-in" value="' + esc(g.start_datum || '') + '">', 'nvgStart') +
+      falt('Slutdatum', '<input type="date" id="nvgSlut" class="prog-in" value="' + esc(g.slut_datum || '') + '">', 'nvgSlut') + '</div>' +
+      '<div class="prog-f"><label for="nvgBesk">Beskrivning (valfritt)</label><textarea id="nvgBesk" class="prog-in" maxlength="500" rows="3">' + esc(g.beskrivning || '') + '</textarea></div>' +
+      (g.id ? '<label class="nv-bock" style="margin-top:10px"><input type="checkbox" id="nvgAktiv"' + (g.aktiv ? ' checked' : '') + '> Gruppen är aktiv</label>' : '') +
+      '<div class="nv-m-act"><span id="nvmMsg" role="status"></span>' +
+      '<button type="button" class="btn" onclick="nv.stang()">Avbryt</button>' +
+      '<button type="button" class="btn btn-primary" onclick="nv.sparaGrupp(' + (g.id || 0) + ')">Spara</button></div>'
+    );
+  }
+
+  async function sparaGrupp(id) {
+    var g = { namn: varde('nvgNamn'), typ: valtRadio('nvgTyp'), start_datum: varde('nvgStart') || null, slut_datum: varde('nvgSlut') || null, beskrivning: varde('nvgBesk') };
+    if (id) { g.id = id; g.aktiv = !!(document.getElementById('nvgAktiv') || {}).checked; }
+    if (!g.namn) { mmsg('Skriv ett namn', 'err'); return; }
+    if (g.typ === 'termin' && (!g.start_datum || !g.slut_datum)) { mmsg('En termingrupp behöver start- och slutdatum', 'err'); return; }
+    mmsg('Sparar…');
+    try {
+      var r = await api('admin_save_grupp', { grupp: g });
+      stang();
+      await renderGrupper();
+      if (!id) gruppDeltagare(r.id);
+    } catch (e) { mmsg(e.message, 'err'); }
+  }
+
+  async function gruppDeltagare(id) {
+    var g = st.grupper.find(function (x) { return x.id === id; });
+    if (!g) return;
+    modal('<h3 class="nv-m-h">' + esc(g.namn) + '</h3><div id="nvgLista"><div class="ud-body-empty">Laddar deltagare…</div></div>');
+    try {
+      var r = await api('admin_get_grupp_deltagare', { gruppId: id });
+      var lista = r.deltagare || [];
+      var el = document.getElementById('nvgLista');
+      if (!el) return;
+      if (!lista.length) {
+        el.innerHTML = '<p class="nv-m-sub">Inga deltagare är aktiva i program i verksamheten. Sätt programstatus Aktiv i fliken Program på deltagaren först.</p>' +
+          '<div class="nv-m-act"><button type="button" class="btn" onclick="nv.stang()">Stäng</button></div>';
+        return;
+      }
+      el.innerHTML = '<p class="nv-m-sub">Bocka i vilka som är med. Listan visar deltagare som är aktiva i program.</p>' +
+        '<div class="nv-m-rad" style="margin-bottom:8px"><button type="button" class="btn" onclick="nv.bockaAlla(true)">Markera alla</button>' +
+        '<button type="button" class="btn" onclick="nv.bockaAlla(false)">Avmarkera alla</button></div>' +
+        '<div class="nv-gr-lista">' + lista.map(function (d) {
+          return '<label class="nv-bock nv-gr-rad"><input type="checkbox" name="nvgDel" value="' + d.user_id + '"' + (d.med ? ' checked' : '') + '> ' +
+            esc(namnFor(d)) + (d.fas ? ' <span class="nv-pass-meta">· ' + esc(FASER[d.fas] || d.fas) + '</span>' : '') +
+            (!d.aktiv ? ' <span class="nv-pill mu">Inte aktiv</span>' : '') + '</label>';
+        }).join('') + '</div>' +
+        '<div class="nv-m-act"><span id="nvmMsg" role="status"></span>' +
+        '<button type="button" class="btn" onclick="nv.stang()">Avbryt</button>' +
+        '<button type="button" class="btn btn-primary" onclick="nv.sparaGruppDeltagare(' + id + ')">Spara</button></div>';
+    } catch (e) { fel('nvgLista', e); }
+  }
+
+  async function sparaGruppDeltagare(id) {
+    mmsg('Sparar…');
+    try {
+      var r = await api('admin_set_grupp_deltagare', { gruppId: id, userIds: lasBockar('nvgDel') });
+      stang();
+      await renderGrupper();
+      var l = document.getElementById('nvGrupper');
+      if (l) l.insertAdjacentHTML('afterbegin', '<p class="nv-hint" role="status">Sparat: ' + r.antal + ' deltagare i gruppen.</p>');
     } catch (e) { mmsg(e.message, 'err'); }
   }
 
@@ -773,6 +909,12 @@
       '.nv-tv-t{font-weight:700;font-size:13.5px;color:var(--tx)}',
       '.nv-tv-u{font-size:12px;color:var(--tx2)}',
       '.btn.nv-farlig{color:var(--rd);border-color:var(--rdb)}',
+      '.nv-gr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}',
+      '.nv-gr{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r,12px);padding:14px;display:flex;flex-direction:column;gap:6px}',
+      '.nv-gr.av{opacity:.65}.nv-gr-h{display:flex;gap:8px;align-items:center;justify-content:space-between;font-size:15px}',
+      '.nv-gr-b{font-size:13px;color:var(--tx2);margin:2px 0;line-height:1.45}',
+      '.nv-gr-lista{max-height:50vh;overflow-y:auto;border:1px solid var(--bd);border-radius:8px;padding:4px 10px}',
+      '.nv-gr-rad{display:flex;padding:8px 0;border-bottom:1px solid var(--bd)}.nv-gr-rad:last-child{border-bottom:0}',
       '.btn.nv-farlig:hover{background:var(--rdb)}'
     ].join('\n');
     document.head.appendChild(s);
@@ -799,7 +941,11 @@
     andraPass: andraPass, sparaAndring: sparaAndring, installa: installa, installaDag: installaDag, avsluta: avsluta,
     nySerie: nySerie, sparaSerie: sparaSerie, andraSerie: andraSerie, sparaSerieAndring: sparaSerieAndring,
     avslutaSerie: avslutaSerie, bekraftaAvsluta: bekraftaAvsluta, stang: stang,
-    sparaTemaStart: sparaTemaStart, andraVecka: andraVecka, sparaVecka: sparaVecka
+    sparaTemaStart: sparaTemaStart, andraVecka: andraVecka, sparaVecka: sparaVecka,
+    nyGrupp: function () { gruppFormular(null); },
+    andraGrupp: function (id) { gruppFormular(st.grupper.find(function (x) { return x.id === id; })); },
+    sparaGrupp: sparaGrupp, gruppDeltagare: gruppDeltagare, sparaGruppDeltagare: sparaGruppDeltagare,
+    bockaAlla: function (pa) { [].forEach.call(document.querySelectorAll('input[name="nvgDel"]'), function (c) { c.checked = pa; }); }
   };
 
   window.narvaroRender = async function () {

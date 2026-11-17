@@ -140,7 +140,9 @@
       if (!d) { el.innerHTML = '<div class="mp-vy"><div class="mp-laddar">Kunde inte hämta schemat. Försök igen om en stund.</div></div>'; return; }
       if (!d.iProgram) { el.innerHTML = '<div class="mp-vy"><div class="mp-laddar">Du har inget schema just nu.</div></div>'; return; }
       var fasRad = 'Du är i fasen <b>' + esc(FAS[d.fas] || '—') + '</b>.' +
-        (d.fasNy ? ' Från ' + esc(datumText(d.fasNyFran, true)) + ' går du vidare till <b>' + esc(FAS[d.fasNy]) + '</b>.' : '');
+        (d.fasNy ? ' Från ' + esc(datumText(d.fasNyFran, true)) + ' går du vidare till <b>' + esc(FAS[d.fasNy]) + '</b>.' : '') +
+        (d.grupper && d.grupper.length ? ' Du är med i ' + d.grupper.map(function (g) { return '<b>' + esc(g) + '</b>'; })
+          .join(d.grupper.length === 2 ? ' och ' : ', ') + '.' : '');
       var dagar = d.dagar.filter(function (x, i) { return i < 5 || x.pass.length; });
       var html =
         '<div class="mp-vy">' +
