@@ -1126,6 +1126,8 @@
   // ============================================================
   window.mpOppnaFranHej = function () { window.switchView('program'); };
 
+  // "Gör den →" på Att göra-kortet: uppgifterna visas i Profil på datorn
+  window.muOppnaUppgifter = function() { window.switchView('profil'); };
   window.switchView = function(view) {
     // ALIAS: 'intervju' och 'train' → 'ovningar' (numera "Träna"-fliken som rymmer båda)
     let openIntervju = false;
@@ -1157,6 +1159,7 @@
       renderHejView();
       if (typeof window.mpHejKort === 'function') { try { window.mpHejKort('mpHejDesk'); } catch(e) {} }
       if (typeof window.meKort === 'function') { try { window.meKort('meHejDesk'); } catch(e) {} }
+      if (typeof window.muKort === 'function') { try { window.muKort('muHejDesk'); } catch(e) {} }
     }
     if (view === 'program' && typeof window.mpOppna === 'function') {
       window.mpOppna('mpVyDesk', function () { window.switchView('hej'); });

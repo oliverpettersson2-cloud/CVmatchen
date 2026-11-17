@@ -32,6 +32,7 @@
   <script src="sprak.js" defer></script>
   <script src="mitt-program.js" defer></script>
   <script src="mina-erbjudanden.js" defer></script>
+  <script src="mina-uppgifter.js" defer></script>
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
   <link rel="apple-touch-icon" href="/icon-192.png">
   <link rel="apple-touch-icon" sizes="512x512" href="/icon-512.png">
@@ -9684,9 +9685,10 @@ var D={
     tasks.forEach(function(task){
       h+='<div class="tcard'+(task.done?' done':'')+'" data-tid="'+task.id+'" onclick="D.toggleTask(this)">';
       h+='<div class="tchk">'+(task.done?'✓':'')+'</div>';
-      h+='<div><div class="ttitle">'+task.title+'</div>';
-      h+='<div class="tdesc">'+task.desc+'</div>';
-      h+='<div class="ttag" style="background:'+task.tc+'22;color:'+task.tc+';">'+task.tag+'</div></div>';
+      var _e=function(x){return String(x==null?'':x).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
+      h+='<div><div class="ttitle">'+_e(task.title)+'</div>';
+      h+='<div class="tdesc">'+_e(task.desc)+'</div>';
+      h+='<div class="ttag" style="background:'+task.tc+'22;color:'+task.tc+';">'+_e(task.tag)+'</div></div>';
       h+='</div>';
     });
     h+='<button class="tadd-btn" onclick="D.addTask()">+ Lägg till uppgift</button>';
@@ -11521,6 +11523,8 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
         <div id="mpHejKort" hidden></div>
         <!-- Praktikerbjudanden — visas bara när personalen frågat deltagaren (mina-erbjudanden.js) -->
         <div id="meHejKort" hidden></div>
+        <!-- Att göra — uppgifter från handläggaren (mina-uppgifter.js) -->
+        <div id="muHejKort" hidden></div>
 
         <!-- Hero -->
         <div style="text-align:center;padding:28px 0 24px;">
@@ -12187,6 +12191,11 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
   }
 
   // ── Flik-navigation ──────────────────────────────────
+  // "Gör den →" på Att göra-kortet: öppna uppgiftsvyn under Träna
+  window.muOppnaUppgifter = function() {
+    mobSwitchTab('ovningar');
+    setTimeout(function(){ try { if (window.D && D.openCat) D.openCat('uppg'); } catch(e) {} }, 120);
+  };
   window.mpOppnaFranHej = function() {
     mobSwitchTab('program');
     if (typeof window.mpOppna === 'function') window.mpOppna('mpVy', function(){ mobSwitchTab('hej'); });
@@ -12219,6 +12228,7 @@ function toast(msg){var t=document.getElementById('ovnToast');t.textContent=msg;
     if (btn) btn.classList.add('mob-tab--active');
     if (tab === 'hej' && typeof window.mpHejKort === 'function') { try { window.mpHejKort('mpHejKort'); } catch(e) {} }
     if (tab === 'hej' && typeof window.meKort === 'function') { try { window.meKort('meHejKort'); } catch(e) {} }
+    if (tab === 'hej' && typeof window.muKort === 'function') { try { window.muKort('muHejKort'); } catch(e) {} }
 
     if (tab === 'export') {
       mobBuildTemplateGrid();

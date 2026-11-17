@@ -67,7 +67,7 @@ export default async function handler(req, res) {
     admin_update_program: 60, admin_save_narvaro: 120, admin_edit_schema: 60,
     admin_create_serie: 60, admin_avsluta_schema: 30, admin_installa_pass: 60,
     admin_save_vecka_tema: 60, admin_save_temacykel_start: 30,
-    admin_save_praktik: 60, admin_save_praktik_kandidat: 120, my_praktik_svar: 30
+    admin_save_praktik: 60, admin_save_praktik_kandidat: 120, my_praktik_svar: 30, my_att_gora_klar: 60
   };
   if (_action && _RATE_LIMITS[_action] && !checkRateLimit(_ip, _action, _RATE_LIMITS[_action])) {
     return res.status(429).json({ error: 'För många försök — vänta en minut och försök igen.' });
@@ -2055,6 +2055,31 @@ export default async function handler(req, res) {
       const w = await makeRequest(`${SUPABASE_URL}/rest/v1/praktik_kandidat?id=eq.${rad.id}`, nvPATCH(), { status: svar, uppdaterad_at: new Date().toISOString() });
       if (w.status >= 400) return res.status(400).json({ error: 'Kunde inte spara ditt svar' });
       return res.status(200).json({ ok: true, status: svar });
+    }
+
+    // ── Att göra på startsidan ──────────────────────────────────
+    // Användaren läses ur inloggningen, inte ur anropet.
+    if (action === 'my_att_gora') {
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
+      const r = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/tasks?user_id=eq.${jwt.id}&status=in.(pending,active)&select=id,title,description,category,deadline,status,verify_field,verify_target&order=deadline.asc.nullslast&limit=20`, nvGET()));
+      const klara = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/tasks?user_id=eq.${jwt.id}&status=eq.completed&select=id&limit=200`, nvGET())).length;
+      return res.status(200).json({ uppgifter: r.map(t => ({ ...t, auto: !!t.verify_field })), klara });
+    }
+
+    if (action === 'my_att_gora_klar') {
+      const jwt = await verifyJwtUser(accessToken);
+      if (!jwt) return res.status(401).json({ error: 'invalid_token' });
+      const id = parseInt(req.body?.taskId, 10);
+      if (!Number.isFinite(id)) return res.status(400).json({ error: 'Ogiltig uppgift' });
+      const t = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/tasks?id=eq.${id}&user_id=eq.${jwt.id}&select=id,status,verify_field&limit=1`, nvGET()))[0];
+      if (!t || !['pending', 'active'].includes(t.status)) return res.status(404).json({ error: 'Uppgiften finns inte längre' });
+      // Uppgifter som kontrolleras automatiskt (t.ex. "sök 5 jobb") bockas inte av för hand
+      if (t.verify_field) return res.status(400).json({ error: 'Den här uppgiften blir klar av sig själv när du har gjort den' });
+      const nu = new Date().toISOString();
+      const w = await makeRequest(`${SUPABASE_URL}/rest/v1/tasks?id=eq.${id}&user_id=eq.${jwt.id}`, nvPATCH(), { status: 'completed', completed_at: nu, updated_at: nu });
+      if (w.status >= 400) return res.status(400).json({ error: 'Kunde inte spara' });
+      return res.status(200).json({ ok: true });
     }
 
     if (action === 'my_program') {

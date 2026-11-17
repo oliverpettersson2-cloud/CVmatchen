@@ -25,7 +25,9 @@ där är något vi aktivt väljer bort, med skäl.
 - [x] Registrera praktikplatser: arbetsgivare, innehåll, förväntningar, arbetets krav, timmar, arbetstider, plats, period, kontaktperson, antal platser, lägsta språknivå, körkort
 - [x] Matcha en plats mot deltagarnas CV, språktest och körkort. AI:n får inga namn eller kontaktuppgifter
 - [x] Kandidatlista per plats med status: förslag → tillfrågad → intresserad / tackat nej → placerad → avslutad
-- [ ] **Dela platsen med deltagaren** — kort i appen med *Intresserad* / *Inte nu*, och SMS-avisering när SMS finns
+- [x] **Dela platsen med deltagaren** — kort på startsidan med *Intresserad* / *Inte nu* (byggt 2026-11-17)
+- [ ] SMS-avisering om nytt erbjudande när SMS finns
+- [x] **Att göra på startsidan** — uppgifter från handläggaren med deadline, försenade först och en stor Klar-knapp (byggt 2026-11-17)
 - [ ] Praktikplatsen som pass i deltagarens schema (typ *Arbetsgivare*) när hen är placerad
 - [ ] Uppföljning: närvaro på praktiken och arbetsgivarens omdöme
 
