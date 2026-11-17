@@ -8,6 +8,7 @@
 <!-- Delad modulkatalog (samma 105 moduler som deltagar-appen) — exponerar window.TRAINING_DATA -->
 <script src="training-modules.js"></script>
 <script src="narvaro-admin.js"></script>
+<script src="praktik-admin.js"></script>
 <style>
 :focus-visible{outline:3px solid #1a73e8;outline-offset:2px;}
 .skip-link{position:absolute;left:-9999px;top:0;z-index:9999;background:#1a73e8;color:#fff;padding:10px 16px;border-radius:0 0 6px 0;}
@@ -1156,7 +1157,7 @@ const SL = {active:'Aktiv',recent:'Nyligen aktiv',new:'Ny',inactive:'Inaktiv'};
 const PAGE_INFO = {
   mina:        {title:'Deltagare',  sub: () => roleSubtitle()},
   uppgifter:   {title:'Tilldelade uppgifter', sub: () => 'Alla uppgifter du tilldelat — aktiva, avklarade och försenade'},
-  matchning:   {title:'Matchningsverktyg', sub: () => 'Matcha deltagare mot lediga tjänster och övervaka träffsäkerhet'},
+  matchning:   {title:'Matchningsverktyg', sub: () => 'Praktikplatser och matchning av deltagare mot platser och tjänster'},
   narvaro:     {title:'Närvaro', sub: () => 'Dagens pass, närvaroregistrering och veckoschema'},
   admins:      {title:'Handläggare & admins', sub: () => 'Användare med admin-roll i systemet'},
   material:    {title:'Sparat material & uppgifter',  sub: () => 'Delat bibliotek för hela enheten — uppgifter, PowerPoints och AI-uppdaterade versioner'}
@@ -7045,7 +7046,7 @@ function drawTasksView(wrap, tasks){
   html += '</div>';
   wrap.innerHTML = html;
 }
-let _matchMode = 'tjanst'; // 'tjanst' = tjänst → kandidater, 'klientel' = klientel → arbetsgivare
+let _matchMode = 'praktik'; // 'praktik' = praktikplatser, 'tjanst' = tjänst → kandidater, 'klientel' = klientel → arbetsgivare
 function setMatchMode(m){ _matchMode = m; renderMatchningView(); }
 
 function renderMatchningView(){
@@ -7064,7 +7065,9 @@ function renderMatchningView(){
   };
 
   let body = '';
-  if(_matchMode === 'tjanst'){
+  if(_matchMode === 'praktik'){
+    body = '<div id="pkRoot"><div class="ud-body-empty">Laddar…</div></div>';
+  } else if(_matchMode === 'tjanst'){
     body = `
       <div style="color:var(--mu);font-size:13px;line-height:1.55;margin-bottom:16px;">
         Beskriv tjänsten med fri text — AI:n går igenom CV:n för dina <b>${mina.length}</b> deltagare
@@ -7108,6 +7111,7 @@ function renderMatchningView(){
           <div style="font-size:17px;font-weight:700;color:var(--tx)">Matchningsverktyg</div>
         </div>
         <div style="display:flex;gap:6px;margin-bottom:16px;">
+          ${tabBtn('praktik','Praktikplatser')}
           ${tabBtn('tjanst','Tjänst → kandidater')}
           ${tabBtn('klientel','Klientel → arbetsgivare')}
         </div>
@@ -7116,6 +7120,7 @@ function renderMatchningView(){
       <div id="matchResults"></div>
     </div>
   `;
+  if(_matchMode === 'praktik' && typeof window.praktikRender === 'function') window.praktikRender();
 }
 
 async function runReverseMatchning(){

@@ -66,7 +66,8 @@ export default async function handler(req, res) {
     admin_delete_user: 10, user_delete_self: 5, send_otp: 10, verify_otp: 20,
     admin_update_program: 60, admin_save_narvaro: 120, admin_edit_schema: 60,
     admin_create_serie: 60, admin_avsluta_schema: 30, admin_installa_pass: 60,
-    admin_save_vecka_tema: 60, admin_save_temacykel_start: 30
+    admin_save_vecka_tema: 60, admin_save_temacykel_start: 30,
+    admin_save_praktik: 60, admin_save_praktik_kandidat: 120
   };
   if (_action && _RATE_LIMITS[_action] && !checkRateLimit(_ip, _action, _RATE_LIMITS[_action])) {
     return res.status(429).json({ error: 'För många försök — vänta en minut och försök igen.' });
@@ -884,7 +885,7 @@ export default async function handler(req, res) {
       if (!admin) return;
       const targetUserId = req.body?.targetUserId;
       if (!targetUserId) return res.status(400).json({ error: 'targetUserId krävs' });
-      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','narvaro','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','narvaro','praktik_kandidat','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
       for (const t of TABLES) {
         await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${targetUserId}`, { method: 'DELETE', headers: serviceHeaders() });
       }
@@ -901,7 +902,7 @@ export default async function handler(req, res) {
       // GDPR: deltagare raderar sitt eget konto.
       const jwt = await verifyJwtUser(accessToken);
       if (!jwt) return res.status(401).json({ error: 'invalid_token' });
-      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','narvaro','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
+      const TABLES = ['user_assignments','cvs','saved_cvs','matched_cvs','saved_edu','job_diary','ovning_progress','sprak_progress','program_logg','narvaro','praktik_kandidat','tasks','task_sessions','interview_messages','interview_sessions','saved_questions','admin_activity_log'];
       for (const t of TABLES) {
         await makeRequest(`${SUPABASE_URL}/rest/v1/${t}?user_id=eq.${jwt.id}`, { method: 'DELETE', headers: serviceHeaders() });
       }
@@ -1852,6 +1853,173 @@ export default async function handler(req, res) {
     // Deltagarens egen vecka: passen hen ska vara på, egen närvaro per pass
     // och närvaro per vecka. Bara för deltagare med programstatus Aktiv;
     // övriga får iProgram:false och ser ingenting nytt i appen.
+    // ── Praktikplatser ──────────────────────────────────────────
+    // Platser hör till en verksamhet (kommun + ev. enhet) som veckoschemat.
+    // praktik_kandidat är matchningens resultat och grunden för att
+    // senare dela platsen med deltagaren.
+    const PK_OMRADEN = ['vard','lager','service','bygg','kontor','handel','restaurang','stad','annat'];
+    const PK_STATUS = ['utkast','oppen','tillsatt','avslutad'];
+    const PK_KSTATUS = ['forslag','tillfragad','intresserad','nej','placerad','avslutad'];
+    const PK_TEXT = { titel: 120, arbetsgivare: 120, adress: 200, ort: 80, kontakt_namn: 120, kontakt_telefon: 40,
+      kontakt_epost: 160, innehall: 2000, forvantningar: 2000, krav: 1000, arbetstider: 200 };
+
+    const PK_NAMN = { titel: 'Titeln', arbetsgivare: 'Arbetsgivaren', adress: 'Adressen', ort: 'Orten',
+      kontakt_namn: 'Kontaktpersonen', kontakt_telefon: 'Telefonnumret', kontakt_epost: 'E-postadressen',
+      innehall: 'Vad deltagaren gör', forvantningar: 'Förväntningar', krav: 'Arbetets krav', arbetstider: 'Arbetstider' };
+    function pkValidera(p) {
+      const ut = {};
+      for (const [f, max] of Object.entries(PK_TEXT)) {
+        if (!(f in p)) continue;
+        const v = p[f] == null ? '' : String(p[f]).trim();
+        if (v.length > max) return { fel: `${PK_NAMN[f] || f} får vara högst ${max} tecken` };
+        ut[f] = v || null;
+      }
+      if ('titel' in ut && !ut.titel) return { fel: 'Ange en titel' };
+      if ('arbetsgivare' in ut && !ut.arbetsgivare) return { fel: 'Ange arbetsgivare' };
+      if (ut.kontakt_epost && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ut.kontakt_epost)) return { fel: 'Ogiltig e-postadress för kontaktpersonen' };
+      if ('yrkesomrade' in p) {
+        if (p.yrkesomrade && !PK_OMRADEN.includes(p.yrkesomrade)) return { fel: 'Ogiltigt yrkesområde' };
+        ut.yrkesomrade = p.yrkesomrade || null;
+      }
+      if ('status' in p) {
+        if (!PK_STATUS.includes(p.status)) return { fel: 'Ogiltig status' };
+        ut.status = p.status;
+      }
+      if ('timmar_per_vecka' in p) {
+        if (p.timmar_per_vecka === '' || p.timmar_per_vecka == null) ut.timmar_per_vecka = null;
+        else {
+          const t = Number(String(p.timmar_per_vecka).replace(',', '.'));
+          if (!Number.isFinite(t) || t <= 0 || t > 40) return { fel: 'Timmar per vecka ska vara mellan 1 och 40' };
+          ut.timmar_per_vecka = Math.round(t * 10) / 10;
+        }
+      }
+      if ('antal_platser' in p) {
+        const a = parseInt(p.antal_platser, 10);
+        if (!Number.isFinite(a) || a < 1 || a > 50) return { fel: 'Antal platser ska vara 1–50' };
+        ut.antal_platser = a;
+      }
+      if ('min_sprak_steg' in p) {
+        if (p.min_sprak_steg === '' || p.min_sprak_steg == null) ut.min_sprak_steg = null;
+        else {
+          const s = parseInt(p.min_sprak_steg, 10);
+          if (!(s >= 0 && s <= 4)) return { fel: 'Ogiltig språknivå' };
+          ut.min_sprak_steg = s;
+        }
+      }
+      if ('korkort_krav' in p) ut.korkort_krav = !!p.korkort_krav;
+      for (const f of ['start_datum', 'slut_datum']) {
+        if (!(f in p)) continue;
+        if (!p[f]) { ut[f] = null; continue; }
+        if (!NV_DAG_RE.test(String(p[f]))) return { fel: 'Ogiltigt datum' };
+        ut[f] = String(p[f]);
+      }
+      if (ut.start_datum && ut.slut_datum && ut.slut_datum < ut.start_datum) return { fel: 'Slutdatum kan inte ligga före startdatum' };
+      return { ut };
+    }
+    async function pkHamta(id) {
+      const n = parseInt(id, 10);
+      if (!Number.isFinite(n)) return null;
+      return nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/praktikplatser?id=eq.${n}&select=*&limit=1`, nvGET()))[0] || null;
+    }
+
+    if (action === 'admin_list_praktik') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const sc = await nvScope(admin, req.body);
+      if (sc.fel) return res.status(400).json({ error: sc.fel });
+      // Enhetens egna platser + kommunens gemensamma (enhet_id null)
+      let url = `${SUPABASE_URL}/rest/v1/praktikplatser?kommun_id=eq.${sc.kommun_id}&select=*&order=status.asc,uppdaterad_at.desc`;
+      if (sc.enhet_id != null) url += `&or=(enhet_id.eq.${sc.enhet_id},enhet_id.is.null)`;
+      const platser = nvRows(await makeRequest(url, nvGET()));
+      const ids = platser.map(p => p.id);
+      const antal = {};
+      if (ids.length) {
+        nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/praktik_kandidat?praktik_id=in.(${ids.join(',')})&select=praktik_id,status`, nvGET()))
+          .forEach(k => {
+            const a = antal[k.praktik_id] || (antal[k.praktik_id] = { totalt: 0, placerade: 0 });
+            a.totalt++; if (k.status === 'placerad') a.placerade++;
+          });
+      }
+      return res.status(200).json({ platser: platser.map(p => ({ ...p, kandidater: antal[p.id] || { totalt: 0, placerade: 0 } })) });
+    }
+
+    if (action === 'admin_save_praktik') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const p = req.body?.praktik || {};
+      if (p.id) {
+        const gammal = await pkHamta(p.id);
+        if (!gammal || !nvIScope(admin, gammal)) return res.status(404).json({ error: 'Platsen finns inte' });
+        const { id, kommun_id, enhet_id, skapad_av, skapad_at, ...rest } = p;
+        const v = pkValidera(rest);
+        if (v.fel) return res.status(400).json({ error: v.fel });
+        const w = await makeRequest(`${SUPABASE_URL}/rest/v1/praktikplatser?id=eq.${gammal.id}`, nvPATCH(), { ...v.ut, uppdaterad_at: new Date().toISOString() });
+        if (w.status >= 400) { console.warn('[admin_save_praktik]', w.status, maskPII(w.data)); return res.status(400).json({ error: 'Kunde inte spara platsen' }); }
+        await logAdminAction(admin.id, 'admin_save_praktik', { praktik_id: gammal.id });
+        return res.status(200).json({ id: gammal.id });
+      }
+      const sc = await nvScope(admin, req.body);
+      if (sc.fel) return res.status(400).json({ error: sc.fel });
+      const v = pkValidera({ titel: '', arbetsgivare: '', ...p });
+      if (v.fel) return res.status(400).json({ error: v.fel });
+      const w = await makeRequest(`${SUPABASE_URL}/rest/v1/praktikplatser?select=id`,
+        { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=representation' } },
+        { ...v.ut, kommun_id: sc.kommun_id, enhet_id: sc.enhet_id, skapad_av: admin.id });
+      const ny = nvRows(w)[0];
+      if (w.status >= 400 || !ny) { console.warn('[admin_save_praktik]', w.status, maskPII(w.data)); return res.status(400).json({ error: 'Kunde inte spara platsen' }); }
+      await logAdminAction(admin.id, 'admin_save_praktik', { praktik_id: ny.id, ny: true });
+      return res.status(200).json({ id: ny.id });
+    }
+
+    if (action === 'admin_list_praktik_kandidater') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const plats = await pkHamta(req.body?.praktikId);
+      if (!plats || !nvIScope(admin, plats)) return res.status(404).json({ error: 'Platsen finns inte' });
+      const k = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/praktik_kandidat?praktik_id=eq.${plats.id}&select=*&order=uppdaterad_at.desc`, nvGET()));
+      const ids = safeUuidIn(k.map(x => x.user_id));
+      const namn = {};
+      if (ids) nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/user_assignments?user_id=in.(${ids})&select=user_id,name`, nvGET()))
+        .forEach(u => { namn[u.user_id] = u.name; });
+      return res.status(200).json({ kandidater: k.map(x => ({ ...x, name: namn[x.user_id] || null })) });
+    }
+
+    if (action === 'admin_save_praktik_kandidat') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const b = req.body || {};
+      const plats = await pkHamta(b.praktikId);
+      if (!plats || !nvIScope(admin, plats)) return res.status(404).json({ error: 'Platsen finns inte' });
+      if (!UUID_RE.test(String(b.userId || ''))) return res.status(400).json({ error: 'Ogiltig deltagare' });
+      // Deltagaren måste höra till samma kommun som platsen (och samma enhet om platsen har en)
+      const ua = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/user_assignments?user_id=eq.${b.userId}&select=kommun_id,enhet_id&limit=1`, nvGET()))[0];
+      if (!ua || String(ua.kommun_id) !== String(plats.kommun_id) || (plats.enhet_id != null && String(ua.enhet_id) !== String(plats.enhet_id)))
+        return res.status(400).json({ error: 'Deltagaren hör inte till platsens verksamhet' });
+      if (b.ta_bort) {
+        await makeRequest(`${SUPABASE_URL}/rest/v1/praktik_kandidat?praktik_id=eq.${plats.id}&user_id=eq.${b.userId}`, { method: 'DELETE', headers: serviceHeaders() });
+        await logAdminAction(admin.id, 'admin_save_praktik_kandidat', { praktik_id: plats.id, user_id: b.userId, borttagen: true });
+        return res.status(200).json({ ok: true });
+      }
+      const rad = { praktik_id: plats.id, user_id: b.userId, uppdaterad_at: new Date().toISOString() };
+      if ('status' in b) {
+        if (!PK_KSTATUS.includes(b.status)) return res.status(400).json({ error: 'Ogiltig status' });
+        rad.status = b.status;
+      }
+      if ('poang' in b && b.poang != null) {
+        const p = parseInt(b.poang, 10);
+        if (p >= 0 && p <= 100) rad.poang = p;
+      }
+      if ('motivering' in b) rad.motivering = String(b.motivering || '').slice(0, 600) || null;
+      if ('kommentar' in b) rad.kommentar = String(b.kommentar || '').trim().slice(0, 300) || null;
+      const finns = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/praktik_kandidat?praktik_id=eq.${plats.id}&user_id=eq.${b.userId}&select=id&limit=1`, nvGET()))[0];
+      const w = finns
+        ? await makeRequest(`${SUPABASE_URL}/rest/v1/praktik_kandidat?id=eq.${finns.id}`, nvPATCH(), rad)
+        : await makeRequest(`${SUPABASE_URL}/rest/v1/praktik_kandidat`, { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=minimal' } }, { ...rad, skapad_av: admin.id });
+      if (w.status >= 400) { console.warn('[admin_save_praktik_kandidat]', w.status, maskPII(w.data)); return res.status(400).json({ error: 'Kunde inte spara' }); }
+      await logAdminAction(admin.id, 'admin_save_praktik_kandidat', { praktik_id: plats.id, user_id: b.userId, status: rad.status });
+      return res.status(200).json({ ok: true });
+    }
+
     if (action === 'my_program') {
       const jwt = await verifyJwtUser(accessToken);
       if (!jwt) return res.status(401).json({ error: 'invalid_token' });

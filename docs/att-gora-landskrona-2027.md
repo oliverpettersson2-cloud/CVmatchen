@@ -19,6 +19,24 @@ där är något vi aktivt väljer bort, med skäl.
 
 ---
 
+
+## Praktikplatser (byggt 2026-11-17)
+
+- [x] Registrera praktikplatser: arbetsgivare, innehåll, förväntningar, arbetets krav, timmar, arbetstider, plats, period, kontaktperson, antal platser, lägsta språknivå, körkort
+- [x] Matcha en plats mot deltagarnas CV, språktest och körkort. AI:n får inga namn eller kontaktuppgifter
+- [x] Kandidatlista per plats med status: förslag → tillfrågad → intresserad / tackat nej → placerad → avslutad
+- [ ] **Dela platsen med deltagaren** — kort i appen med *Intresserad* / *Inte nu*, och SMS-avisering när SMS finns
+- [ ] Praktikplatsen som pass i deltagarens schema (typ *Arbetsgivare*) när hen är placerad
+- [ ] Uppföljning: närvaro på praktiken och arbetsgivarens omdöme
+
+## Förslag: grupper i stället för bara kommun
+
+- [ ] Behåll **kommun** som kund och personuppgiftsansvarig. Lägg till **grupper** inom verksamheten:
+      t.ex. *Jobbnära*, *Hälsa*, *Mässprepp*. En grupp har namn, typ, period (löpande eller termin)
+      och deltagare. En deltagare kan vara med i flera grupper.
+- [ ] Pass, temacykel och praktikplatser kan riktas till en grupp, precis som i dag till fas och spår.
+- [ ] Mässprepp som termingrupp (t.ex. vårterminen) med eget schema och mål, ovanpå grundprogrammet.
+
 ## ✅ Finns redan — återanvänds
 
 Grunden är byggd. Det är därför ett halvår räcker.
