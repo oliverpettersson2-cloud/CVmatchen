@@ -1638,8 +1638,13 @@ export default async function handler(req, res) {
       const ids = pass.map(p => p.id);
       const reg = ids.length ? nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/narvaro?pass_instans_id=in.(${ids.join(',')})&select=pass_instans_id,status`, nvGET())) : [];
       const tema = await nvTemaFor(sc.kommun_id, sc.enhet_id, datum, true);
+      const plac = await pkPlaceringar(del.map(u => u.user_id));
+      const praktik = [];
+      del.forEach(u => (plac[u.user_id] || []).filter(pl => pkGallerDag(pl, datum)).forEach(pl => praktik.push({
+        user_id: u.user_id, name: u.name, arbetsgivare: pl.arbetsgivare, titel: pl.titel,
+        starttid: nvTid(pl.starttid), sluttid: nvTid(pl.sluttid) })));
       return res.status(200).json({
-        datum, tema,
+        datum, tema, praktik: praktik.sort((a, b) => (a.starttid < b.starttid ? -1 : 1)),
         pass: pass.map(p => {
           const r = reg.filter(x => x.pass_instans_id === p.id);
           return { ...p, starttid: nvTid(p.starttid), sluttid: nvTid(p.sluttid),
@@ -2049,7 +2054,36 @@ export default async function handler(req, res) {
         ut[f] = String(p[f]);
       }
       if (ut.start_datum && ut.slut_datum && ut.slut_datum < ut.start_datum) return { fel: 'Slutdatum kan inte ligga före startdatum' };
+      if ('dagar' in p) {
+        const d = [...new Set((Array.isArray(p.dagar) ? p.dagar : []).map(Number))].sort();
+        if (d.some(x => !(x >= 1 && x <= 7))) return { fel: 'Ogiltig veckodag' };
+        ut.dagar = d.length ? d : null;
+      }
+      for (const k of ['starttid', 'sluttid']) {
+        if (!(k in p)) continue;
+        if (!p[k]) { ut[k] = null; continue; }
+        if (!NV_TID_RE.test(String(p[k]))) return { fel: k === 'starttid' ? 'Ogiltig starttid' : 'Ogiltig sluttid' };
+        ut[k] = nvTid(p[k]);
+      }
+      if (ut.starttid && ut.sluttid && nvMin(ut.sluttid) <= nvMin(ut.starttid)) return { fel: 'Sluttiden måste vara efter starttiden' };
+      if ((ut.starttid && !ut.sluttid) || (!ut.starttid && ut.sluttid)) return { fel: 'Fyll i både start- och sluttid' };
       return { ut };
+    }
+    // Placerade deltagares praktik ett visst datum: rätt veckodag och inom perioden.
+    const pkGallerDag = (pl, datum) => pl.dagar && pl.dagar.length && pl.starttid && pl.sluttid
+      && pl.dagar.includes(nvVeckodag(datum))
+      && (!pl.start_datum || pl.start_datum <= datum) && (!pl.slut_datum || pl.slut_datum >= datum);
+    async function pkPlaceringar(userIds) {
+      const ids = safeUuidIn(userIds);
+      if (!ids) return {};
+      const k = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/praktik_kandidat?user_id=in.(${ids})&status=eq.placerad&select=user_id,praktik_id`, nvGET()));
+      if (!k.length) return {};
+      const pl = {};
+      nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/praktikplatser?id=in.(${[...new Set(k.map(x => x.praktik_id))].join(',')})&select=id,titel,arbetsgivare,ort,dagar,starttid,sluttid,start_datum,slut_datum`, nvGET()))
+        .forEach(p => { pl[p.id] = p; });
+      const per = {};
+      k.forEach(x => { if (pl[x.praktik_id]) (per[x.user_id] = per[x.user_id] || []).push(pl[x.praktik_id]); });
+      return per;
     }
     async function pkHamta(id) {
       const n = parseInt(id, 10);
@@ -2160,7 +2194,7 @@ export default async function handler(req, res) {
     // och sina egna svar. Personalens poäng, motivering, kommentar och
     // arbetsgivarens kontaktuppgifter skickas aldrig hit.
     const ME_SYNLIG = ['tillfragad', 'intresserad', 'placerad'];
-    const ME_FALT = 'id,titel,arbetsgivare,yrkesomrade,adress,ort,innehall,forvantningar,krav,timmar_per_vecka,arbetstider,start_datum,slut_datum,status';
+    const ME_FALT = 'id,titel,arbetsgivare,yrkesomrade,adress,ort,innehall,forvantningar,krav,timmar_per_vecka,arbetstider,dagar,starttid,sluttid,start_datum,slut_datum,status';
 
     if (action === 'my_praktik') {
       const jwt = await verifyJwtUser(accessToken);
@@ -2260,6 +2294,7 @@ export default async function handler(req, res) {
         if (x.status === 'narvarande' || x.status === 'sen') v.narvaroMin += min;
       });
 
+      const minPraktik = (await pkPlaceringar([jwt.id]))[jwt.id] || [];
       return res.status(200).json({
         iProgram: true,
         grupper: (u.grupper || []).filter(g => g.aktiv && (!g.slut || g.slut >= idag)).map(g => g.namn).filter(Boolean),
@@ -2272,7 +2307,10 @@ export default async function handler(req, res) {
           pass: pass.filter(p => p.datum === d).map(p => ({
             id: p.id, titel: p.titel, typ: p.typ, starttid: nvTid(p.starttid), sluttid: nvTid(p.sluttid),
             installt: p.installt, kommentar: p.installt ? p.kommentar : null, narvaro: egenMap[p.id] || null
-          }))
+          })).concat(minPraktik.filter(pl => pkGallerDag(pl, d)).map(pl => ({
+            id: 'pk' + pl.id, titel: 'Praktik · ' + pl.arbetsgivare, typ: 'A', praktik: true,
+            starttid: nvTid(pl.starttid), sluttid: nvTid(pl.sluttid), installt: false, kommentar: null, narvaro: null
+          }))).sort((a, b) => (a.starttid < b.starttid ? -1 : 1))
         })),
         veckor: Object.values(veckor).sort((a, b) => (a.mandag < b.mandag ? 1 : -1)).slice(0, 6)
           .map(v => ({ mandag: v.mandag, procent: v.schemaMin ? Math.round((100 * v.narvaroMin) / v.schemaMin) : null }))

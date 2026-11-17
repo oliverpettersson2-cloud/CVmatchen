@@ -44,6 +44,17 @@
     if (!d) return '';
     return new Date(d + 'T12:00:00').toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' }).replace(/\.$/, '');
   }
+  var DAGAR = ['', 'Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'];
+  function tidKort(t) { return t ? String(t).slice(0, 5) : ''; }
+  // "Mån–tor 08:00–13:00" eller "Mån, ons, fre 08:00–13:00"
+  function schemaText(p) {
+    var d = (p.dagar || []).slice().sort();
+    if (!d.length) return '';
+    var lopande = d.every(function (x, i) { return i === 0 || x === d[i - 1] + 1; });
+    var dagar = d.length > 2 && lopande ? DAGAR[d[0]] + '–' + DAGAR[d[d.length - 1]].toLowerCase()
+      : d.map(function (x, i) { return i ? DAGAR[x].toLowerCase() : DAGAR[x]; }).join(', ');
+    return dagar + (p.starttid ? ' ' + tidKort(p.starttid) + '–' + tidKort(p.sluttid) : '');
+  }
   function period(p) {
     if (p.start_datum && p.slut_datum) return visaDatum(p.start_datum) + ' – ' + visaDatum(p.slut_datum);
     if (p.start_datum) return 'från ' + visaDatum(p.start_datum);
@@ -191,10 +202,10 @@
   function renderDetalj() {
     var p = st.vald, el = root();
     if (!el || !p) return;
-    var tid = [p.timmar_per_vecka ? p.timmar_per_vecka.toString().replace('.', ',') + ' timmar i veckan' : '', p.arbetstider].filter(Boolean).join(' · ');
+    var tid = [schemaText(p), p.timmar_per_vecka ? p.timmar_per_vecka.toString().replace('.', ',') + ' timmar i veckan' : '', p.arbetstider].filter(Boolean).join(' · ');
     var plats = [p.adress, p.ort].filter(Boolean).join(', ');
     var kontakt = [p.kontakt_namn, p.kontakt_telefon, p.kontakt_epost].filter(Boolean).join(' · ');
-    var krav = [p.min_sprak_steg != null ? 'Språk: minst ' + STEG[p.min_sprak_steg] : '', p.korkort_krav ? 'B-körkort krävs' : ''].filter(Boolean).join(' · ');
+    var krav = [STEG[p.min_sprak_steg] && p.min_sprak_steg !== '' ? 'Språk: minst ' + STEG[p.min_sprak_steg] : '', p.korkort_krav ? 'B-körkort krävs' : ''].filter(Boolean).join(' · ');
     el.innerHTML =
       '<button type="button" class="pk-tillbaka" onclick="pk.lista()">‹ Alla praktikplatser</button>' +
       '<div class="pk-det">' +
@@ -292,7 +303,7 @@
   function flaggor(u) {
     var p = st.vald, ut = [];
     var test = u.sprak && u.sprak.test;
-    if (p.min_sprak_steg != null) {
+    if (STEG[p.min_sprak_steg] && p.min_sprak_steg !== '') {
       if (!test) ut.push({ t: 'Inget språktest', k: 'mu' });
       else if (test.steg < p.min_sprak_steg) ut.push({ t: 'Språk under kravet (' + STEG[test.steg].split(' · ')[0] + ')', k: 'rd' });
       else ut.push({ t: 'Språk ✓', k: 'gn' });
@@ -467,9 +478,14 @@
         falt('Förväntningar', ta('pkf_forvantningar', p.forvantningar, 2000, 'Vad arbetsgivaren förväntar sig, och vad deltagaren kan förvänta sig: handledare, introduktion, chans till anställning'), 'pkf_forvantningar', true) +
         falt('Arbetets krav', ta('pkf_krav', p.krav, 1000, 'Beskriv arbetet, t.ex. "mycket stående, lyft upp till 15 kg". Inte deltagarens hälsa.'), 'pkf_krav', true)) +
 
-      avsnitt(3, 'Tid och period', '',
+      avsnitt(3, 'Tid och period', 'Dagar och tider gör att praktiken syns i deltagarens schema när hen är placerad.',
         falt('Timmar per vecka', inp('pkf_timmar', p.timmar_per_vecka, 'inputmode="decimal" placeholder="t.ex. 20"'), 'pkf_timmar') +
-        falt('Arbetstider', inp('pkf_arbetstider', p.arbetstider, 'maxlength="200" placeholder="t.ex. mån–tor 08–13"'), 'pkf_arbetstider') +
+        '<div class="prog-f pk-bred"><label>Dagar</label><div class="pk-dagar">' + [1, 2, 3, 4, 5, 6, 7].map(function (d) {
+          return '<label class="pk-dag"><input type="checkbox" name="pkf_dag" value="' + d + '"' + ((p.dagar || []).indexOf(d) > -1 ? ' checked' : '') + '> ' + DAGAR[d] + '</label>';
+        }).join('') + '</div></div>' +
+        falt('Starttid', '<input type="time" id="pkf_starttid" class="prog-in" value="' + esc(tidKort(p.starttid)) + '">', 'pkf_starttid') +
+        falt('Sluttid', '<input type="time" id="pkf_sluttid" class="prog-in" value="' + esc(tidKort(p.sluttid)) + '">', 'pkf_sluttid') +
+        falt('Övrigt om tiderna', inp('pkf_arbetstider', p.arbetstider, 'maxlength="200" placeholder="t.ex. fredagar till 12"'), 'pkf_arbetstider', true) +
         falt('Startdatum', '<input type="date" id="pkf_start" class="prog-in" value="' + esc(p.start_datum || '') + '">', 'pkf_start') +
         falt('Slutdatum', '<input type="date" id="pkf_slut" class="prog-in" value="' + esc(p.slut_datum || '') + '">', 'pkf_slut') +
         falt('Antal platser', inp('pkf_antal', p.antal_platser, 'type="number" min="1" max="50"'), 'pkf_antal')) +
@@ -505,11 +521,14 @@
       titel: varde('pkf_titel'), arbetsgivare: varde('pkf_arbetsgivare'), yrkesomrade: varde('pkf_yrkesomrade'),
       innehall: varde('pkf_innehall'), forvantningar: varde('pkf_forvantningar'), krav: varde('pkf_krav'),
       timmar_per_vecka: varde('pkf_timmar'), arbetstider: varde('pkf_arbetstider'),
+      dagar: [].map.call(document.querySelectorAll('input[name="pkf_dag"]:checked'), function (x) { return Number(x.value); }),
+      starttid: varde('pkf_starttid'), sluttid: varde('pkf_sluttid'),
       start_datum: varde('pkf_start'), slut_datum: varde('pkf_slut'), adress: varde('pkf_adress'), ort: varde('pkf_ort'),
       kontakt_namn: varde('pkf_knamn'), kontakt_telefon: varde('pkf_ktel'), kontakt_epost: varde('pkf_kepost'),
       antal_platser: varde('pkf_antal') || 1, min_sprak_steg: varde('pkf_sprak'), status: varde('pkf_status'),
       korkort_krav: !!(document.getElementById('pkf_korkort') || {}).checked
     };
+    if (!!p.starttid !== !!p.sluttid) { m.textContent = 'Fyll i både start- och sluttid'; m.className = 'err'; return; }
     var saknas = !p.titel ? 'pkf_titel' : !p.arbetsgivare ? 'pkf_arbetsgivare' : null;
     if (saknas) {
       m.textContent = 'Fyll i titel och arbetsgivare'; m.className = 'err';
@@ -596,6 +615,7 @@
       '.pk-avs-h{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}',
       '.pk-avs-h h4{font-size:15px;margin:2px 0 2px}.pk-avs-h p{font-size:12px;color:var(--mu);margin:0}',
       '.pk-nr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--ac);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}',
+      '.pk-dagar{display:flex;gap:6px;flex-wrap:wrap}.pk-dag{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--bd);border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer}',
       '.pk-bockf{display:flex;align-items:flex-end;padding-bottom:8px}',
       '.pk-form [aria-invalid=true]{border-color:var(--rd)}',
       '.pk-form-fot{position:sticky;bottom:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;box-shadow:0 -6px 16px rgba(0,0,0,.06)}',

@@ -220,14 +220,18 @@
       st.pass = r.pass || [];
       var l = document.getElementById('nvPassLista');
       if (!l) return;
+      var pr = (r.praktik || []).length
+        ? '<div class="nv-praktik"><b>🏢 På praktik idag</b>' + r.praktik.map(function (x) {
+            return '<div class="nv-pr-rad"><span>' + esc(namnFor(x)) + '</span><span class="nv-pass-meta">' + esc(x.arbetsgivare) + ' · ' + esc(x.starttid) + '–' + esc(x.sluttid) + '</span></div>';
+          }).join('') + '</div>' : '';
       if (!st.pass.length) {
-        l.innerHTML = temaRad(r.tema) + tomt('Inga pass den här dagen',
+        l.innerHTML = temaRad(r.tema) + pr + tomt('Inga pass den här dagen',
           'Passen skapas från veckoschemat. Lägg in en serie där, så dyker passen upp här de dagar serien gäller.',
           '<button type="button" class="btn btn-primary" onclick="nv.vy(\'schema\')">Öppna veckoschemat</button>');
         return;
       }
       var allaInstallda = st.pass.every(function (p) { return p.installt; });
-      l.innerHTML = temaRad(r.tema) + st.pass.map(passKort).join('') +
+      l.innerHTML = temaRad(r.tema) + pr + st.pass.map(passKort).join('') +
         '<div class="nv-dagfot"><button type="button" class="btn" onclick="nv.installaDag(' + !allaInstallda + ')">' +
         (allaInstallda ? 'Återställ alla pass den här dagen' : 'Ställ in alla pass den här dagen') + '</button></div>';
     } catch (e) { fel('nvPassLista', e); }
@@ -909,6 +913,8 @@
       '.nv-tv-t{font-weight:700;font-size:13.5px;color:var(--tx)}',
       '.nv-tv-u{font-size:12px;color:var(--tx2)}',
       '.btn.nv-farlig{color:var(--rd);border-color:var(--rdb)}',
+      '.nv-praktik{background:var(--blb,#e8effc);border-radius:var(--r,10px);padding:10px 14px;margin-bottom:12px;font-size:13px}',
+      '.nv-pr-rad{display:flex;justify-content:space-between;gap:10px;padding:4px 0;flex-wrap:wrap}',
       '.nv-gr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}',
       '.nv-gr{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r,12px);padding:14px;display:flex;flex-direction:column;gap:6px}',
       '.nv-gr.av{opacity:.65}.nv-gr-h{display:flex;gap:8px;align-items:center;justify-content:space-between;font-size:15px}',

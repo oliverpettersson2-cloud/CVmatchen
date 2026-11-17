@@ -28,7 +28,8 @@ där är något vi aktivt väljer bort, med skäl.
 - [x] **Dela platsen med deltagaren** — kort på startsidan med *Intresserad* / *Inte nu* (byggt 2026-11-17)
 - [ ] SMS-avisering om nytt erbjudande när SMS finns
 - [x] **Att göra på startsidan** — uppgifter från handläggaren med deadline, försenade först och en stor Klar-knapp (byggt 2026-11-17)
-- [ ] Praktikplatsen som pass i deltagarens schema (typ *Arbetsgivare*) när hen är placerad
+- [x] Praktikplatsen i deltagarens schema när hen är placerad: dagar och tider på platsen, *Praktik · arbetsgivare* i veckovyn, och *På praktik idag* under Dagens pass (byggt 2026-11-17)
+- [ ] Närvaro på praktiken (registreras av personal eller bekräftas av arbetsgivaren)
 - [ ] Uppföljning: närvaro på praktiken och arbetsgivarens omdöme
 
 ## Grupper (byggt 2026-11-17)

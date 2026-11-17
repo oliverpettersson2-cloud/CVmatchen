@@ -62,3 +62,14 @@ create table if not exists public.praktik_kandidat (
 );
 create index if not exists praktik_kandidat_user_idx on public.praktik_kandidat (user_id);
 alter table public.praktik_kandidat enable row level security;
+
+-- 2026-11-17: strukturerade arbetstider, så att praktiken kan visas i
+-- deltagarens schema när hen är placerad. arbetstider (fritext) finns kvar
+-- för undantag som "varannan fredag".
+alter table public.praktikplatser add column if not exists dagar    smallint[];
+alter table public.praktikplatser add column if not exists starttid time;
+alter table public.praktikplatser add column if not exists sluttid  time;
+do $$ begin
+  alter table public.praktikplatser add constraint praktikplatser_tid_chk
+    check (starttid is null or sluttid is null or sluttid > starttid);
+exception when duplicate_object then null; end $$;

@@ -26,6 +26,15 @@
     } catch (e) { return d; }
   }
   function timmar(t) { return String(t).replace('.', ','); }
+  var DAGAR = ['', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag', 'Söndag'];
+  function schemaText(p) {
+    var d = (p.dagar || []).slice().sort();
+    if (!d.length) return '';
+    var lopande = d.every(function (x, i) { return i === 0 || x === d[i - 1] + 1; });
+    var dagar = d.length > 2 && lopande ? DAGAR[d[0]] + ' till ' + DAGAR[d[d.length - 1]].toLowerCase()
+      : d.map(function (x, i) { return i ? DAGAR[x].toLowerCase() : DAGAR[x]; }).join(', ');
+    return dagar + (p.starttid ? ' ' + String(p.starttid).slice(0, 5) + '–' + String(p.sluttid).slice(0, 5) : '');
+  }
 
   // ── Uppläsning ──────────────────────────────────────────────
   function las(text) {
@@ -76,7 +85,7 @@
 
   function kort(p) {
     var ut = oppen[p.id];
-    var tid = [p.timmar_per_vecka ? timmar(p.timmar_per_vecka) + ' timmar i veckan' : '', p.arbetstider].filter(Boolean).join(' · ');
+    var tid = [schemaText(p), p.timmar_per_vecka ? timmar(p.timmar_per_vecka) + ' timmar i veckan' : '', p.arbetstider].filter(Boolean).join(' · ');
     var period = p.start_datum ? 'Start ' + datum(p.start_datum) + (p.slut_datum ? ', slut ' + datum(p.slut_datum) : '') : '';
     var plats = [p.adress, p.ort].filter(Boolean).join(', ');
     var h = '<div class="me-plats me-' + p.mittSvar + '">' +
