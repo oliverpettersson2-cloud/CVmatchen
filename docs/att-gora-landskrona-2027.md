@@ -64,7 +64,7 @@ Grunden är byggd. Det är därför ett halvår räcker.
 ### Mars 2027 — schema och skattning
 - [x] Veckoschema som **serier** (`pass_mall` + `pass_instans`) — *klart 2026-11-16*. En serie = flera veckodagar, giltighetstid, varje eller varannan vecka. Ändringar med valt omfång: bara det här passet / alla [måndagar] framåt / hela serien framåt. Ställ in ett pass eller alla pass en dag. Pass med registrerad närvaro skrivs aldrig bort.
 - [x] F2.3 Deltagarens schemavy — *klart 2026-11-17*. Dagens pass överst på Hej, hela veckan ett tryck bort. Ingen ny menyknapp. Ikoner, uppläsning av varje dag, inställda pass med anledning. Syns bara för deltagare med programstatus Aktiv. Mobil och desktop.
-- [ ] `vecka_tema` — 8-veckorscykeln med tema, utflykt, ordtema, hälsofokus
+- [x] `vecka_tema` — 8-veckorscykeln — *klart 2026-11-17*. Startmåndag anges en gång, cykelveckan räknas fram varv efter varv. Tema, utflykt, ordtema, hälsofokus, modul, måndag eftermiddag, KBT-tema och testvecka. Personalen ser allt; deltagaren ser inte KBT-tema eller måndag eftermiddag. Testvecka påminner om språktestet.
 - [x] F2.6 Fasbyte slår igenom nästa måndag — *klart 2026-11-17*. Första fasen sätts direkt (ny deltagare får Landa på en gång). Kryssruta för att rätta direkt. Planerat byte syns i Program och i deltagarens vy.
 - [ ] **F5 Funktionsskattning mot målyrke** — sju dimensioner, fyra svarsalternativ
 - [ ] WHO-5 + självskattad hälsa (en fråga, jämförbar med nationell statistik)

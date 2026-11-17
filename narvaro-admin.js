@@ -191,13 +191,13 @@
       var l = document.getElementById('nvPassLista');
       if (!l) return;
       if (!st.pass.length) {
-        l.innerHTML = tomt('Inga pass den här dagen',
+        l.innerHTML = temaRad(r.tema) + tomt('Inga pass den här dagen',
           'Passen skapas från veckoschemat. Lägg in en serie där, så dyker passen upp här de dagar serien gäller.',
           '<button type="button" class="btn btn-primary" onclick="nv.vy(\'schema\')">Öppna veckoschemat</button>');
         return;
       }
       var allaInstallda = st.pass.every(function (p) { return p.installt; });
-      l.innerHTML = st.pass.map(passKort).join('') +
+      l.innerHTML = temaRad(r.tema) + st.pass.map(passKort).join('') +
         '<div class="nv-dagfot"><button type="button" class="btn" onclick="nv.installaDag(' + !allaInstallda + ')">' +
         (allaInstallda ? 'Återställ alla pass den här dagen' : 'Ställ in alla pass den här dagen') + '</button></div>';
     } catch (e) { fel('nvPassLista', e); }
@@ -446,9 +446,11 @@
   async function renderSchema() {
     var b = body();
     b.innerHTML =
+      '<div id="nvTema"></div>' +
       '<div class="nv-schema-top"><p class="nv-hint">Varje serie skapar pass automatiskt de dagar och veckor den gäller.</p>' +
       '<button type="button" class="btn btn-primary" onclick="nv.nySerie()">+ Ny serie</button></div>' +
       '<div id="nvSerier"><div class="ud-body-empty">Laddar…</div></div>';
+    renderTema();
     try {
       var r = await api('admin_list_serier', {});
       if (st.vy !== 'schema') return;
@@ -612,6 +614,80 @@
     } catch (e) { mmsg(e.message, 'err'); }
   }
 
+  // ── Temacykel (8 veckor) ────────────────────────────────────
+  var TEMA_ETIKETT = [
+    ['tema', 'Tema'], ['utflykt', 'Utflykt'], ['ordtema', 'Ordtema'], ['halsofokus', 'Hälsofokus'],
+    ['modul', 'Veckans modul'], ['man_em', 'Måndag eftermiddag'], ['kbt_tema', 'KBT-tema (visas bara för personal)']
+  ];
+
+  function temaRad(t) {
+    if (!t) return '';
+    var delar = TEMA_ETIKETT.filter(function (e) { return t[e[0]]; })
+      .map(function (e) { return '<span><b>' + esc(e[1].replace(/ \(.*\)$/, '')) + ':</b> ' + esc(t[e[0]]) + '</span>'; });
+    return '<div class="nv-tema"><span class="nv-tema-v">Cykelvecka ' + t.cykelvecka + '</span>' +
+      (t.testvecka ? '<span class="nv-pill or">Testvecka</span>' : '') + delar.join('') + '</div>';
+  }
+
+  async function renderTema() {
+    var box = document.getElementById('nvTema');
+    if (!box) return;
+    box.innerHTML = '<div class="ud-body-empty">Laddar temacykeln…</div>';
+    try {
+      var r = await api('admin_get_temacykel', {});
+      if (st.vy !== 'schema' || !document.getElementById('nvTema')) return;
+      st.tema = r;
+      var start = r.start_datum
+        ? 'Cykeln började ' + esc(visaDatum(r.start_datum, true)) + (r.aktuell ? ' · <b>Nu: vecka ' + r.aktuell + '</b>' : ' · har inte börjat än')
+        : 'Ange vilken måndag cykelvecka 1 börjar. Sedan räknas veckorna fram av sig själva, varv efter varv.';
+      box.innerHTML =
+        '<div class="nv-temasek"><div class="nv-temasek-h"><div><b>Temacykel, 8 veckor</b><div class="nv-pass-meta">' + start + '</div></div>' +
+        '<div class="nv-m-rad"><input type="date" id="nvTemaStart" class="prog-in" style="width:auto" value="' + esc(r.start_datum || '') + '" aria-label="Cykelns startmåndag">' +
+        '<button type="button" class="btn" onclick="nv.sparaTemaStart()">Spara start</button></div></div>' +
+        '<span id="nvTemaMsg" class="nv-pass-meta" role="status"></span>' +
+        '<div class="nv-temagrid">' + r.veckor.map(function (v) {
+          var ifyllt = TEMA_ETIKETT.some(function (e) { return v[e[0]]; });
+          return '<button type="button" class="nv-tv' + (v.cykelvecka === r.aktuell ? ' nu' : '') + '" onclick="nv.andraVecka(' + v.cykelvecka + ')">' +
+            '<span class="nv-tv-n">Vecka ' + v.cykelvecka + (v.cykelvecka === r.aktuell ? ' · nu' : '') + '</span>' +
+            '<span class="nv-tv-t">' + esc(v.tema || (ifyllt ? '—' : 'Inte ifylld')) + '</span>' +
+            (v.utflykt ? '<span class="nv-tv-u">🚶 ' + esc(v.utflykt) + '</span>' : '') +
+            (v.testvecka ? '<span class="nv-pill or">Testvecka</span>' : '') + '</button>';
+        }).join('') + '</div></div>';
+    } catch (e) { fel('nvTema', e); }
+  }
+
+  async function sparaTemaStart() {
+    var d = varde('nvTemaStart'), m = document.getElementById('nvTemaMsg');
+    if (!d) { m.textContent = 'Välj ett datum'; return; }
+    if (veckodag(d) !== 1) { m.textContent = 'Cykeln måste börja på en måndag.'; return; }
+    m.textContent = 'Sparar…';
+    try { await api('admin_save_temacykel_start', { start_datum: d }); renderTema(); }
+    catch (e) { m.textContent = e.message; }
+  }
+
+  function andraVecka(n) {
+    var v = (st.tema && st.tema.veckor || []).find(function (x) { return x.cykelvecka === n; }) || {};
+    modal(
+      '<h3 class="nv-m-h">Cykelvecka ' + n + '</h3>' +
+      '<p class="nv-m-sub">Gäller varje gång vecka ' + n + ' kommer tillbaka i cykeln. KBT-tema och måndag eftermiddag visas bara för personal.</p>' +
+      '<div class="prog-grid">' + TEMA_ETIKETT.map(function (e) {
+        return falt(e[1], '<input id="nvt_' + e[0] + '" class="prog-in" maxlength="120" value="' + esc(v[e[0]] || '') + '">', 'nvt_' + e[0]);
+      }).join('') + '</div>' +
+      '<label class="nv-bock" style="margin-top:14px"><input type="checkbox" id="nvt_testvecka"' + (v.testvecka ? ' checked' : '') + '> ' +
+      'Testvecka — deltagarna gör språktestet och hälsoskattningen</label>' +
+      '<div class="nv-m-act"><span id="nvmMsg" role="status"></span>' +
+      '<button type="button" class="btn" onclick="nv.stang()">Avbryt</button>' +
+      '<button type="button" class="btn btn-primary" onclick="nv.sparaVecka(' + n + ')">Spara</button></div>'
+    );
+  }
+
+  async function sparaVecka(n) {
+    var vecka = { testvecka: !!document.getElementById('nvt_testvecka').checked };
+    TEMA_ETIKETT.forEach(function (e) { vecka[e[0]] = varde('nvt_' + e[0]); });
+    mmsg('Sparar…');
+    try { await api('admin_save_vecka_tema', { cykelvecka: n, vecka: vecka }); stang(); renderTema(); }
+    catch (e) { mmsg(e.message, 'err'); }
+  }
+
   // ── Stil (injiceras en gång) ────────────────────────────────
   function stil() {
     if (document.getElementById('nvStil')) return;
@@ -683,6 +759,18 @@
       '.nv-m-sek{border-top:1px solid var(--bd);margin-top:18px;padding-top:14px;display:grid;gap:10px}',
       '.nv-m-sek-h{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--mu)}',
       '.nv-m-rad{display:flex;flex-wrap:wrap;gap:8px}',
+      '.nv-tema{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;background:var(--acs);border:1px solid var(--bd);border-radius:var(--r);padding:10px 14px;margin-bottom:12px;font-size:13px}',
+      '.nv-tema-v{font-weight:800}',
+      '.nv-pill.or{background:var(--orb);color:var(--or)}',
+      '.nv-temasek{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px;margin-bottom:18px;display:grid;gap:10px}',
+      '.nv-temasek-h{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}',
+      '.nv-temagrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}',
+      '.nv-tv{display:grid;gap:4px;align-content:start;text-align:left;background:var(--sf2);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;font:inherit;cursor:pointer;min-height:84px}',
+      '.nv-tv:hover{border-color:var(--ac)}',
+      '.nv-tv.nu{border:2px solid var(--gn);background:var(--gnb)}',
+      '.nv-tv-n{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mu)}',
+      '.nv-tv-t{font-weight:700;font-size:13.5px;color:var(--tx)}',
+      '.nv-tv-u{font-size:12px;color:var(--tx2)}',
       '.btn.nv-farlig{color:var(--rd);border-color:var(--rdb)}',
       '.btn.nv-farlig:hover{background:var(--rdb)}'
     ].join('\n');
@@ -709,7 +797,8 @@
     oppnaNarvaro: oppnaNarvaro, satStatus: satStatus, satKommentar: satKommentar, sparaNarvaro: sparaNarvaro,
     andraPass: andraPass, sparaAndring: sparaAndring, installa: installa, installaDag: installaDag, avsluta: avsluta,
     nySerie: nySerie, sparaSerie: sparaSerie, andraSerie: andraSerie, sparaSerieAndring: sparaSerieAndring,
-    avslutaSerie: avslutaSerie, bekraftaAvsluta: bekraftaAvsluta, stang: stang
+    avslutaSerie: avslutaSerie, bekraftaAvsluta: bekraftaAvsluta, stang: stang,
+    sparaTemaStart: sparaTemaStart, andraVecka: andraVecka, sparaVecka: sparaVecka
   };
 
   window.narvaroRender = async function () {

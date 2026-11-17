@@ -152,6 +152,7 @@
         '<span>Vecka ' + veckonummer(d.fran) + '</span>' +
         '<button type="button" class="mp-pil" data-mp-vecka="7" aria-label="Nästa vecka">›</button>' +
         '</div>' +
+        temaRuta(d.tema) +
         dagar.map(function (dag) { return dagKort(dag, d.idag); }).join('') +
         narvaroDel(d.veckor) +
         '<p class="mp-not">' + Object.keys(TYP).map(function (k) { return TYP[k].ikon + ' ' + TYP[k].namn; }).join(' · ') + '</p>' +
@@ -160,6 +161,25 @@
       var idag = el.querySelector('.mp-dag--idag');
       if (idag && idag.scrollIntoView) { try { idag.scrollIntoView({ block: 'nearest' }); } catch (e) {} }
     });
+  }
+
+  // Veckans tema. Personalens fält (KBT-tema m.m.) skickas aldrig hit.
+  var TEMA_RADER = [
+    ['tema', '🎯', 'Veckans tema'], ['utflykt', '🚶', 'Utflykt'], ['ordtema', '🗣️', 'Veckans ord'],
+    ['halsofokus', '💚', 'Hälsa'], ['modul', '📚', 'Veckans modul']
+  ];
+  function temaRuta(t) {
+    if (!t) return '';
+    var rader = TEMA_RADER.filter(function (r) { return t[r[0]]; });
+    if (!rader.length && !t.testvecka) return '';
+    var upplast = rader.map(function (r) { return r[2] + ': ' + t[r[0]] + '.'; }).join(' ') +
+      (t.testvecka ? ' Den här veckan är det testvecka. Gör språktestet under Träna och språkträning.' : '');
+    return '<div class="mp-tema"><div class="mp-dag-h"><span>Den här veckan</span>' + hor(upplast, 'Lyssna på veckans tema') + '</div>' +
+      rader.map(function (r) {
+        return '<div class="mp-tema-r"><span aria-hidden="true">' + r[1] + '</span><span><b>' + r[2] + ':</b> ' + esc(t[r[0]]) + '</span></div>';
+      }).join('') +
+      (t.testvecka ? '<div class="mp-tema-test">📏 Testvecka — gör språktestet under <b>Träna → Språkträning</b>.</div>' : '') +
+      '</div>';
   }
 
   function dagKort(dag, idag) {
@@ -247,6 +267,9 @@
       // Bara första bokstaven versal — svenska månadsnamn skrivs med gemen
       '.mp-dag-h>span{display:inline-block}.mp-dag-h>span::first-letter{text-transform:uppercase}',
       '.mp-tom{color:rgba(255,255,255,.55);font-size:14px;padding:4px 0}',
+      '.mp-tema{background:rgba(167,139,250,.10);border:1px solid rgba(167,139,250,.35);border-radius:14px;padding:12px 14px;margin-bottom:12px}',
+      '.mp-tema-r{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.45;padding:4px 0}',
+      '.mp-tema-test{margin-top:8px;background:rgba(245,158,11,.14);border-radius:10px;padding:9px 12px;font-size:14px;color:#fde68a}',
       '.mp-pass{display:grid;grid-template-columns:52px 34px 1fr;gap:10px;align-items:start;padding:10px 0;border-top:1px solid rgba(255,255,255,.07)}',
       '.mp-tid{font-weight:800;font-size:16px;font-variant-numeric:tabular-nums;line-height:1.2}',
       '.mp-tid span{display:block;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.55)}',

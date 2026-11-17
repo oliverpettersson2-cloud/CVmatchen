@@ -84,3 +84,36 @@ alter table public.pass_mall add constraint pass_mall_intervall_check check (int
 alter table public.pass_mall drop constraint if exists pass_mall_giltig_check;
 alter table public.pass_mall add constraint pass_mall_giltig_check check (giltig_till is null or giltig_till >= giltig_fran);
 create index if not exists pass_mall_serie_idx on public.pass_mall (serie_id);
+
+-- ── Temacykel, 8 veckor (kravspec F2.1) ───────────────────────────────
+-- tema_cykel anger vilken måndag cykelvecka 1 börjar; därefter räknas
+-- cykelveckan fram (vecka 1–8, varv efter varv). vecka_tema är innehållet
+-- per cykelvecka. kbt_tema visas bara för personalen.
+create table if not exists public.tema_cykel (
+  id          bigint generated always as identity primary key,
+  kommun_id   bigint not null references public.kommuner(id) on delete cascade,
+  enhet_id    bigint references public.enheter(id) on delete cascade,
+  start_datum date not null check (extract(isodow from start_datum) = 1),
+  uppdaterad_av bigint references public.admins(id) on delete set null,
+  uppdaterad_at timestamptz not null default now()
+);
+create unique index if not exists tema_cykel_scope_uq on public.tema_cykel (kommun_id, coalesce(enhet_id, 0));
+create table if not exists public.vecka_tema (
+  id          bigint generated always as identity primary key,
+  kommun_id   bigint not null references public.kommuner(id) on delete cascade,
+  enhet_id    bigint references public.enheter(id) on delete cascade,
+  cykelvecka  smallint not null check (cykelvecka between 1 and 8),
+  tema        text check (tema is null or length(tema) <= 120),
+  utflykt     text check (utflykt is null or length(utflykt) <= 120),
+  ordtema     text check (ordtema is null or length(ordtema) <= 120),
+  halsofokus  text check (halsofokus is null or length(halsofokus) <= 120),
+  modul       text check (modul is null or length(modul) <= 120),
+  kbt_tema    text check (kbt_tema is null or length(kbt_tema) <= 120),
+  man_em      text check (man_em is null or length(man_em) <= 120),
+  testvecka   boolean not null default false,
+  uppdaterad_av bigint references public.admins(id) on delete set null,
+  uppdaterad_at timestamptz not null default now()
+);
+create unique index if not exists vecka_tema_scope_uq on public.vecka_tema (kommun_id, coalesce(enhet_id, 0), cykelvecka);
+alter table public.tema_cykel enable row level security;
+alter table public.vecka_tema enable row level security;

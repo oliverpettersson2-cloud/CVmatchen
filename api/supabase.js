@@ -65,7 +65,8 @@ export default async function handler(req, res) {
     admin_login: 20, admin_invite: 20, user_invite: 30, admin_resend_invite: 20,
     admin_delete_user: 10, user_delete_self: 5, send_otp: 10, verify_otp: 20,
     admin_update_program: 60, admin_save_narvaro: 120, admin_edit_schema: 60,
-    admin_create_serie: 60, admin_avsluta_schema: 30, admin_installa_pass: 60
+    admin_create_serie: 60, admin_avsluta_schema: 30, admin_installa_pass: 60,
+    admin_save_vecka_tema: 60, admin_save_temacykel_start: 30
   };
   if (_action && _RATE_LIMITS[_action] && !checkRateLimit(_ip, _action, _RATE_LIMITS[_action])) {
     return res.status(429).json({ error: 'För många försök — vänta en minut och försök igen.' });
@@ -1497,6 +1498,31 @@ export default async function handler(req, res) {
       && (!p.faser || !p.faser.length || p.faser.includes(nvFas(u, p.datum)))
       && (!p.spar || !p.spar.length || p.spar.includes(u.spar));
 
+    // ── Temacykel ──
+    const TEMA_FALT = ['tema', 'utflykt', 'ordtema', 'halsofokus', 'modul', 'kbt_tema', 'man_em'];
+    const TEMA_DELTAGARE = ['tema', 'utflykt', 'ordtema', 'halsofokus', 'modul'];   // kbt_tema och man_em bara för personal
+    // Cykelvecka 1–8 för ett datum, räknat från cykelns startmåndag. Före start: null.
+    const nvCykelvecka = (start, datum) => (!start || datum < start) ? null : (nvVeckorMellan(start, datum) % 8) + 1;
+    async function nvTemaScope(kommun_id, enhet_id) {
+      // Enhetens egen cykel går före kommunens
+      const lista = enhet_id != null ? [{ kommun_id, enhet_id }, { kommun_id, enhet_id: null }] : [{ kommun_id, enhet_id: null }];
+      for (const sc of lista) {
+        const c = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/tema_cykel?${nvScopeFilter(sc)}&select=start_datum&limit=1`, nvGET()))[0];
+        if (c) return { ...sc, start_datum: c.start_datum };
+      }
+      return null;
+    }
+    async function nvTemaFor(kommun_id, enhet_id, datum, forPersonal) {
+      const sc = await nvTemaScope(kommun_id, enhet_id);
+      if (!sc) return null;
+      const v = nvCykelvecka(sc.start_datum, datum);
+      if (!v) return null;
+      const rad = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/vecka_tema?${nvScopeFilter(sc)}&cykelvecka=eq.${v}&select=*&limit=1`, nvGET()))[0] || {};
+      const ut = { cykelvecka: v, testvecka: !!rad.testvecka };
+      (forPersonal ? TEMA_FALT : TEMA_DELTAGARE).forEach(k => { if (rad[k]) ut[k] = rad[k]; });
+      return ut;
+    }
+
     async function nvHamtaPass(admin, passId) {
       const id = parseInt(passId, 10);
       if (!Number.isFinite(id)) return { fel: 400, msg: 'Ogiltigt pass' };
@@ -1583,8 +1609,9 @@ export default async function handler(req, res) {
       const del = await nvAktiva(sc.kommun_id, sc.enhet_id);
       const ids = pass.map(p => p.id);
       const reg = ids.length ? nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/narvaro?pass_instans_id=in.(${ids.join(',')})&select=pass_instans_id,status`, nvGET())) : [];
+      const tema = await nvTemaFor(sc.kommun_id, sc.enhet_id, datum, true);
       return res.status(200).json({
-        datum,
+        datum, tema,
         pass: pass.map(p => {
           const r = reg.filter(x => x.pass_instans_id === p.id);
           return { ...p, starttid: nvTid(p.starttid), sluttid: nvTid(p.sluttid),
@@ -1762,6 +1789,66 @@ export default async function handler(req, res) {
       return res.status(200).json({ veckor: lista });
     }
 
+    if (action === 'admin_get_temacykel') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const sc = await nvScope(admin, req.body);
+      if (sc.fel) return res.status(400).json({ error: sc.fel });
+      const c = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/tema_cykel?${nvScopeFilter(sc)}&select=start_datum&limit=1`, nvGET()))[0];
+      const rader = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/vecka_tema?${nvScopeFilter(sc)}&select=*&order=cykelvecka`, nvGET()));
+      const veckor = [1, 2, 3, 4, 5, 6, 7, 8].map(n => {
+        const r = rader.find(x => x.cykelvecka === n) || {};
+        const ut = { cykelvecka: n, testvecka: !!r.testvecka };
+        TEMA_FALT.forEach(k => { ut[k] = r[k] || ''; });
+        return ut;
+      });
+      return res.status(200).json({ start_datum: c?.start_datum || null, aktuell: nvCykelvecka(c?.start_datum, nvIdag()), veckor });
+    }
+
+    if (action === 'admin_save_temacykel_start') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const sc = await nvScope(admin, req.body);
+      if (sc.fel) return res.status(400).json({ error: sc.fel });
+      const d = String(req.body?.start_datum || '');
+      if (!NV_DAG_RE.test(d)) return res.status(400).json({ error: 'Ogiltigt datum' });
+      if (nvVeckodag(d) !== 1) return res.status(400).json({ error: 'Cykeln måste börja på en måndag' });
+      const finns = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/tema_cykel?${nvScopeFilter(sc)}&select=id&limit=1`, nvGET()))[0];
+      const data = { start_datum: d, uppdaterad_av: admin.id, uppdaterad_at: new Date().toISOString() };
+      const w = finns
+        ? await makeRequest(`${SUPABASE_URL}/rest/v1/tema_cykel?id=eq.${finns.id}`, nvPATCH(), data)
+        : await makeRequest(`${SUPABASE_URL}/rest/v1/tema_cykel`, { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=minimal' } }, { ...data, kommun_id: sc.kommun_id, enhet_id: sc.enhet_id });
+      if (w.status >= 400) return res.status(400).json({ error: 'Kunde inte spara startdatum' });
+      await logAdminAction(admin.id, 'admin_save_temacykel_start', { start_datum: d });
+      return res.status(200).json({ start_datum: d, aktuell: nvCykelvecka(d, nvIdag()) });
+    }
+
+    if (action === 'admin_save_vecka_tema') {
+      const { admin } = await requireAdmin(res, accessToken, action, {});
+      if (!admin) return;
+      const sc = await nvScope(admin, req.body);
+      if (sc.fel) return res.status(400).json({ error: sc.fel });
+      const n = parseInt(req.body?.cykelvecka, 10);
+      if (!(n >= 1 && n <= 8)) return res.status(400).json({ error: 'Cykelveckan måste vara 1–8' });
+      const v = req.body?.vecka || {};
+      const data = { testvecka: !!v.testvecka, uppdaterad_av: admin.id, uppdaterad_at: new Date().toISOString() };
+      for (const k of TEMA_FALT) {
+        const t = v[k] == null ? '' : String(v[k]).trim();
+        if (t.length > 120) return res.status(400).json({ error: 'Max 120 tecken per fält' });
+        data[k] = t || null;
+      }
+      const finns = nvRows(await makeRequest(`${SUPABASE_URL}/rest/v1/vecka_tema?${nvScopeFilter(sc)}&cykelvecka=eq.${n}&select=id&limit=1`, nvGET()))[0];
+      const w = finns
+        ? await makeRequest(`${SUPABASE_URL}/rest/v1/vecka_tema?id=eq.${finns.id}`, nvPATCH(), data)
+        : await makeRequest(`${SUPABASE_URL}/rest/v1/vecka_tema`, { method: 'POST', headers: { ...serviceHeaders(), 'Prefer': 'return=minimal' } }, { ...data, kommun_id: sc.kommun_id, enhet_id: sc.enhet_id, cykelvecka: n });
+      if (w.status >= 400) {
+        console.warn('[admin_save_vecka_tema]', w.status, maskPII(w.data));
+        return res.status(400).json({ error: 'Kunde inte spara veckan' });
+      }
+      await logAdminAction(admin.id, 'admin_save_vecka_tema', { cykelvecka: n });
+      return res.status(200).json({ ok: true });
+    }
+
     // Deltagarens egen vecka: passen hen ska vara på, egen närvaro per pass
     // och närvaro per vecka. Bara för deltagare med programstatus Aktiv;
     // övriga får iProgram:false och ser ingenting nytt i appen.
@@ -1812,6 +1899,7 @@ export default async function handler(req, res) {
         fas: nvFas(u, idag), spar: u.spar,
         fasNy: u.fas_ny || null, fasNyFran: u.fas_ny_fran || null,
         fran, till, idag,
+        tema: await nvTemaFor(u.kommun_id, u.enhet_id, fran, false),
         dagar: dagar.map(d => ({
           datum: d,
           pass: pass.filter(p => p.datum === d).map(p => ({
