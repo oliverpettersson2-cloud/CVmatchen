@@ -254,7 +254,8 @@
     }
     h += '<p class="nv-hint">' + (st.registrerad
       ? 'Närvaron är registrerad. Ändra och spara igen om något blev fel.'
-      : 'Alla är förvalda som närvarande. Ändra bara för den som inte kom eller kom sent.') + '</p>' +
+      : 'Alla är förvalda som närvarande. Ändra bara för den som inte kom eller kom sent.') +
+      ' Skriv aldrig sjukdom eller annan hälsoorsak i kommentaren — "giltig, anmäld" räcker.</p>' +
       '<div class="nv-lista">' + st.deltagare.map(rad).join('') + '</div>' +
       '<div class="nv-spara"><span id="nvSparaMsg" role="status"></span>' +
       '<button type="button" class="btn btn-primary" id="nvSpara" onclick="nv.sparaNarvaro()">Spara närvaro (' + st.deltagare.length + ')</button></div>';
@@ -269,7 +270,7 @@
         'onclick="nv.satStatus(\'' + d.user_id + '\',\'' + s[0] + '\')">' + s[1] + '</button>';
     }).join('');
     var kommentar = v.status !== 'narvarande'
-      ? '<input type="text" class="prog-in nv-kom" maxlength="300" placeholder="Kommentar (valfritt)" value="' + esc(v.kommentar) + '" ' +
+      ? '<input type="text" class="prog-in nv-kom" maxlength="300" placeholder="Kommentar (valfritt) — inga hälsouppgifter" value="' + esc(v.kommentar) + '" ' +
         'oninput="nv.satKommentar(\'' + d.user_id + '\',this.value)" aria-label="Kommentar för ' + esc(namn) + '">'
       : '';
     return '<div class="nv-rad" id="nvr-' + d.user_id + '">' +
@@ -668,12 +669,12 @@
     var v = (st.tema && st.tema.veckor || []).find(function (x) { return x.cykelvecka === n; }) || {};
     modal(
       '<h3 class="nv-m-h">Cykelvecka ' + n + '</h3>' +
-      '<p class="nv-m-sub">Gäller varje gång vecka ' + n + ' kommer tillbaka i cykeln. Intern anteckning och måndag eftermiddag visas bara för personal.</p>' +
+      '<p class="nv-m-sub">Gäller varje gång vecka ' + n + ' kommer tillbaka i cykeln. Intern anteckning och måndag eftermiddag visas bara för personal. Skriv inga uppgifter om enskilda deltagare här.</p>' +
       '<div class="prog-grid">' + TEMA_ETIKETT.map(function (e) {
         return falt(e[1], '<input id="nvt_' + e[0] + '" class="prog-in" maxlength="120" value="' + esc(v[e[0]] || '') + '">', 'nvt_' + e[0]);
       }).join('') + '</div>' +
       '<label class="nv-bock" style="margin-top:14px"><input type="checkbox" id="nvt_testvecka"' + (v.testvecka ? ' checked' : '') + '> ' +
-      'Testvecka — deltagarna gör språktestet och hälsoskattningen</label>' +
+      'Testvecka — deltagarna gör språktestet</label>' +
       '<div class="nv-m-act"><span id="nvmMsg" role="status"></span>' +
       '<button type="button" class="btn" onclick="nv.stang()">Avbryt</button>' +
       '<button type="button" class="btn btn-primary" onclick="nv.sparaVecka(' + n + ')">Spara</button></div>'

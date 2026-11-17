@@ -9,6 +9,8 @@ Upprättad 2026-11-13 · Pilot: **20 platser** (ändrat 2026-11-17), testkörnin
 - **Hälsa erbjuds som utbildning och träning i grupp**, t.ex. med extern instruktör. Ingen hälsodata samlas in i pilot 1 — hälsoskattningen skjuts upp.
 - **20 platser från start** i stället för 16.
 - **Lokal 15 000 kr/mån. Aktiviteter 10 000 kr/mån** — instruktör, simhall, studiebesök.
+- **SMS-påminnelser behålls i planen** (beslut 2026-11-17). Cirka 100–300 kr/mån för 20 deltagare. Kräver EU-leverantör, biträdesavtal och en rad i DPIA:n. SMS:en nämner aldrig insatsens art.
+- **Kartläggning görs utan hälsouppgifter:** skriv *vad* som behövs ("kan delta förmiddagar"), aldrig *varför* (diagnos, sjukdom). Tipstext vid närvarokommentaren påminner personalen.
 - Fasta kostnader sjunker från 184 500 till **159 500 kr/mån**. Brytpunkt vid 20 platser: **cirka 8 000 kr per plats och månad** vid full beläggning.
 
 Den här listan styr vad som byggs. **Avstå-listan längst ned är inte en
