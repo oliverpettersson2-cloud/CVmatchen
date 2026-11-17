@@ -433,37 +433,69 @@
       }).join('') + '</select>';
   }
 
+  function avsnitt(nr, rubrik, text, innehall) {
+    return '<section class="pk-avs" aria-labelledby="pkAvs' + nr + '">' +
+      '<div class="pk-avs-h"><span class="pk-nr">' + nr + '</span><div><h4 id="pkAvs' + nr + '">' + esc(rubrik) + '</h4>' +
+      (text ? '<p>' + esc(text) + '</p>' : '') + '</div></div>' +
+      '<div class="pk-fgrid">' + innehall + '</div></section>';
+  }
+
+  // Formuläret visas som en egen sida i fliken, inte som en ruta ovanpå.
   function formular(p) {
+    var el = root();
+    if (!el) return;
+    var andrar = !!(p && p.id);
     p = p || { status: 'oppen', antal_platser: 1 };
+    st.redigerar = andrar ? p.id : 'ny';
     var steg = {}; STEG.forEach(function (s, i) { steg[i] = s; });
-    modal(
-      '<h3 class="pk-m-h">' + (p.id ? 'Ändra praktikplats' : 'Ny praktikplats') + '</h3>' +
-      '<p class="pk-hint">Skriv så att deltagaren förstår vad platsen innebär. Fälten med * krävs.</p>' +
-      '<div class="pk-fgrid">' +
-      falt('Titel *', inp('pkf_titel', p.titel, 'maxlength="120" placeholder="t.ex. Lagerarbete, plock och pack"'), 'pkf_titel', true) +
-      falt('Arbetsgivare *', inp('pkf_arbetsgivare', p.arbetsgivare, 'maxlength="120"'), 'pkf_arbetsgivare') +
-      falt('Yrkesområde', sel('pkf_yrkesomrade', OMRADEN, p.yrkesomrade, 'Välj…'), 'pkf_yrkesomrade') +
-      falt('Vad deltagaren gör', ta('pkf_innehall', p.innehall, 2000, 'Arbetsuppgifter en vanlig dag'), 'pkf_innehall', true) +
-      falt('Förväntningar', ta('pkf_forvantningar', p.forvantningar, 2000, 'Vad arbetsgivaren förväntar sig, och vad deltagaren kan förvänta sig: handledare, introduktion, chans till anställning'), 'pkf_forvantningar', true) +
-      falt('Arbetets krav', ta('pkf_krav', p.krav, 1000, 'Beskriv arbetet, t.ex. "mycket stående, lyft upp till 15 kg". Inte deltagarens hälsa.'), 'pkf_krav', true) +
-      falt('Timmar per vecka', inp('pkf_timmar', p.timmar_per_vecka, 'inputmode="decimal" placeholder="t.ex. 20"'), 'pkf_timmar') +
-      falt('Arbetstider', inp('pkf_arbetstider', p.arbetstider, 'maxlength="200" placeholder="t.ex. mån–tor 08–13"'), 'pkf_arbetstider') +
-      falt('Startdatum', '<input type="date" id="pkf_start" class="prog-in" value="' + esc(p.start_datum || '') + '">', 'pkf_start') +
-      falt('Slutdatum', '<input type="date" id="pkf_slut" class="prog-in" value="' + esc(p.slut_datum || '') + '">', 'pkf_slut') +
-      falt('Adress', inp('pkf_adress', p.adress, 'maxlength="200"'), 'pkf_adress') +
-      falt('Ort', inp('pkf_ort', p.ort, 'maxlength="80"'), 'pkf_ort') +
-      falt('Kontaktperson', inp('pkf_knamn', p.kontakt_namn, 'maxlength="120"'), 'pkf_knamn') +
-      falt('Telefon', inp('pkf_ktel', p.kontakt_telefon, 'maxlength="40" inputmode="tel"'), 'pkf_ktel') +
-      falt('E-post', inp('pkf_kepost', p.kontakt_epost, 'maxlength="160" type="email"'), 'pkf_kepost') +
-      falt('Antal platser', inp('pkf_antal', p.antal_platser, 'type="number" min="1" max="50"'), 'pkf_antal') +
-      falt('Lägsta språknivå', sel('pkf_sprak', steg, p.min_sprak_steg, 'Inget krav'), 'pkf_sprak') +
-      falt('Status', sel('pkf_status', STATUS, p.status), 'pkf_status') +
-      '</div>' +
-      '<label class="pk-bock" style="margin-top:12px"><input type="checkbox" id="pkf_korkort"' + (p.korkort_krav ? ' checked' : '') + '> B-körkort krävs</label>' +
-      '<div class="pk-m-act"><span id="pkMsg" role="status"></span>' +
-      '<button type="button" class="btn" onclick="pk.stang()">Avbryt</button>' +
-      '<button type="button" class="btn btn-primary" onclick="pk.spara(' + (p.id || 0) + ')">Spara</button></div>'
-    );
+    el.innerHTML =
+      '<button type="button" class="pk-tillbaka" onclick="pk.avbryt()">‹ ' + (andrar ? 'Tillbaka till platsen' : 'Alla praktikplatser') + '</button>' +
+      '<form class="pk-form" id="pkForm" novalidate onsubmit="event.preventDefault();pk.spara(' + (p.id || 0) + ')">' +
+      '<div class="pk-form-h"><h3>' + (andrar ? 'Ändra praktikplats' : 'Ny praktikplats') + '</h3>' +
+      '<p>Skriv så att deltagaren förstår vad platsen innebär. Fält med <b>*</b> måste fyllas i.</p></div>' +
+
+      avsnitt(1, 'Arbetsgivare och plats', 'Vem erbjuder praktiken, och vad heter den?',
+        falt('Titel *', inp('pkf_titel', p.titel, 'maxlength="120" required placeholder="t.ex. Lagerarbete, plock och pack"'), 'pkf_titel', true) +
+        falt('Arbetsgivare *', inp('pkf_arbetsgivare', p.arbetsgivare, 'maxlength="120" required'), 'pkf_arbetsgivare') +
+        falt('Yrkesområde', sel('pkf_yrkesomrade', OMRADEN, p.yrkesomrade, 'Välj…'), 'pkf_yrkesomrade') +
+        falt('Adress', inp('pkf_adress', p.adress, 'maxlength="200" autocomplete="off"'), 'pkf_adress') +
+        falt('Ort', inp('pkf_ort', p.ort, 'maxlength="80"'), 'pkf_ort')) +
+
+      avsnitt(2, 'Innehåll', 'Det här ligger till grund för matchningen. Ju konkretare, desto bättre förslag.',
+        falt('Vad deltagaren gör', ta('pkf_innehall', p.innehall, 2000, 'Arbetsuppgifter en vanlig dag'), 'pkf_innehall', true) +
+        falt('Förväntningar', ta('pkf_forvantningar', p.forvantningar, 2000, 'Vad arbetsgivaren förväntar sig, och vad deltagaren kan förvänta sig: handledare, introduktion, chans till anställning'), 'pkf_forvantningar', true) +
+        falt('Arbetets krav', ta('pkf_krav', p.krav, 1000, 'Beskriv arbetet, t.ex. "mycket stående, lyft upp till 15 kg". Inte deltagarens hälsa.'), 'pkf_krav', true)) +
+
+      avsnitt(3, 'Tid och period', '',
+        falt('Timmar per vecka', inp('pkf_timmar', p.timmar_per_vecka, 'inputmode="decimal" placeholder="t.ex. 20"'), 'pkf_timmar') +
+        falt('Arbetstider', inp('pkf_arbetstider', p.arbetstider, 'maxlength="200" placeholder="t.ex. mån–tor 08–13"'), 'pkf_arbetstider') +
+        falt('Startdatum', '<input type="date" id="pkf_start" class="prog-in" value="' + esc(p.start_datum || '') + '">', 'pkf_start') +
+        falt('Slutdatum', '<input type="date" id="pkf_slut" class="prog-in" value="' + esc(p.slut_datum || '') + '">', 'pkf_slut') +
+        falt('Antal platser', inp('pkf_antal', p.antal_platser, 'type="number" min="1" max="50"'), 'pkf_antal')) +
+
+      avsnitt(4, 'Krav för matchning', 'Används för att markera vem som uppfyller kraven. Ingen sorteras bort automatiskt.',
+        falt('Lägsta språknivå', sel('pkf_sprak', steg, p.min_sprak_steg, 'Inget krav'), 'pkf_sprak') +
+        '<div class="prog-f pk-bockf"><label class="pk-bock"><input type="checkbox" id="pkf_korkort"' + (p.korkort_krav ? ' checked' : '') + '> B-körkort krävs</label></div>') +
+
+      avsnitt(5, 'Kontaktperson hos arbetsgivaren', 'Visas bara för personal.',
+        falt('Namn', inp('pkf_knamn', p.kontakt_namn, 'maxlength="120" autocomplete="off"'), 'pkf_knamn') +
+        falt('Telefon', inp('pkf_ktel', p.kontakt_telefon, 'maxlength="40" inputmode="tel" autocomplete="off"'), 'pkf_ktel') +
+        falt('E-post', inp('pkf_kepost', p.kontakt_epost, 'maxlength="160" type="email" autocomplete="off"'), 'pkf_kepost', true)) +
+
+      '<div class="pk-form-fot"><span id="pkMsg" role="status"></span>' +
+      '<label class="pk-statusval" for="pkf_status">Status ' + sel('pkf_status', STATUS, p.status) + '</label>' +
+      '<button type="button" class="btn" onclick="pk.avbryt()">Avbryt</button>' +
+      '<button type="submit" class="btn btn-primary">' + (andrar ? 'Spara ändringar' : 'Lägg upp platsen') + '</button></div>' +
+      '</form>';
+    document.getElementById('pkForm').addEventListener('input', function (e) {
+      if (e.target.getAttribute('aria-invalid') && e.target.value.trim()) {
+        e.target.removeAttribute('aria-invalid');
+        var m = document.getElementById('pkMsg'); if (m) { m.textContent = ''; m.className = ''; }
+      }
+    });
+    var f = document.getElementById('pkf_titel');
+    if (f) f.focus();
+    el.scrollIntoView({ block: 'start' });
   }
 
   async function spara(id) {
@@ -477,12 +509,17 @@
       antal_platser: varde('pkf_antal') || 1, min_sprak_steg: varde('pkf_sprak'), status: varde('pkf_status'),
       korkort_krav: !!(document.getElementById('pkf_korkort') || {}).checked
     };
-    if (!p.titel || !p.arbetsgivare) { m.textContent = 'Fyll i titel och arbetsgivare'; m.className = 'err'; return; }
+    var saknas = !p.titel ? 'pkf_titel' : !p.arbetsgivare ? 'pkf_arbetsgivare' : null;
+    if (saknas) {
+      m.textContent = 'Fyll i titel och arbetsgivare'; m.className = 'err';
+      var fe = document.getElementById(saknas); fe.setAttribute('aria-invalid', 'true'); fe.focus();
+      return;
+    }
     if (id) p.id = id;
     m.className = ''; m.textContent = 'Sparar…';
     try {
       var r = await api('admin_save_praktik', { praktik: p });
-      stang();
+      st.redigerar = null;
       st.platser = (await api('admin_list_praktik', {})).platser || [];
       await oppna(r.id);
     } catch (e) { m.textContent = e.message; m.className = 'err'; }
@@ -552,6 +589,17 @@
       '.pk-m-h{font-size:18px;font-weight:700;margin:0 0 4px}',
       '.pk-fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}.pk-bred{grid-column:1/-1}',
       '.pk-ta{width:100%;min-height:72px;resize:vertical;font:inherit;font-size:13px;padding:8px 10px;box-sizing:border-box}',
+      '.pk-form{max-width:760px}',
+      '.pk-form-h h3{font-size:20px;margin:0 0 4px}.pk-form-h p{color:var(--tx2);font-size:13px;margin:0 0 16px}',
+      '.pk-avs{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:18px;margin-bottom:12px}',
+      '.pk-avs-h{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}',
+      '.pk-avs-h h4{font-size:15px;margin:2px 0 2px}.pk-avs-h p{font-size:12px;color:var(--mu);margin:0}',
+      '.pk-nr{flex:0 0 26px;height:26px;border-radius:50%;background:var(--ac);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}',
+      '.pk-bockf{display:flex;align-items:flex-end;padding-bottom:8px}',
+      '.pk-form [aria-invalid=true]{border-color:var(--rd)}',
+      '.pk-form-fot{position:sticky;bottom:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;box-shadow:0 -6px 16px rgba(0,0,0,.06)}',
+      '.pk-form-fot #pkMsg{margin-right:auto;font-size:12px}',
+      '.pk-statusval{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600}.pk-statusval select{width:auto}',
       '.pk-m-act{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:18px;flex-wrap:wrap}',
       '.pk-m-act span{margin-right:auto;font-size:12px}.pk-m-act span.err,#pkMsg.err{color:var(--rd)}',
       '@media (max-width:640px){.pk-fgrid{grid-template-columns:1fr}.pk-krad{grid-template-columns:1fr 32px}.pk-krad .pk-ksel,.pk-krad .pk-kkom{grid-column:1/2}}'
@@ -564,6 +612,10 @@
     lista: function () { st.vald = null; laddaLista(); },
     filter: function (f) { st.filter = f; renderLista(); },
     ny: function () { formular(null); },
+    avbryt: function () {
+      var id = st.redigerar; st.redigerar = null;
+      if (id && id !== 'ny' && st.vald) { renderDetalj(); laddaKandidater(); } else laddaLista();
+    },
     andra: function () { formular(st.vald); },
     spara: spara, stang: stang, oppna: oppna, matcha: matcha, laggTill: laggTill,
     baraAktiva: function (v) { st.baraAktiva = !!v; },
